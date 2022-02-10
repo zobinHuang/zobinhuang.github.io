@@ -38,8 +38,8 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_plugin.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_gitlab_plugin.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_allow_cross.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_allow_read.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_close_CSRF.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_allow_read.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_ssh_key_1.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_create_project.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_config_token.png">
@@ -47,8 +47,8 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_ssh_exec_command.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/gitlab_webhook_config.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/xxx.png">
-<meta property="article:published_time" content="2022-02-10T17:55:01.526Z">
-<meta property="article:modified_time" content="2022-02-10T17:55:01.526Z">
+<meta property="article:published_time" content="2022-02-10T17:56:33.162Z">
+<meta property="article:modified_time" content="2022-02-10T17:56:33.162Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -523,16 +523,16 @@
   &nbsp;&nbsp;&nbsp;&nbsp;另外，我们还需要在 Jenkins Web 的控制台上运行如下命令来关闭 CSRF 的限制:
 
   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+   <div align="center">
+    <img src="./pic/jenkins_close_CSRF.png" width=80%>
+  </div>
+
   <h4 class="title">允许匿名用户可读</h4>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;我们同时还需要设置允许匿名用户可读:
 
   <div align="center">
     <img src="./pic/jenkins_allow_read.png" width=80%>
-  </div>
-
-  <div align="center">
-    <img src="./pic/jenkins_close_CSRF.png" width=80%>
   </div>
 
   <h4 class="title">安装和配置 SSH 插件</h4>
