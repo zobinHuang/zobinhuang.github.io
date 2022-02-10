@@ -17,25 +17,25 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
 <meta property="og:type" content="website">
 <meta property="og:title" content="哈希方法的概率性分析">
-<meta property="og:url" content="https://zobinhuang.com/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/index.html">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/index.html">
 <meta property="og:site_name" content="Zobin">
 <meta property="og:description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
-<meta property="og:image" content="https://zobinhuang.com/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/hash_chain.png">
-<meta property="og:image" content="https://zobinhuang.com/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/distribution.png">
-<meta property="og:image" content="https://zobinhuang.com/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/randomness_1.png">
-<meta property="og:image" content="https://zobinhuang.com/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/randomness_2.png">
-<meta property="og:image" content="https://zobinhuang.com/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/universality.png">
-<meta property="og:image" content="https://zobinhuang.com/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/uniform_difference_property.png">
-<meta property="og:image" content="https://zobinhuang.com/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/pairwise_independent.png">
-<meta property="og:image" content="https://zobinhuang.com/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/xxx.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/hash_chain.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/distribution.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/randomness_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/randomness_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/universality.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/uniform_difference_property.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/pairwise_independent.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/pic/xxx.png">
 <meta property="article:published_time" content="2022-01-19T19:24:29.361Z">
 <meta property="article:modified_time" content="2022-01-19T19:24:29.361Z">
 <meta property="article:author" content="Zhuobin Huang">
@@ -47,7 +47,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 
-<link rel="canonical" href="https://zobinhuang.com/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/">
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/">
 
 
 <script id="page-configurations">

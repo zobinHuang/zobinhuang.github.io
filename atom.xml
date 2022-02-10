@@ -3,11 +3,11 @@
   <title>Zobin</title>
   
   <subtitle>Loves Tech &amp; Tea</subtitle>
-  <link href="https://zobinhuang.com/atom.xml" rel="self"/>
+  <link href="http://www.zobinhuang.com:10082/atom.xml" rel="self"/>
   
-  <link href="https://zobinhuang.com/"/>
+  <link href="http://www.zobinhuang.com:10082/"/>
   <updated>2021-09-07T12:09:20.877Z</updated>
-  <id>https://zobinhuang.com/</id>
+  <id>http://www.zobinhuang.com:10082/</id>
   
   <author>
     <name>Zhuobin Huang</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="https://zobinhuang.com/2021/09/07/hello-world/"/>
-    <id>https://zobinhuang.com/2021/09/07/hello-world/</id>
+    <link href="http://www.zobinhuang.com:10082/2021/09/07/hello-world/"/>
+    <id>http://www.zobinhuang.com:10082/2021/09/07/hello-world/</id>
     <published>2021-09-07T12:09:20.877Z</published>
     <updated>2021-09-07T12:09:20.877Z</updated>
     
@@ -38,8 +38,8 @@
   
   <entry>
     <title>test_my_site</title>
-    <link href="https://zobinhuang.com/2021/01/05/test-my-site/"/>
-    <id>https://zobinhuang.com/2021/01/05/test-my-site/</id>
+    <link href="http://www.zobinhuang.com:10082/2021/01/05/test-my-site/"/>
+    <id>http://www.zobinhuang.com:10082/2021/01/05/test-my-site/</id>
     <published>2021-01-04T16:13:36.000Z</published>
     <updated>2021-11-28T14:36:17.701Z</updated>
     
