@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="多周期 MIPS 处理器的设计">
+<meta property="og:url" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/xxx.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/state_elements.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/fetch_instruction.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/read_register_file.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/sign_extend_immediate.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/add_base_address.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/load_data.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/write_back.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/increase_pc.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/sw_instruction.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/r_type.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/beq.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/control_unit.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/control_unit_and_datapath.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/dataflow_fetch.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/fsm_fetch.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/dataflow_decode.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/fsm_decode.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/dataflow_compute_memory_address.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/fsm_compute_memory_address.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/fsm_read_memory.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/fsm_memory_write.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/fsm_r_type.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/fsm_beq.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/fsm_complete.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/fsm_addi.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/dataflow_j.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/pic/fsm_j.png">
+<meta property="article:published_time" content="2021-12-24T03:52:31.072Z">
+<meta property="article:modified_time" content="2021-12-24T03:52:31.072Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_5_MIPS_Multiple_Cycle/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>多周期 MIPS 处理器的设计 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">多周期 MIPS 处理器的设计
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Computer_Architerture/">TECH_COMPUTER_ARCHITERTURE</a></li>
+          <li>ARCHITECTURE_5_MIPS_MULTIPLE_CYCLE</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_border{
+      margin-bottom: 20px;
+      padding: 10px 10px; 
+      font-size: 16px; 
+      word-spacing:0px;  
+      border:1px solid black;
+    }
+    .div_learning_post_background{
+      background-color:#E3E2E2;
+      padding: 10px 40px; 
+      font-size: 16px;
+      word-spacing:0px;  
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+    .div_learning_post_background p{
+      margin: 0px;
+    }
+</style>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Dec.21 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_intro"><font color="blue"><b>基本思路</b></font></a>：介绍了设计多周期 MIPS 处理器的基本思路;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.1 <a href="#1_intro_1"><font color="blue">单周期处理器的弊端</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2 <a href="#1_intro_2"><font color="blue">多周期处理器</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2 <a href="#1_intro_3"><font color="blue">设计思路</font></a>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_datapath"><font color="blue"><b>数据通路</b></font></a>：介绍了多周期 MIPS 处理器数据通路的基本设计;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.1 <a href="#2_datapath_1"><font color="blue">State Elements</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.2 <a href="#2_datapath_2"><font color="blue">读取指令</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.3 <a href="#2_datapath_3"><font color="blue">读取源操作数</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.4 <a href="#2_datapath_4"><font color="blue">拓展立即数宽度</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.5 <a href="#2_datapath_5"><font color="blue">计算内存地址</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.6 <a href="#2_datapath_6"><font color="blue">从内存中加载数据</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.7 <a href="#2_datapath_7"><font color="blue">写寄存器</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.8 <a href="#2_datapath_8"><font color="blue">决定下一条指令的地址</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.9 <a href="#2_datapath_9"><font color="blue">增加对指令 <code>sw</code> 的支持</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.10 <a href="#2_datapath_10"><font color="blue">增加对 R-Type 指令的支持</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.11 <a href="#2_datapath_11"><font color="blue">增加对 <code>beq</code> 指令的支持</font></a>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_control_unit"><font color="blue"><b>控制单元</b></font></a>：介绍了多周期 MIPS 处理器 Control Unit 的基本设计，其本质是一个 Moore 型状态机;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.1 <a href="#3_control_unit_1"><font color="blue">基本思路</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.2 <a href="#3_control_unit_2"><font color="blue">Main Decoder 设计基本思路</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.3 <a href="#3_control_unit_3"><font color="blue">读取指令</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.4 <a href="#3_control_unit_4"><font color="blue">解码</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.5 <a href="#3_control_unit_5"><font color="blue">计算内存地址</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.6 <a href="#3_control_unit_6"><font color="blue">读取内存</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.7 <a href="#3_control_unit_7"><font color="blue">写内存</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.8 <a href="#3_control_unit_8"><font color="blue">执行 R-Type 指令</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.9 <a href="#3_control_unit_9"><font color="blue">执行 <code>beq</code> 指令</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.10 <a href="#3_control_unit_10"><font color="blue">执行 <code>addi</code> 指令</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.11 <a href="#3_control_unit_11"><font color="blue">执行 <code>j</code> 指令</font></a>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 4. <a href="#4_performance"><font color="blue"><b>性能分析</b></font></a>：
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.1 <a href="#4_performance_1"><font color="blue">程序运行时间</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.2 <a href="#4_performance_2"><font color="blue">指令运行时间</font></a>
+  </div>
+</div>
+
+<!--标题-->
+<h2><a name="1_intro">1. 基本思路</a></h2>
+<div class="div_learning_post">
+  <h3><a name="1_intro_1">1.1 单周期处理器的弊端</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上一篇文章 <a href="/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/index.html">单周期 MIPS 处理器的设计</a> 中，我们完成了一个针对 MIPS 指令子集的单周期处理器的设计。对于单周期的 MIPS 处理器，我们可以看到有三个弊端：
+
+  <ol> 
+    <li>处理器的时钟周期完全取决于运行时间最长的那条指令所需要的时间，比如我们在上一篇文章 <a href="/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/index.html#6_performance">单周期 MIPS 处理器的设计</a> 中分析过的 <code>lw</code>，对于其它不需要那么多访存操作的指令来说，这样的设计无异于降低了效率;</li>
+    <li>在单周期处理器的设计中我们使用到了 3 个加法器，然而加法器是一种昂贵的电路;</li>
+    <li>在单周期处理器的设计中我们把 Instruction Memory 和 Data Memory 进行了分离，然而在现代系统中通常是使用统一的内存器件以存储指令和数据;</li>
+  </ol>
+
+  <h3><a name="1_intro_2">1.2 多周期处理器</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在本文中，我们将介绍 <font color="blue">多周期处理器 (Multi-cycle Processor)</font>，它通过把一条指令的执行过程的执行过程拆分为若干个子步骤的方式来执行一条指令。在每个子步骤中，处理器可以读取/写入内存、Register File，也可以使用 ALU。这样一来:
+
+  <ol> 
+    <li>不同的指令将会消耗不同数量的子步骤，因此操作更简单的指令可以更快地完成执行过程;</li>
+    <li>处理器只设计了 1 个加法器，加法器在不同的需求下可以被重复使用;</li>
+    <li>处理器会从统一的内存中读写指令和数据;</li>
+  </ol>
+
+  <h3><a name="1_intro_3">1.3 设计思路</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们设计多周期 MIPS 处理器的思路将遵循我们设计单周期处理器的思路：先使用组合逻辑串联 State Elements 来设计数据通路。与设计单周期处理器不同的是，我们在设计多周期处理器的数据通路的时候将会引入 <font color="blue">Non-architectural State Element</font> (i.e. 程序员不可见寄存器) 来暂存两个子步骤之间的中间结果。在完成数据通路的设计后，我们会进而对 Control Unit 进行设计，由于 Control Unit 会在一条指令的不同子步骤上生成不同的控制信号，以在同一套硬件上完成各个子步骤的执行过程，因此在多周期处理器中，Control Unit 实际上是一个 <font color="blue">有限状态机</font>，而不像单周期处理器一样，是一个组合逻辑电路。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成多周期处理器的设计之后，我们同样会演示向基础设计中添加对新指令的支持。我们在最后同样也会进行性能分析，并将多周期处理器与单周期处理器的性能进行比较。
+</div>
+
+<h2><a name="2_datapath">2. 数据通路</a></h2>
+<div class="div_learning_post">
+  <h3><a name="2_datapath_1">2.1 State Elements</a></h3>
+  <div align="center">
+    <img src="./pic/state_elements.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上所示，是我们在多周期的处理器中所使用的 State Element，与单周期处理器大体相同。不同的是，我们使用了 Intruction 和 Data 合二为一的单块大内存。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们对一条指令在多周期处理器中的执行过程进行分析。
+
+  <h3><a name="2_datapath_2">2.2 读取指令</a></h3>
+  <div align="center">
+    <img src="./pic/fetch_instruction.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们假设我们当前处于第 `n` 个时钟周期。我们要做的第一件事情就是从 PC 中获取指令在内存中的地址，并且从 Memory 中获取这条指令，如上图所示。注意到我们在获取这条指令后，我们把该指令存储在一个 Non-architectural 的 <font color="red"><b>Instruction Register</b></font> 中，以供后续周期继续使用。值得注意的是，该寄存器会收到一个控制信号 <font color="blue">`IRWrite`</font>，在输出的指令需要被更新的时候，该信号会被使能，以让读取的指令被寄存器 <font color="red"><b>Instruction Register</b></font> 在 `Instr_{31:0}` 上进行输出。
+
+  <h3><a name="2_datapath_3">2.3 读取源操作数</a></h3>
+  <div align="center">
+    <img src="./pic/read_register_file.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;与我们在分析单周期处理器时一样，我们先假设我们读取出来的指令是一条 <code>lw</code> 指令，后面我们会慢慢地对其它指令增加相关支持。对于 <code>lw</code> 指令来说，它的下一步是去寄存器中读取存储有内存单元基地址的寄存器值。因此如上图所示，在第 `n+1` 个周期，我们把 <code>lw</code> 指令的 <code>rs</code> 字段 (i.e. `Instr_{25:21}`) 送上了 Register File 的寄存器选择端口 <code>A1</code>，以让 Register File 在其输出端口 <code>RD1</code> 上输出相应的寄存器的值，并且把该寄存器的值保存在一个 Non-architectural 的寄存器 <font color="red"><b>A</b></font> 中。
+
+  <h3><a name="2_datapath_4">2.4 拓展立即数宽度</a></h3>
+  <div align="center">
+    <img src="./pic/sign_extend_immediate.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们同样需要扩展 <code>lw</code> 的 <code>imm</code> 字段 (i.e. `Instr_{15:0}`) 所携带的 16-bits 立即数字段。如上图所示，同样还是在第 `n+1` 个周期，我们把 <code>lw</code> 指令的 <code>imm</code> 字段 (i.e. `Instr_{15:0}`) 送上了符号扩展器，并且输出符号扩展后的立即数结果 `SignImm`，作为内存单元地址的偏移量。由于 `SignImm` 是对 `Instr_{31:0}` 的一次组合逻辑运算的结果，在运行当前指令的过程中并不会发生改变，因此此处我们不需要使用 Non-architectural 的寄存器来进行缓存。
+
+  <h3><a name="2_datapath_5">2.5 计算内存地址</a></h3>
+  <div align="center">
+    <img src="./pic/add_base_address.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在拿到 32-bits 的内存单元基地址和 32-bits 的偏移量 `SignImm` 后，我们就需要把这两个数值送入 ALU 中进行加法运算。如上图所示，在第 `n+2` 个周期，我们把 Non-architectural 寄存器 <font color="red"><b>A</b></font> 的暂存结果和 `SignImm` 送入了 ALU 的 <code>SrcA</code> 和 <code>SrcB</code> 输入端口，在收到控制信号 <font color="blue">`ALUControl`</font> 控制的情况下，我们在其输出口 <code>ALUResult</code> 上获得了计算结果值，并将其暂存在 Non-architectural 寄存器 <code>ALUOut</code> 中。
+
+  <h3><a name="2_datapath_6">2.6 从内存中加载数据</a></h3>
+  <div align="center">
+    <img src="./pic/load_data.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在第 `n+3` 个周期，我们就需要从 Memory 中读取出上个时钟周期中由 ALU 输出值作为地址指定的内存单元中存储的值。如上图所示，我们在 Memory 的地址输入端口 <code>A</code> 之前加入了一个多路选择器，并受控制信号 <font color="blue">`Io rD`</font> (i.e. Instruction or Data) 的控制: 如果为 0，则送上 Memory 地址线的是我们上面在读取指令的时候，由 PC 寄存器指定的指令地址; 如果为 1，则送上 Memory 地址线的是由 Non-architectural 寄存器 <code>ALUOut</code> 暂存的值。显然对于 <code>lw</code> 指令来说，运行到这一步，我们的控制信号此时应该为 1。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;从 Memory 中读取出响应的数据后，我们的数据会被缓存到 Non-architectural 寄存器 <font color="red"><b>Data</b></font> 中。注意到由于控制信号 <font color="blue">`IRWrite`</font> 在当前周期并未被使能，所以 
+  Memory 输出的数据并不会被更新到 Non-architectural 寄存器 <font color="red"><b>Instruction Register</b></font> 中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这样的设计使得 MIPS 处理器在处理 <code>lw</code> 指令的时候可以复用对内存的访问，不需要将 Instruction Memory 和 Data Memory 进行拆分。
+
+  <h3><a name="2_datapath_7">2.7 写寄存器</a></h3>
+  <div align="center">
+    <img src="./pic/write_back.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后，在第 `n+4` 个周期，我们将保存在 Non-architectural 寄存器 <font color="red"><b>Data</b></font> 中的数据值写入到由 <code>lw</code> 指令的 <code>rt</code> 字段 (i.e. `Instr_{20:16}`) 指定的寄存器中，如上图所示。
+
+  <h3><a name="2_datapath_8">2.8 决定下一条指令的地址</a></h3>
+  <div align="center">
+    <img src="./pic/increase_pc.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在单周期处理器中，我们使用了额外的加法器以实现对 PC 的自增操作。而在多周期处理器的设计中，实际上我们可以在 ALU 单元空闲的时候实现对 PC 值的计算。为了实现这样的功能，如上图所示，我们在 ALU 的两个输入 <code>SrcA</code> 和 <code>SrcB</code> 之前引入了两个多路选择器：
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 <code>SrcA</code> 来说，我们使用控制信号 <font color="blue">`ALUSrcA`</font> 来控制这个多路选择器: 如果信号为 0，则送入 <code>SrcA</code> 的是当前 PC 输出的值; 如果信号为 1，那么送入 <code>SrcA</code> 的就是我们上面构建的 Non-architectural 寄存器 <font color="red"><b>A</b></font> 输出的值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 <code>SrcB</code> 来说，我们使用控制信号 <font color="blue">`ALUSrcB_{1:0}`</font> 来控制这个多路选择器。由于我们在后面在扩展其它指令的时候，还需要增加对送入 <code>SrcB</code> 的信号的选择，因此此处我们添加的是一个 4 路多路选择器。当 <font color="blue">`ALUSrcB_{1:0}`</font> 为 01 的时候，送上 <code>SrcB</code> 将是常数 4，以实现对 PC 自增 4 的功能。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，我们还引入了一个新的控制信号 <font color="blue">`PCWrite`</font>，在需要更新 PC 寄存器的时钟周期，该控制信号将被使能。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这样一来，我们就完成了数据通路上对指令 <code>lw</code> 的支持。
+
+  <h3><a name="2_datapath_9">2.9 增加对指令 <code>sw</code> 的支持</a></h3>
+  <div align="center">
+    <img src="./pic/sw_instruction.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了增加对 <code>sw</code> 指令的支持，我们要做的工作实际上很简单：和单周期处理器一样，对 Memory 的写入数据恒定只能来自于 Register File 的 <code>RD2</code> 端口，因此我们将指令的 <code>rt</code> 字段 (i.e. `Instr_{20:16}`) 输入 Register File 的输入端口 <code>A2</code>，并将相应的输出端口 <code>RD2</code> 输出的值缓存到 Non-architectural 寄存器 <font color="red"><b>B</b></font> 中，并且将该 Non-architectural 寄存器输出的值连接到 Memory 的写入数据输入端口 <code>WD</code> 上。另外，我们还使用了一个控制信号 <font color="blue">`MemWrite`</font>，以控制对 Memory 的写入使能。
+
+  <h3><a name="2_datapath_10">2.10 增加对 R-Type 指令的支持</a></h3>
+  <div align="center">
+    <img src="./pic/r_type.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面我们完成了多周期 MIPS 处理器对 I-Type 指令 <code>lw</code> 和 <code>sw</code> 的支持，在本节中我们将看到其对 R-Type 指令的支持。R-Type 指令实现了对两个源寄存器 (i.e. 由 <code>rs</code> 和 <code>rt</code> 字段指定) 的读取，以及对一个目的寄存器 (i.e. 由 <code>rd</code> 字段指定) 的写入。对于 R-Type 指令的支持，我们在数据通路上主要有两个更新。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，不同于 I-Type 指令，在 <code>rt</code> 字段 (i.e. `Instr_{20:16}`) 中指定写入的寄存器地址，R-Type 指令利用 <code>rd</code> 字段 (i.e. `Instr_{15:11}`) 来指定，因此我们在 Register File 的寄存器选择输入端口 <code>A3</code> 之前加上了一个多路选择器以进行选择，并且使用控制信号 <font color="blue">`RegDst`</font> 以进行控制: 当信号为 0 时，选择的是 I-Type 指令使用的 <code>rt</code> 字段作为写入寄存器地址; 当信号为 1 时，选择的是 R-Type 指令的 <code>rd</code> 字段。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其次，对于写入寄存器的数据的来源，<code>lw</code> 指令来源于 Memory 中读取出来的数据，而对于大多数 R-Type 指令来说，则来自于 ALU 的计算结果。因此同理我们在 Register File 的寄存器数据输入端口 <code>WD3</code> 中加入了一个多路选择器，并使用控制信号 <font color="blue">`Memt oReg`</font> 以进行控制: 当信号为 0 时，输入寄存器的值来自于 ALU 的计算结果; 当信号为 1 时，输入控制器的值来自于 Memory 的读取结果。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在引入这两个多路选择器部件之后，我们的数据通路就支持 R-Type 指令了。
+
+  <h3><a name="2_datapath_11">2.11 增加对 <code>beq</code> 指令的支持</a></h3>
+  <div align="center">
+    <img src="./pic/beq.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>beq</code> 指令是一条 I-Type 指令，它对由 <code>rt</code> 字段 (i.e. `Instr_{20:16}`) 和 <code>rs</code> 字段 (i.e. `Instr_{25:21}`) 指定的两个寄存器中存储的值进行减法操作，如果减法结果为 0 (i.e. 两个值相等)，则对 PC 值执行: `PC = PC + 4 + SignImm \times 4` 的操作; 否则则进行上面我们讨论过的单纯的 add 4 操作。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在单周期处理器中，我们使用了一个单独的加法器来实现 <code>beq</code> 指令下的 PC 值计算。在多周期处理器中，我们将复用我们数据通路上唯一的加法器资源。基本思路是：我们首先在一个 ALU 空闲的时钟周期 (i.e. 假设为周期 `P`) 内计算出 `PC + 4` 的值，然后写入到 PC 寄存器; 然后在另一个 ALU 空闲的时钟周期 (i.e. 假设为周期 `Q`) 中，利用先前计算好的 `PC + 4` 值来进一步计算 `PC = PC + 4 + SignImm \times 4` 值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们现在先对与 PC 相关的控制信号的产生做一个梳理：我们现在先定义一个控制信号 <font color="blue">`Branch`</font>，以标志分支指令的到来。当 <font color="blue">`Branch`</font> 和 ALU 的标志位输出 <font color="blue">`Zero`</font> 都为真时，我们应该更新 PC 寄存器。同时我们在上面还定义过控制信号 <font color="blue">`PCWrite`</font>，以实现运行常规指令下的 PC 更新。因此，我们对 PC 更新的控制信号的修改如上图所示，首先将 <font color="blue">`Branch`</font> 和 ALU 的标志位输出 <font color="blue">`Zero`</font> 进行相与，以得到运行 <code>beq</code> 指令下 PC 更新的条件; 然后同时将该条件信号和 <font color="blue">`PCWrite`</font> 信号相或，以实现两种不同情况 (i.e. [1] 运行 <code>beq</code> 指令; [2] 运行常规指令) 下的对 PC 进行更新的使能信号输出。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述思路，我们假设我们在周期 `P` 中已经完成了 `PC+4` 的运算，并且将该值存储于 PC 寄存器中。在周期 `Q` 中，我们通过控制信号 <font color="blue">`ALUALUSrcB_{1:0}`</font>计算出 `PC = PC + 4 + SignImm \times 4` 的值，并且保存到 Non-architectural 寄存器 <font color="red"><b>ALUOut</b></font> 中。注意到在该寄存器之后，我们添加了一个多路选择器，并且使用控制信号 <font color="blue">`PCSrc`</font> 予以控制: 当控制信号为 0 时，写入 PC 寄存器输入端口 <code>PC'</code> 的是当前 ALU 的直接计算结果; 当控制信号为 1 时，写入 PC 寄存器输入端口 <code>PC'</code> 的是上一轮时钟周期计算得到的 ALU 结果 (i.e. 保存在 Non-architectural 寄存器 <font color="red"><b>ALUOut</b></font> 中)。显然的，此时该信号应该为 1。并且这也暗示着，我们需要在周期 `Q+1` 中立刻判断 <code>beq</code> 指令指定的两个寄存器中存储的值是否相等，若相等则输出相应的 <font color="blue">`Zero`</font> 信号，来使能实际控制信号 <font color="blue">`PCEn`</font> 以实现 `PC = PC + 4 + SignImm \times 4` 的写入。如果我们不在周期 `Q+1` 中做这件事情，我们将错过 `PC = PC + 4 + SignImm \times 4` 这个计算结果。
+</div>
+
+<h2><a name="3_control_unit">3. 控制单元</a></h2>
+<div class="div_learning_post">
+  <h3><a name="3_control_unit_1">3.1 基本思路</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上面设计数据通路的时候我们不难发现，多周期处理器的控制单元将会是一个较为复杂的 FSM，针对不同的指令都会有不同的控制步骤流程。在本节中我们将看到我们是如何设计这个复杂 FSM 的。
+
+  <div align="center">
+    <img src="./pic/control_unit.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在单周期处理器中，我们设计的控制单元由 Main Decoder 和 ALU Decoder 组成，并且是一个组合逻辑电路，受指令中的 <code>Opcode</code> 和 <code>Funct</code> 字段控制以输出相应的控制信号。而在多周期处理器的设计中，如上图所示，我们保留了 ALU Decoder 的设计，它作为一个组合逻辑电路继续输出 <font color="blue">`ALUControl_{2:0}`</font> 来控制 ALU 的行为; 而对于 Main Decoder 来说，它是一个时序逻辑电路，它输出的控制信号取决于: (1) 当前正在运行的指令 以及 (2) 当前正在运行的指令到达的步骤，因此是一个有限状态机。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如下所示，是 ALU Decoder 的真值表。
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th><div align="center">`ALUOp`</div></th>
+      <th><div align="center"><code>Funct</code></div></th>
+      <th><div align="center">`ALUControl` (含义)</div></th>
+    </tr>
+    <tr>
+      <td><div align="center">00</div></td>
+      <td><div align="center">X</div></td>
+      <td><div align="center">010 (add)</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">X1</div></td>
+      <td><div align="center">X</div></td>
+      <td><div align="center">110 (sub)</div></td>
+    </tr>
+    <tr>
+      <td colspan=3><div align="center"><font color="blue">1X: 由 <code>Funct</code> 字段决定 ALU 功能</font></div></td>
+    </tr>
+    <tr>
+      <td><div align="center">1X</div></td>
+      <td><div align="center">100000 (add)</div></td>
+      <td><div align="center">010 (add)</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">1X</div></td>
+      <td><div align="center">100010 (sub)</div></td>
+      <td><div align="center">110 (sub)</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">1X</div></td>
+      <td><div align="center">100100 (and)</div></td>
+      <td><div align="center">000 (and)</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">1X</div></td>
+      <td><div align="center">100101 (or)</div></td>
+      <td><div align="center">001 (or)</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">1X</div></td>
+      <td><div align="center">101010 (slt)</div></td>
+      <td><div align="center">111 (set less than)</div></td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如下所示，是 Control Unit 和数据通路的整体连接图。
+
+  <div align="center">
+    <img src="./pic/control_unit_and_datapath.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们对 Main Decoder 的设计展开讨论。
+
+  <h3><a name="3_control_unit_2">3.2 Main Decoder 设计基本思路</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上所示，Main Controller 的输入可以视为指令的 <code>Opcode</code> 和 <code>Funct</code> 字段，输出是 <font color="blue">(1) 多路选择器选择信号</font> 以及 <font color="blue">(2) Non-architectural 寄存器使能信号</font>。回顾我们在 <a href="/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_2_Sequential_Circuit/index.html">时序逻辑电路基础</a> 中讨论的关于 Moore 型和 Mealy 型状态机的模型。我们在下面会看到，对于 Main Controller 来说，它的输出仅取决于 FSM 所处的状态，因此我们本节中设计的 FSM 将会是一个 Moore 型状态机。并且，状态和状态之间的转移是由时钟信号驱动的。如果存在状态转移的分支，那么具体转移到哪个状态将会由 <code>Opcode</code> 和 <code>Funct</code> 字段来决定。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们将重新分析一条指令的执行过程，但我们将把目光转向 Control Unit 的状态转移和相关控制信号输出。值得注意的是，在下面的分析时，一条指令执行的各个阶段，我们只会展示相关的控制信号线，并不会展示所有的控制信号线。
+
+  <h3><a name="3_control_unit_3">3.3 读取指令</a></h3>
+  <div align="center">
+    <img src="./pic/dataflow_fetch.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，执行一条指令的第一个状态 <font color="blue">S0: Fetch</font> 是: 处理器根据 PC 输出的地址值从内存中读取得到相应的指令，并且完成 PC 的自增 4 的操作。每当处理器被重置的时候，FSM 都会重新来到这个状态下。如上图所示，此时:
+
+  <ol>
+    <li>控制信号 <font color="blue">`Io rD`</font> 将会为 0，以使得送上 Memory 地址线的是 PC 寄存器的输出 <code>PC'</code>;</li>
+    <li>控制信号 <font color="blue">`IRWrite`</font> 将会被使能，以使得从 Memory 读取出来的指令会被存储到 Non-architectural 寄存器 <font color="red"><b>IR</b></font> 中去;</li>
+    <li>为了基于当前的 `PC` 值计算出 `PC+4` 值，控制信号 <font color="blue">`ALUOp`</font> 会为 00，控制信号 <font color="blue">`ALUSrcA`</font> 会为 0，控制信号 <font color="blue">`ALUSrcB`</font> 会为 01，这样一来 `PC+4` 值就会被 ALU 计算得出;</li>
+    <li>控制信号 <font color="blue">`PCSrc`</font> 将会为 0，以将当前周期中 ALU 的计算结果输出到 PC 寄存器的输入端口 <code>PC'</code> 上去;</li>
+    <li>控制信号 <font color="blue">`PCWrite`</font> 将会为 1，因此 <font color="blue">`PCEn`</font> 信号为 1，以使能将新得到的 `PC+4` 的计算结果写入到 PC 寄存器中。</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;以上所有控制信号可以归纳为如下所示：
+
+  <div align="center">
+    <img src="./pic/fsm_fetch.png" width=50%>
+  </div>
+
+  <h3><a name="3_control_unit_4">3.4 解码</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成指令的读取后，我们现在的处境是:
+
+  <ol>
+    <li>我们在 Non-architectural 寄存器 <font color="red"><b>IR</b></font> 中存储并输出了新读取出来的指令 `Instr_{31:0}`;</li>
+    <li>PC 寄存器已经完成了自增 4 的操作;</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;来到当前状态 <font color="blue">S1: Decode</font>，我们的操作首先是进行解码: 根据 <code>Opcode</code> 和 <code>Funct</code> 字段来决定 FSM 下一步进行转移的状态。我们在这里将使用一个额外单独的状态来接收来自 Non-architectural 寄存器 <font color="red"><b>IR</b></font> 输出的指令中包含的 <code>Opcode</code> 和 <code>Funct</code> 字段，作为 Moore 状态机的输入信号以实现下一个跳转状态的选择。一开始我想不懂为什么解码需要使用一个单独的状态，"浪费" 一个时钟周期来进行等待。事实是，在当前时钟周期开始的时候，Non-architectural 寄存器 <font color="red"><b>IR</b></font> 才开始输出读取到的指令，而作为时序逻辑电路的 Control Unit，其输出的控制信号的值只有在时钟上升沿到来的时候才会发生改变，因此倘若我们想根据 <font color="red"><b>IR</b></font> 的输出来改变 Control Unit 的控制信号，则必须先等待 <font color="red"><b>IR</b></font> 的输出，以作为 Control Unit 的输入，因此我们必须等待。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同时在当前状态，我们的另一个任务是，在不清楚指令类型的情况下，根据潜在的 <code>rs</code> 和 <code>rt</code> 字段从 Register File 中读取相关寄存器中保存的值，同时使用符号扩展器扩展潜在的 <code>imm</code> 字段，在其输出上得到 `SignImm`。
+
+  <div align="center">
+    <img src="./pic/dataflow_decode.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，是当前状态下的数据通路。注意到我们在进行上述两个操作的时候，我们并不需要输出任何控制信号，因此如下图所示，我们在当前状态的圆圈中是没有任何输出的。
+
+  <div align="center">
+    <img src="./pic/fsm_decode.png" width=50%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在结束当前状态进入下一个状态时，我们的 Control Unit 将会把 <code>Opcode</code> 和 <code>Funct</code> 字段作为输入，用于决定跳转的下一状态，我们在下面分别会看到不同的跳转分支。
+
+  <h3><a name="3_control_unit_5">3.5 计算内存地址</a></h3>
+
+  <div align="center">
+    <img src="./pic/dataflow_compute_memory_address.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;假设我们读取到的指令是 <code>lw</code> 或 <code>sw</code> 指令。来到当前状态 <font color="blue">S2: MemAdr</font>，此时处理器的任务是完成由 <code>rs</code> 字段指定的寄存器的值和完成符号扩展的立即数值 `SignImm` 的相加操作。因此如上图所示，我们首先控制 <font color="blue">`ALUSrcA`</font> 信号为 1，<font color="blue">`ALUSrcB_{1:0}`</font> 信号为 10 来选择正确的送入 ALU 的数据源，同时我们输出 <font color="blue">`ALUout`</font> 信号为 00 来使得 ALU 完成的是加法操作。完成加法操作后，计算结果将被保存到 Non-architectural 寄存器 <font color="red"><b>ALUOut</b></font> 中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如下图所示，是当前状态的转移和输出情况。
+
+  <div align="center">
+    <img src="./pic/fsm_compute_memory_address.png" width=50%>
+  </div>
+
+  <h3><a name="3_control_unit_6">3.6 读取内存</a></h3>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果我们读取到的是一条 <code>lw</code> 指令，那么我们下一步操作将是根据在上一个状态计算得到的内存单元地址，从 Memory 中读取相应的数据。如下图所示是状态转移情况。首先我们会来到 <font color="blue">S3: MemRead</font> 状态，我们控制 <font color="blue">`Io rD`</font> 信号为 1，以选择送上 Memory 地址线的是 Non-architectural 寄存器 <font color="red"><b>ALUOut</b></font> 输出的值，该值是我们在上一个状态计算得到的地址值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;接着我们会来到 <font color="blue">S4: MemWriteback</font> 状态，该状态的任务是实现将数据向寄存器中的写入。我们控制 <font color="blue">`RegDst`</font> 信号为 0，以使得送上 Register File 写寄存器地址的是 <code>lw</code> 指令的 <code>rt</code> 字段 (i.e. `Instr_{20:16}`); 控制 <font color="blue">`Memt oReg`</font> 信号为 1，使得送上 Register File 写数据端口的是来自上一个状态 <font color="blue">S3: MemRead</font> 我们从 Memory 读取得到的数据。同时我们还需要打开 <font color="blue">`RegWrite`</font> 信号，以实现对 Register File 的写入。
+
+  <div align="center">
+    <img src="./pic/fsm_read_memory.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成对 Register File 的写入后，<code>lw</code> 指令的执行也就结束了，我们的下一个状态将回到 <font color="blue">S0: Fetch</font>。
+
+  <h3><a name="3_control_unit_7">3.7 写内存</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果我们读取到的是一条 <code>sw</code> 指令，那么我们下一步操作将是以 Non-architectural 寄存器 <font color="red"><b>ALUOut</b></font> 输出的值作为写入的内存单元的地址，写入由 <code>rt</code> 字段指定的寄存器的值，该寄存器的值已经在 <font color="blue">S1: Decode</font> 之后就一直输出在 Non-architectural 寄存器 <font color="red"><b>B</b></font> 之中。
+
+  <div align="center">
+    <img src="./pic/fsm_memory_write.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示是运行 <code>sw</code> 指令相应的状态转移图。我们在 <font color="blue">S2: MemAdr</font> 完成内存地址的计算后，来到 <font color="blue">S5: MemWrite</font> 状态。我们控制 <font color="blue">`Io rD`</font> 信号为 1，以选择送上 Memory 地址线的是 Non-architectural 寄存器 <font color="red"><b>ALUOut</b></font> 输出的值，该值是我们在上一个状态计算得到的地址值。同时我们还需要打开 <font color="blue">`MemWrite`</font> 信号，以实现对 Memory 写入的控制。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成对 Memory 的写入后，<code>sw</code> 指令的执行也就结束了，我们的下一个状态将回到 <font color="blue">S0: Fetch</font>。
+
+  <h3><a name="3_control_unit_8">3.8 执行 R-Type 指令</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到解码状态 <font color="blue">S1: Decode</font> 完成之后，如果处理器发现它读取到的指令是一条 R-Type 指令，那么处理器的任务将是对两个寄存器的值进行计算之后写入到另一个寄存器中去。
+
+  <div align="center">
+    <img src="./pic/fsm_r_type.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此，如上图所示，我们首先来到 <font color="blue">S6: Execute</font> 状态，我们控制 <font color="blue">`ALUSrcA`</font> 信号为 1，<font color="blue">`ALUSrcB`</font> 信号为 00，以将 Register File 输出的两个寄存器值送上 ALU 进行运算。同时我们指定 <font color="blue">`ALUOp`</font> 信号为 10，以使得 ALU 的运算行为根据 <code>funct</code> 字段来决定，上面 <a href="#3_control_unit_1">基本思路</a> 中我们已经给出了 ALU Decoder 的真值表。在完成运算后，ALU 的运算结果将被保存在 Non-architectural 寄存器 <font color="red"><b>ALUOut</b></font> 中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完成 ALU 运算后，我们来到 <font color="blue">S7: ALU Writeback</font> 状态，我们此时的任务是把运算结果写回 Register File。因此，我们控制 <font color="blue">`RegDst`</font> 信号为 1，以选择送上 Register File 地址线的是 R-Type 指令中的 <code>rd</code> 字段 (i.e. `Instr_{15:11}`); 控制 <font color="blue">`Memt oReg`</font> 信号为 0，以控制送上 Register File 写入数据端口的数据来自于存储在 Non-architectural 寄存器 <font color="red"><b>ALUOut</b></font> 中的上一状态 ALU 计算结果。同时我们使能 <font color="blue">`RegWrite`</font> 信号，以实现对 Register File 的写入操作。
+
+  <h3><a name="3_control_unit_9">3.9 执行 <code>beq</code> 指令</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到指令获取状态 <font color="blue">S0: Fetch</font> 完成之后。如果我们读取到的指令是一条 <code>beq</code> 跳转指令，那么处理器的任务是对两个寄存器的值进行减法操作，并且根据计算结果完成跳转操作，这个过程需要进行两次 ALU 运算: (1) 对寄存器的减法操作 和 (2) 计算新跳转地址。回顾我们上面在 <a href="#3_control_unit_4">解码</a> 所进行的过程，我们发现在状态 <font color="blue">S1: Decode</font> 中，ALU 运算单元是空闲的。因此处于提高 CPU 器件利用率，避免增加额外时钟周期的目的考虑，我们的思路是: 我们可以在状态 <font color="blue">S1: Decode</font> 中首先完成对新跳转地址的运算 (p.s. 我们在 <font color="blue">S0: Fetch</font> 中已经完成了 `PC+4` 值的计算)。在 <font color="blue">S1: Decode</font> 中完成对新跳转地址的计算之后，我们再进入一个新的状态中完成对两个寄存器值的运算，并且得到相应的控制信号，以决定是否在下一个时钟上升沿到来的时候，将新地址写入 PC 寄存器中。
+
+  <div align="center">
+    <img src="./pic/fsm_beq.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述思路，如上图所示，我们对 <font color="blue">S1: Decode</font> 状态输出的控制信号进行修改: 我们控制 <font color="blue">`ALUSrcA`</font> 信号为 0，<font color="blue">`ALUSrcB`</font> 信号为 11，以将 `PC+4` 和 `SignImm` 送入 ALU 进行运算，同时我们指定 <font color="blue">`ALUOp`</font> 信号为 00，以使得 ALU 进行加法操作。在计算完成后，我们会在 Non-architectural 寄存器 <font color="red"><b>ALUOut</b></font> 中保存 `PC+4+SignImm` 的值。 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完成了 <font color="blue">S1: Decode</font> 状态后，Control Unit 就能够判断读取的指令的类型了。如果处理器发现读取的指令是一条 <code>beq</code> 指令，那么它将来到 <font color="blue">S8: Branch</font> 状态。在这个状态下，我们的任务是实现对两个指定的寄存器的值的运算，并且输出相应的控制信号来决定是否更新 PC 寄存器 `PC+4+SignImm` 的值。因此，我们控制 <font color="blue">`ALUSrcA`</font> 信号为 1，<font color="blue">`ALUSrcB`</font> 信号为 00，以将 Register File 输出的两个寄存器值送上 ALU 进行运算。同时我们指定 <font color="blue">`ALUOp`</font> 信号为 01，以使得 ALU 进行减法运算。并且，我们还需要使能 <font color="blue">`Branch`</font> 信号为 1，以使得当 ALU 运算标志信号 <font color="blue">`Zero`</font> 信号为 1 时，控制 PC 寄存器写入的信号 <font color="blue">`PCEn`</font> 能为 1。另外，我们还需要使能 <font color="blue">`PCSrc`</font> 信号，以使得在 <code>beq</code> 跳转条件成立时，写入 PC 寄存器的值来源于上一个状态 <font color="blue">S1: Decode</font> ALU 运算的结果。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">S8: Branch</font> 状态完成后，<code>beq</code> 指令的运行就结束了，处理器将会回到 <font color="blue">S0: Fetch</font> 状态，读取出刚刚完成跳转的位置的指令进行下一指令的运行。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在，我们已经得到了 Control Unit 的 Moore 状态转移图，如下所示。
+
+  <div align="center">
+    <img src="./pic/fsm_complete.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们将增加对另外两条指令 <code>addi</code> 和 <code>j</code> 的支持。
+
+  <h3><a name="3_control_unit_10">3.10 执行 <code>addi</code> 指令</a></h3>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成 <font color="blue">S1: Decode</font> 后，我们如果发现读取的指令是一条 <code>addi</code> 指令，那么我们将进入 <font color="blue">S9: ADDI</font> 状态。<code>addi</code> 指令的任务是完成对一个寄存器值 (i.e. 由 <code>rs</code>, `Instr_{25:21}` 指定) 和一个立即数值 (i.e. 由 <code>imm</code>, `Instr_{15:0}` 指定) 的加法操作，并写入另一个寄存器 (i.e. 由 <code>rt</code>, `Instr_{20:16}` 指定) 中。  
+
+  <div align="center">
+    <img src="./pic/fsm_addi.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，来到 <font color="blue">S9: ADDI</font> 状态，我们首先应该先完成 ALU 运算。因此，我们控制 <font color="blue">`ALUSrcA`</font> 信号为 1，<font color="blue">`ALUSrcB`</font> 信号为 10，以将指定寄存器值和 `SignImm` 送上 ALU 进行运算。同时我们指定 <font color="blue">`ALUOp`</font> 信号为 00，以使得 ALU 进行加法运算。在完成运算之后，运算结果将被保存在 Non-architectural 寄存器 <code>ALUOut</code> 中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成 ALU 运算后，我们来到 <font color="blue">S10: ADDIWriteback</font> 状态，我们此时将上一个状态计算得到的值写回 Register File 的相应寄存器中。我们控制 <font color="blue">`RegDst`</font> 信号为 0，以使得送上 Register File 的写寄存器选择端口来自于 <code>addi</code> 指令的 <code>rt</code> 字段 (i.e. `Instr_{20:16}`)，同时我们控制 <font color="blue">`Memt oReg`</font> 信号为 0，使得写入 Register File 的数据来源于上一个时钟周期 ALU 的计算结果。我们还需要使能 <font color="blue">`RegWrite`</font> 信号，以完成对 Register File 的写入操作。
+
+  <h3><a name="3_control_unit_11">3.11 执行 <code>j</code> 指令</a></h3>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>j</code> 指令是 J-Type 指令，其用于向 PC 寄存器中写入一个新的地址值。基于指令 <code>j</code> 进行跳转时，PC 中存储的 32-bits 地址值的最低 2 位 `PC_{1:0}` 恒为 0 (i.e. 存储的指令是 32-bits 对齐的)，接下来的 26 bits `PC_{[27:2]}` 是从指令 <code>j</code> 的 <code>imm</code> 字段 (i.e. `Instr_{[25:0]}`) 中进行提取的，最高的 4 bits `PC_{[31:28]}` 保留的是 PC 寄存器中原先的最高 4 位。
+
+  <div align="center">
+    <img src="./pic/dataflow_j.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于我们上面设计的数据通路并没有实现上面 <code>j</code> 指令描述的计算逻辑，因此，我们需要对数据通路进行修改。如上图所示，为了完成上述复杂的 PC 值计算方法，我们拓展了写入 PC 寄存器输入端口 <code>PC'</code> 的来源: 我们将控制信号 <font color="blue">`PCSrc`</font> 拓展成为 <font color="blue">`PCSrc_{1:0}`</font>，同时相应的多路选择器也进行了扩展。当 <font color="blue">`PCSrc_{1:0}`</font> 为 10 时，写入 PC 的值将是上述 <code>j</code> 指令合成的 PC 值。
+
+  <div align="center">
+    <img src="./pic/fsm_j.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上所示，在完成 <font color="blue">S1: Decode</font> 状态后，如果处理器发现读取的指令是一条 <code>j</code> 指令，那么将会进入 <font color="blue">S11: Jump</font> 状态。在这个状态下，我们控制 <font color="blue">`PCSrc`</font> 信号为 10，以选择正确的写入 PC 寄存器的来源，同时我们还会使能 <font color="blue">`PCWrite`</font> 信号，以实现对 PC 寄存器的写入。同时值得注意的是，由于我们对 <font color="blue">`PCSrc`</font> 实现了扩展，先前我们对 <font color="blue">`PCSrc`</font> 控制信号的使用也被修改成为了相应的值，在图中已经用蓝色标出。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在，我们已经完成了对多周期 MIPS 处理器的设计。
+</div>
+
+<h2><a name="4_performance">4. 性能分析</a></h2>
+<div class="div_learning_post">
+  <h3><a name="4_performance_1">4.1 程序运行时间</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;相比于单周期 MIPS 处理器，多周期处理器不同的是，不同的指令有不同的运行时钟周期: <code>beq</code> 和 <code>j</code> 指令消耗 3 个时钟周期，<code>sw</code>、<code>addi</code> 和 R-Type 指令消耗 4 个时钟周期，<code>lw</code> 指令消耗 5 个时钟周期。因此，不同的指令有不同的 CPI 值。针对不同的评估程序，有不同的指令成分组成。因此，我们在讨论多周期处理器的性能之前，我们必须先确认我们用于评估处理器性能的程序的成分。计算方法很简单：
+
+  <div align="center" class="div_learning_post{_border">
+    `\overline{CPI} = \sum_{Instr}Rate_{Instr} \cdot CPI_{Instr}`
+  </div>
+
+  <h3><a name="4_performance_2">4.2 指令运行时间</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;让我们回到对一条指令的运行时间上来。同样是分析 Critical Path，对于一条指令的运行来说，在一个时钟周期内，处理器需要执行 ALU 操作、读/写 Memory 和 读/写 Register File 等操作。我们假设:
+
+  <ol>
+    <li>对 Register File 的访问快于对 Memory 的访问;</li>
+    <li>对 Memory 的写操作快于对 Memory 的读操作</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在一条最糟糕的指令的一个步骤中，它首先需要从内存中读取相应的数据，并且将其送入 Register File 中，然后根据 Register File 的输出进行 ALU 运算。因此对于一个时钟周期来说，我们可以得到约束其最小值的等式：
+
+  <div align="center" class="div_learning_post{_border">
+    `T_c \geq t_{pcq} + t_{m ux} + max(t_{ALU}+t_{m ux}, t_{mem}) + t_{setup}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其中 `t_{pcq}` 是传播时间; `t_{m ux}` 是 Memory 地址线前多路选择器的传播延迟; `t_{ALU}+t_{m ux}` 是输入源多路选择器和 ALU 计算的共同延迟; `t_{mem}` 是 Memory 的读取时间; `t_{setup}` 是建立时间。
+</div>
+
+<!--ref-->
+<!--
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+1. golang.org, <a target="_blank" rel="noopener" href="https://golang.org/cmd/go/#hdr-GOPATH_environment_variable">GOPATH environment variable</a>
+</p>
+</div>-->
+
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Computer_Architerture/">TECH_COMPUTER_ARCHITERTURE</a></li>
+          <li>ARCHITECTURE_5_MIPS_MULTIPLE_CYCLE</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

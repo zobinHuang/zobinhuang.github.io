@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="线性规划：建模与对偶">
+<meta property="og:url" content="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/pic/xxx.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/pic/polyhedron.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/pic/polyhedra.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/pic/example_1.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/pic/feasible_region_solution.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/pic/example_2.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/pic/example_3.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/pic/example_4.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/pic/example_5.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/pic/example_6.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/pic/example_7.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/pic/example_8.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/pic/example_9.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/pic/example_10.png">
+<meta property="article:published_time" content="2021-11-28T14:36:17.709Z">
+<meta property="article:modified_time" content="2021-11-28T14:36:17.709Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="https://zobinhuang.com/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>线性规划：建模与对偶 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">线性规划：建模与对偶
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Cloud_Network/">TECH_CLOUD_NETWORK</a></li>
+          <li>MATH_CONMUNICATION_NETWORK_MATH_BASIC_1_LINEAR_PROGRAMMING</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .cmath{margin-bottom:20px;}
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_border{
+      margin-bottom: 20px;
+      padding: 10px 10px; 
+      font-size: 16px; 
+      word-spacing:0px;  
+      border:1px solid black;
+    }
+    .div_learning_post_background{
+      background-color:#E3E2E2;
+      padding: 10px 40px; 
+      font-size: 16px;
+      word-spacing:0px;  
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+    .div_learning_post_background p{
+      margin: 0px;
+    }
+</style>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Sept.15 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=30%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.1 <a href="#1_xxx"><font color="blue">xxx</font></a>：xxx
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+
+  </div>
+</div>
+
+<!--标题-->
+<h2><a name="1_motivation">1. 为什么学线性规划</a></h2>
+<div class="div_learning_post">
+  <h3><a name="1_motivation_1">1.1 什么是线性规划？</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+
+  <h3><a name="1_motivation_2">1.2 算法意义</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;LP 在 <font color="blue">问题求解</font> 的意义上非常重要，大量的问题可以被建模为 LP，并且那些无法被建模为 LP 的问题，也需要借助 LP 来进行求解。
+
+  <h3><a name="1_motivation_3">1.3 理论意义</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;LP 在 <font color="blue">问题分析</font> 的意义上非常重要，理解和使用 <font color="blue">对偶理论</font> 是分析很多问题的有效方式。
+
+  <h3><a name="1_motivation_3">1.4 与线性代数的关系</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;线性代数是求解满足方程约束的解，而线性规划是分析在满足约束的解中，哪个解是最好的。
+</div>
+
+<h2><a name="2_model">2. LP 建模</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;要建模一个 LP 问题，有以下三个要素：
+
+  <ul>
+    <li><b>决策变量</b>：`x_1, x_2, ..., x_n \in R`，矢量形式为 `x \in R^n`</li>
+    <li><b>线性约束</b>：`\sum_{j=1}^{n}a_(ij)x_j \leq b_j` 或 `\sum_{j=1}^{n}a_(ij)x_j \geq b_j` 或 `\sum_{j=1}^{n}a_(ij)x_j = b_j`，对应的矩阵形式为 `Ax\leqb` 或 `Ax\geqb` 或 `Ax=b`</li>
+    <li><b>线性目标函数</b>：`max \sum_{j=1}^{n}c_jx_j` 或者 `min \sum_{j=1}^{n}c_jx_j`，矢量形式即 `max cx`</li>
+  </ul>
+</div>
+
+<h2><a name="3_general_form">3. LP 一般型：几何意义理解 LP 建模</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们定义如下形式为 LP 的一般型：
+
+  <div class="div_learning_post_background" align="center">
+    Minimize `c^Tx` 
+    <br>subject to `Ax \geq b`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面让我们从几何意义的角度出发来理解 LP 的一般型，然后我们再回到代数上来看其求解方法。我们首先定义几个概念：
+
+  <div align="center">
+    <img src="./pic/polyhedron.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">多面体 (polyhedron)</font>：一个被 `{x \in R^n|Ax \geq b}` 描述的 n 维空间，其中 `A` 是一个 `m \times n` 的矩阵，`b` 是一个 m 维的向量。即在 n 维空间中由 m 个平面围起来的一个 n 维空间 (i.e. 可开放可密闭，且 `m` 和 `n` 一定满足 `m \geq n`)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">超平面 (hyperplane)</font>：一个被 `{x \in R^n|ax=b}` 描述的 n 维空间中的一个平面，其中 `a` 是一个 n 维的向量，`b` 是一个标量。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">半空间 (halfspace)</font>：一个被 `{x \in R^n|ax \geq b}` 描述的 n 维空间中的一个开放空间，其中 `a` 是一个 n 维的向量，`b` 是一个标量。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以发现，halfspace 是使用 hyperplane 加上方向来表现的，多个 halfspace 的交集就形成了 polyhedron。LP 一般型的 <font color="blue">可行域 (feasible region)</font> 就是 polyhedron。
+
+  <div align="center">
+    <img src="./pic/polyhedra.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">极点 (polyhedra)</font>：polyhedron 的边缘点，描述为 `P={x|Ax \geq b}`，如上图所示。从代数意义上看，`P={x|Ax \geq b}` 中的一个极点 `x_0` 代表了在 `Ax \geq b` 所代表的 m 个不等式中，至少有 n 个不等式在 `x_0` 处取等号。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在缺乏证明的情况下，我们默认一个结论：对于一个受 `Ax \geq b` 约束的线性规划问题来说，我们要追求的目标 `cX` 一定是在 polyhedra 的地方取到。因此，我们求解线性规划问题的方法可以先将范围缩小为求解 polyhedra 的问题，然后再寻找最优解。因此，我们有：
+
+  <ul>
+    <li>若多面体 `{x \in R^n|Ax \geq b}` 是空集，则不存在 polyhedra，则 LP 问题无解；</li>
+    <li>若多面体 `{x \in R^n|Ax \geq b}` 无界，则 LP 问题不一定有最优解。如下图所示的优化目标和约束条件，虽然多面体无界，但是优化目标的最优解可以在其中一个 polyhedra 上取到；如果更改优化目标为求解最大值，则最优解将为无穷，此时不存在最优解；</li>
+    <li>若多面体 `{x \in R^n|Ax \geq b}` 有界，则 LP 问题一定存在最优解</li>
+  </ul> 
+
+  <div align="center">
+    <img src="./pic/example_1.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;再次总结强调，<font color="red">只要存在最优解，最优解就一定在 polyhydra 上取到。</font>
+</div>
+
+<h2><a name="4_deal">4. LP 问题求解：代数方法</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;通过上面的描述，我们已经发现：求解 LP 最优解的问题已经转化为以下两步：
+
+  <ol>
+    <li>找出所有的 polyhydra</li>
+    <li>按照一定的求解策略求解出最优解</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在本小节，我们将从几何理解回到代数方法，探究基于上述思路求解 LP 问题的算法。值得注意的是，我们将不会仔细探究求解的算法，因为大多数情况下都可以把 LP 看作黑盒子，只要建模成功，用商用软件一跑就行了，很难有机会直接自己来编码实现这些算法。并且讲透这些算法所需要的篇幅远远超过了本文预期篇幅。我们最终还是会把重点回归到建模和对偶上。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们将介绍 <font color="blue">(1) 求解 LP 问题的最基本方法</font> 以及经过了优化的 <font color="blue">(2) 单纯形 (Simplex) 算法</font>
+
+  <h3><a name="4_deal_1">4.1 求解 LP 问题的最基本方法</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们下面分析上述的两个步骤。
+
+  <div align="center">
+    <img src="./pic/feasible_region_solution.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先是找 polyhydra。从 polyhydra 的几何定义出发，我们在代数上可以描述为：线性规划约束 `Ax\geqb` 的 `m` 个不等式中至少有 `n` 个取等号。所以我们找 polyhedra 的思路可以很暴力：运行 `C_{m}^{n}` 次程序，每次令不同的 `n` 个不等式取等号，最终找出所有的 polyhedra。但是值得注意的是，在每次迭代中，找出来的解并不一定是落在可行域内的 (i.e. 如上第二个图所示)，因此我们还需要验证求出来的解。当这个解落在可行域内时，我们称之为 <font color="blue"> 可行解 </font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;好了，有了基本的思路，下面我们来关心一下具体的求解过程。我们下面先给出一些概念：
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">基 (base)</font>：假定 `A` 为 polyhydra `P={x|Ax\geqb}` 中的系数矩阵，`A'` 是由 `A` 的 `n` 个线性无关的行组成的 `n \times n` 矩阵，则 `A'` 是 `A` 的一个基。基 就是我们面所说的 `n` 个取等号的不等式，注意这 `n` 个不等式是线性无关的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">基本解 (basic solution)</font>：假定令 `A'x=b'`，则该方程有唯一解，并且该解被称为 <font color="red">polyhydra P 对应的线性规划问题的基本解</font>。注意！这个基本解不一定是可行的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">基本可行解 (basic feasible solution)</font>：如果一个基本解 `x_0` 满足 `Ax_0\geqb`，即落在可行域内，则该解就被称为一个基本可行解。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;总结来说，<font color="blue">基</font> 就是我们在每一次求解过程中关心的 `n` 个线性无关的不等式，<font color="blue">基本解</font> 就是这 `n` 行不等式的解，<font color="blue">基本可行解</font> 就是落在可行区域内的，可供我们最后求解最优解参考的基本解，对应几何意义上的 polyhedra。因此，在求解过程中的每次迭代，我们应该：
+
+  <ol>
+    <li>找出系数矩阵 `A` 的基 `A'`；</li>
+    <li>求 `A'x=b` 的基本解 x'；</li>
+    <li>验证 x' 是否是基本可行解，是的话就存起来；</li>
+    <li>判断是否遍历完 'A' 的所有基：若未遍历完则 Loop back to (1)；若已经遍历完则 Jump to (5)；</li>
+    <li>把各个基本可行解对应的优化目标值求出来，将最大的优化目标值对应的基本可行解作为最优解</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="red">[Remain Question!!] </font>但是，对于上面步骤的第 (1) 步：<font color="red">基于 LP 问题的一般形式来找系数矩阵的基是比较困难的</font>。原因是因为我们的约束条件中充满了不等式，在代数意义上如果没有表示为相等的话，是很难利用线性代数的方法来求解的。读者可能会思考：基于我们上面的论述，我们运行 `C_{m}^{n}` 次程序，每次程序都从 `m` 个不等式中抽取出不同的 `n` 个不等式令其相等进行求解，这样子不是可行的吗？确实是可行的，这也是我们刚刚分析的思路，但是这种方法未免过于暴力，我们在后面还会介绍不那么暴力的单纯性算法。因此，我们在这里先将我们的线性规划问题从<font color="blue">一般形式</font> 统一为 <font color="blue">标准形式</font>。我们下面分析一下我们如何从一般型转化到标准型。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于符号为 `\geq` 的一般型约束来说，我们引入一个系数为 `-1` 的 <font color="blue">剩余变量 `x_s`</font>，且 `s\geq0`，将不等式转化为等式。
+
+  <div class="div_learning_post_border" align="center">
+    `\underbrace{a_1x_1+a_2x_2+...+a_nx_n \geq b}_{一般型} \rightarrow \underbrace{a_1x_1+a_2x_2+...+a_nx_n-x_s = b, x_s \geq 0}_{标准型}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于符号为 `\leq` 的一般型约束来说，我们引入一个系数为 `+1` 的 <font color="blue">松弛变量 `x_s`</font>，且 `s\geq0`，将不等式转化为等式。
+
+  <div class="div_learning_post_border" align="center">
+    `\underbrace{a_1x_1+a_2x_2+...+a_nx_n \leq b}_{一般型} \rightarrow \underbrace{a_1x_1+a_2x_2+...+a_nx_n+x_s = b, x_s\geq0}_{标准型}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;经过如此转化，由于我们向每条约束中添加了剩余/松弛变量，我们实际上拓展了线性方程组所表示的维度，如下所示。系数矩阵此时被拓展为 `m\timesn'` 且 `m \leq n'`。相应地，决策变量也由原来的 `n` 维向量变为了 `n'` 维向量。相应的，我们的优化目标 `c^Tx` 也变成了 `(c')^Tx'`，其中 `c'` 是一个 `n'` 维的向量只不过 `c'` 的 `c'_(n'-m), ..., c'_(n')` 分量全为 0，因为这部分系数所对应的决策变量是我们人工加上去的剩余/松弛变量，在一般型中并不存在。
+
+  <div class="cmath" align="center">
+    `\underbrace{
+     ((a_(11), a_(12), ..., a_(1n)), (a_(21), a_(22), ..., a_(2n)), (..., ..., ..., ...), (a_(m1), a_(m2), ..., a_(mn)))\cdot((x_1), (x_2), (...), (x_n))}_{一般型}
+     \rightarrow \underbrace{
+     ((a_(11), a_(12), ..., a_(1(n'-1)), a_(1n')), (a_(21), a_(22), ..., a_(2(n'-1)), a_(2n')), (..., ..., ..., ..., ...), (a_(m1), a_(m2), ..., a_(m(n'-1)), a_(mn'))) 
+      \cdot 
+     ((x_1), (x_2), (...), (x_(n'-1)), (x_n')) = ((b_1), (b_2), (...), (b_m))
+     且 n' \geq m \geq n}_{标准型}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上面我们添加剩余/松弛变量的时候，我们强调了 `x_s \geq 0`。
+  实际上对于 LP 的标准型约束来说，为了方便我们后续的操作，我们通过一定的转换，可以让 `x \geq 0`，
+  即决策变量 `x` 的任何分量都必须大于 0。具体的转换方法如下所示：
+
+  <ul>
+    <li>若 `x_i\geq0, i\in[1,n']`，则不用做处理</li>
+    <li>若 `x_i\leq0, i\in[1,n']`，则使用 `-x_i` 来代替 `x_i`</li>
+    <li>若 `x_i, i\in[1,n']` 无约束，则使用 `x_i=x_p-x_q, x_p\geq 0, x_q \geq 0` 来代替 `x_i`</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;综上，经过一番转化后，下面是 LP 问题的标准形式。注意到我们下面给出的 `A`、`x`、`b`、`n` 和 `c` 等都是我们上面论证过程中的 `A'`、`x'`、`b'`、`n'` 和 `c'`，与一般型的 `A`、`x`、`b`、`n` 和 `c` 是不一样的。我们在后面中讨论的都是标准形式。
+
+  <div class="div_learning_post_background" align="center">
+    Minimize `c^Tx` 
+    <br>subject to `Ax = b` and `x \geq 0`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;此时我们就可以着手开始解这个线性规划问题了。我们拿到手的是 `m` 个等号约束条件 `(m \leq n)`。
+  经过我们上面的讨论，在一个 `n` 维的向量空间中找到一个极点，需要 `n` 个 Hyperplane。
+  因此除了我们所拥有的 `m` 个等号约束，我们还需要 `n-m` 个其他的等号约束。
+  这 `n-m` 个等号约束来自于我们将 `x \geq 0` 这 `n` 个不等式中的 `n-m` 个不等式置为 0，我们就能得到 `n` 个 Hyperplane。
+  我们把等于 `0` 的 `n-m` 个变量叫做 <font color="blue">非基变量 `X_N`</font>，
+  把其余的 `m` 个变量叫做 <font color="blue">基变量 `X_B`</font>。
+  我们把 `X_B` 对应的系数矩阵用 <font color="blue">基矩阵 `B`</font> 来表示，
+  `X_N` 对应的系数矩阵用 <font color="blue">非基矩阵 `N`</font> 来表示，即：
+
+  <div class="cmath" align="center">
+  `(B,N) \cdot ((X_B), (X_N)) = b`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上式实际上可以被简化为，其中 `b'` 为 `b` 去掉了 `n-m` 个非基变量的 `m` 维向量：
+
+  <div align="center">
+  `B \cdot X_B = b'`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;此时如果矩阵 `B` 可逆，则我们可以得到一个基本解为：`X = (B^(-1)b, 0)`。
+  然后我们对 `X \geq 0` 的限制进行验证，如果验证通过，则说明 `X` 是一个基本的可行解。
+  如此反复，直到找到所有的基本可行解，从而求出使得优化目标最小的解 `X^\star`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这里穿插一句：如果矩阵 `B` 不可逆，说明其行列式 `det(B)=0`，且 `B` 不为满秩，此时我们抽取出来的 n 个 hyperplane 不会相交在一个点上。
+
+  <h3><a name="4_deal_2">4.2 单纯形 (Simplex) 算法</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上面的基本方法中，我们通过枚举基本可行解，最终找到了最优解。对于单纯形 (Simplex) 算法来说，它的优化思路如下所示：
+
+
+  <div class="div_learning_post_border">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;从可行域的一个基本可行解出发，判别它是否已是最优解，如果不是，寻找下一个基本可行解，并使目标函数得到改进，如此迭代下去，直到找到最优解或判定问题为无界为止
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们通过一个具体的例子来训练这种直觉。
+
+  <h5><a name="4_deal_2_1">4.2.1 靠直觉求解</a></h5>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;举例来说，考虑如下线性规划问题：
+
+  <div align="center">
+    <img src="./pic/example_2.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;转化为标准形式如下：
+
+  <div align="center">
+    <img src="./pic/example_3.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们选取 `x_3` 和 `x_4` 作为基变量，然后我们使用其它 非基变量 来表示 基变量 和 目标函数，如下所示。这种形式被称为 <font color="blue">关于基的典则形式</font>。
+
+  <div align="center">
+    <img src="./pic/example_4.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后基于我们上面传统方法的讨论，我们令非基变量为全 0，即可得到基本解 `x^((1))=(0, 0, 120, 50), z^((1))=0`。基本解对应的决策变量各个分量都大于 0，因此是一个基本可行解。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然而我们的思考不会止步于此，我们完全有理由相信此时的可行解还不是一个最优解，因为影响优化目标的决策变量 `x_1` 和 `x_2` 还是一个最小值，而它们越大则能使我们的优化目标更优，因此我们有理由增大它们。由于在优化目标中 `x_1` 前的系数的绝对值更大，因此我们选择在下一步增大 x_1，而增大 x_1 还需要满足以下第一张图所表示的两个约束：
+
+  <div class="div_concurrent_img" align="center">
+    <img src="./pic/example_5.png" width=300px>
+    <img src="./pic/example_6.png" width=180px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于 `x_2` 此时仍为 0，所以我们可以把约束化简为上图第二张图所示的两个约束。因此我们可以得到 `x_1=min(120/4, 50/2)=25`，故此时 `x_4` 为 0。我们把这个过程称为 `x_1` <font color="blue">入基</font>，`x_4` <font color="blue">出基</font>。此时新的典则方程为：
+
+  <div align="center">
+    <img src="./pic/example_7.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;以求得第二个基本可行解 `x^((2))=(25, 0, 20, 0), z^((2))=-1250`。此时显然我们还有进步空间，因为越大对优化目标越有利的 `x_2` 此时还是非基变量且还是最小值。因此同样地，我们此时通过 `x_2` 的约束问题考虑该将谁换出基：
+
+  <div class="div_concurrent_img" align="center">
+    <img src="./pic/example_8.png" width=300px>
+    <img src="./pic/example_9.png" width=180px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以得到：`x_2=min(25/(0.5), 20/1)=20`，即此时 `x_3` 出基，`x_2` 入基。
+
+  <div align="center">
+    <img src="./pic/example_10.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;此时我们可以求得基本可行解 `x^((3))=(15, 20, 0, 0), z^((3))=-1350`。由于初始非基变量 `x_3` 和 `x_4` 在目标函数中的系数都为正，且此时它们已经为最小值，所以已经无法继续优化，故我们拿到最优解 `z^\star=z^((3))`。
+
+  <h5><a name="4_deal_2_2">4.2.2 理论阐述单纯性算法</a></h5>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+</div>
+
+
+
+<!--ref-->
+<!--
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+1. golang.org, <a target="_blank" rel="noopener" href="https://golang.org/cmd/go/#hdr-GOPATH_environment_variable">GOPATH environment variable</a>
+</p>
+</div>-->
+
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Cloud_Network/">TECH_CLOUD_NETWORK</a></li>
+          <li>MATH_CONMUNICATION_NETWORK_MATH_BASIC_1_LINEAR_PROGRAMMING</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

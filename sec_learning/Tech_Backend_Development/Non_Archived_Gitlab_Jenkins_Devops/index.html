@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
+<meta property="og:type" content="website">
+<meta property="og:title" content="一文搞定居家 CI&#x2F;CD Devops">
+<meta property="og:url" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/tencent_cloud_ssl_application.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/ssl_download.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/nginx_ssl.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/nginx_directory.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/gitlab_approve_user.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_init.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_plugin.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_gitlab_plugin.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/gitlab_token.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/config_jenkins_1.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/config_jenkins_2.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/config_jenkins_3.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/config_jenkins_4.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/config_jenkins_5.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/config_jenkins_6.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/xxx.png">
+<meta property="article:published_time" content="2022-02-10T14:39:11.666Z">
+<meta property="article:modified_time" content="2022-02-09T16:10:39.335Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="https://zobinhuang.com/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>一文搞定居家 CI/CD Devops | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">一文搞定居家 CI/CD Devops
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Backend_Development/">TECH_BACKEND_DEVELOPMENT</a></li>
+          <li>NON_ARCHIVED_GITLAB_JENKINS_DEVOPS</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body onload="load_page()">
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Feb.1 2022</i></font></h4>
+</div>
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+<br>
+<div class="div_catalogue">
+  <div align="center">
+    <h1> 目录 </h1>
+    <p>
+    <font size="3px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_load_catalogue_alert" id="load_catalogue_alert">正在加载目录...</div>
+  <div class="div_catalogue_container" id="catalogue_container">
+  </div>
+</div><br>
+
+<!-- Start your post here -->
+<h2 class="title">部署前言</h2>
+<div class="div_learning_post">
+  <h3 class="title">部署目标</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最近趁着过年在家里部署了私有云的基础设施。接下来基于搭建的基础设施，我计划继续部署基于 Gitlab 和 Jenkins 的 Devops 环境，以实现自动化构建和部署流程，简化后续项目的部署压力。
+
+  <h3 class="title">部署背景</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在部署之前，我在家里的网关的地方做了基于 Openwrt 的软路由处理，并且为家中申请了公网 IP 出口。
+</div>
+
+<h2 class="title">部署和配置 Nginx</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于我们后面需要起 Gitlab, Jenkins 的 Web 服务，以及我还打算基于 CI/CD 流程来实现博客的自动化部署，所以在本篇教程的最开始我们首先部署 Nginx，以实现反向代理的功能。
+
+  <h3 class="title">拉取镜像</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们拉取 Nginx 的官方最新镜像
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">zobin@ubuntu-server:~$ sudo docker pull nginx:latest</span><br><span class="line">latest: Pulling from library/nginx</span><br><span class="line">a2abf6c4d29d: Pull complete </span><br><span class="line">a9edb18cadd1: Pull complete </span><br><span class="line">589b7251471a: Pull complete </span><br><span class="line">186b1aaa4aa6: Pull complete </span><br><span class="line">b4df32aa5a72: Pull complete </span><br><span class="line">a0bcbecc962e: Pull complete </span><br><span class="line">Digest: sha256:0d17b565c37bcbd895e9d92315a05c1c3c9a29f762b011a10c54a66cd53c9b31</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> nginx:latest</span><br><span class="line">docker.io/library/nginx:latest</span><br></pre></td></tr></table></figure>
+  <h3 class="title">基于 HTTPS 的 Nginx 代理</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们需要先在宿主机上创建并编写 Nginx 的配置文件，我们之后启动 Nginx 容器的时候将会把宿主机上的配置文件映射到容器内部，以实现运行。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们想要 Nginx 实现的效果是基于 HTTP 客户端访问的域名， HTTP 流量转发到 Giitlab/Jenkins/博客 对应的容器上去，并且我们想要基于 HTTPS 来实现安全的访问。下面我们开始一步步配置。
+
+  <h4 class="title">申请 SSL 证书</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于要实现基于 HTTPS 的访问，因此我们需要首先为我们的域名申请一个 SSL 证书。我是在腾讯云上购买的域名，因此也就使用了腾讯云提供的 SSL 证书服务。我们在控制台中可以很方便地操作，我这里为 <code>gitlab.zobinhuang.com</code> 申请了一张 SSL 证书，我们下面以为 Gitlab 提供 Web 访问服务为例展开描述。
+
+  <div align="center">
+    <img src="./pic/tencent_cloud_ssl_application.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;申请完成之后，我们将拿到的 SSL 证书下载下来，我拿到的证书文件目录如下所示:
+
+  <div align="center">
+    <img src="./pic/ssl_download.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们需要把 SSL 证书放置到 Nginx 的目录下。我们同样的创建一个 <code>nginx</code> 文件夹，这个文件夹我们待会将会映射到 Nginx 容器中去。然后我们在下面建立子目录 <code>nginx/root/.cert</code>，然后把同样的上面的那两个证书给丢进去，(p.s. 下图中文件夹中有其他文件是因为我曾经开启过 Nginx 容器，此处可以不管):
+
+  <div align="center">
+    <img src="./pic/nginx_ssl.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这样一来我们的 SSL 证书就放置完成了。
+
+  <h4 class="title">配置 Nginx 配置文件</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;十分详细的 nginx.conf 配置文件原理和写法可参考官方文档 <cite>nginxdoc_config_webserver</cite> 和 <cite>nginxdoc_create_confiig_file</cite>，我们在这里不再赘述，我们只描述我们需要填写的内容。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们首先在我们上面创建的 <code>nginx</code> 文件夹下创建一个文件 <code>nginx.conf</code>，这是 Nginx 默认的配置文件，然后我们可以先把如下的默认内容填入容器中。
+
+  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">user</span>  nginx;</span><br><span class="line"><span class="attribute">worker_processes</span>  auto;</span><br><span class="line"></span><br><span class="line"><span class="attribute">error_log</span>  /var/log/nginx/error.log <span class="literal">notice</span>;</span><br><span class="line"><span class="attribute">pid</span>        /var/run/nginx.pid;</span><br><span class="line"></span><br><span class="line"><span class="section">events</span> &#123;</span><br><span class="line">    <span class="attribute">worker_connections</span>  <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">    <span class="attribute">include</span>       /etc/nginx/mime.types;</span><br><span class="line">    <span class="attribute">default_type</span>  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">log_format</span>  main  <span class="string">&#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">access_log</span>  /var/log/nginx/access.log  main;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">sendfile</span>        <span class="literal">on</span>;</span><br><span class="line">    <span class="comment">#tcp_nopush     on;</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">keepalive_timeout</span>  <span class="number">65</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># gzip  on;</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">include</span> /etc/nginx/conf.d/<span class="regexp">*.conf</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上面代码的 Line 29 中，我们看见 Nginx 采用 include 的方式包含了其它的配置文件，这也是推荐的写法。我们可以在容器中的 <code>/etc/nginx/conf.d/default.conf</code> 中找到被 include 的配置文件的写法，它的作用是为对 80 端口的访问返回静态资源，也就是 Nginx 的欢迎页。其内容如下所示:
+
+  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">listen</span>  [::]:<span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span>  localhost;</span><br><span class="line"></span><br><span class="line">    <span class="comment">#access_log  /var/log/nginx/host.access.log  main;</span></span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">        <span class="attribute">root</span>   /usr/share/nginx/html;</span><br><span class="line">        <span class="attribute">index</span>  index.html index.htm;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">#error_page  404              /404.html;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># redirect server error pages to the static page /50x.html</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="attribute">error_page</span>   <span class="number">500</span> <span class="number">502</span> <span class="number">503</span> <span class="number">504</span>  /50x.html;</span><br><span class="line">    <span class="attribute">location</span> = /50x.html &#123;</span><br><span class="line">        <span class="attribute">root</span>   /usr/share/nginx/html;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># proxy the PHP scripts to Apache listening on 127.0.0.1:80</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment">#location ~ \.php$ &#123;</span></span><br><span class="line">    <span class="comment">#    proxy_pass   http://127.0.0.1;</span></span><br><span class="line">    <span class="comment">#&#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment">#location ~ \.php$ &#123;</span></span><br><span class="line">    <span class="comment">#    root           html;</span></span><br><span class="line">    <span class="comment">#    fastcgi_pass   127.0.0.1:9000;</span></span><br><span class="line">    <span class="comment">#    fastcgi_index  index.php;</span></span><br><span class="line">    <span class="comment">#    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;</span></span><br><span class="line">    <span class="comment">#    include        fastcgi_params;</span></span><br><span class="line">    <span class="comment">#&#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># deny access to .htaccess files, if Apache&#x27;s document root</span></span><br><span class="line">    <span class="comment"># concurs with nginx&#x27;s one</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment">#location ~ /\.ht &#123;</span></span><br><span class="line">    <span class="comment">#    deny  all;</span></span><br><span class="line">    <span class="comment">#&#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<cite>cnblogs_nginx_forword</cite>, <cite>csdn_gitlab_nginx_https</cite> 现在让我们自己来写针对 Gitlab 容器的 Nginx 配置文件。我们在上面创建的 <code>nginx</code> 文件夹下创建一个子文件夹 <code>nginx/conf.d</code>，然后在其中新建文件 <code>gitlab.conf</code> 用于存储 Nginx 反向代理 Gitlab 容器的配置。我们在其中填入如下内容:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们定义一个 upstream 模块，用于承载我们后端的 Gitlab 服务器，我们这里只有一台 Gitlab 服务器，也就是我们后面要起的 Gitlab 容器，这里指派的 IP 是我们后面会为容器分配的 IP，端口号是后面 Gitlab 在其容器中监听的 TCP 端口。我们之后将会关闭 Gitlab 容器中的 Nginx，为 Gitlab 本体指定一个 TCP 端口进行监听，然后指派我们当前正在创建的 Nginx 容器为代理 Nginx。
+
+  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">upstream</span> gitlab&#123;</span><br><span class="line">    <span class="attribute">server</span> <span class="number">172.25.0.3:10443</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们定义一个 virtual server，它监听 Nginx 容器的 443 端口上对域名 <code>gitlab.zobinhuang.com</code> 的访问，将相关的数据转发到我们上面定义好的 upstream 模块中。特别值得注意的是 <code>ssl_certificate</code> 和 <code>ssl_certificate_key</code> 的设置，需要制定到容器能访问到 SSL 证书的位置，这里与我们后面创建容器的时候的映射目录需要对应起来。
+
+  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">  <span class="attribute">listen</span> <span class="number">443</span> ssl http2;</span><br><span class="line">  <span class="attribute">listen</span> [::]:<span class="number">443</span> ssl http2;</span><br><span class="line">  <span class="attribute">server_name</span> gitlab.zobinhuang.com;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">ssl_certificate</span> /root/.cert/gitlab.zobinhuang.com_bundle.crt;</span><br><span class="line">  <span class="attribute">ssl_certificate_key</span> /root/.cert/gitlab.zobinhuang.com.key;</span><br><span class="line">  </span><br><span class="line">  <span class="attribute">location</span> / &#123;</span><br><span class="line">      <span class="attribute">proxy_set_header</span> Host               $http_host;</span><br><span class="line">      <span class="attribute">proxy_set_header</span> X-Real-IP          $remote_addr;</span><br><span class="line">      <span class="attribute">proxy_set_header</span> X-Forwarded-Ssl    <span class="literal">on</span>;</span><br><span class="line">      <span class="attribute">proxy_set_header</span> X-Forwarded-For    $proxy_add_x_forwarded_for;</span><br><span class="line">      <span class="attribute">proxy_set_header</span> X-Forwarded-Proto  $scheme;</span><br><span class="line">      <span class="attribute">proxy_pass</span> http://gitlab;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们还需要定义另一个 virtual server，将对 Nginx 容器 80 端口的访问全部转发到 Gitlab 容器的 443 端口上去。
+
+  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span>  gitlab.zobinhuang.com;</span><br><span class="line">    <span class="attribute">rewrite</span><span class="regexp"> ^(.*)$</span> https://<span class="variable">$&#123;server_name&#125;</span><span class="variable">$1</span> <span class="literal">permanent</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完成好的配置文件如下图所示:
+
+  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">upstream</span> gitlab&#123;</span><br><span class="line">    <span class="attribute">server</span> <span class="number">172.25.0.3:10443</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server&#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">443</span> ssl http2;</span><br><span class="line">    <span class="attribute">listen</span> [::]:<span class="number">443</span> ssl http2;</span><br><span class="line">    <span class="attribute">server_name</span> gitlab.zobinhuang.com;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">ssl_certificate</span> /root/.cert/gitlab.zobinhuang.com_bundle.crt;</span><br><span class="line">    <span class="attribute">ssl_certificate_key</span> /root/.cert/gitlab.zobinhuang.com.key;</span><br><span class="line">    </span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Host               $http_host;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Real-IP          $remote_addr;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-Ssl    <span class="literal">on</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-For    $proxy_add_x_forwarded_for;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-Proto  $scheme;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://gitlab;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> <span class="regexp">~ .*\.(js|css|png)$</span> &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span>  http://gitlab;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span>  gitlab.zobinhuang.com;</span><br><span class="line">    <span class="attribute">rewrite</span><span class="regexp"> ^(.*)$</span> https://<span class="variable">$&#123;server_name&#125;</span><span class="variable">$1</span> <span class="literal">permanent</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <h3 class="title">创建 Docker 网络</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<cite>csdn_ngin_forword</cite> 我们现在为后续要部署的容器创建一个专用网络:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zobin@ubuntu-server:~$ sudo docker network create --driver bridge --subnet 172.25.0.0/16 ci_cd_network</span><br><span class="line">9124c129f5d06088cc94818e62acbb4edeaa5fb29b77b451a6e4d93076044195</span><br></pre></td></tr></table></figure>
+  <h3 class="title">运行 Nginx 容器</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在运行 Nginx 容器之前，我们要映射进容器内部的文件夹目录下是这样的:
+
+  <div align="center">
+    <img src="./pic/nginx_directory.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在让我们启动这个容器，注意把我们创建的目录一一映射到 Nginx 容器中，并且放开 80 和 443 端口，然后把我们的容器接入到我们上面创建的 Docker 网桥中。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">zobin@ubuntu-server:~$ sudo docker run --name nginx \</span><br><span class="line">--network=ci_cd_network \</span><br><span class="line">--restart always</span><br><span class="line">-p 80:80 \</span><br><span class="line">-p 443:443 \ </span><br><span class="line">-v /home/zobin/nginx/nginx.conf:/etc/nginx/nginx.conf \</span><br><span class="line">-v /home/zobin/nginx/conf.d:/etc/nginx/conf.d \</span><br><span class="line">-v /home/zobin/nginx/root:/root \</span><br><span class="line">-v /home/zobin/nginx/logs:/var/<span class="built_in">log</span>/nginx \</span><br><span class="line">-d nginx</span><br><span class="line">3f5860a932e4e88a6e4c3dd04b79d692b243be196e0ec4b33069b29f29c2a41f</span><br></pre></td></tr></table></figure>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在，我们的 Nginx 就启动好了。如果我们后续要需要重启 Nginx 服务，我们可以进入 Nginx 容器，运行下面的命令即可:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 Nginx 容器</span></span><br><span class="line">zobin@ubuntu-server:~$ sudo docker <span class="built_in">exec</span> -it nginx /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启 Nginx 服务</span></span><br><span class="line">root@3f5860a932e4:/ nginx -s reload</span><br><span class="line">nginx: [warn] the <span class="string">&quot;ssl&quot;</span> directive is deprecated, use the <span class="string">&quot;listen ... ssl&quot;</span> directive instead <span class="keyword">in</span> /etc/nginx/conf.d/gitlab.conf:11</span><br></pre></td></tr></table></figure>
+</div>
+
+<h2 class="title">部署和配置 Gitlab</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成 Nginx 容器的部署后，我们现在开始对 Gitlab 容器进行部署。
+
+  <h3 class="title">拉取镜像</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们拉取 Gitlab 的官方镜像
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">zobin@zobin-ubuntu:~$ sudo docker pull gitlab/gitlab-ce</span><br><span class="line">Using default tag: latest</span><br><span class="line">latest: Pulling from gitlab/gitlab-ce</span><br><span class="line">7b1a6ab2e44d: Pull complete </span><br><span class="line">6c37b8f20a77: Pull complete </span><br><span class="line">f50912690f18: Pull complete </span><br><span class="line">bb6bfd78fa06: Pull complete </span><br><span class="line">2c03ae575fcd: Pull complete </span><br><span class="line">839c111a7d43: Pull complete </span><br><span class="line">4989fee924bc: Pull complete </span><br><span class="line">666a7fb30a46: Pull complete </span><br><span class="line">Digest: sha256:5a0b03f09ab2f2634ecc6bfeb41521d19329cf4c9bbf330227117c048e7b5163</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> gitlab/gitlab-ce:latest</span><br><span class="line">docker.io/gitlab/gitlab-ce:latest</span><br></pre></td></tr></table></figure>
+  <h3 class="title">启动 Gitlab 实例</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在让我们启动这个容器，注意要指定好 Docker 网桥以及相应的 IP 地址。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">zobin@zobin-ubuntu:~$ sudo docker run -itd -h gitlab \</span><br><span class="line">&gt;   --network=ci_ci_network</span><br><span class="line">&gt;   --ip=172.25.0.3 \</span><br><span class="line">&gt;   --name gitlab \</span><br><span class="line">&gt;   --restart always \</span><br><span class="line">&gt;   -v /home/zobin/gitlab/config:/etc/gitlab \</span><br><span class="line">&gt;   -v /home/zobin/gitlab/logs:/var/<span class="built_in">log</span>/gitlab \</span><br><span class="line">&gt;   -v /home/zobin/gitlab/data:/var/opt/gitlab \</span><br><span class="line">&gt;   --privileged=<span class="literal">true</span> \[]</span><br><span class="line">&gt;   gitlab/gitlab-ce</span><br><span class="line">97f8a6ceb423c7f910812cbf95264e9b2fb0ce321e956bb8982a4a506f4cc509</span><br></pre></td></tr></table></figure>
+
+  <h3 class="title">配置访问路径</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<cite>gitlab_docker</cite>按上面的方式，Gitlab 容器运行没问题，但在 Gitlab 上创建项目的时候，生成项目的 URL 访问地址是按容器的 Hostname 来生成的，也就是容器的 id。作为 Gitlab 服务器，我们需要一个固定的 URL 访问地址。我们需要配置 <code>gitlab.rb</code> 文件 (p.s. 基于上面的映射方法，该文件位于宿主机路径 /home/gitlab/config/gitlab.rb)。修改内容具体如下。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果有端口号的话也需要在 [port] 处指定</span></span><br><span class="line">external_url <span class="string">&#x27;https://gitlab.zobinhuang.com:[port]&#x27;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，由于我们要将我们上面设置的 Nginx 容器作为 Gitlab 的代理 Nginx，关闭 Gitlab 自带的 Nginx，因此我们需要在 <code>gitlab.rb</code> 文件中添加下列信息。首先我们关闭了自带的 Nginx; 然后将我们上面创建的 Nginx 所在的 IP 地址指定为 <code>trusted_proxies</code>; 最后我们设置 Gitlab 本体监听 TCP 端口的 [port] 端口。(i.e. [port] 改为你的端口)。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx[<span class="string">&#x27;enable&#x27;</span>] = <span class="literal">false</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;trusted_proxies&#x27;</span>] = [<span class="string">&#x27;172.25.0.2&#x27;</span>]</span><br><span class="line">gitlab_workhorse[<span class="string">&#x27;listen_network&#x27;</span>] = <span class="string">&quot;tcp&quot;</span></span><br><span class="line">gitlab_workhorse[<span class="string">&#x27;listen_addr&#x27;</span>] = <span class="string">&quot;172.25.0.3:[port]&quot;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<cite>csdn_gitlab_memory_issue</cite> <cite>csdn_gitlab_memory_issue_2</cite> 如果我们现在直接启动 Gitlab 容器，我们会发现我们机器的内存瞬间被用完，这是因为 Gitlab 开启的进程太多了。我们同样可以在 <code>gitlab.rb</code> 文件中进行设置以进行约束:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">puma[<span class="string">&#x27;worker_processes&#x27;</span>] = 2</span><br><span class="line">sidekiq[<span class="string">&#x27;max_concurrency&#x27;</span>] = 16</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp; <cite>csdn_gitlab_avartar_issue</cite> <cite>csdn_gitlab_avartar_issue_2</cite> 另外，由于 Gitlab 依赖的头像服务被墙，因此我们需要手动的在 <code>gitlab.rb</code> 文件中将头像服务指向另外的位置:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gitlab_rails[<span class="string">&#x27;gravatar_plain_url&#x27;</span>] = <span class="string">&#x27;http://sdn.geekzu.org/avatar/%&#123;hash&#125;?s=%&#123;size&#125;&amp;d=identicon&#x27;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;gravatar_ssl_url&#x27;</span>] = <span class="string">&#x27;https://sdn.geekzu.org/avatar/%&#123;hash&#125;?s=%&#123;size&#125;&amp;d=identicon&#x27;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;配置好的 Gitlab 配置文件如下所示:
+
+  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">external_url</span> <span class="string">&quot;https://gitlab.zobinhuang.com:[port]&quot;</span></span><br><span class="line">nginx[<span class="string">&#x27;enable&#x27;</span>] = <span class="literal">false</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;trusted_proxies&#x27;</span>] = [<span class="string">&#x27;172.25.0.2&#x27;</span>]</span><br><span class="line">gitlab_workhorse[<span class="string">&#x27;listen_network&#x27;</span>] = <span class="string">&quot;tcp&quot;</span></span><br><span class="line">gitlab_workhorse[<span class="string">&#x27;listen_addr&#x27;</span>] = <span class="string">&quot;172.25.0.3:[port]&quot;</span></span><br><span class="line">puma[<span class="string">&#x27;worker_processes&#x27;</span>] = <span class="number">2</span></span><br><span class="line">sidekiq[<span class="string">&#x27;max_concurrency&#x27;</span>] = <span class="number">16</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;gravatar_plain_url&#x27;</span>] = <span class="string">&#x27;http://sdn.geekzu.org/avatar/%&#123;hash&#125;?s=%&#123;size&#125;&amp;d=identicon&#x27;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;gravatar_ssl_url&#x27;</span>] = <span class="string">&#x27;https://sdn.geekzu.org/avatar/%&#123;hash&#125;?s=%&#123;size&#125;&amp;d=identicon&#x27;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;随后我们保存并重启 Gitlab 容器。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 Gitlab 容器</span></span><br><span class="line">zobin@ubuntu-server:~$ sudo docker <span class="built_in">exec</span> -it gitlab /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新配置 Gitlab 服务</span></span><br><span class="line">root@gitlab:/ gitlab-ctl reconfigure</span><br><span class="line">root@gitlab:/ gitlab-rake cache:clear RAILS_ENV=production</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果一切正常，此时就应该能从公网地址访问 Gitlab 了。
+
+  <h3 class="title">配置 root 用户</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果在你第一次登入 Gitlab 的时候没有提示修改 root 用户的密钥信息，那么我们需要手动的在命令行进行操作来完成 root 用户密码的设置，具体命令如下<cite>gitlab_root</cite>:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 gitlab 容器</span></span><br><span class="line">zobin@zobin-ubuntu:~$ sudo docker <span class="built_in">exec</span> -it gitlab /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入 gitlab console</span></span><br><span class="line">root@gitlab:/opt/gitlab/bin<span class="comment"># ./gitlab-rails console</span></span><br><span class="line">--------------------------------------------------------------------------------</span><br><span class="line">Ruby:         ruby 2.7.5p203 (2021-11-24 revision f69aeb8314) [x86_64-linux]</span><br><span class="line">GitLab:       14.6.1 (661d663ab2b) FOSS</span><br><span class="line">GitLab Shell: 13.22.1</span><br><span class="line">PostgreSQL:   12.7</span><br><span class="line">--------------------------------------------------------------------------------</span><br><span class="line">Loading production environment (Rails 6.1.4.1)</span><br><span class="line">irb(main):001:0&gt; u=User.where(id:1).first</span><br><span class="line">=&gt; <span class="comment">#&lt;User id:1 @root&gt;</span></span><br><span class="line">irb(main):002:0&gt; u.password=<span class="string">&#x27;你的密码&#x27;</span></span><br><span class="line">=&gt; <span class="string">&quot;你的密码&quot;</span></span><br><span class="line">irb(main):003:0&gt; u.password_confirmation=<span class="string">&#x27;你的密码&#x27;</span></span><br><span class="line">=&gt; <span class="string">&quot;你的密码&quot;</span></span><br><span class="line">irb(main):004:0&gt; u.save</span><br><span class="line">=&gt; <span class="literal">true</span></span><br><span class="line">irb(main):005:0&gt; quit</span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出 gitlab 容器</span></span><br><span class="line">root@gitlab:/opt/gitlab/bin<span class="comment"># exit</span></span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这样一来我们就可以使用 root 用户登入我们的 Gitlab 平台了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们使用 root 用户，在如下的页面中可以批准其它的用户的注册请求。
+
+  <div align="center">
+    <img src="./pic/gitlab_approve_user.png" width=80%>
+  </div>
+</div>
+
+<h2 class="title">部署和配置 Jenkins</h2>
+<div class="div_learning_post">
+  <h3 class="title">拉取镜像</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们拉取 Jenkins 的镜像。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">zobin@zobin-ubuntu:~$ sudo docker pull jenkinsci/blueocean</span><br><span class="line">[sudo] password <span class="keyword">for</span> zobin: </span><br><span class="line">Using default tag: latest</span><br><span class="line">latest: Pulling from jenkinsci/blueocean</span><br><span class="line">97518928ae5f: Pull complete </span><br><span class="line">f4d84728e541: Download complete </span><br><span class="line">419d112ff4fa: Download complete </span><br><span class="line">ecf8c1881f75: Download complete </span><br><span class="line">78b59c3bfdb7: Download complete </span><br><span class="line">2ff43df4e763: Download complete </span><br><span class="line">aac7818be7cc: Download complete </span><br><span class="line">2913a3e94ae4: Download complete </span><br><span class="line">f75b1dac4ec0: Download complete </span><br><span class="line">3d3fbe6f1850: Download complete </span><br><span class="line">07ef919d711b: Download complete </span><br><span class="line">5b96e9c30f6a: Download complete </span><br><span class="line">83dcd37be04b: Download complete </span><br><span class="line">6beb8929489c: Download complete </span><br><span class="line">476e95021232: Download complete </span><br><span class="line">9add339bd1dd: Download complete </span><br><span class="line">ecb71d48971e: Downloading [================================&gt;                  ]  52.44MB/79.82MB</span><br><span class="line">384cd4783059: Downloading [================================&gt;                  ]  51.36MB/80.01MB</span><br><span class="line">latest: Pulling from jenkinsci/blueocean</span><br><span class="line">59bf1c3509f3: Pull complete </span><br><span class="line">2399850c81e5: Pull complete </span><br><span class="line">9bb689cf0473: Pull complete </span><br><span class="line">6920668afd14: Pull complete </span><br><span class="line">a9463f127a8b: Pull complete </span><br><span class="line">f165d1960c36: Pull complete </span><br><span class="line">6d0b294bf128: Pull complete </span><br><span class="line">97c7c441c699: Pull complete </span><br><span class="line">be81f7c5b9bf: Pull complete </span><br><span class="line">04f779fdfc64: Pull complete </span><br><span class="line">af53562e8b7e: Pull complete </span><br><span class="line">da664bc4f7d1: Pull complete </span><br><span class="line">d83772bd4600: Pull complete </span><br><span class="line">d53c0244d127: Pull complete </span><br><span class="line">21fc66f92960: Pull complete </span><br><span class="line">2911c5a59967: Pull complete </span><br><span class="line">565e2816ab69: Pull complete </span><br><span class="line">a0c6099df42e: Pull complete </span><br><span class="line">Digest: sha256:ff4f44681c1b127db1dd60ffe8a962a364d59750f48bb6d2b1c52502d17bea49</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> jenkinsci/blueocean:latest</span><br><span class="line">docker.io/jenkinsci/blueocean:latest</span><br></pre></td></tr></table></figure>
+  <h3 class="title">运行 Jenkins 容器</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们运行 Jenkins 容器
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">zobin@zobin-ubuntu:~$ sudo docker run \</span><br><span class="line">&gt; -u root \</span><br><span class="line">&gt; --rm \</span><br><span class="line">&gt; -d \</span><br><span class="line">&gt; -p 8080:8080 \</span><br><span class="line">&gt; -p 50000:50000 \</span><br><span class="line">&gt; -v /home/jenkins/jenkins-data:/var/jenkins_home \</span><br><span class="line">&gt; -v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">&gt; jenkinsci/blueocean</span><br><span class="line">[sudo] password <span class="keyword">for</span> zobin: </span><br><span class="line">56c789d07b34159f5a8693649f56f4e7e4e6175239ba6bf6dd365906653b536f</span><br></pre></td></tr></table></figure>
+  <h3 class="title">配置 Jenkins</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们首次进入 Jenkins 时，我们需要从指定的日志文件中提取出密钥来保证安全的初始化。
+
+  <div align="center">
+    <img src="./pic/jenkins_init.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;随后我们安装推荐的插件，创建第一个账户后，就可以进入 Jenkins 了。然后我们在如下图所示的插件中心中安装 Gitlab 的插件，以完成我们后续 Gitlab 的接入。
+
+  <div align="center">
+    <img src="./pic/jenkins_plugin.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;安装完如下所示:
+
+  <div align="center">
+    <img src="./pic/jenkins_gitlab_plugin.png" width=80%>
+  </div>
+</div>
+
+<h2 class="title">对接 Gitlab 和 Jenkins</h2>
+<div class="div_learning_post">
+  <h3 class="title">配置 Gitlab Access Token</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我专门创建了一个 Gitlab 用户用于对接 Jenkins。在登入该账户以后，我们首先为其生成 Gitlab 的 Access Token，以便让 Jenkins 使用 Gitlab API。如下所示:
+
+  <div align="center">
+    <img src="./pic/gitlab_token.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;拿到生成的 API Token 后，我们来到 Jenkins，进入 Configure System:
+
+  <div align="center">
+    <img src="./pic/config_jenkins_1.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们找到配置 Gitlab 的区域，先输入 Gitlab 部署的位置信息:
+
+  <div align="center">
+    <img src="./pic/config_jenkins_2.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们添加我们刚刚拿到的 Gitlab Token:
+
+  <div align="center">
+    <img src="./pic/config_jenkins_3.png" width=80%>
+  </div>
+
+  <h3 class="title">测试连通情况</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在让我们测试连通情况，首先让我们创建一个 Jenkins free project:
+
+  <div align="center">
+    <img src="./pic/config_jenkins_4.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们对触发器进行配置，注意这里我们要记下 webhook 的 URL:
+
+  <div align="center">
+    <img src="./pic/config_jenkins_5.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们创建一个构建步骤，用于测试用，如下所示:
+
+  <div align="center">
+    <img src="./pic/config_jenkins_6.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;接着，我们在 Gitlab 上创建一个新的 project 用于测试，创建完成后，我们需要配置 integration。
+</div>
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Backend_Development/">TECH_BACKEND_DEVELOPMENT</a></li>
+          <li>NON_ARCHIVED_GITLAB_JENKINS_DEVOPS</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

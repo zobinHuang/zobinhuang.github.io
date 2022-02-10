@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     table th{text-align:center;}     table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_catalogue{padding: 10px 10px;">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Brief of BeauCoup (SIGCOMM&#39;20)">
+<meta property="og:url" content="https://zobinhuang.com/sec_learning_backup/Tech_Cloud_Network/Paper_Network_Measurement_SIGCOMM_20_BeauCoup/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     table th{text-align:center;}     table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_catalogue{padding: 10px 10px;">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Cloud_Network/Paper_Network_Measurement_SIGCOMM_20_BeauCoup/pic/xxx.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Cloud_Network/Paper_Network_Measurement_SIGCOMM_20_BeauCoup/pic/beau_coup_origin.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Cloud_Network/Paper_Network_Measurement_SIGCOMM_20_BeauCoup/pic/beau_coup_1.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Cloud_Network/Paper_Network_Measurement_SIGCOMM_20_BeauCoup/pic/beau_coup_2.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Cloud_Network/Paper_Network_Measurement_SIGCOMM_20_BeauCoup/pic/beau_coup_3.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Cloud_Network/Paper_Network_Measurement_SIGCOMM_20_BeauCoup/pic/dataplane_choose_query.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Cloud_Network/Paper_Network_Measurement_SIGCOMM_20_BeauCoup/pic/dataplane_choose_query_origin.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Cloud_Network/Paper_Network_Measurement_SIGCOMM_20_BeauCoup/pic/dataplane_update_coupon.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Cloud_Network/Paper_Network_Measurement_SIGCOMM_20_BeauCoup/pic/dataplane_prototype.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Cloud_Network/Paper_Network_Measurement_SIGCOMM_20_BeauCoup/pic/query_compiler_output.png">
+<meta property="article:published_time" content="2021-12-15T18:05:10.986Z">
+<meta property="article:modified_time" content="2021-12-15T18:05:10.986Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="https://zobinhuang.com/sec_learning_backup/Tech_Cloud_Network/Paper_Network_Measurement_SIGCOMM_20_BeauCoup/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>Brief of BeauCoup (SIGCOMM'20) | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">Brief of BeauCoup (SIGCOMM'20)
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_Cloud_Network/">TECH_CLOUD_NETWORK</a></li>
+          <li>PAPER_NETWORK_MEASUREMENT_SIGCOMM_20_BEAUCOUP</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    table th{text-align:center;}
+    table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_boder{margin-bottom: 20px; padding: 10px 10px; font-size: 16px; word-spacing:0px;  border:1px solid black;}
+</style>
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+</head>
+
+<body>
+<!--
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：June.20 2021</i></font></h4>
+</div>
+-->
+<!--
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+-->
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=30%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<!--
+<br>
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">此文篇幅较长，故设置目录，有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 0. <a href="#0_term"><font color="blue"><b>术语约定</b></font></a>：约定了本文中使用的语言，与原文保持同步；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_problem"><font color="blue"><b>Problem</b></font></a>：阐述了文章要解决的的问题；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_situation"><font color="blue"><b>Situation</b></font></a>：阐述了针对 §1 中描述的问题，现有的解决方案及其缺点；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_design"><font color="blue"><b>Design</b></font></a>：阐述了本文方案的设计；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.1 <a href="#3_design_1"><font color="blue">问题建模</font></a>：对本文问题进行建模；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.2 <a href="#3_design_2"><font color="blue">基于 Coupon Collector 的数据结构</font></a>：对 Coupon Collector 问题进行背景介绍，基于此描述了本文设计的数据结构；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.3 <a href="#3_design_3"><font color="blue">数据平面算法具体设计</font></a>：基于 §3.2 描述的数据结构设计，阐述了数据平面的测量算法；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.4 <a href="#3_design_4"><font color="blue">参数编译设计</font></a>：基于 §3.3 描述的数据平面测量算法，阐述了用于计算数据平面参数的编译算法；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 4. <a href="#4_prototype"><font color="blue"><b>Prototype</b></font></a>：阐述了 BeauCoup 在可编程交换机上的实现方法；
+  </div>
+</div>
+-->
+<h1 id="BeauCoup-SIGCOMM’20-阅读笔记"><a href="#BeauCoup-SIGCOMM’20-阅读笔记" class="headerlink" title="BeauCoup (SIGCOMM’20) 阅读笔记"></a>BeauCoup (SIGCOMM’20) 阅读笔记</h1><h2><a name="0_term">0. 术语约定</a></h2>
+<div class="div_learning_post">
+  <ul>
+    <li>attribute (属性)：可以理解为测量任务需要收集的包头字段；</li>
+    <li>key (键)：测量任务的输入，可以是一个确定的 source IP，或者其它字段。一个测量任务需要观察多个 attribute，其中有一部分 attribute 是 key，测量结果通常是针对各个 key 做出的。比如某个测量任务的 key 是 source IP，那么这次测量分析的就是各个 source IP 的行为。</li>
+  </ul>
+
+</div>
+
+<!--标题-->
+<h2><a name="1_problem">1. Problem</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;BeauCoup 要解决的是这样一件事情：如何<font color="red">在数据平面上</font>，在满足<font color="red">内存空间约束和 per-packet 内存访问次数约束</font>的情况下，<font color="red">同时处理多个查询任务</font>。首先我们把这个大问题分解一下，分别为以下两个子问题：
+
+  <h3>Sub-problem 1: 测量任务的多样性</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;网络测量的任务可以被模型化为这样一件事情：<b>对一系列数据包中的各个 attribute 的进行计数</b>。对于单一的测量任务，其收集的是单个或者多个 attribute 的数目。不同测量任务要求收集的 attribute 通常是不一样的。<font color="red">因此，多样的测量任务以及他们对 attribute 的不同需求，使得同时运行多个测量任务变得富有挑战性。</font>
+
+  <h3>Sub-problem 2: 可编程交换机上有限的资源</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当下，可编程交换机可以支持直接在数据平面上在数据包流过的时候直接对网络流量进行分析。<font color="red">但是有限的内存空间和计算资源加大了精确测量的难度。</font>
+</div>
+
+<h2><a name="2_situation">2. Situation</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;针对在 §1 中提出来的问题，现有的解决方案及问题如下：
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;针对 Sub-problem 1，为了支持对多种测量任务的同时运行，当下的绝大多数方案都依赖于运行在数据平面之外的测量软件来处理在数据平面的数据包，这样一来就引入了不可避免的时延和通信开销。其中，最简单的方案就是让上层控制器随机在数据平面进行采样，然后让测量软件基于这些采样的数据包去计算测量数据，这样的精确度是最差的；另外的方案还有比如在控制器统计所有可能与测量任务相关的流的信息，这样以来虽然提高了精度，但是却增大了从数据平面提取的数据的体积 (浪费通信资源)，并且使得测量任务的数量变得不可扩展。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;针对 Sub-problem 2，为了支持在资源有限的可编程交换机上实现在数据平面上直接对流量进行测量，现有的传统方案通常把关注点放在如何应对数据平面有限的内存空间上，它们方案都是设计了可以用于计算<b>单一测量任务估计值</b>的数据结构，或者是计算<b>多个基于相同包头字段的测量任务</b>的数据结构。然而，这样的方案在遇到需要同时运行多个基于不同包头字段的测量任务时，会变得十分困难，原因有二：
+  <ul>
+    <li>为了支持多个基于不同 attribute 的测量任务，就必须实例化多个数据结构，这样一来就无法满足内存不足的约束；</li> 
+    <li>为了保持线速率，可编程交换机通常仅支持针对一个数据包有较少的几次内存访问，这样一来针对同一个数据包同时更新多个数据结构的操作就显得不可行。</li> 
+  </ul>
+</div>
+
+<h2><a name="3_design">3. Design</a></h2>
+<div class="div_learning_post">
+  <h3><a name="3_design_1">(1) 问题建模</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;BeauCoup 对网络测量问题的建模如下面所示：
+
+  <div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;测量任务 <span>`q`</span> 会将每一个数据包 <span>`i`</span> 中按照其想观测的键 <span>`key_q(i)`</span> 进行映射，并且对属于同一个键的其他属性 <span>`at tr_q(i)`</span> 的数量进行计数。如果超出了数量超出了预先设置的阈值 <span>`T_q`</span>，则会输出一个针对特定观测任务和键值的警告 <span>`(q,k)`</span>。即，在一定的时间窗口内，测量任务的在满足以下条件时，会发出警告 <span>`(q,k)`</span>：
+  <div align="center">
+    <span>`|{at tr_q(i)|key_q(i)=k}| > T_q`</span>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;BeauCoup 的设计目标是：在 <b>(1)内存的最大存储空间约束 <span>`S`</span></b> 和 <b>(2)针对每个数据包能够对内存发起访问的次数约束 <span>`\Gamma`</span></b> 的条件下，系统可以同时执行多个测量任务 <span>`Q={q_1, q_2, ...}`</span>，并且在计数器超过相应阈值时输出警告 <span>`(q_j, k_j)`</span>。 
+  </div>
+
+  <h3><a name="3_design_2">(2) 基于 Coupon Collector 的数据结构</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;BeauCoup 的设计基于<b>赠券收集问题 (Coupon Collector's Problem)</b>，这边做下背景补充<sup>[1]</sup>：
+
+  <div class="div_learning_post_boder">
+  <div align="center"><h3>赠券收集问题 (Coupon Collector's Problem)</h3></div>
+  <h4>(1) 问题描述</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;假设有 <span>`n`</span> 种赠券，每种赠券的收集概率相同，且赠券无限供应。问若取赠券 <span>`t`</span> 张，能够集齐 <span>`n`</span> 种赠券的概率是多少？
+
+  <h4>(2) 求解</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;假设 <span>`T`</span> 为集齐所有 <span>`n`</span> 种赠券的次数，<span>`t_i`</span> 是收集了 <span>`i-1`</span> 种赠券后，收集到第 <span>`i`</span> 种赠券的次数。此处可以发现 <span>`T`</span> 和 <span>`t_i`</span> 都是随机变量。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 <span>`t_i`</span>，收集到 <span>`i-1`</span> 种赠券后每次抽取能找到一种"新"赠券的概率是：
+  <div align="center">
+    <span>`p_i=(n-i+1)/(n)`</span>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;并且，我们可以发现 <span>`t_i`</span> 服从几何分布，即在收集第 <span>`i`</span> 种赠券的过程中，每次抽取都是相互独立的，并且在第 <span>`k`</span> 次中抽取到第 <span>`i`</span> 种赠券的概率为：
+  <div align="center">
+    <span>`P_i(ξ=k) = (1-p_i)^(k-1)p_i`</span>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此我们根据几何分布规律，得到 <span>`t_i`</span> 的期望为：
+
+  <div align="center">
+    <span>`E(t_i) = 1/(p_i) = (n)/(n-i+1)`</span>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;综上我们可以得到集齐所有 <span>`n`</span> 种赠券的次数 <span>`T`</span> 的期望为：
+
+  <div align="center">
+    <span>`E(T) = E(t_1) + E(t_2) + ... + E(t_n) = n/n + n/(n-1) + ... + n/1 = n(1 + 1/2 + ... + 1/n) = nH_n`</span>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其中，等式最后的 <span>`H_n`</span> 是调和数<sup>[2]</sup>，由调和数的估算值，我们直接代入得到：
+
+  <div align="center">
+    <p><span>`H_n ~ \lnn + \gamma + 1/(2n) + 1/(2n) - 1/(12n^4) + 1/(120n^4) - ...`</span>，其中 <span>`\gamma \approx 0.5772156649`</span>，为欧拉-马斯刻若尼常数
+    <font color="red"><h5>赠券收集问题期望</h5></font>
+    <div class="div_learning_post_boder">
+      <p><font color="red"><span>`E(T) = n\lnn + n\gamma + 1/2 + O(1)`</span>, 当 <span>`n \rightarrow \infty`</span></font>
+    </div>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;那么可用马尔可夫不等式<sup>[3]</sup>来求取概率的上限：
+
+  <div align="center">
+    <span>`P(T \geq cnH_n) \leq 1/c`</span>
+  </div>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;理解了 Coupon Collector 后，现在我们来看一下 BeauCoup 的基本 Idea。
+
+  <div align="center">
+    <img src="./pic/beau_coup_origin.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示。针对每一个 Query 的每一个 activated 的 Key (之前已经观测过的 Key)，BeauCoup 都会维护一个 Coupons 来记录收集到的 Attributes 的情况。<b><font color="red">与 Coupon Collector 不同的是，BeauCoup 把一个新的观测到的 Attribute 当作一次对 Coupons 的抽取</font></b>。这样一来，类比 Coupon Collector，我们就能猜到：BeauCoup 构建的是<b> Coupons 个数和 Attributes 种数</b> 的关系。当一个数据包到来的时候，首先 BeauCoup 会：
+  <ul>
+    <li>选择一个 Query 任务</li>
+    <li>提取数据包的 Key</li>
+    <li>根据数据包的属性 (attributes) 使用 Hash Function 计算并决定是否更新 Coupon；若更新，更新哪一个 Coupon</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;随后，BeauCoup <b>抽取 (draw)</b> Table 中的相应位置的 Coupon。当某个 Query 下的某个 Key 拥有的 Coupons 的抽取数量足够时，就会触发告警 <span>`(q_j,k_j)`</span>。相比于传统方法 (i.e. 针对各个 Key，在内存中对观察到的 Attributes 进行计数)，这样的方案对 (1)占用内存数 和 (2)per-packet 内存访问次数 都比较友好。下面详细分析一下以上三步的具体实现方法。
+
+  <h3><a name="3_design_3">(3) 数据平面算法具体设计</a></h3>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先明确一点，BeauCoup 的具体设计都紧紧围绕着严格的 per-packet 内存访问次数展开。
+
+  <h5>&nbsp;&nbsp;&nbsp;&nbsp;a. 每个 Query 下的每个 Key 的 Coupons 的抽取条件</h5>
+
+  <div align="center">
+    <img src="./pic/beau_coup_1.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;针对每个 Query 下的每个 Key 的 Coupons (以下简称 Coupons)，当数据包到来时，首先会使用一个 Hash Function 将想要观测的 Attributes 的映射为一个 [0,1) 的数。然后，根据这个算出来的数，决定抽取哪一个 Coupon。以上图为例，若算出来的数位于 [0,1/8)，则抽取 Coupon #1，若位于 [1/8, 1/4)，则抽取 Coupon #2，以此类推。每一个 Query 都有一个 probability 的设置值，意为在一次哈希过程中抽取一个 Coupon 的可能性，如上图的例子，probability 就为 1/8。若算出来的哈希值位于 [1/2, 1)，则不抽取任何 Coupon。这实际上是对一个 Query 内的 per-packet 的内存访问次数做了压缩，我们通过以下模型来理解一下：
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们有 Hash Function：
+
+  <div align="center">
+    <span>`h:{at tr_q(i),\foralli}\rightarrow[0,1)`</span>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;假设我们有 <span>`m_q=4`</span> 个 Coupons，然后上文提到的 probability 假设我们设定为 <span>`p_q=1/8`</span>，于是我们得到：在一个 Query 中，针对一个数据包平均我们只会抽取 <span>`\gamma_q = m_q*p_q = 1/2`</span> 次 Coupon。也就是说一个 Query 并不会为每一个数据包去抽取 Coupon，而节省出来的 Memory Access Budget 就可以留给另外的 Query 任务。BeauCoup 通过这种方式使得在最大 per-packet 内存访问次数 <span>`\Gamma = O(1)`</span> 的约束下实现了多个 Queries 的并发运行。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此，对于 <span>`m_q`</span> 和 <span>`p_q`</span> 的取值，我们需要满足下面这个约束，即一个 Query 任务的最大 per-packet 内存访问次数约束：
+  <div align="center">
+    <span>`m_q*p_q \leq \gamma_q = \Gamma/(|c*Q|)`</span>，其中 <span>`\Gamma`</span> 是 per-packet 内存访问次数约束，<span>`Q`</span> 是 Query 任务数
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然而，即使我们有了这样的压缩机制，但是难免会碰到：一个数据包需要去抽取多个 Query 任务的 Coupons，这样一来就违背了严格的常数规模的 per-packet 的内存访问次数约束 <span>`\Gamma`</span>。BeauCoup 对多个 Query 都需要对内存发起访问的情况进行了优化，详看下面。
+
+  <h5>&nbsp;&nbsp;&nbsp;&nbsp;b. 合并有相同 Attribute 需求的 Queries</h5>
+
+  <div align="center">
+    <img src="./pic/beau_coup_2.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于那些有着相同观测 Attribute 的 Queries，它们的哈希函数是可以合并的。因此，如上图所示，我们把它们的哈希计算和映射放在了一起。这样一来，通过合并一部分哈希函数，我们一定程度减少了多个 Query 同时需要对内存发起访问的情况。
+
+  <h5>&nbsp;&nbsp;&nbsp;&nbsp;c. 相互竞争的 Query 的选择机制</h5>
+
+  <div align="center">
+    <img src="./pic/beau_coup_3.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在我们完成对可以合并的哈希函数的合并后，BeauCoup 就会呈现上面的形态。当一个数据包到来时，会同时触发多个哈希函数的计算 (每个哈希函数对应一组 Attributes，相同 Attributes 需求的 Query 任务的哈希函数已经被合并)。如果只有一个哈希函数需要触发对 Coupons 的抽取，那么就启动对相应内存的访问；如果有两个，那么会有一个抛硬币机制决定谁去抽取 Coupons；如果超过两个哈希函数需要抽取 Coupon，那么此轮将不更新。
+
+  <h3><a name="3_design_4">(4) 参数编译设计</a></h3>
+  <h5>&nbsp;&nbsp;&nbsp;&nbsp;a. 模型设计</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 §3.3 的讨论中，我们发现数据平面在运行测量算法的时候需要这样几个参数：
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th>参数</th>
+      <th>含义</th>
+    </tr>
+    <tr>
+      <td><span>`m_q`</span></td>
+      <td>测量任务 q 所需要的 coupon 的总数</td>
+    </tr>
+    <tr>
+      <td><span>`n_q`</span></td>
+      <td>测量任务 q 用以触发告警的已统计 coupons 所需数量</td>
+    </tr>
+    <tr>
+      <td><span>`p_q`</span></td>
+      <td>测量任务 q 中各个 coupon 被抽取的概率</td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面这几个数据平面的参数，是编译器在编译阶段根据下面的输入参数计算出来的：
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th>参数</th>
+      <th>含义</th>
+    </tr>
+    <tr>
+      <td><span>`T_q`</span></td>
+      <td>测量任务 q 触发告警所需要观测的 Attribute 的种类数目</td>
+    </tr>
+    <tr>
+      <td><span>`\gamma_q`</span></td>
+      <td>测量任务 q 平均 per-packet 的 coupon 抽取次数</td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;也就是说，根据输入 <span>`T_q`</span> 和 <span>`\gamma_q`</span> 约束，编译器会输出一组 <span>`(m_q, n_q, p_q)`</span>。下面我们描述编译器计算出这组 <span>`(m_q, n_q, p_q)`</span> 的过程。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们区分一下 BeauCoup 的模型与传统 Coupon Collector 问题模型的区别。
+  <ul>
+    <li>对于传统 Coupon Collector 问题，有 <span>`n=m`</span>，即只有在 Coupon 全部被抽取才算结束。但在 BeauCoup 的模型中，有 <span>`1 \leq n \leq m`</span>，即 Coupon 无需全部被抽取，仅需抽取 Coupon 的子集即可；</li>
+    <li>对于传统 Coupon Collector 问题，有 <span>`p=1/m`</span>，即抽取到各个 Coupon 的概率是 Coupon 种类数目的倒数。但在 BeauCoup 的模型中，有 <span>`0 \leq p \leq 1/m`</span>。因为我们的哈希函数导致了有些 Coupon 是"无效的"。</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于此，我们推导一下在 BeauCoup 模型中的抽取次数的期望 (即要多少种类数目的 Attribute，才能够结束抽取)：
+
+  <div class="div_learning_post_boder">
+  <div align="center"><h3>BeauCoup 下的赠券收集问题</h3></div>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;假设我们已经抽取了 <span>`j-1`</span> 个 Coupons，设那么我们在抽取到一个新的 Coupon 的次数为 <span>`t_j`</span>，抽取到一个新的 Coupon 的可能性为:
+    <div align="center"><span>`p(m-j+1)=(m-j+1)*p_(each)`</span>，其中<span>`p_(each)`</span> 为抽取到单个 Coupon 的概率</div>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;正如我们在 §3.2 中分析的，<span>`t_j`</span> 服从几何分布，因此其期望为：
+    <div align="center"><span>`E(t_j) = 1/(p(m-j+1)) = 1/((m-j+1)*p_(each))`</span></div>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;我们一共需要抽取 <span>`n`</span> 个 Coupons 才能结束抽取。因此，当我们确定 <span>`m`</span>，<span>`n`</span> 和 <span>`p`</span> 的值时，它们所确定的总共需要抽取次数期望为：
+    <div align="center"><span>`E(m, n, p) = \sum_{j=1}^{n}1/(p(m-j+1)) = \sum_{j=1}^{n}1/((m-j+1)*p_(each))`</span></div>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这时我们就能得到了输入和输出的关系了。举例说，假设 Query <span>`q`</span> 给目的 IP 这个 Attribute 定的阈值是 <span>`T_q`</span>，那么我们的编译器就要输出合适的 <span>`m_q`</span>，<span>`n_q`</span> 和 <span>`p_q`</span> 的值，使得 <span>`E(m_q, n_q, p_q)`</span> 与 <span>`T_q`</span> 的偏差最小，同时满足内存访问约束 <span>`m_q*p_q \leq \gamma_q`</span>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然而，基于上述关系输出的 <span>`(m_q, n_q, p_q)`</span> 潜在组合的数字可能会有很大的方差，因此我们必须定义一个量来评估一个 <span>`(m_q, n_q, p_q)`</span> 组合的 Accuracy，从而挑选出合适的 <span>`(m_q, n_q, p_q)`</span> 组合。定义如下：
+  <ul>
+    <li>假定在观察数据包 <span>`i_1, i_2, ..., i_t`</span>后，应用参数 <span>`(m_q, n_q, p_q)`</span> 的数据平面告警 <span>`(q, k)`</span>。我们令该数据平面真实观察到的 Attribute 的种类数目为：<span>`\tau = |{at tr_q(i)|key_q(i)=k, i \in i_1, i_2, ..., i_t }|`</span></li>
+    <li>应用参数 <span>`(m_q, n_q, p_q)`</span> 的数据平面的绝对误差为：<span>`\tau - T_q`</span></li>
+    <li>应用参数 <span>`(m_q, n_q, p_q)`</span> 的数据平面的相对误差为：<span>`(\tau - T_q)/T_q`</span></li>
+  </ul>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;BeauCoup 会准备一张查找表，里面算出了应用各组 <span>`(m_q, n_q, p_q)`</span> 参数的数据平面的测量平均相对误差。我们在算出 <span>`(m_q, n_q, p_q)`</span> 潜在组合后，从中挑选一个平均相对误差最小的组合作为我们最终生成的参数。
+
+  <h5>&nbsp;&nbsp;&nbsp;&nbsp;b. 工程实现</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;结合实际的工程实现，我们总结一下参数编译器根据输入的 <span>`T_q`</span> 和 <span>`\gamma_q`</span> 获取最佳配置参数组合 <span>`(m_q, n_q, p_q)`</span> 的过程。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们约定：
+  <ul>
+    <li>由于交换机内存读取一次性能读 32-bit 数据，因此为了提高效率，实现一次内存访问就实现一次 Coupons 抽取，我们规定 <span>`m_q \leq 32`</span></li>
+    <li>为了实现哈希函数的高效映射，我们要求 <span>`p_q`</span> 必须是 2 的幂次方</li>
+    <li>正如上面一直强调的，我们必须满足内存次数访问约束：<span>`m_q*p_q \leq \gamma_q`</span></li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;以下是求出参数的过程：
+  <ul>
+    <li>遍历所有可取的 <span>`p_q=2^(-j)`</span>，我们求出最大的可取的 Coupons 数目 <span>`\overline{m_q}=min(32, \gamma_q/p_q)`</span>。如果 <span>`\overline{m_q} < 1`</span>，则编译退出。</li>
+    <li>对于各个可取的 <span>`p_q=2^(-j)`</span>，我们穷举出所有可取的满足 <span>`1 \leq n_q \leq m_q \leq \overline{m_q}`</span> 的 <span>`n_q`</span> 和 <span>`m_q`</span>，并且求出基于这些配置的期望 <span>`E(m_q, n_q, p_q)`</span>。我们保留那些精读比较高的期望值 (5%偏差：<span>`0.95T_q \leq E(m_q, n_q, p_q) \leq 1.05T_q`</span>) 所对应的 <span>`(m_q, n_q, p_q)`</span> 配置。</li>
+    <li>根据查找表找出测量平均相对误差最小的 <span>`(m_q, n_q, p_q)`</span> 配置作为编译输出</li>
+  </ul>
+</div>
+
+<h2><a name="4_prototype">4. Prototype</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于 §3 中讨论的数据平面算法设计，和参数编译器的计算原理，在本章我们首先介绍一下 BeauCoup 在可编程交换机上的数据平面的工作模式落地，然后介绍编译器是如何配置数据平面的。
+  <h3><a name="4_prototype_1">(1) 数据平面工作流程</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们来看一下 BeauCoup 是如何在数据平面处理 Query 任务的。
+  <h5>&nbsp;&nbsp;&nbsp;&nbsp; a. 选择一个 Query</h5>
+  <div align="center">
+    <img src="./pic/dataplane_choose_query.png" width=700px>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当数据包到来的时候，BeauCoup 会先抽取它的 Queries 们关心的 Key，并且送进各个 Hash Function，算出来一个 16-bit 的码，通过查询在 TCAM 中为各个 Hash Function 分别设置的 Table，利用掩码机制，就能得出各个 Hash Function 的输出是否映射到了某个 Query 下的某个 Coupon 上，如上图所示。如我们在 §3 中所讨论的，当只有一个 Hash Function 需要更新 Coupon 时，这个阶段就结束了；当有超过两个 Hash Function 需要更新 Coupon 时，这个阶段也结束了；当有两个 Hash Function 需要更新 Coupon 时，BeauCoup 会使用一张 Tie Break Table，利用一个随机数生成器，最终决定执行哪一个 Hash Function 的输出，我们使用下面的论文原图来观察可能会更加直观些。
+  <div align="center">
+    <img src="./pic/dataplane_choose_query_origin.png" width=700px>
+  </div>
+
+  <h5>&nbsp;&nbsp;&nbsp;&nbsp; b. 更新相应 Coupon</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成上一步对 Query 任务的选择之后，随后就会对位于 SRAM 中的 Coupon 发起更新。在 SRAM 中一共使用了三个寄存器数组 (register array)，在一个寄存器数组中，有 <span>`S`</span> 个 32-bit 寄存器，如下图所示。这三个寄存器数组中，有用于标识对应 Coupon 是否超时的 Timestamp 寄存器 <span>`\Gamma S(·)`</span> ，有用于标识是否发生哈希冲突的 Checksum 寄存器 <span>`QK(·)`</span>，有用于存储真正 Coupon 数据的 Coupon 寄存器 <span>`C C(·)`</span>。下面我们来看更新过程
+
+  <div align="center">
+    <img src="./pic/dataplane_update_coupon.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们会有个 Index Hash Function，其根据 <span>`(q, key_q(i))`</span> 元组输出用于标示寄存器的序号 <span>`idx`</span>。并且我们将我们在上一步中拿到的欲更新的 Coupon 的编号转化为一个 32-bit 热编码 (e.g. 00..010...000)，即 <span>`o n e h o t(c)`</span>，随后：
+  <ul>
+    <li><b>检查是否存在相应 Coupon</b>：检查 <span>`\Gamma S(idx) < i.t i m e s tamp - W`</span> 是否成立。若成立说明，该 index 上的 Coupon 已经超时被释放掉了。此时我们令：<span>`\Gamma S(idx) = i.t i m e s tamp`</span>，<span>`QK(idx) = check s u m(key_q(i))`</span>，<span>`C C(idx) = o n e h o t(c)`</span></li>
+    <li>若上一步的时间戳检查并没有超时，即 <span>`\Gamma S(idx) \geq i.t i m e s tamp - W`</span>，则检查 <span>`\Gamma S(idx) = i.t i m e s tamp`</span> 是否成立，若成立则更新 Coupon：<span>`C C(idx)= C C(idx) | o n e h o t(c)`</span></li>
+    <li>若上一步的 Checksum 检查没有通过，则说明有不同的 Key 都映射到了同一个 Coupon 寄存器 <span>`C C(idx)`</span> 中，一个 Coupon 寄存器是只为一个具体的 Key 使用，因此这样显然发生了冲突。这样一来，BeauCoup 只有抛弃这次更新。这样的 Coupon 寄存器冲突代表 Coupn 的数量太多了。</li>
+  </ul>
+
+  <!--
+  <h3><a name="4_prototype_2">(2) 编译器的对数据平面参数的配置</h3>
+
+  <div align="center">
+    <img src="./pic/dataplane_prototype.png" width=700px>
+  </div>
+
+  <h5>&nbsp;&nbsp;&nbsp;&nbsp;a. Query Compiler</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Query Compiler 根据输入的描述各个 Query 的 yaml 文件 (i.e. Key, Attribute, Exceed)，输出所有根据上面算法求得的哈希函数，输入的哈希函数如下图所示，各个哈希函数合并了同类 Attribute 需求的 Query：
+
+  <div align="center">
+    <img src="./pic/query_compiler_output.png" width=100%>
+  </div>
+
+  <h5>&nbsp;&nbsp;&nbsp;&nbsp;b. P4 Code Generator</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+-->
+</div>
+
+<!--ref-->
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+<ol>
+<li>Wikipedia, <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E8%B4%88%E5%88%B8%E6%94%B6%E9%9B%86%E5%95%8F%E9%A1%8C">赠券收集问题</a></li>
+<li>Wikipedia, <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E8%AA%BF%E5%92%8C%E6%95%B8">调和数</a></li>
+<li>Wikipedia, <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%A6%AC%E7%88%BE%E5%8F%AF%E5%A4%AB%E4%B8%8D%E7%AD%89%E5%BC%8F">马尔可夫不等式</a></p>
+</div>
+
+</li>
+</ol>
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_Cloud_Network/">TECH_CLOUD_NETWORK</a></li>
+          <li>PAPER_NETWORK_MEASUREMENT_SIGCOMM_20_BEAUCOUP</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

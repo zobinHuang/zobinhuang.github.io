@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     table th{text-align:center;}     table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_learning_post{font-size: 16px">
+<meta property="og:type" content="website">
+<meta property="og:title" content="云计算服务的类型">
+<meta property="og:url" content="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Service_Type/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     table th{text-align:center;}     table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_learning_post{font-size: 16px">
+<meta property="og:locale">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Service_Type/pic/saas_paas_iaas.jpg">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Service_Type/pic/virtualization_container.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Service_Type/pic/paas_arch.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Service_Type/pic/iaas_arch.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Service_Type/pic/cloud_service_arch.png">
+<meta property="article:published_time" content="2021-11-28T14:36:17.724Z">
+<meta property="article:modified_time" content="2021-11-28T14:36:17.724Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Service_Type/pic/saas_paas_iaas.jpg">
+
+<link rel="canonical" href="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Service_Type/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>云计算服务的类型 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">云计算服务的类型
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_Advanced_Network/">TECH_ADVANCED_NETWORK</a></li>
+            <li><a href="/sec_learning_backup/Tech_Advanced_Network/Backup/">BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/">CLOUD_COMPUTING</a></li>
+          <li>CLOUD_SERVICE_TYPE</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    table th{text-align:center;}
+    table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+</style>
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+<h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Mar.22 2021</i></font></h4>
+</div>
+
+<h2>1. 常见的云计算服务模式 </h2>
+<div class="div_learning_post">
+<div align="center">
+  <img src="./pic/saas_paas_iaas.jpg" width=500px>
+</div>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;常见的三种 <b>云计算服务</b> 分别是 <b>SaaS (Software as a Service)</b>，<b>PaaS (Platform as a Service)</b> 和 <b>IaaS (Infrastrature as a Service)</b>。结合上图，我们比较一下其区别：
+&nbsp;&nbsp;&nbsp;&nbsp;<h3>(1) SaaS (软件即服务)</h3>
+&nbsp;&nbsp;&nbsp;&nbsp;<b>SaaS</b> 即云服务提供商向用户直接提供应用程序，这些应用程序由第三方供应商直接管理，大多数为Web应用程序，用户不需要在客户端下进行任何的下载&安装即可使用，常见的例子如Google Gmail，Google Drive等；
+&nbsp;&nbsp;&nbsp;&nbsp;<h3>(2) PaaS (平台即服务)</h3>
+<div align="center">
+  <img src="./pic/virtualization_container.png" width=500px>
+</div>
+&nbsp;&nbsp;&nbsp;&nbsp;<b>PaaS</b> 即云服务提供商向用户提供云组件，大白话就是提供了一个软件创建平台，这个平台已经部署好了底层硬件、操作系统，还有可能另外还部署好了中间件、运行库等（这些都是可以定制的），用户可以在这个平台上直接创建自己的应用程序以及管理相应的数据内容。在实际应用中，PaaS大都是基于容器实现的，而我们下面要讲的 IaaS 大都是基于虚拟化技术实现的。容器的概念从上图在与虚拟化技术的比较中即可一目了然，即在一个主机操作系统下可以运行多个容器，这些容器互不干扰，资源占用都是动态的。容器是使用镜像构建的，其内部已经集成了运行/开发程序所需要的环境。PaaS的意义有几个：一是用户可以专注于应用程序逻辑的开发而无需关心实际的部署问题，使得整套流程变得更加简单，二是如果有多个开发人员涉及到云应用程序的开发，那么一个统一的程序开发环境将提供极大的便利。常见的例子有：AWS Elastic Beanstalk、Windows Azure、Heroku、Force.com、Google App Engine，Apache Stratos，OpenShift等；
+<div align="center">
+  <img src="./pic/paas_arch.png" width=100%>
+</div>
+&nbsp;&nbsp;&nbsp;&nbsp;App Engine是PaaS模式的一种部署实现架构，App Engine将应用运行所需的 IT 资源和基础设施以服务的方式提供给用户，包括了中间件服务、资源管理服务、弹性调度服务、消息服务等多种服务形式。App Engine利用虚拟化与自动化技术实现快速搭建部署应用运行环境和动态调整应用运行时环境资源这两个目标。一方面实现即时部署以及快速回收，降低了环境搭建时间，避免了手工配置错误，快速重复搭建环境，及时回收资源， 减少了低利用率硬件资源的空置。另一方面，根据应用运行时的需求对应用环境进行动态调整，实现了应用平台的弹性扩展和自优化，减少了非高峰时硬件资源的空置。App Engine的架构如上图所示，各个部分的功能如下表列出所述。
+<table border="1" align="center">
+  <caption>组成模块说明</caption>
+  <tr>
+    <th>组成模块</th>
+    <th>模块功能</th>
+  </tr>
+  <tr>
+    <td>App Router[流量接入层]</td>
+    <td>接收用户请求，并转发到不同的App Runtime</td>
+  </tr>
+  <tr>
+    <td>App Runtime[应用运行层]</td>
+    <td>应用运行环境，为各个应用提供基本的运行引擎，从而让app能够运行起来</td>
+  </tr>
+  <tr>
+    <td>Services[基础服务层]</td>
+    <td>各个通用基础服务，主要是对主流的服务提供通用的接入，例如数据库等</td>
+  </tr>
+  <tr>
+    <td>Platform Control[平台控制层]</td>
+    <td>整个平台的控制中心，实现业务调度，弹性扩容、资源审计、集群管理等相关工作</td>
+  </tr>
+  <tr>
+    <td>Platform Control[平台控制层]</td>
+    <td>提供友好可用的管理操作界面方便平台管理员来控制管理整个平台</td>
+  </tr>
+  <tr>
+    <td>Platform Support[平台支持层]</td>
+    <td>为应用提供相关的支持，比如应用监控、问题定位、分布式日志重建、统计分析等</td>
+  </tr>
+  <tr>
+    <td>Log Center[日志中心]</td>
+    <td>实时收集相关应用及系统的日志（日志收集），提供实时计算和分析平台（日志处理）</td>
+  </tr>
+  <tr>
+    <td>Code Center[代码中心]</td>
+    <td>完成代码存储、部署上线相关的工作</td>
+  </tr>
+</table>
+&nbsp;&nbsp;&nbsp;&nbsp;简单提一下结合到的技术栈：
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) 底层依赖：对于<b>资源隔离</b>来说，其依赖的是Linux内核的名称空间 (namespace)，它提供了一种资源的隔离方案，即允许不同namespace下存在相同的PID，IPC和Network等系统资源，通过Namespace即可以进行区分；对于 <b>资源控制</b>来说，其依赖的是Linux内核的CGroup (control group)，CGroup本身是提供将进程进行分组化管理的功能和接口的基础结构，I/O或内存的分配控制等具体的资源管理功能是通过这个功能来实现的。CGroups可以限制、记录、隔离进程组所使用的物理资源（包括：CPU、memory、IO等），为容器实现虚拟化提供了基本保证。CGroups本质是内核附加在程序上的一系列钩子（hooks），通过程序运行时对资源的调度触发相应的钩子以达到资源追踪和限制的目的。
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) 应用程序载体：即容器的实现，业界目前靠的大都是 Docker，它可以把应用以及应用所依赖的环境完完整整地打成一个包，这个包拿到哪里都能原生运行。因此可以在开发、测试、运维中保证环境的一致性。Docker=LXC(Namespace+CGroups)+Docker Images，即在Linux内核的Namespace[资源隔离]和CGroups[资源控制]技术的基础上通过镜像管理机制来实现轻量化设计。
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(3) 容器集群管理：Kubernetes，它是一个由Google开源的容器集群管理系统。它构建Docker技术之上，为容器化的应用提供资源调度、部署运行、服务发现、扩容缩容等整一套功能。
+&nbsp;&nbsp;&nbsp;&nbsp;<h3>(3) IaaS (基础设施即服务)</h3>
+&nbsp;&nbsp;&nbsp;&nbsp;<b>IaaS</b> 即云服务提供商向用户提供可供自由组合的计算、存储、一定时间内的网络带宽、公网ip、以及一些增值服务（如监控、自动伸缩等）等资源，用户可以提出自定义的资源租赁需求，并通过 <b>购买虚拟机</b> 的方式来获取请求的主机资源，然后在其上可以运行自定义的操作系统、中间件从而开发自己的应用程序。IaaS的意义有几个：对于初创公司来说，IaaS使得他们不需要购买实际的硬件就能拥有满足自己需求的数据中心，对于快速发展的公司而言，IaaS具有极高的可扩展性和灵活性来支持他们不断扩张的业务。IaaS 又可以分为 <b>私有IaaS</b> 和 <b>公有IaaS</b>，前者由企业/组织在内部自己搭建，将私有云基础设施资源作为服务向公司里的各个部门提供，后者由专门的云服务提供商以租赁形式向外界提供，常见的 公有IaaS 例子有：DigitalOcean，Linode，Rackspace，AWS，Cisco Metapod，Microsoft Azure，Google Compute Engine（GCE）等；
+<div align="center">
+  <img src="./pic/iaas_arch.png" width=100%>
+</div>
+&nbsp;&nbsp;&nbsp;&nbsp;我们关注一下IaaS云端的基础架构，如上图所示，可以分为三层：
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) <b>云管理器</b> 是云端对外的出口，在这里验证用户身份，管理用户权限，向合法用户发放票据（然后用户持此票据使用计算资源）、分配资源并管理用户租赁的资源。与之相关联的存储是 <b>DOS (Data Object Storage)</b>，负责存储与用户相关的元数据。
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) <b>集群管理器</b> 负责管理本集群内部的高速互联在一起的计算机，一个集群内的计算机可能有成百上千台。集群管理器接受上层的资源查询请求，然后向下层的计算机管理器发送查询请求，最后汇总并判断是部分满足还是全部满足上层请求的资源，再反馈给上层。如果接下来收到上层分配资源的命令，那么集群管理器指导下层的计算机管理器进行资源分配并配置虚拟网络，以便能让用户后续访问。与之相关联的存储是 <b>PLS (Persistent Local Storage)</b>，用于存储本集群内的全部虚拟机镜像文件，这样一台虚拟机就能在集群内任意一台计算机上运行，并轻松实现虚拟机热迁移。
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(3) <b>计算机管理器 (CM)</b> 在每台计算机上都有搭载，它一方面与上层的集群管理器打交道，另一方面与本机上的虚拟机软件打交道。它把本机的状态（如正在运行的虚拟机数、可用的资源数等）反馈给上层，当收到上层的命令时，计算机管理器就指导本机的虚拟机软件执行相应命令。这些命令包括启动、关闭、重启、挂起、迁移和重配置虚拟机，以及设置虚拟网络等。
+</div>
+
+<h2>2. 总结</h2>
+<div class="div_learning_post">
+
+<div align="center">
+  <img src="./pic/cloud_service_arch.png" width=100%>
+</div>
+
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;在了解完云服务提供商提供的服务类型后，我们可以总结出云服务提供商提供云服务的基本思路。如上图所示，我们通过系统的结构来明确云服务供应需要考虑的东西。
+<br>&nbsp;&nbsp;&nbsp;&nbsp;首先我们必须明确我们提供的是哪一个层次的云服务。如果我们是对企业/个体用户直接提供Web/移动端App等应用的话（分别对应ToB，ToC），我们就是在做SaaS；如果我们不直接提供可以直接使用的应用程序，而是提供在线计算(e.g. Apache Flink, Spark)、离线计算(e.g. yarn)，在线存储(e.g. ElasticSearch, MySQL, Redis, Kafka)、离线存储(e.g. HDFS, Hive)、监控告警、源数据(e.g. DNS, Zookeeper)等可用于构建应用程序的在线/离线组件，我们就是在做PaaS；如果我们是将底层计算、存储和网络资源打包封装租赁给其他用户或者提供给自己企业内部的其它业务，那么我们就是在做IaaS。
+<br>&nbsp;&nbsp;&nbsp;&nbsp;明确了我们在做的东西是哪个层次的云服务以后，给我们的云服务提供支持的底层服务就可以千变万化了。比如，在构建SaaS的顶层应用的时候，我们既可以选择基于PaaS平台提供的接口来创建应用，也可以选择基于IaaS提供的平台自己搭建。而对于一个全面的能提供所有三个层次的云服务提供商来说，PaaS和IaaS的选择也是自由的，既可以选择自家的，也可以基于其他云平台提供的这两种服务来实现上层需求，这就与具体的需求、成本和预期投入有关系了。
+</p>
+
+</div>
+
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+<ol>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/luoqingchao/2072240">https://blog.51cto.com/luoqingchao/2072240</a>, <b>Private Cloud和On-Premise区别构</b></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/liujg79/article/details/84453736">https://blog.csdn.net/liujg79/article/details/84453736</a>, <b>一张图看懂IaaS, PaaS和SaaS的区别</b></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/huwh_/article/details/75935700">https://blog.csdn.net/huwh_/article/details/75935700</a>, <b>基于Docker及Kubernetes技术构建容器云（PaaS）平台概述</b></li>
+<li><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3787.html">http://c.biancheng.net/view/3787.html</a>, <b>IaaS、PaaS和SaaS：云计算的三种服务模式（精讲）</b></p>
+
+</li>
+</ol>
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_Advanced_Network/">TECH_ADVANCED_NETWORK</a></li>
+            <li><a href="/sec_learning_backup/Tech_Advanced_Network/Backup/">BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/">CLOUD_COMPUTING</a></li>
+          <li>CLOUD_SERVICE_TYPE</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+.cover_container {
+    margin: 20px;
+    margin-bottom: 40px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: #8b8b8b 1px solid;
+    border-radius: 15px;
+}
+
+.title_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cover_container h2{
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.cover_container h5{
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+
+.intro_container p{
+    font-size: 15px;
+}
+
+.image_container .grayscale {-webkit-filter: grayscale(100%);filter: grayscale(100%);} /*img class 灰色*/
+.image_container .huerotate {-webkit-filter: hue-rotate(180deg);filter: hue-rotate(180deg);} /*img class 色调旋转*/
+.image_container .invert {-webkit-filter: invert(100%);filter: invert(100%);} /*img class 色调反转*/
+.image_container .opacity {-webkit-filter: opacity(50%);filter: opacity(50%);} /*img class 浅化*/
+.image_container .saturate {-webkit-filter: saturate(7); filter: saturate(7);} /*img class 浸水化*/
+.image_container .sepia {-webkit-filter: sepia(100%);filter: sepia(100%);} /*img class 复古化*/
+.image_container .shadow {-webkit-filter: drop-shadow(8px 8px 10px green);filter: drop-shadow(8px 8px 10px green);} /*img class 添加阴影*/

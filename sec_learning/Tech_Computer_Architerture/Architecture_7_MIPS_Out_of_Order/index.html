@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="指令级并行技术与 MIPS 指令乱序执行">
+<meta property="og:url" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_7_MIPS_Out_of_Order/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_7_MIPS_Out_of_Order/pic/xxx.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_7_MIPS_Out_of_Order/pic/dlx.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_7_MIPS_Out_of_Order/pic/dlx_tomasulo.png">
+<meta property="article:published_time" content="2021-12-29T11:28:18.808Z">
+<meta property="article:modified_time" content="2021-12-29T11:28:18.808Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_7_MIPS_Out_of_Order/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>指令级并行技术与 MIPS 指令乱序执行 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">指令级并行技术与 MIPS 指令乱序执行
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Computer_Architerture/">TECH_COMPUTER_ARCHITERTURE</a></li>
+          <li>ARCHITECTURE_7_MIPS_OUT_OF_ORDER</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_border{
+      margin-bottom: 20px;
+      padding: 10px 10px; 
+      font-size: 16px; 
+      word-spacing:0px;  
+      border:1px solid black;
+    }
+    .div_learning_post_background{
+      background-color:#E3E2E2;
+      padding: 10px 40px; 
+      font-size: 16px;
+      word-spacing:0px;  
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+    .div_learning_post_background p{
+      margin: 0px;
+    }
+</style>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Dec.29 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.1 <a href="#1_xxx"><font color="blue">xxx</font></a>：xxx
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+
+  </div>
+</div>
+
+<!--标题-->
+<h2><a name="1_intro">1. 指令级并行 与 程序乱序执行</a></h2>
+<div class="div_learning_post">
+  <h3><a name="1_intro_1">1.1 指令级并行</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;几乎所有的处理机都利用流水线来使指令重叠并行执行，以达到提高性能的目的。这种指令之间存在的潜在并行性称为 <font color="blue">指令级并行 (Instruction-Level Parallelism, ILP)</font>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 <a href="/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/index.html">流水线 MIPS 处理器的设计</a> 一文中，我们看到了，在流水线模型机中，如果指令间无相关或者相关可以通过专用数据通路消除 (i.e. 转发方法)，则流水线没有停顿，指令级并行得以充分发挥。但是，不能消除的相关必然会导致流水线的停顿，使流水线的利用率下降。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果要避免暂停流水线，一个相关指令的执行必须和被相关的前一条指令的要分开，分开的时钟周期需至少等于被相关的指令的流水线延迟。例如下面的指令序列，若顺序执行，则这两条指令之间必须暂停一个时钟周期。为了避免流水线的停顿，我们可以考虑在这两条指令之间插入一条非数据相关的指令。
+
+  <figure class="highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">load r1, <span class="number">100</span>(r2)</span><br><span class="line"><span class="keyword">add </span> r3, r1, r4</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本文我们将分别以硬件和软件实现的方式，讨论如何打乱指令之间的顺序，既保证执行结果的正确性，又不牺牲性能。
+
+  <h3><a name="1_intro_2">1.2 程序乱序执行</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;打乱指令顺序主要有两种方法:
+
+  <ol>
+    <li><font color="blue">静态调度</font>: 在编译阶段静态的发现指令级并行，再重新排序和优化指令</li>
+    <li><font color="blue">动态调度</font>: 在硬件执行指令时动态的发现指令级的并行，再重新排序指令</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在工业界产品中，Intel 的 Pentium 系列采用动态调度；Intel 的 Itanium (用于科学领域和特殊应用) 采用静态调度。在 RISC 机器中，指令系统支持编译优化，其编译器都会采用静态调度方式，有的也同时采用动态调度。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然而，指令顺序的调整并不是随心所欲的，工程师意识到以下三种情况的程序乱序是会产生正确性问题的：
+
+  <figure class="highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ADD </span>  R4 , R0 , R2；</span><br><span class="line">…</span><br><span class="line"><span class="keyword">ADD </span>  R1 , R4 , R8</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;(1) <font color="blue"><b>数据冒险</b></font>: 上面是一个我们在 <a href="/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/index.html">流水线 MIPS 处理器的设计</a> 一文中介绍过的 <font color="blue">写后读 (Read After Write, RAW)</font>冒险。
+
+  <figure class="highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ADD </span>  R4 , R0 , R2</span><br><span class="line">…</span><br><span class="line"><span class="keyword">ADD </span>  R4 , R5 , R8</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;(2) <font color="blue"><b>写后写</b></font>: 指令 `j` 和指令 `i` 写相同的名。输出相关指令的执行顺序是不能颠倒的。
+
+  <figure class="highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ADD </span>  R4 , R0 , R2</span><br><span class="line">…</span><br><span class="line"><span class="keyword">ADD </span>  R0 , R5 , R8</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;(3) <font color="blue"><b>读后写</b></font>: 指令 `i` 先执行，指令 `j` 写的名是指令 `i` 读的名。反相关指令间的顺序是必须保证的。
+</div>
+
+<h2><a name="2_scoreboarding">2. 动态调度分析方法: 记分牌</a></h2>
+<div class="div_learning_post">
+  <h3><a name="2_scoreboarding_1">2.1 介绍</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;要发挥指令乱序执行的特点，需要允许多条指令同时处于 <font color="blue">Execute</font> 阶段，这就要求有多个功能部件或功能部件流水化或者两者兼有。如果没有多个功能功能部件，动态调度的最大的优势也就没有了。通过复制处理器内部部件的数量，使得每个流水级可以启动多条指令，这种技术被称为 <font color="blue">多发射</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;记分牌技术的目标是，在资源充足时，尽可能早地执行没有数据阻塞的指令，争取达到每个时钟周期流出尽量多的指令。下面我们对记分牌进行介绍。
+
+  <h3><a name="2_scoreboarding_2">2.2 阶段划分</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，我们把每条指令在流水线中在指令 <font color="blue">Fetch</font> 之后的过程分为四个阶段：
+
+  <div class="div_learning_post_border">
+    <h5>(1) 流出阶段 (Issue, IS)</h5>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;如果本指令所需的功能部件有空闲，并且本指令的目的寄存器与其它正在执行的指令使用的目的寄存器不同，记分牌就向下一阶段流出本指令，并修改记分牌内部的数据记录。也即: <b>通过 <font color="blue">Issue</font> 阶段的指令就没有结构冒险与写后写问题</b>。
+    <h5>(2) 读操作数 (Read Operand，RO)</h5>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;记分牌需要检测源操作数寄存器中数据的有效性。如果本指令的源操作数寄存器与先序指令不存在数据冒险，或者一个正在工作的功能部件已经完成了对源寄存器的写操作，那么此操作数有效。当操作数有效后，记分牌将启动本指令的功能部件进行读操作数并开始执行。<b>通过 <font color="blue">Issue</font> 阶段的指令就没有数据冒险问题</b>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，<font color="red">指令在 IS 段按序流出，从 RO 段开始乱序执行。</font>
+    <h5>(3) 执行 (Execution，EX)</h5>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;取到操作数后就可以由功能部件执行指令，允许多条指令同时且乱序执行，不同功能部件需要的时钟周期不同。
+    <h5>(4) 写结果 (Write Result，WR)</h5>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;在该阶段，记分牌会先检测 <font color="blue">读后写 (WAR)</font> 问题，如果出现: 先序的某条指令 (i.e. 由于乱序，现在已经落后) 还没有读取操作数，且其某个源操作数寄存器与本指令的目的寄存器相同时，则不允许当前指令写结果。如果没有读后写，目标寄存器空闲，就将结果写入到目标寄存器中，然后释放本指令使用的所有资源。
+  </div>
+
+
+  <h3><a name="2_scoreboarding_3">2.3 记分牌组成</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述的记分牌原理，记分牌需要由以下 3 部分进行组成:
+
+  <ol>
+    <li><font color="blue">指令状态表</font>: 记录正在执行的各条指令已经进入记分牌流水线四段中的哪些段;</li>
+    <li>
+      <font color="blue">功能部件状态表</font>: 记录各个功能部件的状态。每个功能部件在状态表中都由以下九个域来纪录：
+      <ul>
+        <li><font color="red">Busy</font>: 指示功能部件是否在工作;</li>
+        <li><font color="red">Op</font>: 功能部件当前执行的操作;</li>
+        <li><font color="red">Fi</font>: 目的寄存器编号;</li>
+        <li><font color="red">Fj, Fk</font>: 源寄存器编号;</li>
+        <li><font color="red">Qj, Qk</font>: 向 Fj, Fk 中写结果的功能部件;</li>
+        <li><font color="red">Rj, Rk</font>: 指示源寄存器 Fj, Fk 已准备就绪但尚未读取的标记。在操作数尚未准备就绪，以及在完成操作数读取后，该项会被设置为 "否"</li>
+      </ul>
+    </li>
+    <li><font color="blue">结果寄存器状态表</font>: 每个寄存器在该表中有一个域，用于记录当前已经进入流水线的指令所需写入该寄存器的功能部件 (编号)。如果当前正在运行的功能部件不需要写入该寄存器的，则相应域置为空。</li>
+  </ol>
+
+  <h3><a name="2_scoreboarding_4">2.4 记分牌实例</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们下面来看一个具体的例子，如下所示是 DLX 处理器的功能部件示意图，其拥有两个浮点乘法单元，1 个浮点除法单元，1 个浮点加法单元，以及一个整数计算部件。另外，在 DLX 处理器中，加法需 2 个时钟周期，乘法需 10 个时钟周期，除法需 40 个时钟周期。
+
+  <div align="center">
+    <img src="./pic/dlx.png" width=400px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们现在对如下指令序列进行分析 (p.s. 分析六个时钟周期)。
+
+  <figure class="highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">LD F6,<span class="number">34</span>(R2)</span><br><span class="line">LD F2,<span class="number">45</span>(R3)</span><br><span class="line"><span class="keyword">MULT.D </span>F0,F2,F4</span><br><span class="line"><span class="keyword">SUB.D </span>F8,F6,F2</span><br><span class="line"><span class="keyword">DIV.D </span>F10,F0,F6</span><br><span class="line"><span class="keyword">ADD.D </span>F6,F8,F2</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先是指令状态表，如下所示。
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th rowspan="2"><div align="center">指令</div></th>
+      <th colspan="4"><div align="center">指令状态表</div></th>
+    </tr>
+    <tr>
+      <td><div align="center">IS</div></td>
+      <td><div align="center">RO</div></td>
+      <td><div align="center">EX</div></td>
+      <td><div align="center">WR</div></td>
+    </tr>
+    <tr>
+      <td><div align="center"><code>LD F6,34(R2)</code></div></td>
+      <td>
+        <div align="center">
+          <font color="blue">Cycle 1</font><br>
+          ☑️
+        </div>
+      </td>
+      <td>
+        <div align="center">
+          <font color="blue">Cycle 2</font><br>
+          ☑️
+        </div>
+      </td>
+      <td>
+        <div align="center">
+          <font color="blue">Cycle 3-4</font><br>
+          ☑️
+        </div>
+      </td>
+      <td>
+        <div align="center">
+          <font color="blue">Cycle 5</font><br>
+          ☑️
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td><div align="center"><code>LD <font color="red"><b>F2</b></font>,45(R3)</code></div></td>
+      <td>
+        <div align="center">
+          <font color="blue">Cycle 2</font><br>
+          ☑️
+        </div>
+      </td>
+      <td>
+        <div align="center">
+          <font color="blue">Cycle 3</font><br>
+          ☑️
+        </div>
+      </td>
+      <td>
+        <div align="center">
+          <font color="blue">Cycle 5-6</font><br>
+          ☑️
+        </div>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><div align="center"><code>MULT.D <font color="purple"><b>F0</b></font>,<font color="red"><b>F2</b></font>,F4</code></div></td>
+      <td>
+        <div align="center">
+          <font color="blue">Cycle 3</font><br>
+          ☑️
+        </div>
+      </td>
+      <td>
+        <div align="center">
+          阻塞等待 F2
+        </div>
+      </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><div align="center"><code><font color="blue"><b>SUB.D</b></font> F8,F6,<font color="red"><b>F2</b></font></code></div></td>
+      <td>
+        <div align="center">
+          <font color="blue">Cycle 4</font><br>
+          ☑️
+        </div>
+      </td>
+      <td>
+        <div align="center">
+          阻塞等待 F2
+        </div>
+      </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><div align="center"><code>DIV.D F10,<font color="purple"><b>F0</b></font>,F6</code></div></td>
+      <td>
+        <div align="center">
+          <font color="blue">Cycle 5</font><br>
+          ☑️
+        </div>
+      </td>
+      <td>
+        <div align="center">
+          阻塞等待 F0
+        </div>
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><div align="center"><code><font color="blue"><b>ADD.D</b></font> F6,F8,F2</code></div></td>
+      <td>
+        <div align="center">
+          阻塞等待加法计算单元
+        </div>
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后是功能部件状态表，到第 6 个时钟周期时如下所示。
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th rowspan="2"><div align="center">部件名称</div></th>
+      <th colspan="9"><div align="center">功能部件状态表</div></th>
+    </tr>
+    <tr>
+      <td><div align="center">Busy</div></td>
+      <td><div align="center">Op</div></td>
+      <td><div align="center">Fi</div></td>
+      <td><div align="center">Fj</div></td>
+      <td><div align="center">Fk</div></td>
+      <td><div align="center">Qj</div></td>
+      <td><div align="center">Qk</div></td>
+      <td><div align="center">Rj</div></td>
+      <td><div align="center">Rk</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">整数</div></td>
+      <td><div align="center">yes</div></td>
+      <td><div align="center"><code>LD</code></div></td>
+      <td><div align="center">F2</div></td>
+      <td><div align="center">R3</div></td>
+      <td><div align="center"></div></td>
+      <td><div align="center"></div></td>
+      <td><div align="center"></div></td>
+      <td><div align="center">no</div></td>
+      <td><div align="center"></div></td>
+    </tr>
+    <tr>
+      <td><div align="center">乘法 1</div></td>
+      <td><div align="center">yes</div></td>
+      <td><div align="center"><code>MULT.D</code></div></td>
+      <td><div align="center">F0</div></td>
+      <td><div align="center">F2</div></td>
+      <td><div align="center">F4</div></td>
+      <td><div align="center">整数</div></td>
+      <td><div align="center"></div></td>
+      <td><div align="center">no</div></td>
+      <td><div align="center">yes</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">乘法 2</div></td>
+      <td><div align="center">no</div></td>
+      <td><div align="center"></div></td>
+      <td><div align="center"></div></td>
+      <td><div align="center"></div></td>
+      <td><div align="center"></div></td>
+      <td><div align="center"></div></td>
+      <td><div align="center"></div></td>
+      <td><div align="center"></div></td>
+      <td><div align="center"></div></td>
+    </tr>
+    <tr>
+      <td><div align="center">加法</div></td>
+      <td><div align="center">yes</div></td>
+      <td><div align="center"><code>SUB.D</code></div></td>
+      <td><div align="center">F8</div></td>
+      <td><div align="center">F6</div></td>
+      <td><div align="center">F2</div></td>
+      <td><div align="center">整数</div></td>
+      <td><div align="center"></div></td>
+      <td><div align="center">yes</div></td>
+      <td><div align="center">no</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">除法</div></td>
+      <td><div align="center">yes</div></td>
+      <td><div align="center"><code>DIV.D</code></div></td>
+      <td><div align="center">F10</div></td>
+      <td><div align="center">F0</div></td>
+      <td><div align="center">F6</div></td>
+      <td><div align="center">乘法 1</div></td>
+      <td><div align="center"></div></td>
+      <td><div align="center">no</div></td>
+      <td><div align="center">yes</div></td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后是寄存器结果状态，到第 6 个时钟周期时如下所示。
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th><div align="center">寄存器</div></th>
+      <th><div align="center">功能单元</div></th>
+    </tr>
+    <tr>
+      <td><div align="center">F0</div></td>
+      <td><div align="center">乘法 1</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">F2</div></td>
+      <td><div align="center">整数</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">F4</div></td>
+      <td><div align="center"></div></td>
+    </tr>
+    <tr>
+      <td><div align="center">F6</div></td>
+      <td><div align="center"></div></td>
+    </tr>
+    <tr>
+      <td><div align="center">F8</div></td>
+      <td><div align="center">加法</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">F10</div></td>
+      <td><div align="center">除法</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">F12</div></td>
+      <td><div align="center"></div></td>
+    </tr>
+    <tr>
+      <td><div align="center">...</div></td>
+      <td><div align="center"></div></td>
+    </tr>
+    <tr>
+      <td><div align="center">F30</div></td>
+      <td><div align="center"></div></td>
+    </tr>
+  </table>
+
+  <h3><a name="2_scoreboarding_5">2.5 记分牌控制原理总结</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们对指令通过记分牌各个阶段的控制逻辑进行总结，首先我们先做如下符号约定:
+
+  <ul>
+    <li><font color="blue">FU</font>: 指令使用的功能单元;</li>
+    <li><font color="blue">D</font>: 目的寄存器的名字;</li>
+    <li><font color="blue">S1 和 S2</font>: 源操作数寄存器的名字;</li>
+    <li><font color="blue">Op</font>: 进行的操作;</li>
+    <li><font color="blue">Fj(FU)</font>: 功能部件 FU 在功能状态表中的 Fj 域，其它域同理;</li>
+    <li><font color="blue">Fj(FU) `\leftarrow` 'S1'</font>: 将寄存器 S1 的名字送入功能状态表中 FU 功能单元的 Fj 域，其它域同理;</li>
+    <li><font color="blue">Busy(FU)</font>: 功能部件的忙碌状态;</li>
+    <li><font color="blue">result(D)</font>: 寄存器结果状态表中对应于寄存器 D 的内容，也即产生寄存器 D 中结果的功能部件名;</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;给出一条指令，操作是 Op，其源寄存器要求是 S1 和 S2，目的寄存器要求是 D，功能部件要求是 FU，下面我们对各个阶段的通过条件进行总结。
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th><div align="center">阶段</div></th>
+      <th><div align="center">通过条件</div></th>
+      <th><div align="center">通过后记分牌记录内容</div></th>
+    </tr>
+    <tr>
+      <td><div align="center">流出 (IS)</div></td> 
+      <td><div align="center">!Busy(FU) && !result(D)</div></td>
+      <td>
+        <div align="center">
+          Busy(FU) `\leftarrow` yes <br>
+          Op(FU) `\leftarrow` Op <br>
+          Fi(FU) `\leftarrow` D <br>
+          Fj(FU) `\leftarrow` S1 <br>
+          Fk(FU) `\leftarrow` S2 <br>
+          Qj(FU) `\leftarrow` result(S1) <br>
+          Qk(FU) `\leftarrow` result(S2) <br>
+          Rj(FU) `\leftarrow` !Qj <br>
+          Rk(FU) `\leftarrow` !Qk <br>
+          resultD(D) `\leftarrow` FU
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td><div align="center">读操作数 (RO)</div></td> 
+      <td><div align="center">Rj && Rk</div></td>
+      <td>
+        <div align="center">
+          Rj(FU) `\leftarrow` no <br>
+          Rk(FU) `\leftarrow` no <br>
+          Qj(FU) `\leftarrow` 0 <br>
+          Qk(FU) `\leftarrow` 0
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td><div align="center">执行 (EX)</div></td> 
+      <td><div align="center"></div></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><div align="center">写结果 (WR)</div></td> 
+      <td>
+        <div align="center">
+          `\forall`f ( Fj(f)`\ne`Fi(FU) || Rj(f)=no )<br>
+          &&<br>
+          `\forall`f ( Fk(f) `\ne` Fi(FU) || Rk(f)=no )<br>
+          (其它功能单元的目的寄存器与当前指令不冲突) 
+        </div>
+      </td>
+      <td>
+        <div align="center">
+          Rj(FU) `\leftarrow` no <br>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注意到上面写结果阶段的通过逻辑，其含义为: 其它功能单元的源寄存器 (i.e. Fj 和 Fk)与当前指令的目的寄存器 (i.e. Fi) 不冲突，或者二者冲突但是其他功能单元以及完成对相关寄存器的读取，因此不会有 WAR 问题。
+</div>
+
+<h2><a name="3_tomasulo">3. 动态调度分析方法: Tomasulo</a></h2>
+<div class="div_learning_post">
+  <h3><a name="3_tomasulo_1">3.1 介绍</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Tomasulo 算法将记分牌的关键部分和寄存器换名技术结合在一起，通过寄存器换名消除写后写、先读后写相关引起的停顿。
+
+  <h3><a name="3_tomasulo_2">3.2 基于 Tomasulo 算法的流水线分段</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，基于 Tomasulo 算法，我们把每条指令在流水线中在指令 <font color="blue">Fetch</font> 之后的过程分为三个阶段：
+
+  <div class="div_learning_post_border">
+    <h5>(1) 流出阶段 (Issue, IS)</h5>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;如果是浮点操作且有空的保留站，则该指令通过 Issue 阶段。若其中的操作数在寄存器就绪就将其送入保留站，如果未就绪就在保留站中记录产生该操作数的保留站编号 (操作数寄存器名换成了保留站名)。
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;如果是访存操作且有空的缓冲就 Issue 到缓冲。
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;如果没有空的保留站和缓冲，即有结构相关，就不 Issue。
+    <h5>(2) 执行 (Execution，EX)</h5>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;如果保留站的操作数未计算出，就用保留站编号监视 CDB (公共数据总线)，一旦有结果就取到保留站中，当两个操作数就绪，进入执行阶段，执行指令操作。解决先写后读相关。
+    <h5>(3) 写结果 (Write Result，WR)</h5>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;功能部件完成计算后，将结果连同产生该结果的保留站号一起送到 CDB 上。根据流出时的记录，所有等待本保留站结果的保留站、存缓冲、目标寄存器将同时从 CDB 上获得所需数据。
+  </div>
+
+  <h3><a name="3_tomasulo_3">3.3 基于 Tomasulo 的 DLX 浮点部件的基本结构</a></h3>
+  <div align="center">
+    <img src="./pic/dlx_tomasulo.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+
+  <h3><a name="3_tomasulo_4">3.4 保留站基本结构</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;每个保留站有以下 6 个域:
+
+  <ul>
+    <li><font color="blue">Op</font>: 对源操作数 S1 和 S2 所进行的操作;</li>
+    <li><font color="blue">Vj, Vk</font>: 两个就绪源操作数的值;</li>
+    <li><font color="blue">Qj, Qk</font>: 产生源操作数的保留站号。等于 0 表示操作数在 Vj 和 Vk 中，或不需要操作数;</li>
+    <li><font color="blue">Busy</font>: 标示本保留站和相应的功能部件是否空闲</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，Vj 和 Qj 只能同时有一个有效， Vk 和 Qk 也只能同时有一个有效。
+
+  <h3><a name="3_tomasulo_5">3.5 缓冲基本结构</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;存缓冲拥有 6 个域，其含义如下所示:
+
+  <ul>
+    <li><font color="blue">Busy</font>: 标示缓冲是否空闲;</li>
+    <li><font color="blue">Address</font>: 地址域，用于记录保存的存储器地址;</li>
+    <li><font color="blue">Vk</font>: 保存要存入存储器的数据;</li>
+    <li><font color="blue">Qk</font>: 结果要存入存缓冲的保留站号。如果 Qk 空，表示存入的数据在 Vk 域，或没有指令要将结果写入存缓冲;</li>
+    <li><font color="blue">Vj</font>: 保存来自 已经就绪的寄存器 的地址分量;</li>
+    <li><font color="blue">Qj</font>: 产生有效地址中分量的保留站号。等于 0 表示地址分量在Vj中或不需要操作数</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;取缓冲拥有 4 个域，其含义如下所示:
+
+  <ul>
+    <li><font color="blue">Busy</font>: 标示缓冲是否空闲;</li>
+    <li><font color="blue">Address</font>: 地址域，用于记录取的存储器地址;</li>
+    <li><font color="blue">Vj</font>: 保存来自 已经就绪的寄存器 的地址分量;</li>
+    <li><font color="blue">Qj</font>: 产生有效地址中分量的保留站号。等于 0 表示地址分量在Vj中或不需要操作数</li>
+  </ul>
+
+  <h3><a name="3_tomasulo_6">3.6 寄存器域</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;每个寄存器有 1 个 Qi 域：结果要存入本寄存器的保留站或取缓冲号。如果 Qi 空，表示当前没有指令要将结果写入此寄存器。当寄存器空闲时，Qi 域空。 
+</div>
+<!--ref-->
+<!--
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+<ol>
+<li>golang.org, <a target="_blank" rel="noopener" href="https://golang.org/cmd/go/#hdr-GOPATH_environment_variable">GOPATH environment variable</a></p>
+</div>-->
+
+</li>
+</ol>
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Computer_Architerture/">TECH_COMPUTER_ARCHITERTURE</a></li>
+          <li>ARCHITECTURE_7_MIPS_OUT_OF_ORDER</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

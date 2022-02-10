@@ -1,0 +1,73 @@
+
+  .card {
+	width: 600px;
+	padding: 30px;
+	background: #0074D9;
+	margin: auto;
+	transition: .3s ease;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  }
+
+  .card:hover {
+	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8);
+	transform: translateY(-10px) scale(1.02);
+  }
+
+  .card:hover .entry-title {
+	background-position: -100% 0;
+  }
+  
+  .entry-title a {
+	color: white;
+	text-decoration: none;
+  }
+  
+  .entry-title h1 {
+	color: white;
+	text-decoration: none;
+  }
+
+  .small p{
+	margin-top: 20px;
+	display: block;
+	font-size: 20px;
+	color: #FFDC00;
+  }
+
+  .small a {
+	color: white;
+	text-decoration: none;
+  }
+  
+  #card span {
+	display: block;
+	margin-top: 10px;
+	font-weight: 700;
+	color: #16a085;
+  }
+  #card span a {
+	color: white;
+  }
+  
+  .iklan {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	background: white;
+	width: 200px;
+	padding: 20px;
+  }
+  .iklan p {
+	margin: 0 0 15px;
+	line-height: 1.4;
+	color: #333;
+  }
+  .iklan a {
+	background-color: #ff4757;
+	color: white;
+	display: inline-block;
+	padding: 10px 20px;
+	border-radius: 3px;
+	text-decoration: none;
+	font-size: 14px;
+  }

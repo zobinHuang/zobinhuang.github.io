@@ -1,0 +1,75 @@
+img{margin-left: 10px;}
+img{margin-right: 20px;}
+
+.div_learning{
+    background-color: #FFFFFF;
+    font-size: 18px; 
+    word-spacing:0px; 
+    border:1px solid #010101; 
+    border-radius: 10px; 
+    padding: 20px 20px;
+    transition: all 0.1s ease-in-out;
+}
+
+.div_learning:hover {
+    border-radius: 20px;
+    -webkit-box-shadow: 0 0 20px 10px #0074D9;
+    -moz-box-shadow: 0 0 20px 10px #0074D9;
+    box-shadow: 0 0 5px 2px #0074D9;
+}
+
+.div_switch_bar_container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #d8d8d8;
+    border-radius: 10px;
+}
+
+.div_switch_bar_container h4{
+    margin: 5px;
+    padding: 0;
+}
+
+.div_buttons_container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 5px;
+}
+
+.div_buttons_container button{
+    width: 200px;  
+    padding:7px;
+    margin: 10px;  
+    background-color: #0074D9;  
+    color: #fff;   
+    text-align: center;  
+    vertical-align: middle;  
+    border: 1px solid transparent;   
+    border-radius: 5px;
+    font-size: 15px; 
+    transition: all;
+    transition-duration: 0.2s;
+}
+
+.div_buttons_container button:hover{
+    background-color: #0088ff;
+    cursor:pointer;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
+}
+
+@media(max-width: 768px) {
+    .div_buttons_container{
+        flex-direction: column;
+    }
+
+    .div_switch_bar_container h4{
+        font-size: 15px;
+    }
+}

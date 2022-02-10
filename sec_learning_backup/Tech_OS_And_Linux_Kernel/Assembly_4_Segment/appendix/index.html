@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="附录程序">
+<meta property="og:url" content="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_4_Segment/appendix/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_4_Segment/appendix/pic/xxx.png">
+<meta property="article:published_time" content="2021-09-07T12:09:29.596Z">
+<meta property="article:modified_time" content="2021-09-07T12:09:29.596Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_4_Segment/appendix/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>附录程序 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">附录程序
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+            <li><a href="/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_4_Segment/">ASSEMBLY_4_SEGMENT</a></li>
+          <li>APPENDIX</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_boder{padding: 10px 10px; font-size: 16px; word-spacing:0px;  border:1px solid black;}
+</style>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Jan.30 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=30%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+<!--
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.1 <a href="#1_xxx"><font color="blue">xxx</font></a>：xxx
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+
+  </div>
+</div>
+-->
+
+<!--标题-->
+<h2><a name="1_lst">1. NASM 编译器生成的 .lst 文件</a></h2>
+<div class="div_learning_post">
+
+  <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;｜ 段内偏移 |  机器码  ｜                                        汇编程序                                          ｜</span></span><br><span class="line">  <span class="comment">;---------------------------------------------------------------------------------------------------------------                                         </span></span><br><span class="line">                                  <span class="comment">;===============================================================================</span></span><br><span class="line">                                  <span class="meta">SECTION</span> header vstart=<span class="number">0</span>                   <span class="comment">;定义用户程序头部段 </span></span><br><span class="line">  <span class="number">00000000</span> [<span class="number">00000000</span>]               program_length  <span class="built_in">dd</span> program_end          <span class="comment">;程序总长度[0x00]</span></span><br><span class="line">                                      </span><br><span class="line">                                    <span class="comment">;用户程序入口点</span></span><br><span class="line">  <span class="number">00000004</span> [A000]                   code_entry      <span class="built_in">dw</span> start                <span class="comment">;偏移地址[0x04]</span></span><br><span class="line">  <span class="number">00000006</span> [<span class="number">00000000</span>]                               <span class="built_in">dd</span> <span class="meta">section</span><span class="number">.</span>code_1<span class="number">.</span>start <span class="comment">;段地址[0x06] </span></span><br><span class="line">                                        </span><br><span class="line">  0000000A <span class="number">0500</span>                     realloc_tbl_len <span class="built_in">dw</span> (header_end-code_1_segment)/<span class="number">4</span> <span class="comment">;段重定位表项个数[0x0a]</span></span><br><span class="line">                                                                                </span><br><span class="line">                                    <span class="comment">;段重定位表           </span></span><br><span class="line">  0000000C [<span class="number">00000000</span>]               code_1_segment  <span class="built_in">dd</span> <span class="meta">section</span><span class="number">.</span>code_1<span class="number">.</span>start <span class="comment">;[0x0c]</span></span><br><span class="line">  <span class="number">00000010</span> [<span class="number">00000000</span>]               code_2_segment  <span class="built_in">dd</span> <span class="meta">section</span><span class="number">.</span>code_2<span class="number">.</span>start <span class="comment">;[0x10]</span></span><br><span class="line">  <span class="number">00000014</span> [<span class="number">00000000</span>]               data_1_segment  <span class="built_in">dd</span> <span class="meta">section</span><span class="number">.</span>data_1<span class="number">.</span>start <span class="comment">;[0x14]</span></span><br><span class="line">  <span class="number">00000018</span> [<span class="number">00000000</span>]               data_2_segment  <span class="built_in">dd</span> <span class="meta">section</span><span class="number">.</span>data_2<span class="number">.</span>start <span class="comment">;[0x18]</span></span><br><span class="line">  0000001C [<span class="number">00000000</span>]               stack_segment   <span class="built_in">dd</span> <span class="meta">section</span><span class="number">.</span>stack<span class="number">.</span>start  <span class="comment">;[0x1c]</span></span><br><span class="line">                                    </span><br><span class="line"><span class="symbol">                                    header_end:</span>                </span><br><span class="line">                                 </span><br><span class="line">                                  <span class="comment">;===============================================================================</span></span><br><span class="line">                                  <span class="meta">SECTION</span> code_1 <span class="meta">align</span>=<span class="number">16</span> vstart=<span class="number">0</span>          <span class="comment">;定义代码段1（16字节对齐） </span></span><br><span class="line"><span class="symbol">                                    put_string:</span>                             <span class="comment">;显示串(0结尾)。</span></span><br><span class="line">                                                                            <span class="comment">;输入：DS:BX=串地址</span></span><br><span class="line">  <span class="number">00000000</span> 8A0F                             <span class="keyword">mov</span> <span class="built_in">cl</span>,[<span class="built_in">bx</span>]</span><br><span class="line">  <span class="number">00000002</span> 08C9                             <span class="keyword">or</span> <span class="built_in">cl</span>,<span class="built_in">cl</span>                        <span class="comment">;cl=0 ?</span></span><br><span class="line">  <span class="number">00000004</span> <span class="number">7406</span>                             <span class="keyword">jz</span> .exit                        <span class="comment">;是的，返回主程序 </span></span><br><span class="line">  <span class="number">00000006</span> E80400                           <span class="keyword">call</span> put_char</span><br><span class="line">  <span class="number">00000009</span> <span class="number">43</span>                               <span class="keyword">inc</span> <span class="built_in">bx</span>                          <span class="comment">;下一个字符 </span></span><br><span class="line">  0000000A EBF4                             <span class="keyword">jmp</span> put_string</span><br><span class="line">                                    </span><br><span class="line"><span class="symbol">                                    .exit:</span></span><br><span class="line">  0000000C C3                               <span class="keyword">ret</span></span><br><span class="line">                                    </span><br><span class="line">                                    <span class="comment">;-------------------------------------------------------------------------------</span></span><br><span class="line"><span class="symbol">                                    put_char:</span>                               <span class="comment">;显示一个字符</span></span><br><span class="line">                                                                            <span class="comment">;输入：cl=字符ascii</span></span><br><span class="line">  <span class="number">0000000D</span> <span class="number">50</span>                               <span class="keyword">push</span> <span class="built_in">ax</span></span><br><span class="line">  0000000E <span class="number">53</span>                               <span class="keyword">push</span> <span class="built_in">bx</span></span><br><span class="line">  0000000F <span class="number">51</span>                               <span class="keyword">push</span> <span class="built_in">cx</span></span><br><span class="line">  <span class="number">00000010</span> <span class="number">52</span>                               <span class="keyword">push</span> <span class="built_in">dx</span></span><br><span class="line">  <span class="number">00000011</span> 1E                               <span class="keyword">push</span> <span class="built_in">ds</span></span><br><span class="line">  <span class="number">00000012</span> <span class="number">06</span>                               <span class="keyword">push</span> <span class="built_in">es</span></span><br><span class="line">                                    </span><br><span class="line">                                            <span class="comment">;以下取当前光标位置</span></span><br><span class="line">  <span class="number">00000013</span> BAD403                           <span class="keyword">mov</span> <span class="built_in">dx</span>,<span class="number">0x3d4</span></span><br><span class="line">  <span class="number">00000016</span> B00E                             <span class="keyword">mov</span> <span class="built_in">al</span>,<span class="number">0x0e</span></span><br><span class="line">  <span class="number">00000018</span> EE                               <span class="keyword">out</span> <span class="built_in">dx</span>,<span class="built_in">al</span></span><br><span class="line">  <span class="number">00000019</span> BAD503                           <span class="keyword">mov</span> <span class="built_in">dx</span>,<span class="number">0x3d5</span></span><br><span class="line">  0000001C EC                               <span class="keyword">in</span> <span class="built_in">al</span>,<span class="built_in">dx</span>                        <span class="comment">;高8位 </span></span><br><span class="line">  <span class="number">0000001D</span> 88C4                             <span class="keyword">mov</span> <span class="number">ah</span>,<span class="built_in">al</span></span><br><span class="line">                                    </span><br><span class="line">  0000001F BAD403                           <span class="keyword">mov</span> <span class="built_in">dx</span>,<span class="number">0x3d4</span></span><br><span class="line">  <span class="number">00000022</span> B00F                             <span class="keyword">mov</span> <span class="built_in">al</span>,<span class="number">0x0f</span></span><br><span class="line">  <span class="number">00000024</span> EE                               <span class="keyword">out</span> <span class="built_in">dx</span>,<span class="built_in">al</span></span><br><span class="line">  <span class="number">00000025</span> BAD503                           <span class="keyword">mov</span> <span class="built_in">dx</span>,<span class="number">0x3d5</span></span><br><span class="line">  <span class="number">00000028</span> EC                               <span class="keyword">in</span> <span class="built_in">al</span>,<span class="built_in">dx</span>                        <span class="comment">;低8位 </span></span><br><span class="line">  <span class="number">00000029</span> 89C3                             <span class="keyword">mov</span> <span class="built_in">bx</span>,<span class="built_in">ax</span>                       <span class="comment">;BX=代表光标位置的16位数</span></span><br><span class="line">                                   </span><br><span class="line">  0000002B 80F90D                           <span class="keyword">cmp</span> <span class="built_in">cl</span>,<span class="number">0x0d</span>                     <span class="comment">;回车符？</span></span><br><span class="line">  0000002E 750C                             <span class="keyword">jnz</span> .put_0a                     <span class="comment">;不是。看看是不是换行等字符 </span></span><br><span class="line">  <span class="number">00000030</span> 89D8                             <span class="keyword">mov</span> <span class="built_in">ax</span>,<span class="built_in">bx</span>                       <span class="comment">;此句略显多余，但去掉后还得改书，麻烦 </span></span><br><span class="line">  <span class="number">00000032</span> B350                             <span class="keyword">mov</span> <span class="built_in">bl</span>,<span class="number">80</span>                       </span><br><span class="line">  <span class="number">00000034</span> F6F3                             <span class="keyword">div</span> <span class="built_in">bl</span></span><br><span class="line">  <span class="number">00000036</span> F6E3                             <span class="keyword">mul</span> <span class="built_in">bl</span></span><br><span class="line">  <span class="number">00000038</span> 89C3                             <span class="keyword">mov</span> <span class="built_in">bx</span>,<span class="built_in">ax</span></span><br><span class="line">  0000003A EB45                             <span class="keyword">jmp</span> .set_cursor</span><br><span class="line">                                    </span><br><span class="line"><span class="symbol">                                    .put_0a:</span></span><br><span class="line">  0000003C 80F90A                           <span class="keyword">cmp</span> <span class="built_in">cl</span>,<span class="number">0x0a</span>                     <span class="comment">;换行符？</span></span><br><span class="line">  0000003F <span class="number">7505</span>                             <span class="keyword">jnz</span> .put_other                  <span class="comment">;不是，那就正常显示字符 </span></span><br><span class="line">  <span class="number">00000041</span> 83C350                           <span class="keyword">add</span> <span class="built_in">bx</span>,<span class="number">80</span></span><br><span class="line">  <span class="number">00000044</span> EB0F                             <span class="keyword">jmp</span> .roll_screen</span><br><span class="line">                                   </span><br><span class="line"><span class="symbol">                                    .put_other:</span>                             <span class="comment">;正常显示字符</span></span><br><span class="line">  <span class="number">00000046</span> B800B8                           <span class="keyword">mov</span> <span class="built_in">ax</span>,<span class="number">0xb800</span></span><br><span class="line">  <span class="number">00000049</span> 8EC0                             <span class="keyword">mov</span> <span class="built_in">es</span>,<span class="built_in">ax</span></span><br><span class="line">  0000004B D1E3                             <span class="keyword">shl</span> <span class="built_in">bx</span>,<span class="number">1</span></span><br><span class="line">  <span class="number">0000004D</span> 26880F                           <span class="keyword">mov</span> [<span class="built_in">es</span>:<span class="built_in">bx</span>],<span class="built_in">cl</span></span><br><span class="line">                                    </span><br><span class="line">                                            <span class="comment">;以下将光标位置推进一个字符</span></span><br><span class="line">  <span class="number">00000050</span> D1EB                             <span class="keyword">shr</span> <span class="built_in">bx</span>,<span class="number">1</span></span><br><span class="line">  <span class="number">00000052</span> 83C301                           <span class="keyword">add</span> <span class="built_in">bx</span>,<span class="number">1</span></span><br><span class="line">                                    </span><br><span class="line"><span class="symbol">                                    .roll_screen:</span></span><br><span class="line">  <span class="number">00000055</span> 81FBD007                         <span class="keyword">cmp</span> <span class="built_in">bx</span>,<span class="number">2000</span>                     <span class="comment">;光标超出屏幕？滚屏</span></span><br><span class="line">  <span class="number">00000059</span> 7C26                             <span class="keyword">jl</span> .set_cursor</span><br><span class="line">                                   </span><br><span class="line">  0000005B B800B8                           <span class="keyword">mov</span> <span class="built_in">ax</span>,<span class="number">0xb800</span></span><br><span class="line">  0000005E 8ED8                             <span class="keyword">mov</span> <span class="built_in">ds</span>,<span class="built_in">ax</span></span><br><span class="line">  <span class="number">00000060</span> 8EC0                             <span class="keyword">mov</span> <span class="built_in">es</span>,<span class="built_in">ax</span></span><br><span class="line">  <span class="number">00000062</span> FC                               <span class="keyword">cld</span></span><br><span class="line">  <span class="number">00000063</span> BEA000                           <span class="keyword">mov</span> <span class="built_in">si</span>,<span class="number">0xa0</span></span><br><span class="line">  <span class="number">00000066</span> BF0000                           <span class="keyword">mov</span> <span class="built_in">di</span>,<span class="number">0x00</span></span><br><span class="line">  <span class="number">00000069</span> B98007                           <span class="keyword">mov</span> <span class="built_in">cx</span>,<span class="number">1920</span></span><br><span class="line">  0000006C F3A5                             <span class="keyword">rep</span> <span class="keyword">movsw</span></span><br><span class="line">  0000006E BB000F                           <span class="keyword">mov</span> <span class="built_in">bx</span>,<span class="number">3840</span>                     <span class="comment">;清除屏幕最底一行</span></span><br><span class="line">  <span class="number">00000071</span> B95000                           <span class="keyword">mov</span> <span class="built_in">cx</span>,<span class="number">80</span></span><br><span class="line"><span class="symbol">                                    .cls:</span></span><br><span class="line">  <span class="number">00000074</span> 26C7072007                       <span class="keyword">mov</span> <span class="built_in">word</span>[<span class="built_in">es</span>:<span class="built_in">bx</span>],<span class="number">0x0720</span></span><br><span class="line">  <span class="number">00000079</span> 83C302                           <span class="keyword">add</span> <span class="built_in">bx</span>,<span class="number">2</span></span><br><span class="line">  0000007C E2F6                             <span class="keyword">loop</span> .cls</span><br><span class="line">                                    </span><br><span class="line">  0000007E BB8007                           <span class="keyword">mov</span> <span class="built_in">bx</span>,<span class="number">1920</span></span><br><span class="line">                                    </span><br><span class="line"><span class="symbol">                                    .set_cursor:</span></span><br><span class="line">  <span class="number">00000081</span> BAD403                           <span class="keyword">mov</span> <span class="built_in">dx</span>,<span class="number">0x3d4</span></span><br><span class="line">  <span class="number">00000084</span> B00E                             <span class="keyword">mov</span> <span class="built_in">al</span>,<span class="number">0x0e</span></span><br><span class="line">  <span class="number">00000086</span> EE                               <span class="keyword">out</span> <span class="built_in">dx</span>,<span class="built_in">al</span></span><br><span class="line">  <span class="number">00000087</span> BAD503                           <span class="keyword">mov</span> <span class="built_in">dx</span>,<span class="number">0x3d5</span></span><br><span class="line">  0000008A 88F8                             <span class="keyword">mov</span> <span class="built_in">al</span>,<span class="number">bh</span></span><br><span class="line">  0000008C EE                               <span class="keyword">out</span> <span class="built_in">dx</span>,<span class="built_in">al</span></span><br><span class="line">  <span class="number">0000008D</span> BAD403                           <span class="keyword">mov</span> <span class="built_in">dx</span>,<span class="number">0x3d4</span></span><br><span class="line">  <span class="number">00000090</span> B00F                             <span class="keyword">mov</span> <span class="built_in">al</span>,<span class="number">0x0f</span></span><br><span class="line">  <span class="number">00000092</span> EE                               <span class="keyword">out</span> <span class="built_in">dx</span>,<span class="built_in">al</span></span><br><span class="line">  <span class="number">00000093</span> BAD503                           <span class="keyword">mov</span> <span class="built_in">dx</span>,<span class="number">0x3d5</span></span><br><span class="line">  <span class="number">00000096</span> 88D8                             <span class="keyword">mov</span> <span class="built_in">al</span>,<span class="built_in">bl</span></span><br><span class="line">  <span class="number">00000098</span> EE                               <span class="keyword">out</span> <span class="built_in">dx</span>,<span class="built_in">al</span></span><br><span class="line">                                    </span><br><span class="line">  <span class="number">00000099</span> <span class="number">07</span>                               <span class="keyword">pop</span> <span class="built_in">es</span></span><br><span class="line">  0000009A 1F                               <span class="keyword">pop</span> <span class="built_in">ds</span></span><br><span class="line">  0000009B 5A                               <span class="keyword">pop</span> <span class="built_in">dx</span></span><br><span class="line">  0000009C <span class="number">59</span>                               <span class="keyword">pop</span> <span class="built_in">cx</span></span><br><span class="line">  <span class="number">0000009D</span> 5B                               <span class="keyword">pop</span> <span class="built_in">bx</span></span><br><span class="line">  0000009E <span class="number">58</span>                               <span class="keyword">pop</span> <span class="built_in">ax</span></span><br><span class="line">                                    </span><br><span class="line">  0000009F C3                               <span class="keyword">ret</span></span><br><span class="line">                                    </span><br><span class="line">                                    <span class="comment">;-------------------------------------------------------------------------------</span></span><br><span class="line"><span class="symbol">                                    start:</span></span><br><span class="line">                                            <span class="comment">;初始执行时，DS和ES指向用户程序头部段</span></span><br><span class="line">  000000A0 A1[1C00]                         <span class="keyword">mov</span> <span class="built_in">ax</span>,[stack_segment]           <span class="comment">;设置到用户程序自己的堆栈 </span></span><br><span class="line">  000000A3 8ED0                             <span class="keyword">mov</span> <span class="built_in">ss</span>,<span class="built_in">ax</span></span><br><span class="line">  000000A5 BC[<span class="number">0001</span>]                         <span class="keyword">mov</span> <span class="built_in">sp</span>,stack_end</span><br><span class="line">                                             </span><br><span class="line">  000000A8 A1[<span class="number">1400</span>]                         <span class="keyword">mov</span> <span class="built_in">ax</span>,[data_1_segment]          <span class="comment">;设置到用户程序自己的数据段</span></span><br><span class="line">  000000AB 8ED8                             <span class="keyword">mov</span> <span class="built_in">ds</span>,<span class="built_in">ax</span></span><br><span class="line">                                    </span><br><span class="line">  000000AD BB[<span class="number">0000</span>]                         <span class="keyword">mov</span> <span class="built_in">bx</span>,msg0</span><br><span class="line">  000000B0 E84DFF                           <span class="keyword">call</span> put_string                  <span class="comment">;显示第一段信息 </span></span><br><span class="line">                                    </span><br><span class="line">  000000B3 26FF36[<span class="number">1000</span>]                     <span class="keyword">push</span> <span class="built_in">word</span> [<span class="built_in">es</span>:code_2_segment]</span><br><span class="line">  000000B8 B8[<span class="number">0000</span>]                         <span class="keyword">mov</span> <span class="built_in">ax</span>,begin</span><br><span class="line">  000000BB <span class="number">50</span>                               <span class="keyword">push</span> <span class="built_in">ax</span>                          <span class="comment">;可以直接push begin,80386+</span></span><br><span class="line">                                             </span><br><span class="line">  000000BC CB                               <span class="keyword">retf</span>                             <span class="comment">;转移到代码段2执行 </span></span><br><span class="line">                                             </span><br><span class="line"><span class="symbol">                                    continue:</span></span><br><span class="line">  000000BD 26A1[<span class="number">1800</span>]                       <span class="keyword">mov</span> <span class="built_in">ax</span>,[<span class="built_in">es</span>:data_2_segment]       <span class="comment">;段寄存器DS切换到数据段2 </span></span><br><span class="line">  000000C1 8ED8                             <span class="keyword">mov</span> <span class="built_in">ds</span>,<span class="built_in">ax</span></span><br><span class="line">                                             </span><br><span class="line">  000000C3 BB[<span class="number">0000</span>]                         <span class="keyword">mov</span> <span class="built_in">bx</span>,msg1</span><br><span class="line">  000000C6 E837FF                           <span class="keyword">call</span> put_string                  <span class="comment">;显示第二段信息 </span></span><br><span class="line">                                    </span><br><span class="line">  000000C9 EBFE                             <span class="keyword">jmp</span> $ </span><br><span class="line">                                    </span><br><span class="line">                                  <span class="comment">;===============================================================================</span></span><br><span class="line">                                  <span class="meta">SECTION</span> code_2 <span class="meta">align</span>=<span class="number">16</span> vstart=<span class="number">0</span>          <span class="comment">;定义代码段2（16字节对齐）</span></span><br><span class="line">                                    </span><br><span class="line"><span class="symbol">                                    begin:</span></span><br><span class="line">  <span class="number">00000000</span> 26FF36[0C00]                     <span class="keyword">push</span> <span class="built_in">word</span> [<span class="built_in">es</span>:code_1_segment]</span><br><span class="line">  <span class="number">00000005</span> B8[BD00]                         <span class="keyword">mov</span> <span class="built_in">ax</span>,continue</span><br><span class="line">  <span class="number">00000008</span> <span class="number">50</span>                               <span class="keyword">push</span> <span class="built_in">ax</span>                          <span class="comment">;可以直接push continue,80386+</span></span><br><span class="line">                                             </span><br><span class="line">  <span class="number">00000009</span> CB                               <span class="keyword">retf</span>                             <span class="comment">;转移到代码段1接着执行 </span></span><br><span class="line">                                             </span><br><span class="line">                                  <span class="comment">;===============================================================================</span></span><br><span class="line">                                  <span class="meta">SECTION</span> data_1 <span class="meta">align</span>=<span class="number">16</span> vstart=<span class="number">0</span></span><br><span class="line">                                    </span><br><span class="line">  <span class="number">00000000</span> <span class="number">202054686973206973</span>-              msg0 <span class="built_in">db</span> <span class="string">&#x27;  This is NASM - the famous Netwide Assembler. &#x27;</span></span><br><span class="line">  <span class="number">00000009</span> 204E41534D202D2074-</span><br><span class="line">  <span class="number">00000012</span> 68652066616D6F7573-</span><br><span class="line">  <span class="number">0000001B</span> 204E65747769646520-</span><br><span class="line">  <span class="number">00000024</span> 417373656D626C6572-</span><br><span class="line">  <span class="number">0000002D</span> 2E20               </span><br><span class="line">  0000002F 4261636B2061742053-              <span class="built_in">db</span> <span class="string">&#x27;Back at SourceForge and in intensive development! &#x27;</span></span><br><span class="line">  <span class="number">00000038</span> 6F75726365466F7267-</span><br><span class="line">  <span class="number">00000041</span> 6520616E6420696E20-</span><br><span class="line">  0000004A 696E74656E73697665-</span><br><span class="line">  <span class="number">00000053</span> 20646576656C6F706D-</span><br><span class="line">  0000005C 656E742120         </span><br><span class="line">  <span class="number">00000061</span> <span class="number">476574207468652063</span>-              <span class="built_in">db</span> <span class="string">&#x27;Get the current versions from http://www.nasm.us/.&#x27;</span></span><br><span class="line">  0000006A 757272656E74207665-</span><br><span class="line">  <span class="number">00000073</span> 7273696F6E73206672-</span><br><span class="line">  0000007C 6F6D20687474703A2F-</span><br><span class="line">  <span class="number">00000085</span> 2F7777772E6E61736D-</span><br><span class="line">  0000008E 2E75732F2E         </span><br><span class="line">  <span class="number">00000093</span> 0D0A0D0A                         <span class="built_in">db</span> <span class="number">0x0d</span>,<span class="number">0x0a</span>,<span class="number">0x0d</span>,<span class="number">0x0a</span></span><br><span class="line">  <span class="number">00000097</span> 20204578616D706C65-              <span class="built_in">db</span> <span class="string">&#x27;  Example code for calculate 1+2+...+1000:&#x27;</span>,<span class="number">0x0d</span>,<span class="number">0x0a</span>,<span class="number">0x0d</span>,<span class="number">0x0a</span></span><br><span class="line">  000000A0 20636F646520666F72-</span><br><span class="line">  000000A9 2063616C63756C6174-</span><br><span class="line">  000000B2 6520312B322B2E2E2E-</span><br><span class="line">  000000BB 2B313030303A0D0A0D-</span><br><span class="line">  000000C4 0A                 </span><br><span class="line">  000000C5 2020202020786F7220-              <span class="built_in">db</span> <span class="string">&#x27;     xor dx,dx&#x27;</span>,<span class="number">0x0d</span>,<span class="number">0x0a</span></span><br><span class="line">  000000CE 64782C64780D0A     </span><br><span class="line">  000000D5 2020202020786F7220-              <span class="built_in">db</span> <span class="string">&#x27;     xor ax,ax&#x27;</span>,<span class="number">0x0d</span>,<span class="number">0x0a</span></span><br><span class="line">  000000DE 61782C61780D0A     </span><br><span class="line">  000000E5 2020202020786F7220-              <span class="built_in">db</span> <span class="string">&#x27;     xor cx,cx&#x27;</span>,<span class="number">0x0d</span>,<span class="number">0x0a</span></span><br><span class="line">  000000EE 63782C63780D0A     </span><br><span class="line">  000000F5 202040403A0D0A                   <span class="built_in">db</span> <span class="string">&#x27;  @@:&#x27;</span>,<span class="number">0x0d</span>,<span class="number">0x0a</span></span><br><span class="line">  000000FC 2020202020696E6320-              <span class="built_in">db</span> <span class="string">&#x27;     inc cx&#x27;</span>,<span class="number">0x0d</span>,<span class="number">0x0a</span></span><br><span class="line">  <span class="number">00000105</span> 63780D0A           </span><br><span class="line">  <span class="number">00000109</span> <span class="number">202020202061646420</span>-              <span class="built_in">db</span> <span class="string">&#x27;     add ax,cx&#x27;</span>,<span class="number">0x0d</span>,<span class="number">0x0a</span></span><br><span class="line">  <span class="number">00000112</span> 61782C63780D0A     </span><br><span class="line">  <span class="number">00000119</span> <span class="number">202020202061646320</span>-              <span class="built_in">db</span> <span class="string">&#x27;     adc dx,0&#x27;</span>,<span class="number">0x0d</span>,<span class="number">0x0a</span></span><br><span class="line">  <span class="number">00000122</span> 64782C300D0A       </span><br><span class="line">  <span class="number">00000128</span> 2020202020696E6320-              <span class="built_in">db</span> <span class="string">&#x27;     inc cx&#x27;</span>,<span class="number">0x0d</span>,<span class="number">0x0a</span></span><br><span class="line">  <span class="number">00000131</span> 63780D0A           </span><br><span class="line">  <span class="number">00000135</span> 2020202020636D7020-              <span class="built_in">db</span> <span class="string">&#x27;     cmp cx,1000&#x27;</span>,<span class="number">0x0d</span>,<span class="number">0x0a</span></span><br><span class="line">  0000013E 63782C313030300D0A </span><br><span class="line">  <span class="number">00000147</span> 20202020206A6C6520-              <span class="built_in">db</span> <span class="string">&#x27;     jle @@&#x27;</span>,<span class="number">0x0d</span>,<span class="number">0x0a</span></span><br><span class="line">  <span class="number">00000150</span> 40400D0A           </span><br><span class="line">  <span class="number">00000154</span> 20202020202E2E2E20-              <span class="built_in">db</span> <span class="string">&#x27;     ... ...(Some other codes)&#x27;</span>,<span class="number">0x0d</span>,<span class="number">0x0a</span>,<span class="number">0x0d</span>,<span class="number">0x0a</span></span><br><span class="line">  <span class="number">0000015D</span> 2E2E2E28536F6D6520-</span><br><span class="line">  <span class="number">00000166</span> 6F7468657220636F64-</span><br><span class="line">  0000016F 6573290D0A0D0A     </span><br><span class="line">  <span class="number">00000176</span> <span class="number">00</span>                               <span class="built_in">db</span> <span class="number">0</span></span><br><span class="line">                                  </span><br><span class="line">                                  <span class="comment">;===============================================================================</span></span><br><span class="line">                                  <span class="meta">SECTION</span> data_2 <span class="meta">align</span>=<span class="number">16</span> vstart=<span class="number">0</span></span><br><span class="line">                                   </span><br><span class="line">  <span class="number">00000000</span> 20205468652061626F-              msg1 <span class="built_in">db</span> <span class="string">&#x27;  The above contents is written by LeeChung. &#x27;</span></span><br><span class="line">  <span class="number">00000009</span> 766520636F6E74656E-</span><br><span class="line">  <span class="number">00000012</span> <span class="number">747320697320777269</span>-</span><br><span class="line">  <span class="number">0000001B</span> 7474656E206279204C-</span><br><span class="line">  <span class="number">00000024</span> 65654368756E672E20 </span><br><span class="line">  <span class="number">0000002D</span> 323031312D30352D30-              <span class="built_in">db</span> <span class="string">&#x27;2011-05-06&#x27;</span></span><br><span class="line">  <span class="number">00000036</span> <span class="number">36</span>                 </span><br><span class="line">  <span class="number">00000037</span> <span class="number">00</span>                               <span class="built_in">db</span> <span class="number">0</span></span><br><span class="line">                                    </span><br><span class="line">                                  <span class="comment">;===============================================================================</span></span><br><span class="line">                                  <span class="meta">SECTION</span> stack <span class="meta">align</span>=<span class="number">16</span> vstart=<span class="number">0</span></span><br><span class="line">                                               </span><br><span class="line">  <span class="number">00000000</span> &lt;res <span class="number">00000100</span>&gt;                   <span class="built_in">resb</span> <span class="number">256</span></span><br><span class="line">            ******************    warning: uninitialized space declared <span class="keyword">in</span> stack <span class="meta">section</span>: zeroing</span><br><span class="line">                                    </span><br><span class="line"><span class="symbol">                                    stack_end:</span>  </span><br><span class="line">                                    </span><br><span class="line">                                  <span class="comment">;===============================================================================</span></span><br><span class="line">                                  <span class="meta">SECTION</span> trail <span class="meta">align</span>=<span class="number">16</span></span><br><span class="line"><span class="symbol">                                    program_end:</span></span><br></pre></td></tr></table></figure>
+</div>
+
+
+<!--ref-->
+<!--
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+1. golang.org, <a target="_blank" rel="noopener" href="https://golang.org/cmd/go/#hdr-GOPATH_environment_variable">GOPATH environment variable</a>
+</p>
+</div>-->
+
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+            <li><a href="/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_4_Segment/">ASSEMBLY_4_SEGMENT</a></li>
+          <li>APPENDIX</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

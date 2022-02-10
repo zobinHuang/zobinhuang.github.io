@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     p{margin-left: 15px; margin-right: 15px;}     #th{text-align:center;}     #td{text-align:center;}     .div_licence{font-size: 16px; word-spacing:0">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PCIe 网卡驱动分析">
+<meta property="og:url" content="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Linux_Kernel_Driver_1_PCIe_NIC/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     p{margin-left: 15px; margin-right: 15px;}     #th{text-align:center;}     #td{text-align:center;}     .div_licence{font-size: 16px; word-spacing:0">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Linux_Kernel_Driver_1_PCIe_NIC/pic/xxx.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Linux_Kernel_Driver_1_PCIe_NIC/pic/pci_pcie.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Linux_Kernel_Driver_1_PCIe_NIC/pic/PCI_bar_1.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Linux_Kernel_Driver_1_PCIe_NIC/pic/PCI_bar_2.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Linux_Kernel_Driver_1_PCIe_NIC/pic/module_alias.png">
+<meta property="article:published_time" content="2021-09-07T12:09:30.038Z">
+<meta property="article:modified_time" content="2021-09-07T12:09:30.038Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Linux_Kernel_Driver_1_PCIe_NIC/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>PCIe 网卡驱动分析 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">PCIe 网卡驱动分析
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>LINUX_KERNEL_DRIVER_1_PCIE_NIC</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    p{margin-left: 15px; margin-right: 15px;}
+    #th{text-align:center;}
+    #td{text-align:center;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .boder{border:2px solid black; margin-left: 15px; margin-right: 15px; word-spacing:0px;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+</style>
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+<h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：April.14 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--图片-->
+<!--<img src="./pic/xxx.png" width=30% style="float:left">-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<h2>1. 写在前面</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;(1) 这篇文章将分析 PCIe 网卡驱动是如何工作的，并分析一个数据包从在网卡上被接收到抵达 socket 接收缓冲的过程。
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;(2) 基于手头的参考资料，我们选择的分析目标是针对 Intel I350 Ethernet controller<sup>[1]</sup> 的网卡驱动，其驱动文件在如下源码树路径：
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="red">/drivers/net/ethernet/intel/igb/</font>
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;(3) 可以前往我个人维护的 linux 内核仓库<sup>[2]</sup>查看带有中文注释的代码。
+  </p>
+</div>
+
+<h2>2. PCI 总线基础 与 内核相应 PCI 数据结构和操作函数</h2>
+<div class="div_learning_post">
+  <div class="boder">
+    <div align="center">
+      <h3>(1) PCI 总线原理</h3>
+    </div>
+    <h4>&nbsp;&nbsp;&nbsp;&nbsp;(a) PCI 与 PCIe 总线</h4>
+    <div align="center">
+      <img src="./pic/pci_pcie.png" width=700px>
+    </div>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;如上左图所示，PCI 是一种总线型的设计。系统中的北桥上方连接了 CPU 和 内存，管理的是 <font color="red"><b>存储域</b></font> 的地址空间，北桥下方连接的是PCI总线，管理的是 <font color="red"><b>PCI域</b></font> 的空间。也就是说，“CPU和内存”，“PCI总线上的设备” 这两者是独立寻址的。PCI 设备的定位方法是通过 <font color="red"><b>"总线(bus) + 设备(device) + 功能(function)"</b></font> 组成的，即在某条 PCI 总线上的某个 PCI 设备上的某个功能，根据这三者来定位 PCI 设备的方法被称为 <b>“PCI 寻址”</b>。一颗 PCI 设备树一共支持 256 条总线，一条总线上支持 32 个设备，一个设备上又支持 8 个功能。
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;总线发展到 PCIe 则变为一种端到端型的设计，如上右图所示，PCIe 设备通过 PCIe Switch 进行路由，不再是总线型的通信。另外与 PCI 有差别的就是，隔离 <font color="red"><b>存储域</b></font> 和 <font color="red"><b>PCI域</b></font> 的设备在 PCIe 标准中被定义为 <b>Root Complex</b>。而 <b>“PCIe 寻址”</b> 方法与 “PCI 寻址” 无太大差别，也是通过 <b>"总线(bus) + 设备(device) + 功能(function)"</b></font> 对设备进行定位。
+    </p>
+    <h4>&nbsp;&nbsp;&nbsp;&nbsp;(b) PCI 设备内存</h4>
+    <h5>&nbsp;&nbsp;&nbsp;&nbsp;1. PCI 设备内存类型 和 访问方式</h5>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;PCI 设备上的存储器分为两种：<b>寄存器</b> 和 <b>内存</b>，前者一般用于存储设备的配置参数，其中有些寄存器是 read-only 的，由厂商在出厂时写死的；后者一般用于存储设备处理的一些数据，比如 网卡上的网络数据包，SSD 中存储的数据 Cache 等。
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;Host 访问 PCI 设备上存储器的编址方式有两种：<b>内存空间 (Memory Space)</b> 和 <b>IO空间 (IO Space)</b>。前者即主机内存地址的寻址空间，即 PCI 设备会占据部分主机内存的地址空间；后者是 x86 特有的一个空间，是与内存空间相独立的一个空间。当外部设备的存储器映射到 IO 空间时，主机只能使用 <b>IO 端口操作函数</b> 对数据进行读写，如 inb(), inbw(), inl(); outb(), outw(), outl() 等，这被称为 <font color="red"><b>IO 端口 (IO Port)</b></font>；当外部设备的存储器映射到的是内存空间时，主机则可以使用访问内存的方式对外部设备存储器进行操作，这种方式被称为 <font color="red"><b>IO 内存 (IO Memory)</b></font><sup>[4]</sup>。
+    </p>
+    <h5>&nbsp;&nbsp;&nbsp;&nbsp;2. PCI Configuration Space</h5>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;PCI 标准规定了每个 PCI 设备功能都必须具备配置寄存器，即 256-Byte 的 Configuration Space Registers 的组织格式，如下表所示，具体各个寄存器的用途也在表中有所阐述。值得注意的是，我们分析的是 Header Type 为 0x00 的 PCI Configuration Space Register，即 PCI 设备卡的配置寄存器。此外还有诸如 Header Type 为 0x01 的 PCI 桥等的配置寄存器，此处不做介绍。
+    </p>
+    <table border="1" align="center">
+      <caption>PCI Configuration Space Registers</caption>
+      <tr>
+        <th>register</th>
+        <th>offset</th>
+        <th>bits 31-24</th>
+        <th>bits 23-16</th>
+        <th>bits 15-8</th>
+        <th>bits 7-0</th>
+      </tr>
+      <tr>
+        <td>00</td>
+        <td>00</td>
+        <td colspan=2>Device ID<br><font color="red">&nbsp;&nbsp;&nbsp;&nbsp;用于标识硬件制造厂商，制造商必须向 PCI Special Interest Group 申请一个全球唯一的编号才能够出厂设备<sup>[3]</sup></font></td>
+        <td colspan=2>Vendor ID<br><font color="red">&nbsp;&nbsp;&nbsp;&nbsp;用于表示厂商下的某个设备，由厂商自己决定，无需对外申请。Device ID 和 Vendor ID组成了唯一的 32 位的设备标识符，通常被称为 <b>签名(Signature)</b><sup>[3]</sup></font></td>
+      </tr>
+      <tr>
+        <td>01</td>
+        <td>04</td>
+        <td colspan=2>Status</td>
+        <td colspan=2>Command</td>
+      </tr>
+      <tr>
+        <td>02</td>
+        <td>08</td>
+        <td>Class Code<br><font color="red">&nbsp;&nbsp;&nbsp;&nbsp;用于标识该外部设备属于哪个类。某些驱动程序可以支持多个相似的设备，这些设备的 <b>签名</b> 都不一样，驱动程序则能根据 Class Code 字段识别<sup>[3]</sup>。</font></td>
+        <td>Subclass</td>
+        <td>Prog IF</td>
+        <td>Revision ID</td>
+      </tr>
+      <tr>
+        <td>03</td>
+        <td>0C</td>
+        <td>BIST</td>
+        <td>Header Type</td>
+        <td>Latency Timer</td>
+        <td>Cache Line Size</td>
+      </tr>
+      <tr>
+        <td>04</td>
+        <td>10</td>
+        <td colspan=4>Base Address #0 (BAR0)</td>
+      </tr>
+      <tr>
+        <td>05</td>
+        <td>14</td>
+        <td colspan=4>Base Address #1 (BAR1)</td>
+      </tr>
+      <tr>
+        <td>06</td>
+        <td>18</td>
+        <td colspan=4>Base Address #2 (BAR2)</td>
+      </tr>
+      <tr>
+        <td>07</td>
+        <td>1C</td>
+        <td colspan=4>Base Address #3 (BAR3)</td>
+      </tr>
+      <tr>
+        <td>08</td>
+        <td>20</td>
+        <td colspan=4>Base Address #4 (BAR4)</td>
+      </tr>
+      <tr>
+        <td>09</td>
+        <td>24</td>
+        <td colspan=4>Base Address #5 (BAR5)</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td colspan=4><font color="red">每一张 PCI 卡上的每一个功能都会有这六个 BAR 寄存器，BAR 寄存器的作用可以被理解为：<sup>[5]</sup><br>&nbsp;&nbsp;&nbsp;&nbsp;(1)
+        PCI 制造商会在 BAR 寄存器中以某种方式 (下面会解释) 向操作系统说明它想要操作系统为它分配多少内存，以及这些内存要映射的是 <b>内存空间</b> 还是 <b>IO空间</b>。<br>&nbsp;&nbsp;&nbsp;&nbsp;(2) 操作系统在初始化 PCI 设备的时候会读取这几个 BAR 寄存器，并根据要求为这些设备分配相应内存空间，并且会将分配的内存空间初始地址写回到 BAR 寄存器中。</font></td>
+      </tr>
+      <tr>
+        <td>0A</td>
+        <td>28</td>
+        <td colspan=4>Cardbus CIS Pointer</td>
+      </tr>
+      <tr>
+        <td>0B</td>
+        <td>2C</td>
+        <td colspan=2>Subsystem ID</td>
+        <td colspan=2>Subsystem Vendor ID</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td colspan=4><font color="red">Subsystem ID, Subsystem Vendor ID 这两个字段用来进一步识别设备。某些外设可能是一个通用的接口芯片，接上不同的子设备可能会是完全不同的用途，这个字段就用于继续标明子设备，以让驱动程序识别它所关心的实际设备。<sup>[3]</sup></font></td>
+      </tr>
+      <tr>
+        <td>0C</td>
+        <td>30</td>
+        <td colspan=4>Expansion ROM base address</td>
+      </tr>
+      <tr>
+        <td>0D</td>
+        <td>34</td>
+        <td colspan=3>Reserved</td>
+        <td>Capabilities Pointer</td>
+      </tr>
+      <tr>
+        <td>0E</td>
+        <td>38</td>
+        <td colspan=4>Reserved</td>
+      </tr>
+      <tr>
+        <td>0F</td>
+        <td>3C</td>
+        <td>Max latency</td>
+        <td>Min Grant</td>
+        <td>Interrupt PIN</td>
+        <td>Interrupt Line</td>
+      </tr>
+    </table>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;在这些寄存器中，有标注红字的寄存器都是值得我们去关注的。其中 ，BAR 寄存器的工作方式值得我们继续探讨，因为它与外部设备与主机内存的交互这件事情有比较大的关系。我们都知道：主机访问外部设备存储器有两种方式，即 I/O端口 和 I/O内存。我们通过上表红字还知道 PCI 设备会通过 BAR 寄存器以某种方式告知主机它想要的内存映射方法。我们下面来看一下 BAR 寄存器这 32 位的组成，并且通过例子来理解这是如何实现的。
+    </p>
+    <table border="1" align="center">
+      <caption>Memory Space BAR Layout</caption>
+      <tr>
+        <th>bits 31-4</th>
+        <th>bit 3</th>
+        <th>bits 2-1</th>
+        <th>bit 0</th>
+      </tr>
+      <tr>
+        <td>16-Byte Aligned Base Address</td>
+        <td>Prefetchable</td>
+        <td>Type</td>
+        <td>Always 0</td>
+      </tr>
+    </table>
+    <table border="1" align="center">
+      <caption>I/O Space BAR Layout</caption>
+      <tr>
+        <th>bits 31-2</th>
+        <th>bit 1</th>
+        <th>bit 0</th>
+      </tr>
+      <tr>
+        <td>4-Byte Aligned Base Address</td>
+        <td>Reserved</td>
+        <td>Always 1</td>
+      </tr>
+    </table>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，如果 PCI 设备想要的内存映射方式是 I/O内存 方式，则最低位为0，若为 I/O端口 方式则反之。我们重点看 Memory Space 的情况。bits 2-1 的 Type 字段用于指定 该 BAR 寄存器映射区域的大小。若为 0x00，则代表这个寄存器是 32 位宽的，可以映射到 32 位内存空间中的任意位置；若为 0x02，则代表这个寄存器是 64 位宽的，可以映射到 64 位内存空间的任意位置，值得注意的是，若映射的是 64 位宽的空间，则需要消耗 2 个 BAR寄存器用于记录操作系统分配的内存的起始地址。
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;我们通过例子讲解一下 BAR 寄存器是如何工作的。
+    </p>
+    <h5>&nbsp;&nbsp;&nbsp;&nbsp;(i) 在 32 位内存空间中申请 4k Bytes 的内存空间</h5>
+    <div align="center">
+      <img src="./pic/PCI_bar_1.png" width=500px>
+    </div>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;<b>Step 1</b>：如图中（1）所示，未初始化的BAR的低比特 [11~4] 都是0，高比特 [31~12] 都是不确定的值。在初始化阶段，操作系统会向整个 BAR 都写 1，来确定 BAR 的可操作的最低位是哪一位。在上图的例子中，当前可操作的最低位为12，因此当前 BAR 申请的地址空间大小为 <span>`2^12 = 4kB`</span>。如果可操作的最低位为 20，则该 BAR 申请的地址空间大小为 <span>`2^20 = 1MB`</span>。
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;<b>Step 2</b>：完成初始化（写1操作）之后，软件便开始读取BAR的值，来确定每一个 BAR 对应的地址空间大小和映射类型，具体在上面已经阐述。
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;<b>Step 3</b>：最后一步是，软件向 BAR 的高比特写入地址空间的起始地址（Start Address）。如图中所示，为0xF900_0000。注意到操作系统此时写入的只有高 20 位 (高 4 字节)的地址值，低 20 位 (低 4 字节)自动默认为 0。能这么操作的原因是申请的地址是 4kB 对齐的，因此低 12 位肯定为0。
+    </p>
+    <h5>&nbsp;&nbsp;&nbsp;&nbsp;(ii) 在 64 位内存空间中申请 64M Bytes 的内存空间</h5>
+    <div align="center">
+      <img src="./pic/PCI_bar_2.png" width=500px>
+    </div>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;原理同上，注意到此时我们是在 64 位的地址空间中申请内存，因此我们需要两个 BAR 寄存器来存储我们的起始地址。同样的，我们观察到此时操作系统写入的只有高 38 位 (高 6 字节半) 的地址，低 26 位是默认为 0 的，道理是一样的，我们申请的是 <span>`2^26 = 64MB`</span> 的空间，给出来的地址是 64MB 对齐的，所以低 26 位肯定是0。
+    </p>
+  </div>
+
+  <br>
+
+  <div class="boder">
+    <div align="center">
+      <h3>(2) 内核与 PCI 有关的数据结构和操作函数</h3>
+    </div>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;这个部分用于汇总使用到的数据结构和操作函数，无需一条一条看，后面会把这些函数和数据结构的使用过程串起来，用到了再来看用法就行。可以跳转至后面看 igb 驱动源码的分析。
+    </p>
+    <table border="1" align="center">
+      <caption>数据结构</caption>
+      <tr>
+        <th>类型和名称</th>
+        <th>位置</th>
+        <th>作用</th>
+      </tr>
+      <tr>
+        <td>struct pci_dev</td>
+        <td>/include/linux/pci.h</td>
+        <td>
+          该结构体用于描述一个 PCI 设备。
+          <br>关键成员：
+          <br><font color="red">&nbsp;&nbsp;&nbsp;&nbsp;struct resource resource[DEVICE_COUNT_RESOURCE]
+        </td>
+      </tr>
+      <tr>
+        <td>struct pci_bus</td>
+        <td>/include/linux/pci.h</td>
+        <td>描述一条 PCI 总线</td>
+      </tr>
+      <tr>
+        <td>struct pci_slot</td>
+        <td>/include/linux/pci.h</td>
+        <td>描述一个 PCI 物理插槽</td>
+      </tr>
+      <tr>
+        <td>struct pci_driver</td>
+        <td>/include/linux/pci.h</td>
+        <td>描述一个 PCI 设备驱动</td>
+      </tr>
+      <tr>
+        <td>struct pci_device_id</td>
+        <td>/include/linux/mod_devicetable.h</td>
+        <td>用于定义某个驱动程序支持的 PCI 设备</td>
+      </tr>
+    </table>
+     <table border="1" align="center">
+      <caption>操作函数</caption>
+      <tr>
+        <th width=40%>类型和名称</th>
+        <th>位置</th>
+        <th>作用</th>
+      </tr>
+      <tr>
+        <td>int pci_enable_device_io(struct pci_dev *dev);<br>int pci_enable_device_mem(struct pci_dev *dev);<br>int pci_enable_device(struct pci_dev *dev);</td>
+        <td>/drivers/pci/pci.c</td>
+        <td>
+          初始化一个 PCI 设备，三个函数分别对应：
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;初始化仅使用 IO 端口映射方法的设备
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;初始化仅使用 IO 内存映射方法的设备
+          <br>&nbsp;&nbsp;&nbsp;&nbsp;初始化使用 both IO 端口和 IO 内存的设备
+          <br>实际上这三个函数底层都是调用了 pci_enable_device_flags 对 PCI 设备进行初始化
+      </tr>
+    </table>
+  </div>
+</div>
+
+<h2>2. igb 网卡驱动分析<sup>[7]</sup></h2>
+<div class="div_learning_post">
+  <h3>(1) 模块初始化</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们定位到 /drivers/net/ethernet/intel/igb/igb_main.c，我们可以看见如下的模块初始化函数和模块注册代码：
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  *  igb_init_module - Driver Registration Routine</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  *  igb_init_module is the first routine called when the driver is</span></span><br><span class="line"><span class="comment">  *  loaded. All it does is register with the PCI subsystem.</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> __init <span class="title">igb_init_module</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> ret;</span><br><span class="line">  pr_info(<span class="string">&quot;%s - version %s\n&quot;</span>, igb_driver_string, igb_driver_version);</span><br><span class="line">  pr_info(<span class="string">&quot;%s\n&quot;</span>, igb_copyright);</span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line">  ret = pci_register_driver(&amp;igb_driver);</span><br><span class="line">  <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line">module_init(igb_init_module);</span><br></pre></td></tr></table></figure>
+<p>  <br>&nbsp;&nbsp;&nbsp;&nbsp;可以看到模块的初始化主要是调用了 pci_register_driver 函数完成的，下面我们重点关注一下 PCI 驱动是如何注册的。<br>  </p></p>
+  <h3>(2) PCI 初始化</h3>
+  <h5>(a) 定义驱动程序支持的硬件设备</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在 /drivers/net/ethernet/intel/igb/igb_main.c 中可以发现如下代码：
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">pci_device_id</span> <span class="title">igb_pci_tbl</span>[] =</span> &#123;</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_I354_BACKPLANE_1GBPS) &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_I354_SGMII) &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_I354_BACKPLANE_2_5GBPS) &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_I211_COPPER), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_I210_COPPER), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_I210_FIBER), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_I210_SERDES), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_I210_SGMII), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_I210_COPPER_FLASHLESS), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_I210_SERDES_FLASHLESS), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_I350_COPPER), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_I350_FIBER), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_I350_SERDES), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_I350_SGMII), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82580_COPPER), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82580_FIBER), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82580_QUAD_FIBER), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82580_SERDES), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82580_SGMII), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82580_COPPER_DUAL), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_DH89XXCC_SGMII), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_DH89XXCC_SERDES), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_DH89XXCC_BACKPLANE), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_DH89XXCC_SFP), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82576), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82576_NS), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82576_NS_SERDES), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82576_FIBER), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82576_SERDES), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82576_SERDES_QUAD), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82576_QUAD_COPPER_ET2), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82576_QUAD_COPPER), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82575EB_COPPER), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82575EB_FIBER_SERDES), board_82575 &#125;,</span><br><span class="line">  &#123; PCI_VDEVICE(INTEL, E1000_DEV_ID_82575GB_QUAD_COPPER), board_82575 &#125;,</span><br><span class="line">  <span class="comment">/* required last entry */</span></span><br><span class="line">  &#123;<span class="number">0</span>, &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>  <br>&nbsp;&nbsp;&nbsp;&nbsp;这部分代码创建了一个 <font color="red"><b>struct pci_device_id</b></font> 结构体数组 <font color="red"><b>igb_pci_tbl</b></font>，正如我们上面在“内核数据结构”部分所说，<font color="red"><b>struct pci_device_id</b></font> 用于描述 PCI 驱动所支持的设备型号，因此这个列表实际上就是在描述这个 igb 驱动所支持的网卡列表。注意到这里是使用了 <font color="red"><b>PCI_VDEVICE</b></font> 宏来初始化这些结构体，PCI_VDEVICE 是在 /include/linux/pci.h 中定义的，其定义如下所示：<br>  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* PCI_VDEVICE - macro used to describe a specific PCI device in short form</span></span><br><span class="line"><span class="comment">* @vend: the vendor name</span></span><br><span class="line"><span class="comment">* @dev: the 16 bit PCI Device ID</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* This macro is used to create a struct pci_device_id that matches a</span></span><br><span class="line"><span class="comment">* specific PCI device.  The subvendor, and subdevice fields will be set</span></span><br><span class="line"><span class="comment">* to PCI_ANY_ID. The macro allows the next field to follow as the device</span></span><br><span class="line"><span class="comment">* private data.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> PCI_VDEVICE(vend, dev) \</span></span><br><span class="line">  .vendor = PCI_VENDOR_ID_#<span class="meta">#vend, .device = (dev), \</span></span><br><span class="line">  .subvendor = PCI_ANY_ID, .subdevice = PCI_ANY_ID, <span class="number">0</span>, <span class="number">0</span></span><br></pre></td></tr></table></figure><br>  <br>&nbsp;&nbsp;&nbsp;&nbsp;可以看出实际上就是将 <font color="red"><b>struct pci_device_id</b></font> 结构体的 vendor 和 device 做了相应初始化，并把 subvendor 和 subdevice 字段设置为 PCI_ANY_ID，代表它能够处理任何类型的子系统id，<br>  然后把 class 和 class_mask 字段设置为0。除了 PCI_VDEVICE 宏以外，在它的代码周围还有其它接口的 <font color="red"><b>struct pci_device_id</b></font> 初始化宏，如 PCI_DEVICE_DATA，PCI_DEVICE_SUB 等，这里不做过多介绍。<br>  <br>&nbsp;&nbsp;&nbsp;&nbsp;回到我们的驱动程序，在我们创建完这个 struct pci_device_id 结构体数组后，宏 MODULE_DEVICE_TABLE 会被调用：<br>  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MODULE_DEVICE_TABLE(pci, igb_pci_tbl);</span><br></pre></td></tr></table></figure><br>  <br>&nbsp;&nbsp;&nbsp;&nbsp;宏 MODULE_DEVICE_TABLE 用于将这个列表导出到用户空间以供 热插拔 和 模块装载系统 了解什么模块针对什么硬件设备。宏 MODULE_DEVICE_TABLE 在 /include/linux/module.h 中被定义，如下所示：</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> MODULE</span></span><br><span class="line"><span class="comment">/* Creates an alias so file2alias.c can find device table. */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MODULE_DEVICE_TABLE(type, name)					\</span></span><br><span class="line">extern typeof(name) __mod_##type##__##name##_device_table		\</span><br><span class="line">  __attribute__ ((unused, alias(__stringify(name))))</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span>  <span class="comment">/* !MODULE */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MODULE_DEVICE_TABLE(type, name)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<p>  <br>&nbsp;&nbsp;&nbsp;&nbsp;可以看出，宏 MODULE_DEVICE_TABLE  创建了一个名为 类型为 typeof(name)，名称为 __mod_type__name_device_table 的变量，在我们的分析的 igb 驱动中其创建的就是一个类型为 struct pci_device_id[]，名称为 __mod_pci__igb_pci_tbl_device_table 的局部变量 (extern 在这里的意思指的是这个变量在本文件中其他位置定义)。在内核的构建过程中，depmod 程序会在所有模块中搜索符号 __mod_type__name_device_table，如果找到了该符号，则会把数据从模块中抽出，添加到文件 /lib/modules/KERNEL_VERSION/module.alias 中 (在 [3] 一书中说的是 module.pcimap 文件，实际上新内核已经没有这个文件)，当 depmod 结束之后，内核支持的所有 PCI 设备连同相应的模块名称都会在该文件中被列出。当内核告知热插拔系统一个新的 PCI 设备已经被发现时，热插拔系统使用该文件来寻找要装载的恰当的驱动程序。以 igb 驱动为例，其在 /lib/modules/KERNEL_VERSION/module.alias 文件中如下所示：<br>  </p><br>  <div align="center"><br>    <img src="./pic/module_alias.png" width=700px><br>  </div></p>
+  <h5>(b) 注册 PCI 驱动程序</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在关注完 PCI 驱动程序是如何记录其支持的设备后，我们来关注一下驱动程序是如何注册进内核的。正如我们在上面所看见的，在驱动程序的初始化函数中，我们调用 pci_register_driver (struct pci_driver * ) 以将我们的驱动程序注册到内核中。
+  此时我们关注一下 struct pci_driver 结构体。
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* struct pci_driver - PCI driver structure</span></span><br><span class="line"><span class="comment">* @node:	List of driver structures.</span></span><br><span class="line"><span class="comment">* @name:	Driver name.</span></span><br><span class="line"><span class="comment">* @id_table:	Pointer to table of device IDs the driver is</span></span><br><span class="line"><span class="comment">*		interested in.  Most drivers should export this</span></span><br><span class="line"><span class="comment">*		table using MODULE_DEVICE_TABLE(pci,...).</span></span><br><span class="line"><span class="comment">* @probe:	This probing function gets called (during execution</span></span><br><span class="line"><span class="comment">*		of pci_register_driver() for already existing</span></span><br><span class="line"><span class="comment">*		devices or later if a new device gets inserted) for</span></span><br><span class="line"><span class="comment">*		all PCI devices which match the ID table and are not</span></span><br><span class="line"><span class="comment">*		&quot;owned&quot; by the other drivers yet. This function gets</span></span><br><span class="line"><span class="comment">*		passed a &quot;struct pci_dev \*&quot; for each device whose</span></span><br><span class="line"><span class="comment">*		entry in the ID table matches the device. The probe</span></span><br><span class="line"><span class="comment">*		function returns zero when the driver chooses to</span></span><br><span class="line"><span class="comment">*		take &quot;ownership&quot; of the device or an error code</span></span><br><span class="line"><span class="comment">*		(negative number) otherwise.</span></span><br><span class="line"><span class="comment">*		The probe function always gets called from process</span></span><br><span class="line"><span class="comment">*		context, so it can sleep.</span></span><br><span class="line"><span class="comment">* @remove:	The remove() function gets called whenever a device</span></span><br><span class="line"><span class="comment">*		being handled by this driver is removed (either during</span></span><br><span class="line"><span class="comment">*		deregistration of the driver or when it&#x27;s manually</span></span><br><span class="line"><span class="comment">*		pulled out of a hot-pluggable slot).</span></span><br><span class="line"><span class="comment">*		The remove function always gets called from process</span></span><br><span class="line"><span class="comment">*		context, so it can sleep.</span></span><br><span class="line"><span class="comment">* @suspend:	Put device into low power state.</span></span><br><span class="line"><span class="comment">* @resume:	Wake device from low power state.</span></span><br><span class="line"><span class="comment">*		(Please see Documentation/power/pci.rst for descriptions</span></span><br><span class="line"><span class="comment">*		of PCI Power Management and the related functions.)</span></span><br><span class="line"><span class="comment">* @shutdown:	Hook into reboot_notifier_list (kernel/sys.c).</span></span><br><span class="line"><span class="comment">*		Intended to stop any idling DMA operations.</span></span><br><span class="line"><span class="comment">*		Useful for enabling wake-on-lan (NIC) or changing</span></span><br><span class="line"><span class="comment">*		the power state of a device before reboot.</span></span><br><span class="line"><span class="comment">*		e.g. drivers/net/e100.c.</span></span><br><span class="line"><span class="comment">* @sriov_configure: Optional driver callback to allow configuration of</span></span><br><span class="line"><span class="comment">*		number of VFs to enable via sysfs &quot;sriov_numvfs&quot; file.</span></span><br><span class="line"><span class="comment">* @err_handler: See Documentation/PCI/pci-error-recovery.rst</span></span><br><span class="line"><span class="comment">* @groups:	Sysfs attribute groups.</span></span><br><span class="line"><span class="comment">* @driver:	Driver model structure.</span></span><br><span class="line"><span class="comment">* @dynids:	List of dynamically added device IDs.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">pci_driver</span> &#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span>	<span class="title">node</span>;</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span>		*name;</span><br><span class="line">  <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">pci_device_id</span> *<span class="title">id_table</span>;</span>	<span class="comment">/* Must be non-NULL for probe to be called */</span></span><br><span class="line">  <span class="keyword">int</span>  (*probe)(struct pci_dev *dev, <span class="keyword">const</span> struct pci_device_id *id);	<span class="comment">/* New device inserted */</span></span><br><span class="line">  <span class="keyword">void</span> (*remove)(struct pci_dev *dev);	<span class="comment">/* Device removed (NULL if not a hot-plug capable driver) */</span></span><br><span class="line">  <span class="keyword">int</span>  (*suspend)(struct pci_dev *dev, <span class="keyword">pm_message_t</span> state);	<span class="comment">/* Device suspended */</span></span><br><span class="line">  <span class="keyword">int</span>  (*resume)(struct pci_dev *dev);	<span class="comment">/* Device woken up */</span></span><br><span class="line">  <span class="keyword">void</span> (*shutdown)(struct pci_dev *dev);</span><br><span class="line">  <span class="keyword">int</span>  (*sriov_configure)(struct pci_dev *dev, <span class="keyword">int</span> num_vfs); <span class="comment">/* On PF */</span></span><br><span class="line">  <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">pci_error_handlers</span> *<span class="title">err_handler</span>;</span></span><br><span class="line">  <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">attribute_group</span> **<span class="title">groups</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">device_driver</span>	<span class="title">driver</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">pci_dynids</span>	<span class="title">dynids</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>  <br>&nbsp;&nbsp;&nbsp;&nbsp;可以发现，struct pci_device 中包含的绝大多数都是指针，其中大部分是函数指针，另外还有指向我们上文介绍的 struct pci_device_id[] igb_pci_tbl 的指针。内核使用这些由驱动程序注册的函数来唤醒并初始化 PCI 设备。<br>  其中，我们要关注一下 probe (探针) 函数。<br>  </p></p>
+  <h5>(c) PCI 探针 (PCI Probe)</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在系统上电之后，Linux 内核的 PCI 核心 (PCI Core) 会在 链路训练阶段 (Link Training Phase) 列举出当前系统所装载的所有 PCI 设备，在这个阶段它会收集各个设备的基本信息，即我们上文所讲的 PCI 设备配置空间寄存器，包括 Vendor ID， Device ID
+  等信息，在收集完所有设备的信息之后，PCI 核心会遍历所有的使用 pci_register_driver() 注册的 pci_driver，判断它们是否能用于支持 PCI 设备，判断的依据就是 struct pci_device 中的指向 struct pci_device_id[] 的指针指向的列表，也就是我们上文中多次提到的
+  igb_pci_tbl。当 PCI 核心认为当前驱动可以用于支持目标 PCI 设备时，probe 函数就会被调用<sup>[8]</sup>。
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;我们通过 igb 驱动的例子来分析 probe 函数都干了一些什么事情。
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;首先我们定位到 /drivers/net/ethernet/intel/igb/igb_main.c 的 igb_probe 函数，观察其函数接口：
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*  igb_probe - Device Initialization Routine</span></span><br><span class="line"><span class="comment">*  @pdev: PCI device information struct</span></span><br><span class="line"><span class="comment">*  @ent: entry in igb_pci_tbl</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">*  Returns 0 on success, negative on failure</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">*  igb_probe initializes an adapter identified by a pci_dev structure.</span></span><br><span class="line"><span class="comment">*  The OS initialization, configuring of the adapter private structure,</span></span><br><span class="line"><span class="comment">*  and a hardware reset occur.</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">igb_probe</span><span class="params">(struct pci_dev *pdev, <span class="keyword">const</span> struct pci_device_id *ent)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  <br>&nbsp;&nbsp;&nbsp;&nbsp;我们看到其传进了两个参数，其中 struct pci_dev *pdev 用于描述匹配到该驱动的真实 PCI 设备，const struct pci_device_id *ent 用于描述具体在 struct pci_device_id[] 列表中匹配到的表项。接下来我们进入函数进行分析。</p>
+  <h5>(i) PCI 初始化</h5>
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">igb_probe</span><span class="params">(struct pci_dev *pdev, <span class="keyword">const</span> struct pci_device_id *ent)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">/* </span></span><br><span class="line"><span class="comment">    ... </span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="comment">/*唤醒设备（如果已挂起），启用内存资源等*/</span></span><br><span class="line">  err = pci_enable_device_mem(pdev);</span><br><span class="line">  <span class="keyword">if</span> (err)</span><br><span class="line">    <span class="keyword">return</span> err;</span><br><span class="line">  <span class="comment">/* *</span></span><br><span class="line"><span class="comment">  * 设置DMA掩码。该设备可以读取和写入64位内存地址，因此 dma_set_mask_and_coherent</span></span><br><span class="line"><span class="comment">  * 通过参数 DMA_BIT_MASK（64）进行调用。</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  pci_using_dac = <span class="number">0</span>;</span><br><span class="line">  err = dma_set_mask_and_coherent(&amp;pdev-&gt;dev, DMA_BIT_MASK(<span class="number">64</span>));</span><br><span class="line">  <span class="keyword">if</span> (!err) &#123;</span><br><span class="line">    pci_using_dac = <span class="number">1</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    err = dma_set_mask_and_coherent(&amp;pdev-&gt;dev, DMA_BIT_MASK(<span class="number">32</span>));</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">      dev_err(&amp;pdev-&gt;dev,</span><br><span class="line">        <span class="string">&quot;No usable DMA configuration, aborting\n&quot;</span>);</span><br><span class="line">      <span class="keyword">goto</span> err_dma;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/*保留内存区域*/</span></span><br><span class="line">  err = pci_request_mem_regions(pdev, igb_driver_name);</span><br><span class="line">  <span class="keyword">if</span> (err)</span><br><span class="line">    <span class="keyword">goto</span> err_pci_reg;</span><br><span class="line">  <span class="comment">/*使能 PCI Express Advanced Error Reporting*/</span></span><br><span class="line">  pci_enable_pcie_error_reporting(pdev);</span><br><span class="line">  <span class="comment">/*使能 DMA*/</span></span><br><span class="line">  pci_set_master(pdev);</span><br><span class="line">  <span class="comment">/*保存 PCI 配置空间*/</span></span><br><span class="line">  pci_save_state(pdev);</span><br><span class="line">  <span class="comment">/* </span></span><br><span class="line"><span class="comment">    ... </span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>  <br>&nbsp;&nbsp;&nbsp;&nbsp;首先，igb_probe 函数使用 pci_enable_device_mem 对设备进行唤醒。<br>  </p></p>
+</div>
+
+<!--ref-->
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+<ol>
+<li>Intel, <a target="_blank" rel="noopener" href="http://www.intel.com/content/dam/www/public/us/en/documents/datasheets/ethernet-controller-i350-datasheet.pdf">Intel® Ethernet Controller I350 Datasheet</a></li>
+<li>Github Repo, <a target="_blank" rel="noopener" href="https://github.com/zobinHuang/linux">zobinHuang/linux</a></li>
+<li>Jonathan Corbet, Alessandro Rubini, and Greg Kroah-Hartman, <a target="_blank" rel="noopener" href="https://lwn.net/Kernel/LDD3/">Linux Device Drivers, Third Edition</a></li>
+<li>knightsoul, <a target="_blank" rel="noopener" href="https://www.cnblogs.com/reality-soul/p/6126382.html">IO端口、IO内存、IO空间、内存空间的含义和联系</a></li>
+<li>Stack Exchange, <a target="_blank" rel="noopener" href="https://softwareengineering.stackexchange.com/questions/358817/how-does-the-base-address-registers-bars-in-a-pci-card-work#:~:text=Each%20function%20in%20a%20PCI,IO%20or%20Port%2Dmapped%20IO.">How does the Base Address Registers (BARs) in a PCI card work?</a></li>
+<li>Felix, <a target="_blank" rel="noopener" href="http://blog.chinaaet.com/justlxy/p/5100053320">PCIe扫盲——基地址寄存器（BAR）详解</a></li>
+<li>Joe Damato, <a target="_blank" rel="noopener" href="https://blog.packagecloud.io/eng/2016/06/22/monitoring-tuning-linux-networking-stack-receiving-data/">Monitoring and Tuning the Linux Networking Stack: Receiving Data</a></li>
+<li>Stack Overflow, <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/31330039/when-linux-calls-pci-drivers-probe-function">when Linux calls PCI driver’s probe function?</a></p>
+</div>
+
+</li>
+</ol>
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>LINUX_KERNEL_DRIVER_1_PCIE_NIC</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

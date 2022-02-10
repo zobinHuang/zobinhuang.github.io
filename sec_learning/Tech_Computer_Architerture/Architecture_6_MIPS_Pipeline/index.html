@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="流水线 MIPS 处理器的设计">
+<meta property="og:url" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/xxx.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/pipeline.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/abstract_pipeline.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/wrong_datapath.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/datapath.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/control.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/data_hazard.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/forwarding.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/hazard_detection_unit.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/two_cycle_latency_hazard.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/stall.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/stall_hdu.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/branch_predict.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/earlier_decision.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/flush_hdu.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/flush_hdu_forward.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/pic/complete_design.png">
+<meta property="article:published_time" content="2021-12-29T03:20:58.212Z">
+<meta property="article:modified_time" content="2021-12-29T03:20:58.212Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_6_MIPS_Pipeline/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>流水线 MIPS 处理器的设计 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">流水线 MIPS 处理器的设计
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Computer_Architerture/">TECH_COMPUTER_ARCHITERTURE</a></li>
+          <li>ARCHITECTURE_6_MIPS_PIPELINE</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_border{
+      margin-bottom: 20px;
+      padding: 10px 10px; 
+      font-size: 16px; 
+      word-spacing:0px;  
+      border:1px solid black;
+    }
+    .div_learning_post_background{
+      background-color:#E3E2E2;
+      padding: 10px 40px; 
+      font-size: 16px;
+      word-spacing:0px;  
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+    .div_learning_post_background p{
+      margin: 0px;
+    }
+</style>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Dec.24 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_intro"><font color="blue"><b>基本思路</b></font></a>：介绍了设计 MIPS 流水线处理器的基本思路;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.1 <a href="#1_intro_1"><font color="blue">流水线技术</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2 <a href="#1_intro_2"><font color="blue">阶段划分</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3 <a href="#1_intro_3"><font color="blue">冒险</font></a>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_datapath"><font color="blue"><b>数据通路</b></font></a>：介绍了 MIPS 流水线处理器的数据通路设计
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_control"><font color="blue"><b>控制单元</b></font></a>：介绍了 MIPS 流水线处理器的 Control Unit 设计
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 4. <a href="#4_hazard"><font color="blue"><b>流水线冒险</b></font></a>：本章重点，介绍了 MIPS 流水线处理器的冒险解决方法
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.1 <a href="#4_hazard_1"><font color="blue">定义</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.2 <a href="#4_hazard_2"><font color="blue">解决数据冒险: Forwarding</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.3 <a href="#4_hazard_3"><font color="blue">解决数据冒险: Stall</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.4 <a href="#4_hazard_4"><font color="blue">解决控制冒险: Flush</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.5 <a href="#4_hazard_5"><font color="blue">小结</font></a>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 5. <a href="#3_control"><font color="blue"><b>性能分析</b></font></a>：分析了 MIPS 流水线寄存器的 CPI 以及时钟周期长度决定方法
+  </div>
+</div>
+
+<!--标题-->
+<h2><a name="1_intro">1. 基本思路</a></h2>
+<div class="div_learning_post">
+  <h3><a name="1_intro_1">1.1 流水线技术</a></h3>
+
+  <div align="center">
+    <img src="./pic/pipeline.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">流水线 (Pipeline)</font> 是一种有效的提升系统带宽的技术手段。考虑我们在 <a href="/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/index.html">单周期 MIPS 处理器的设计</a> 中设计的单周期 MIPS 处理器，其运行形态如上图 (a) 所示。在本节讨论的流水线技术中，我们通过将单周期处理器的设计分解为 5 个流水线阶段 (pipeline stages)。在同一时刻下，流水线处理器可以同时执行 5 条指令，如上图 (b) 所示。每个指令都处在不同的阶段下。由于每个阶段都只是整个数据通路逻辑的大约 `1/5`，因此流水线处理器的时钟周期大约可以增加 5 倍，所以运行一条指令所需要的时延基本没有发生改变，但是我们却通过流水线技术提升了几乎 5 倍系统运行的吞吐量。
+
+  <h3><a name="1_intro_2">1.2 阶段划分</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;详细地说，我们会把指令的执行过程分为以下 5 个阶段:
+
+  <ol>
+    <li><font color="blue"><b>Fetch</b></font>: 从 Instruction Memory 中读取相关指令;</li>
+    <li><font color="blue"><b>Decode</b></font>: 从 Register File 从读取源操作数; 解码获取得到的指令，输出相应的控制信号;</li>
+    <li><font color="blue"><b>Execute</b></font>: 利用 ALU 进行相关计算操作;</li>
+    <li><font color="blue"><b>Memory</b></font>: 读写 Memory;</li>
+    <li><font color="blue"><b>Writeback</b></font>: 如果需要的话，将计算结果写回 Register File</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如下图所示，是我们对多条指令在流水线处理器中运行的抽象表示。每一个流水线阶段都由代表该阶段的关键部件表示: <font color="blue">Instruction Memory (IM)</font>，<font color="blue">Register File (RF) Read</font>，<font color="blue">ALU execution</font>，<font color="blue">Data Memory (DM)</font> 和 <font color="blue">Register File (RF) Write</font>。我们抽取出图中的每一行，看到的将是一条指令穿梭在各个流水线阶段中的运行周期; 我们抽取中图中的每一列，看到的是在一个特定的时钟周期下，各个流水线阶段正在运行的不同指令。
+
+  <div align="center">
+    <img src="./pic/abstract_pipeline.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上述图中，注意到我们使用了阴影来代表某个部件正在被使用。值得注意的是 Register File 在 <font color="blue">Decode</font> 阶段会被读取，而在 <font color="blue">Writeback</font> 阶段会被进行写入，我们在上图中使用了不同半边的阴影来表示这种区别。可以发现，Register File 在同一个时钟周期内，既可以被读取，又可以被写入。
+
+  <h3><a name="1_intro_3">1.3 冒险</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于流水线处理器允许多条指令在同一段时间内在处理器中运行，因此一个必须解决的问题是 <font color="blue">冒险 (hazard)</font> 问题 —— 一条后续的指令需要前序指令的运算结果，但是前序指令尚未完成运行。我们在后面将会介绍 <font color="blue">forwarding</font>、<font color="blue">stalls</font> 和 <font color="blue">flushes</font> 三种方法来解决冒险问题。
+</div>
+
+<h2><a name="2_datapath">2. 数据通路</a></h2>
+<div class="div_learning_post">
+
+  <div align="center">
+    <img src="./pic/wrong_datapath.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图 (a) 所示，是我们在 <a href="/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/index.html">单周期 MIPS 处理器的设计</a> 中完成的数据通路。通过在数据通路中插入四个 Pipeline Register，我们即可以将其分解为 5 个阶段，如上图 (b) 所示。然而实际上我们不能简单地向数据通路中添加 Pipeline Register 就草草了事，图 (b) 是一个存在错误的流水线设计。流水线设计中有一个很重要的原则: <font color="red">与一条指令相关所有信号输出都应该被推送到下一个流水线阶段</font>。因此，观察上图 (b)，错误出现在最后一个对 Register File 的写逻辑，信号 <font color="blue">`WriteRegE_{4:0}`</font> 来自于 <font color="blue">Execute</font> 阶段，而信号 <font color="blue">`Resu l tW`</font> 来自于 <font color="blue">Writeback</font> 阶段，这很明显是不匹配且错误的。因此，我们虽然在 <font color="blue">Execute</font> 阶段就获得了 <font color="blue">`WriteRegE_{4:0}`</font> 信号，但是我们必须将该信号伴随着指令的执行一路推送到 <font color="blue">Writeback</font>，然后和 <font color="blue">`Resu l tW`</font> 信号一起送上 Register File 的写入端口。修正的数据通路如下图所示:
+
+  <div align="center">
+    <img src="./pic/datapath.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;细心的读者还会发现，PC 的输入端口信号 <code>PC'</code> 的更新逻辑也存在一定的问题: 它既可以在 <font color="blue">Fetch</font> 阶段被更新，也可以在 <font color="blue">Memory</font> 阶段中被更新。我们会在后面专门针对冒险问题的讨论中解决这个问题。
+</div>
+
+<h2><a name="3_control">3. 控制单元</a></h2>
+<div class="div_learning_post">
+
+  <div align="center">
+    <img src="./pic/control.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在流水线处理器中，我们使用了和单周期处理器一样的控制信号，如上图所示。Control Unit 根据指令的 <code>opcode</code> 和 <code>funct</code> 字段来输出相应的控制信号。同样地，遵循上述的流水线处理器设计的原则，我们需要将这些控制信号伴随着指令在流水线中的执行，一路推送到后续的各个流水线阶段中。
+</div>
+
+<h2><a name="4_hazard">4. 流水线冒险</a></h2>
+<div class="div_learning_post">
+  <h3><a name="4_hazard_1">4.1 定义</a></h3>
+
+  <ol>
+    <li>如果一条指令的执行依赖于另一条 <font color="red">未完成</font> 的指令的运行结果，我们说当前流水线发生了 <font color="blue">数据冒险 (Data Hazard)</font>;</li>
+    <li>如果在处理器还没有得出下一条要运行的指令的地址的情况下，第一级流水线阶段就读取了可能有误的下一条指令，我们就说当前流水线发生了 <font color="blue">控制冒险 (Control Hazard)</font>;</li>
+    <li>结构冒险?</li>
+  </ol>
+
+  <div align="center">
+    <img src="./pic/data_hazard.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们来看一个数据冒险的例子。如上图所示，当指令 <code>add $s0, $s2, $s2</code> 还没有完成对 <code>s0</code> 的写入操作时，后续指令对 <code>s0</code> 寄存器的引用就都会产生错误的旧的引用结果。我们把这种情况称为 <font color="blue">写后读 (Read After Write, RAW)</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，上图中最后一条指令 <code>sub $t2, $s0, $s5</code> 的执行并不存在数据冒险问题，原因是因为: <font color="red">在一个时钟周期内，Register File 在前半个时钟周期完成数据的写入，在后半个时钟周期完成数据的读取</font>。因此在上图的第 5 个时钟周期中，指令 <code>add $s0, $s2, $s2</code> 在前半个时钟周期完成了对 <code>s0</code> 的写入操作，指令 <code>sub $t2, $s0, $s5</code> 在后半个时钟周期读取到了 <code>s0</code> 被更新的值，因此不存在数据冒险问题。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在本节中我们将引入一个 Hazard Unit，用于处理冒险问题。相应地，下面我们将介绍两种种用于解决数据冒险的方法: <font color="blue">Forwarding</font> 和 <font color="blue">Stall</font>，以及一种用于解决控制冒险的方法: <font color="blue">Flush</font>。
+
+  <h3><a name="4_hazard_2">4.2 解决数据冒险: Forwarding</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">Forwarding (转发)</font> 技术用于解决我们在上面看到的 RAW 数据冒险。满足如下条件的数据冒险可以使用转发手段来进行解决:
+
+  <div align="center" class="div_learning_post_border">
+    <div align="center"><h3>转发条件</h3></div>
+    [正在 <font color="blue">Execute</font> 阶段的指令的源操作寄存器] 与 [正在 <font color="blue">Memory</font> 或 <font color="blue">Writeback</font> 阶段的指令的目的操作寄存器] 相同时
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;转发技术的流程是这样的。如下图所示，在第 4 个时钟周期，指令 <code>add $s0, $s2, $s3</code> (p.s. 以下简称指令[1]) 位于 <font color="blue">Memory</font> 阶段，此时由于下一条指令 <code>and $t0, $s0, $s1</code> (p.s. 以下简称指令[2]) 需要使用到 <code>s0</code> 寄存器，因此如图所示， <code>s0</code> 寄存器的结果在指令[1] 的 <font color="blue">Memory</font> 阶段被转发到了指令 [2] 的 <font color="blue">Execution</font> 阶段，此时虽然指令 [1] 还未将更新过的 <code>s0</code> 寄存器的值写入 Register File，但是指令[2] 拿到的是正确的更新好的值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同理，在第 5 个时钟周期，指令 <code>or $t1, $s4, $s0</code> (p.s. 以下简称指令[3]) 接受到了来自指令[1] 在其 <font color="blue">Writeback</font> 阶段转发过来的 <code>s0</code> 指令的值。而对于最后一条指令 <code>sub $t2, $s0, $s5</code> (p.s. 以下简称指令[4])，我们在上面已经提及，Register File 在时钟周期前半部分写入，后半部分读取的特性，因此并不需要进行转发。
+
+  <div align="center">
+    <img src="./pic/forwarding.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了实现转发，我们必须向处理器中加入一个 <font color="blue">冒险检测单元 (Hazard Detection Unit, HDU)</font>，以及两个用于转发的多路选择器，如下图所示。
+
+  <div align="center">
+    <img src="./pic/hazard_detection_unit.png" width=100%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;HDU 接收运行至 <font color="blue">Execution</font> 阶段的指令的 <code>rs</code> (i.e. `Instr_{25:21}`) 和 <code>rt</code> (i.e. `Instr_{20:16}`) 字段，用于明确该指令所需要的源寄存器; 同时它还接收运行至 <font color="blue">Memory</font> 和 <font color="blue">Writeback</font> 阶段的指令的写入寄存器地址 (p.s. 由 <code>rt</code> (i.e. `Instr_{20:16}`) 或 <code>rd</code> (i.e. `Instr_{15:11}`) 指定，在该指令的 <font color="blue">Execution</font> 阶段 就已经被获取)，当前指令在 <font color="blue">Execution</font> 阶段的 ALU 计算结果 `ALUOutM` 和 `ALUOutW`，以及指示是否需要对 Register File 进行写入的信号 <font color="blue">`RegWriteM`</font> 和 <font color="blue">`RegWriteW`</font>，用于明确该指令是否需要对相关寄存器进行写入。注意到此处的 <font color="blue">`RegWriteM`</font> 和 <font color="blue">`RegWriteW`</font> 信号与控制单元的两个同名信号是同样的两个信号。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在数据通路上，两个多路选择器用于选择 ALU 两个输入操作数的来源: (1) 伴随当前指令的 Register File 的寄存器读取值; (2) 先序指令转发值。HDU 会对转发条件 (p.s. 见上面) 进行判断，如果满足条件，则就会通过信号 <font color="blue">`Fo rwardAE`</font> 或 <font color="blue">`Fo rwardBE`</font>，把由 `ALUOutM` 或 `ALUOutW` 承载的寄存器更新值转发至 <font color="blue">Execution</font> 阶段的指令。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，如果 <font color="blue">Memory</font> 和 <font color="blue">Writeback</font> 阶段的指令都需要进行转发，也即它们都满足转发条件，那么优先转发 <font color="blue">Memory</font> 阶段的寄存器更新值，因为它是最新的更新结果。另外，寄存器 <code>$0</code> 是固定被硬件下拉至 0 值的，因此它不会被转发。对于 ALU 的操作数 <code>SrcA</code> 来说，它的转发选择逻辑可以表达如下 Verilog 代码:
+
+  <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这样写是否考虑了优先级?</span></span><br><span class="line"><span class="keyword">if</span> ((RsE != <span class="number">0</span>) &amp;&amp; (RsE == WriteRegM) &amp;&amp; (RegWriteM)) <span class="keyword">begin</span></span><br><span class="line">  ForwardAW = <span class="number">10</span>; </span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> ((RsE != <span class="number">0</span>) &amp;&amp; (RsE == WriteRegW) &amp;&amp; (RegWriteW)) <span class="keyword">begin</span></span><br><span class="line">  ForwardAW = <span class="number">01</span>; </span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">  ForwardAW = <span class="number">00</span>; </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+  <h3><a name="4_hazard_3">4.3 解决数据冒险: Stall</a></h3>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 <code>lw</code> 指令来说，它对寄存器的更新值是在 <font color="blue">Memory</font> 阶段结束时才能获取到的，而不像我们上面看到的指令那样在 <font color="blue">Execute</font> 阶段结束之后就可以拿到，因此我们说这类指令有 <font color="blue">Two-cycle Latency</font>。假若这类指令后续有依赖于其目的寄存器的指令，那么单靠我们上面介绍的转发技术是无法解决的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如下是一个 Two-cycle Latency 的例子。当指令 <code>lw $s0, 40($0)</code> (i.e. 以下简称指令[1]) 需要运行到第 4 个时钟结束时才能够获取到 <code>s0</code> 寄存器的正确更新值，然而指令 <code>and $to, $s0, $s1</code> (i.e. 以下简称指令[2]) 在第 4 个时钟周期的开始处就需要使用 <code>s0</code> 寄存器的值，因此此时单靠转发并不能解决该冒险问题。
+
+  <div align="center">
+    <img src="./pic/two_cycle_latency_hazard.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此，我们在这里讨论一种新的解决上述数据冒险问题的方案: <font color="blue">停顿 (Stall)</font>。 如下图所示，指令[2] 会在第 3 个时钟周期，也就是当它运行到 <font color="blue">Decode</font> 阶段的时候，产生一次停顿，也就是说到了第 4 个时钟周期，它还是处于 <font color="blue">Decode</font> 阶段。相应地，指令 <code>or $t1, $s4, $s0</code> (i.e. 以下简称指令[3]) 也会被相应地进行一次停顿，在第 3 个和第 4 个时钟周期都停顿在 <font color="blue">Fetch</font> 阶段。
+
+  <div align="center">
+    <img src="./pic/stall.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注意到在第 4 个时钟周期中，<font color="blue">Execute</font> 阶段处于空闲状态; 在第 5 个时钟周期中，<font color="blue">Memory</font> 阶段处于空闲状态; 在第 6 个时钟周期中，<font color="blue">Fetch</font> 阶段处于空闲状态。我们将这些在流水线中 unused 的阶段成为 <font color="blue">气泡 (bubble)</font>。气泡的产生原理是在 <font color="blue">Execution</font> 阶段清空所有流水线寄存器的值，包括所有的控制信号和存储的数据，以使得 <font color="blue">Execution</font> 阶段仿佛是在执行一条 <code>nop</code>，并且这条伪 <code>nop</code> 指令将会随着流水线的推进到达 <font color="blue">Memory</font> 和 <font color="blue">Writeback</font> 阶段。细心的读者会注意到，在 <font color="blue">Execution</font> 阶段的所有流水线寄存器中，只有 <code>RsE</code>, <code>RtE</code>, <code>RdE</code> 和所有控制信号寄存器中存储的值会被用于更新内存单元以及 Architectural State (i.e. 各类寄存器)，因此理论上来说，在停顿发生的时候，我们并不需要清空所有的 <font color="blue">Execution</font> 阶段的流水线寄存器，而只清空上面我们提到的这些寄存器就足够了。
+
+  <div class="div_learning_post_border">
+    <div align="center"><h3>停顿条件</h3></div>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;我们下面会看到，HDU 会对一条正处于 <font color="blue">Execute</font> 阶段的指令进行检查，如果发现是一条 <code>lw</code> 指令，并且它的目的寄存器 (i.e. 由 <code>rt</code> (`Instr_{20:16}`) 字段指定) 与当前正处于 <font color="blue">Decode</font> 阶段的指令的任一源寄存器 (i.e. 由 <code>rs</code> (`Instr_{20:16}`) 和 <code>rt</code> (`Instr_{20:16}`) 指定)相同，则这条位于 <font color="blue">Decode</font> 阶段的指令会被停顿一个周期，停顿结束后它进入 <font color="blue">Execute</font> 阶段时，它就能收到正确的来自 <font color="blue">Writeback</font> 阶段的 <code>lw</code> 的转发值。
+  </div>
+
+  <div align="center">
+    <img src="./pic/stall_hdu.png" width=100%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们现在来讨论流水线处理器是如何支持停顿设计的。如上图所示，是支持停顿的流水线处理器，我们向 <font color="blue">Fetch</font> 和 <font color="blue">Decode</font> 阶段的流水线处理器上增加了 <code>EN</code> 使能端口，相应的使能信号是 <font color="blue">`StallF`</font> 和 <font color="blue">`StallD`</font>;向 <font color="blue">Execute</font> 阶段的流水线处理器上增加了 <code>CLR</code> 同步重置端口，相应的重置信号是 <font color="blue">`FlushE`</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当 HDU 检测到停顿条件时，它会使能 <font color="blue">`StallF`</font> 和 <font color="blue">`StallD`</font> 信号来关闭 <font color="blue">Fetch</font> 和 <font color="blue">Decode</font> 阶段的流水线处理器的更新 (p.s. 注意到这两个流水线寄存器的 <code>EN</code> 使能端口前有两个反相器)，以使得它们保持旧值。同时 HDU 还会使能 <font color="blue">`FlushE`</font> 信号，以使在下一个时钟周期开始的时候清空 <font color="blue">Execute</font> 阶段的流水线寄存器的输出，以在 <font color="blue">Execute</font> 阶段产生一个气泡。另外，我们在 <font color="blue">Execute</font> 阶段将控制信号 <font color="blue">`Memt oRegE`</font> 送入了 HDU，HDU 凭借这个信号判断得出当前在 <font color="blue">Execute</font> 阶段的指令是否是一条 <code>lw</code> 指令。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上述信号的控制逻辑可以使用以下 Verilog 代码进行表示:
+
+  <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">wire</span> lwstall = ((RsD==RtE) || (RtD==RtE)) &amp;&amp; (MemtoRegE)</span><br><span class="line">StallF = lwstall</span><br><span class="line">StallD = lwstall</span><br><span class="line">FlushE = lwstall</span><br></pre></td></tr></table></figure>
+  <h3><a name="4_hazard_4">4.4 解决控制冒险: Flush</a></h3>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>beq</code> 指令在流水线处理器中会引入这样的一个问题: 只有当 <code>beq</code> 指令运行到 <font color="blue">Memory</font> 阶段的时候，才能知悉是否需要对 PC 寄存器进行修改，而此时已经有三条分别位于 <font color="blue">Fetch</font>, <font color="blue">Decode</font> 和 <font color="blue">Execute</font> 阶段的指令进入了流水线，此时必须对在 <code>beq</code> 指令之后的指令进行处理。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一个最简单暴力的办法就是一旦发现一条 <code>beq</code> 指令进入流水线，就停顿三个时钟周期，直到 <code>beq</code> 指令在其 <font color="blue">Memory</font> 阶段对 PC 寄存器进行更新，才开始下一条指令的执行。这样的方法无异于降低了处理器的运行效率。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另一种方法是，对分支指令的跳转结果进行预测，然后基于预测结果将相关后序指令送入流水线。当分支指令在其 <font color="blue">Memory</font> 阶段知悉跳转结果时，如果预测结果是错误的，那么被送上流水线的三条后续指令就必须被 <font color="blue">清空 (Flush)</font>，清空的办法是清空相关阶段的流水线寄存器中的值，也就是我们上面提到过的插入气泡。这些被浪费了指令周期被称为 <font color="blue">分支预测错误惩罚 (Branch Misprediction Penalty)</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下图是清空方案的一个例子。指令 <code>beq $t1, $t2, 40</code> (i.e. 以下简称指令[1]) 位于 24 地址处，其与后续的三条指令被陆续送上了流水线，也就是说处理器的预测是不会发生跳转行为。在第 4 个时钟周期，位于 <font color="blue">Memory</font> 阶段的指令[1] 得到了跳转结果，我们假设跳转条件为真，那么此时后续三条分别位于 <font color="blue">Fetch</font>, <font color="blue">Decode</font> 和 <font color="blue">Execute</font> 阶段的指令的流水线寄存器都将被清空。在第 5 个时钟周期时，位于跳转目的地址的 64 内存单元存储的指令 <code>slt $t3, $s2, $s3</code> 就被送上了流水线。
+
+  <div align="center">
+    <img src="./pic/branch_predict.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;考虑上面的方案，我们总得等到 <code>beq</code> 指令执行到 <font color="blue">Memory</font> 阶段后才能知悉指令跳转的结果。如果预测错误，我们将浪费掉三个时钟周期的运行资源，这对处理器的性能将是一个极大的损失。因此，我们最直接的一个想法就是: 是否可以提前知悉跳转结果?
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>beq</code> 的跳转预测涉及到对两个寄存器值的判断。当判断到我们读取到的指令是一条 <code>beq</code> 指令时，我们可以在其运行到 <font color="blue">Decode</font> 阶段时，提前使用一个额外的比较器，对从 Register File 读取出来的两个源寄存器的值进行比较，并且在 <font color="blue">Decode</font> 阶段结束时，将相应的比较结果用于决定下一个 PC 指针值。下图展示了该跳转过程，可以发现，如果我们可以在 <font color="blue">Decode</font> 阶段就知悉跳转结果，当遭遇预测失败时，我们只需要清空当前 <font color="blue">Fetch</font> 阶段的流水线寄存器就可以了，减少了由于控制冒险产生的气泡的个数。
+
+  <div align="center">
+    <img src="./pic/earlier_decision.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了支持对提前清空操作的支持，我们对 HDU 进行了修改，如下图所示。首先，我们在  <font color="blue">Decode</font> 阶段增加了一个比较器，在  <font color="blue">Decode</font> 阶段就对读取出来的两个寄存器数据进行比较，并且配合控制信号 <font color="blue">`BranchD`</font>，形成最终决定是否跳转的信号 <font color="blue">`PCSrc`</font>。一旦该信号被使能，首先它会被用于选取 PC 寄存器前的多路选择器，以选择来自 <code>beq</code> 指令计算结果的下一指令地址; 其次它会被用于清空 <font color="blue">Decode</font> 阶段的流水线寄存器。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，注意到为了在 <font color="blue">Decode</font> 阶段就能计算得到相应的跳转地址，我们把用于计算跳转地址的加法器也放置到了 <font color="blue">Decode</font> 阶段中，以在需要跳转的时候，在 <font color="blue">Decode</font> 阶段中就能得到跳转的具体地址。
+
+  <div align="center">
+    <img src="./pic/flush_hdu.png" width=100%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然而，单纯的进行上述修改仍然遗留了一个 RAW 的数据冒险问题: 如果 <code>beq</code> 指令的前序指令尚未将相关寄存器的更新值写回 Register File 中，那么比较器获取的两个寄存器值就为旧值，因此我们必须解决该数据冒险问题。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;解决办法如下图所示，具体如下:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，HDU 根据 <font color="blue">`BranchD`</font> 信号检测到位于 <font color="blue">Decode</font> 阶段的指令是一条 <code>beq</code> 指令，从 `RsD` 和 `RtD` 获取 <code>beq</code> 指令判断的寄存器，从 `WriteRegE_{4:0}`, `WriteRegM_{4:0}` 和 `WriteRegW_{4:0}` 获取 <font color="blue">Execute</font>, <font color="blue">Memory</font> 和 <font color="blue">Writeback</font> 阶段的指令写入的目标寄存器，然后它会对以下情况进行检查:
+
+  <ol>
+    <li>如果在 <font color="blue">Writeback</font> 阶段的前序指令将新值写入寄存器，那么由于 Register File 在时钟周期前半部分完成写入，在后半部分完成读取，所以没有冒险会产生;</li>
+    <li>如果在 <font color="blue">Memory</font> 阶段的前序指令产生了写入寄存器的新值，它将被转发至 <font color="blue">Decode</font> 阶段接在比较器前的两个多路选择器，HDU 分别使用 <font color="blue">`Fo rwardAD`</font> 和 <font color="blue">`Fo rwardBD`</font> 信号对这两个多路选择器进行控制。HDU 根据 <font color="blue">`RegWriteM`</font> 检测到这种情况;</li>
+    <li>如果在 <font color="blue">Memory</font> 阶段的指令是一条 <code>lw</code> 指令，那么位于 <font color="blue">Decode</font> 阶段的 <code>beq</code> 就必须等待该 <code>lw</code> 指令到达 <font color="blue">Writeback</font> 阶段时，才可能获取更新的寄存器值，因此流水线必须停顿一个时钟周期。HDU 根据 <font color="blue">`Memt oRegM`</font> 检测到这种情况;</li>
+    <li>如果在 <font color="blue">Execute</font> 阶段的前序指令产生了写入寄存器的新值，流水线同样需要被暂停一个时钟周期，使得这条指令到达 <font color="blue">Memory</font> 阶段，然后根据指令的不同，使用上述 2 或 3 来进行处理。HDU 根据 <font color="blue">`RegWriteE`</font> 检测到这种情况。</li>
+  </ol>
+
+  <div align="center">
+    <img src="./pic/flush_hdu_forward.png" width=100%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述修改，转发相关信号的产生逻辑可以使用如下 Verilog 代码来表示:
+
+  <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Branch Forward Control</span></span><br><span class="line"><span class="keyword">wire</span> ForwardAD = ((RsD != <span class="number">0</span>) &amp;&amp; (RsD == WriteRegM) &amp;&amp; (RegWriteM))</span><br><span class="line"><span class="keyword">wire</span> ForwardBD = ((RtD != <span class="number">0</span>) &amp;&amp; (RtD == WriteRegM) &amp;&amp; (RegWriteM))</span><br><span class="line"></span><br><span class="line"><span class="comment">// Normal Forward Control</span></span><br><span class="line"><span class="comment">// 这样写是否考虑了优先级?</span></span><br><span class="line"><span class="keyword">if</span> ((RsE != <span class="number">0</span>) &amp;&amp; (RsE == WriteRegM) &amp;&amp; (RegWriteM)) <span class="keyword">begin</span></span><br><span class="line">  ForwardAW = <span class="number">10</span>; </span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> ((RsE != <span class="number">0</span>) &amp;&amp; (RsE == WriteRegW) &amp;&amp; (RegWriteW)) <span class="keyword">begin</span></span><br><span class="line">  ForwardAW = <span class="number">01</span>; </span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">  ForwardAW = <span class="number">00</span>; </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;停顿相关信号的产生逻辑可以使用如下 Verilog 代码来表示:
+
+  <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Stall Control</span></span><br><span class="line"><span class="keyword">wire</span> branchstall =  ( BranchD &amp;&amp; (RegWriteE) &amp;&amp; ((RsD == WriteRegE)||(RtD == WriteRegE)) ) ||</span><br><span class="line">                    ( BranchD &amp;&amp; (Memt oRegM) &amp;&amp; ((RsD == WriteRegM)||(RtD == WriteRegM)) )</span><br><span class="line"><span class="keyword">wire</span> lwstall = ((RsD==RtE) || (RtD==RtE)) &amp;&amp; (MemtoRegE)</span><br><span class="line"></span><br><span class="line">StallF = (lwstall || branchstall)</span><br><span class="line">StallD = (lwstall || branchstall)</span><br><span class="line">FlushE = (lwstall || branchstall)</span><br></pre></td></tr></table></figure>
+  <h3><a name="4_hazard_5">4.5 小结</a></h3>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们已经完成了一个 5 阶段的 MIPS 流水线处理器设计了，总体如下所示:
+
+  <div align="center">
+    <img src="./pic/complete_design.png" width=100%>
+  </div>
+
+</div>
+
+
+<h2><a name="5_performance">5. 性能分析</a></h2>
+<div class="div_learning_post">
+  <h3><a name="5_performance_1">5.1 CPI</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;理想情况下 (i.e. 没有清空和停顿操作)，流水线处理器每一个时钟周期可以接收一条新的指令，因此流水线处理器的 CPI 值为 1。由于每一次清空和每一次停顿操作都需要浪费掉一个时钟周期，所以在实际上流水线处理器会有稍高的 CPI。
+
+  <h3><a name="5_performance_2">5.2 时钟周期</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了确定流水线处理器的运行时钟周期，我们需要取出 5 个阶段运行时间的最大值，也即
+
+  <div class="cmath" align="center">
+    `T_c = max((t_{pcq}+t_{mem}+t_{setup}), (2(t_{pcq}+t_{RFRead}+t_{m ux}+t_{eq}+t_{AND}+T_{m ux}+t_{setup})), (t_{pcq}+t_{m ux}+t_{m ux}+t_{ALU}+t_{setup}), (t_{pcq}+t_{memwrite}+t_{setup}), (2(t_{pcq}+t_{m ux}+t_{RFWrite})) ) ((Fetch), (Decode), (Execute), (Memo ry), (Writeback))`
+  </div>
+  <br>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有个值得注意的点是，由于 Register File 在 <font color="blue">Writeback</font> 阶段的前半个时钟周期完成写入操作，在 <font color="blue">Decode</font> 阶段的后半个时钟周期完成读取操作，因此这两个阶段的时钟周期长度实际上应该是 读取/写入 操作的两倍长。
+</div>
+<!--ref-->
+<!--
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+<ol>
+<li>golang.org, <a target="_blank" rel="noopener" href="https://golang.org/cmd/go/#hdr-GOPATH_environment_variable">GOPATH environment variable</a></p>
+</div>-->
+
+</li>
+</ol>
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Computer_Architerture/">TECH_COMPUTER_ARCHITERTURE</a></li>
+          <li>ARCHITECTURE_6_MIPS_PIPELINE</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

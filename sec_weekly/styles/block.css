@@ -1,0 +1,95 @@
+/*周报封面陈列 container*/
+.weekly-report-showcase{
+	display: flex;
+	flex-flow: row wrap;
+	/* justify-content: center; */
+	align-items: center;
+	align-content: flex-start;
+}
+
+
+
+
+/*周报样式*/
+/*本周周报的总 container*/
+.weekly-report-current-report-container{
+	/* flex:0 0 25% 等于 flex-grow=0(默认不放大) + flex-shrink=0(不缩小) + flex-basis=25%(项目占据主轴的空间) */
+	flex: 0 0 25%;
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+	background-color: #FFFFFF;
+	padding: 20px 30px;
+}
+
+/*本周周报部分的 container*/
+.weekly-report-current-report{
+	width: 250px;
+	border: 1px solid #000000;
+	box-shadow: 10px 10px 5px #888888;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin: 20px 20px;
+}
+
+/*本周周报封面 container*/
+.weekly-report-current-report-image{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 80%;
+}
+.weekly-report-current-report-image img{
+	margin: 0px;
+	padding: 0px;
+	width: 250px;
+}
+.weekly-report-current-report-image .grayscale {-webkit-filter: grayscale(100%);filter: grayscale(100%);} /*img class 灰色*/
+.weekly-report-current-report-image .huerotate {-webkit-filter: hue-rotate(180deg);filter: hue-rotate(180deg);} /*img class 色调旋转*/
+.weekly-report-current-report-image .invert {-webkit-filter: invert(100%);filter: invert(100%);} /*img class 色调反转*/
+.weekly-report-current-report-image .opacity {-webkit-filter: opacity(50%);filter: opacity(50%);} /*img class 浅化*/
+.weekly-report-current-report-image .saturate {-webkit-filter: saturate(7); filter: saturate(7);} /*img class 浸水化*/
+.weekly-report-current-report-image .sepia {-webkit-filter: sepia(100%);filter: sepia(100%);} /*img class 复古化*/
+.weekly-report-current-report-image .shadow {-webkit-filter: drop-shadow(8px 8px 10px green);filter: drop-shadow(8px 8px 10px green);} /*img class 添加阴影*/
+
+/*本周周报标题 container*/
+.weekly-report-current-report-title{
+	padding: 10px 0px 10px 0px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.weekly-report-current-report-title h2{
+	margin: 0px;
+	padding: 0px;
+	font-size: 18px;
+}
+.weekly-report-current-report-title h5{
+	margin: 0px;
+	padding: 0px;
+	font-size: 12px;
+}
+
+/*本周周报封面介绍 container*/
+.weekly-report-current-report-intro{
+	padding: 5px 30px;
+}
+.weekly-report-current-report-intro p{
+	margin: 0px;
+	padding: 0px;
+	font-size: 10px;
+}
+
+@media(max-width: 768px) {
+	.weekly-report-current-report-container{
+		flex: none;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+}

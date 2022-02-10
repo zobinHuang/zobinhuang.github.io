@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 10px;}         img{margin-right: 20px;}         .div_learning_post{font-size: 16px; word-spacing:0px;}         .post_fs14_ws0{font-size: 18px; word-spacing:0px; border:2">
+<meta property="og:type" content="website">
+<meta property="og:title" content="进阶网络">
+<meta property="og:url" content="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 10px;}         img{margin-right: 20px;}         .div_learning_post{font-size: 16px; word-spacing:0px;}         .post_fs14_ws0{font-size: 18px; word-spacing:0px; border:2">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-11-28T14:36:17.727Z">
+<meta property="article:modified_time" content="2021-11-28T14:36:17.727Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>进阶网络 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">进阶网络
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+          <li>TECH_ADVANCED_NETWORK</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+    <style>
+        img{margin-left: 10px;}
+        img{margin-right: 20px;}
+        .div_learning_post{font-size: 16px; word-spacing:0px;}
+        .post_fs14_ws0{font-size: 18px; word-spacing:0px; border:2px solid black;}
+        .boder{border:2px solid black; margin-left: 15px; margin-right: 15px; word-spacing:0px;}
+    </style>
+</head>
+
+<body>
+
+<h3>1. 公有云平台</h3>
+<div class="post_fs14_ws0">
+
+<table>
+<thead>
+<tr>
+<th align="left"><div align="center"><h1><b>☁️ 公有云的概念、相关产品和技术栈分析</b></h1></div></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1. <a href="./Cloud_1_What_Is_Public_Cloud/index.html"><b>公有云概念</b></a> <br> &nbsp;&nbsp;&nbsp;&nbsp; <font color="red">[画饼中]</font></td>
+</tr>
+<tr>
+<td align="left">2. <a href="./Cloud_2_Enterprise_Documents/index.html"><b>云厂商文档链接合集</b></a> <br> &nbsp;&nbsp;&nbsp;&nbsp; 本页面整理了代表性云服务提供平台的文档页面，方便随时跳转查看</td>
+</tr>
+<tr>
+<td align="left">3. <a href="./Cloud_3_Network_Product_And_Tech_Stack/index.html"><b>云平台网络产品观察以及相关技术栈分析</b></a> <br> &nbsp;&nbsp;&nbsp;&nbsp; 对云平台提供的网络产品进行分析，并且结合 Linux 开源网络世界的拓扑，介绍基于 Linux 基金会划分的开源网络框架</td>
+</tr>
+</tbody></table>
+</div>
+
+<br>
+
+<h3>2. 技术栈知识储备</h3>
+<div class="boder">
+<h4>&nbsp;&nbsp;&nbsp;&nbsp;(1) 网络基础设施</h3>
+<div class="boder">
+
+<table>
+<thead>
+<tr>
+<th align="left"><div align="center"><h1><b>数据中心硬件基础设施</b></h1></div></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1. <a href="./Infrastructure_Datacenter_1_Hardware_Arch/index.html"><b>数据中心网络架构</b></a> <br> &nbsp;&nbsp;&nbsp;&nbsp; <font color="red">[画饼中]</font></td>
+</tr>
+</tbody></table>
+</div>
+
+<br>
+
+<h4>&nbsp;&nbsp;&nbsp;&nbsp;(2) I/O 和 数据通路</h3>
+<div class="boder">
+
+<table>
+<thead>
+<tr>
+<th align="left"><div align="center"><h1><b>虚拟化技术</b></h1></div></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1. <a href="./Infrastructure_Virtualization_1_Motivation_And_Principles/index.html"><b>虚拟化的动机、基本原理和种类</b></a> <br> &nbsp;&nbsp;&nbsp;&nbsp; 结合历史背景介绍虚拟化技术出现的动机和要解决的问题，并且对 both 狭义的和广义的虚拟化进行定义和解释</td>
+</tr>
+<tr>
+<td align="left">2. <a href="./Infrastructure_Virtualization_2_Network_Virtualization_Definition/index.html"><b>网络虚拟化：基本概念</b></a> <br> &nbsp;&nbsp;&nbsp;&nbsp; 对网络虚拟化的基本动机和概念进行分析</td>
+</tr>
+<tr>
+<td align="left">3. <a href="./Infrastructure_Virtualization_3_Open_vSwitch_Paper/index.html"><b>网络虚拟化：Open vSwitch 论文阅读</b></a> <br> &nbsp;&nbsp;&nbsp;&nbsp; 阅读 The Design and Implementation of Open vSwitch (NSDI’15) 论文，对 OVS 的工作原理进行理解</td>
+</tr>
+</tbody></table>
+</div>
+
+<br>
+
+<div class="boder">
+
+<table>
+<thead>
+<tr>
+<th align="left"><div align="center"><h1><b>DPDK</b></h1></div></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1. <a href="./Infrastructure_DPDK_1_DPDK_Intro/index.html"><b>DPDK 概述</b></a> <br> &nbsp;&nbsp;&nbsp;&nbsp; 对 DPDK 技术的动机和涉及的相关技术进行简介</td>
+</tr>
+<tr>
+<td align="left">2. <a href="./Infrastructure_DPDK_2_Cache_And_Memory/index.html"><b>内存 与 Cache</b></a> <br> &nbsp;&nbsp;&nbsp;&nbsp; 对计算机的 Cache 和 内存系统作全面介绍，作为理解 DPDK 设计思路的基础</td>
+</tr>
+</tbody></table>
+</div>
+
+<br>
+
+<div class="boder">
+
+<table>
+<thead>
+<tr>
+<th align="left"><div align="center"><h1><b>RDMA</b></h1></div></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><div align="center"><font color="red">[画饼中]</font></div></td>
+</tr>
+</tbody></table>
+</div>
+
+<br>
+
+<div class="boder">
+
+<table>
+<thead>
+<tr>
+<th align="left"><div align="center"><h1><b>Offloading</b></h1></div></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1. <a href="./Infrastructure_Offloading_1_Offloading_Intro/index.html"><b>Offloading 技术介绍</b></a> <br> &nbsp;&nbsp;&nbsp;&nbsp; <font color="red">[画饼中]</font></td>
+</tr>
+<tr>
+<td align="left">2. <a href="./Infrastructure_Offloading_2_Config_SmartNIC/index.html"><b>BlueField SmartNIC Bring Up</b></a> <br> &nbsp;&nbsp;&nbsp;&nbsp; 基于 BlueField SmartNIC 开启对 Offloading 技术的分析，本章将介绍如何在服务器上安装、配置 BlueField SmartNIC</td>
+</tr>
+</tbody></table>
+</div>
+
+<br>
+
+<div class="boder">
+
+<table>
+<thead>
+<tr>
+<th align="left"><div align="center"><h1><b>SDN</b></h1></div></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1. <a href="./Infrastructure_SDN_1_SDN_OpenFlow_Intro/index.html"><b>SDN 概念 和 OpenFlow 介绍</b></a> <br> &nbsp;&nbsp;&nbsp;&nbsp; 对 SDN 的概念作出介绍，并且对标准化南向协议 OpenFlow 的进行初步简单理解</td>
+</tr>
+</tbody></table>
+</div>
+
+<br>
+<div class="boder">
+
+<table>
+<thead>
+<tr>
+<th align="left"><div align="center"><h1><b>P4</b></h1></div></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><div align="center"><font color="red">[画饼中]</font></div></td>
+</tr>
+</tbody></table>
+</div>
+
+<br>
+
+
+</div>
+</body>
+
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+          <li>TECH_ADVANCED_NETWORK</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

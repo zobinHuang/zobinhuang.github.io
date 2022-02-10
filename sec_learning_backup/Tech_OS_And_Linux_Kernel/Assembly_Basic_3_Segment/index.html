@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="代码段、栈段和数据段">
+<meta property="og:url" content="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_3_Segment/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_3_Segment/pic/xxx.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_3_Segment/pic/asm_1.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_3_Segment/pic/asm_2.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_3_Segment/pic/asm_3.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_3_Segment/pic/asm_address.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_3_Segment/pic/segment_switch.png">
+<meta property="article:published_time" content="2021-09-07T12:09:29.636Z">
+<meta property="article:modified_time" content="2021-09-07T12:09:29.636Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="https://zobinhuang.com/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_3_Segment/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>代码段、栈段和数据段 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">代码段、栈段和数据段
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>ASSEMBLY_BASIC_3_SEGMENT</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_boder{padding: 10px 10px; font-size: 16px; word-spacing:0px;  border:1px solid black;}
+</style>
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：July 9 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=30%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<!---->
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.1 <a href="#1_xxx"><font color="blue">xxx</font></a>：xxx
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+
+  </div>
+</div>
+
+<h2>1. Segment 的理解</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;通过上一篇文章我们知道了：CPU 在访问内存时，会把内存中存储的数据分为三类：数据、代码和栈，分别用 DS:[], CS:IP, SS:SP 的分段访问方式进行访问。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;但是在之前的例子中我们都是随意指定一段内存就当作代码段、数据段和栈段，实际上这样是非常不安全的。下面我们通过一些汇编代码例子来体会如何稍微安全一些地安排这三种不同的数据。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先说明，这里是第一次展示汇编代码程序，因此必须对汇编代码的结构作出介绍。汇编代码由：指令、数据和伪指令构成。指令是最终被编译器转化为机器码的部分，数据不言自明，伪指令就是指导编译器编译的一些信息，最终不会被转义为机器码。关于各类伪指令的用法，将在下面代码的例子中进行介绍。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们关心代码段，因为代码段是我们用于编写我们指令的地方，请看下面这段代码的说明，理解汇编程序的各种伪指令的意义。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将 code segment 的地址和 CS 寄存器关联起来 (MASM 编译器需要)</span></span><br><span class="line">assume cs:code</span><br><span class="line"></span><br><span class="line"><span class="comment"># code segment 指明了代码段开始的位置 (CS 寄存器的初始值)</span></span><br><span class="line">code segment</span><br><span class="line"></span><br><span class="line"><span class="comment"># start 指明了程序开始的位置 (也即 IP 寄存器的初始值)</span></span><br><span class="line"><span class="comment"># 编译后，编译器会把 start 的位置附在可执行文件的描述信息中，</span></span><br><span class="line"><span class="comment"># 在运行这个程序的时候就会根据这段描述信息去设置 CS 和 IP 寄存器，从而实现了 start 的入口的功能</span></span><br><span class="line">start:      mov bx, 0</span><br><span class="line">            mov ax, 0</span><br><span class="line">            mov cx, 8</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 程序退出</span></span><br><span class="line">            mov  ax, 4C00H</span><br><span class="line">            int 21H</span><br><span class="line">code ends</span><br><span class="line"><span class="comment"># 代码段结尾</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 程序结尾</span></span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后，通过 "dw" 关键字，我们可以尝试在代码段中安排我们自己定义的数据，比如使用下面的代码，我们能实现从 1 到 8 的累加功能：
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">assume cs:code</span><br><span class="line"></span><br><span class="line">code segment</span><br><span class="line">            <span class="comment"># 在代码段中定义了数据</span></span><br><span class="line">            dw 1,2,3,4,5,6,7,8</span><br><span class="line"></span><br><span class="line">start:      mov bx, 0</span><br><span class="line">            mov ax, 0</span><br><span class="line">            mov cx, 8</span><br><span class="line"></span><br><span class="line">add_number: add ax, cs:[bx] <span class="comment">#这里 cs 实际上指向的就是代码段最开始的 dw 的部分</span></span><br><span class="line">            add bx, 2</span><br><span class="line">            loop add_number</span><br><span class="line"></span><br><span class="line">            mov  ax, 4C00H</span><br><span class="line">            int 21H</span><br><span class="line">code ends</span><br><span class="line"></span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以观察一下这段代码导致的内存分布如下，可以看见 code segment 的最初 16 个字节 (076A:0000-076A:000F) 是我们在代码段中定义的数据，我们真正的指令是在之后的 076A:0010 才开始的：
+
+  <div align="center">
+    <img src="./pic/asm_1.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们也可以通过类似的方式在代码段中定义我们的栈，比如是用下面的代码，将 8 个数 "push" 到了位于代码段中的栈中，然后又 "pop" 出来放进了原来的位置中：
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">assume cs:code</span><br><span class="line"></span><br><span class="line">code segment</span><br><span class="line">            dw 1,2,3,4,5,6,7,8</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 代码段中的栈</span></span><br><span class="line">            dw 0,0,0,0,0,0,0,0</span><br><span class="line">            dw 0,0,0,0,0,0,0,0</span><br><span class="line"></span><br><span class="line">start:      mov bx, 0</span><br><span class="line">            mov ax, 0</span><br><span class="line">            mov cx, 8</span><br><span class="line"></span><br><span class="line">            mov ax, cs</span><br><span class="line">            mov ss, ax</span><br><span class="line">            mov sp, 48</span><br><span class="line">            </span><br><span class="line">push_data:  push cs:[bx]</span><br><span class="line">            add bx, 2</span><br><span class="line">            loop push_data</span><br><span class="line"></span><br><span class="line">            mov bx, 0</span><br><span class="line">            mov cx, 8</span><br><span class="line"></span><br><span class="line">pop_data:   pop cs:[bx]</span><br><span class="line">            add bx, 2</span><br><span class="line">            loop pop_data</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 程序退出</span></span><br><span class="line">            mov  ax, 4C00H</span><br><span class="line">            int 21H</span><br><span class="line"></span><br><span class="line">code ends</span><br><span class="line"></span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以观察一下这段代码导致的内存分布如下，可以看见 code segment 的最初 16 个字节 (076A:0000-076A:000F) 是我们在代码段中定义的数据，之后的 32 字节 (076A:0010-076A:001F) 是我们定义的栈，我们真正的指令是在之后的 076A:0020 才开始的：
+
+  <div align="center">
+    <img src="./pic/asm_2.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然而，把数据和栈存储在代码段中显然不是一个好的做法：(1) 这样安排会十分混乱，代码段中混杂着代码、数据和栈；(2) 数据和栈的引入导致了 IP 寄存器的初始值不为 0，使得 IP 寄存器的可变化范围缩小了，减小了可以存储的代码的数量。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;实际上，我们应该<font color="red"><b>把程序理解为描述对内存如何安排的文件</b></font>。我们在编写汇编代码的时候，本质上就是在安排代码段、数据段和栈段中存储的内容，然后编译后交给操作系统运行。一个最简单最古老的操作系统 (i.e. 不考虑虚拟内存等机制) 拿到这个程序后，就会去设置 CS:IP, DS, SS:SP 为相应的值，然后我们的程序就能够在机器上运行起来。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此，一个更加合理的程序安排应该如下所示：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将 code segment 的地址和 CS 寄存器关联起来</span></span><br><span class="line"><span class="comment"># 将 data segment 的地址和 DS 寄存器关联起来</span></span><br><span class="line"><span class="comment"># 将 stack segment 的地址和 SS 寄存器关联起来</span></span><br><span class="line">assume cs:code, ds:data, ss:stack</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据段</span></span><br><span class="line">data segment</span><br><span class="line">  </span><br><span class="line">data ends</span><br><span class="line"></span><br><span class="line"><span class="comment"># 栈段</span></span><br><span class="line">stack segment</span><br><span class="line">  </span><br><span class="line">stack ends</span><br><span class="line"></span><br><span class="line"><span class="comment"># 代码段</span></span><br><span class="line">code segment</span><br><span class="line">start:</span><br><span class="line">  </span><br><span class="line">code ends</span><br><span class="line"></span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+</div>
+
+<h2>2. 观察内存中的 Segment</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们改写我们上面写过的一段针对栈的 "push" 和 "pop" 操作的代码，如下所示：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">assume cs:code,ds:data,ss:stack</span><br><span class="line"></span><br><span class="line">data segment</span><br><span class="line">    dw 1,2,3,4,5,6,7,8</span><br><span class="line">data ends</span><br><span class="line"></span><br><span class="line">stack segment</span><br><span class="line">    dw 0,0,0,0,0,0,0,0</span><br><span class="line">    dw 0,0,0,0,0,0,0,0</span><br><span class="line">stack ends</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">code segment</span><br><span class="line">start:      mov bx, 0</span><br><span class="line">            mov cx, 8</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 配置 ds 寄存器，指向数据段</span></span><br><span class="line">            <span class="comment"># assume 不会配置 ds 寄存器</span></span><br><span class="line">            <span class="comment"># assume 伪指令是用于在编译阶段让编译器知道各个段对应的段基址寄存器是哪个</span></span><br><span class="line">            mov ax, data</span><br><span class="line">            mov ds, ax</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 配置 ss:sp 寄存器，指向栈段</span></span><br><span class="line">            <span class="comment"># assume 不会配置 ss:sp 寄存器</span></span><br><span class="line">            <span class="comment"># assume 伪指令是用于在编译阶段让编译器知道各个段对应的段基址寄存器是哪个</span></span><br><span class="line">            mov ax, stack</span><br><span class="line">            mov ss, ax</span><br><span class="line">            mov sp, 32</span><br><span class="line">            </span><br><span class="line">push_data:  push ds:[bx]</span><br><span class="line">            add bx, 2</span><br><span class="line">            loop push_data</span><br><span class="line"></span><br><span class="line">            mov bx, 0</span><br><span class="line">            mov cx, 8</span><br><span class="line"></span><br><span class="line">pop_data:   pop ds:[bx]</span><br><span class="line">            add bx, 2</span><br><span class="line">            loop pop_data</span><br><span class="line"></span><br><span class="line">            ; 程序退出</span><br><span class="line">            mov  ax, 4C00H</span><br><span class="line">            int 21H</span><br><span class="line"></span><br><span class="line">code ends</span><br><span class="line"></span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下图展示了程序还未开始运行时的内存情况，可以看见我们定义的数据段和栈段已经分别在 [076A:0000-076A:000F] 和 [076A:0010-076A:002F] 就位了，并且我们的代码段也已经位于 [076A:0030-...]。CS:IP 寄存器已经指向了我们的代码段所在的位置，这是由于我们的 start 伪指令将程序入口位置包装在了程序的描述信息中，使得 CPU 的 CS:IP 寄存器组在开始运行这段代码时得以被配置。但是我们发现 DS 和 SS:SP 寄存器并没有被配置，因此我们在上面程序的开始部分也对 DS 和 SS:SP 寄存器做了配置，使得它们能分别瞄准数据段和栈段。
+
+  <div align="center">
+    <img src="./pic/asm_3.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外值得一提的是，内存中的段是 16-bytes 对齐的。假如我们在 data segment 中声明了 20-bytes 的数据，那么实际编译过后我们的 data segment 会占用 32-bytes 的空间。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，在段中声明数据时，我们可以使用 "dup" 伪指令来简化，如下所示，我们可以通过 "db"/"dw"/"dd" 来声明每个单元的长度，一个常数(e.g. 下面的 100)来声明单元的个数，括号内的值来声明各个单元的初始化值：
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db  100 dup (0)</span><br></pre></td></tr></table></figure>
+</div>
+
+<h2><a name="1_xxx">3. 我们的地址代号如何被编译器和操作系统解读？</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;通过上文的分析，我们知道了，我们在编写程序的时候，要有意识地把代码分为代码段，栈段和数据段来管理，这样一来会更加地合理和安全。当我们在代码中声明在数据段中存储的数据，在代码段中存储的代码，在栈段中存储的栈时，在这份程序被运行起来的时候，各个段中的内容就必然在内存中被准备好了，这样才能保证我们的程序被正确地运行起来。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这样一来我们不禁好奇：我们程序的各个段的内容是怎么被 load 到内存中的呢？回顾之前我们写过的汇编程序，我们从来没有在代码中写过一个绝对的物理地址，我们从来都是使用代号的方式来表明一个我们想访问的基地址，然后基于这个代号开展我们对段中数据的访问。由于我们是在 CPU 的 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Real_mode">实模式</a> 下编写汇编代码，我们使用 段基地址+偏移地址 组合出来的地址就是 8086 CPU 实际送上内存地址线的物理地址。那么，这些代号是怎么被转化为实际的物理地址的呢？
+
+  <div align="center">
+    <img src="./pic/asm_address.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在下面的代码中，我们看到的是由 NASM 编译器编译过后生成的 .lst 文件。在左边的第二列 "汇编地址" 中，我们可以观察到，编译器会为每一条有意义的汇编指令都分配一个汇编地址，就仿佛它们是在真实的内存中存储着一样。基于这个汇编地址，编译器将我们在程序中所使用的所有代号都替换为相应位置的内存地址。并且，只有当程序装入内存后，IP 寄存器同样被设置为从 0x0000 开始增长，才能保证基于汇编地址编译生成的机器码是合法有效的，因为汇编指令也是从 0x0000 开始增长的。如上图所示，当我们的程序被装入 CS:IP = 6000H:0000H 的内存后，由于 IP 寄存器此时是从 0x0000H 开始递增的，因此我们程序中所包含的汇编地址依然有效。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当我们能够预见到我们的程序装入内存后 IP 寄存器不会为 0x0000H 开始增长时，我们就应该在程序中使用代号的地方加上 IP 寄存器的初始值。如下面的代码所示，下面这段代码其实是会被放在硬盘第一个逻辑扇区的代码，会被 ROM-BIOS 拷贝到 0x0000:0x7C00 的地方开始运行。因此，我们的 IP 寄存器一开始并不会为 0x0000。所以，你能看见，我们在 Line 47, 52 等地方在使用代号寻址的时候，我们都加上了 IP 初始偏移量 0x7C00。当然，这是一个比较进阶的写法。我们在之后讨论实模式的文章中，并不会去深究这一点。这里提一嘴主要是为了让读者理解我们所编写的汇编代码中设计的地址信息如何被编译器和操作系统所解读的。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 行号 汇编地址 机器码                                  汇编代码</span></span><br><span class="line"><span class="comment"># -------------------------------------------------------------------------------------------------</span></span><br><span class="line">   1                                           <span class="comment"># 代码清单5-1 </span></span><br><span class="line">   2                                           <span class="comment"># 文件名：c05_mbr.asm</span></span><br><span class="line">   3                                           <span class="comment"># 文件说明：硬盘主引导扇区代码</span></span><br><span class="line">   4                                           <span class="comment"># 创建日期：2011-3-31 21:15 </span></span><br><span class="line">   5                                           </span><br><span class="line">   6 00000000 B800B8                           mov ax,0xb800                 <span class="comment"># 指向文本模式的显示缓冲区</span></span><br><span class="line">   7 00000003 8EC0                             mov es,ax</span><br><span class="line">   8                                  </span><br><span class="line">   9                                           <span class="comment"># 以下显示字符串&quot;Label offset:&quot;</span></span><br><span class="line">  10 00000005 26C60600004C                     mov byte [es:0x00],<span class="string">&#x27;L&#x27;</span></span><br><span class="line">  11 0000000B 26C606010007                     mov byte [es:0x01],0x07</span><br><span class="line">  12 00000011 26C606020061                     mov byte [es:0x02],<span class="string">&#x27;a&#x27;</span></span><br><span class="line">  13 00000017 26C606030007                     mov byte [es:0x03],0x07</span><br><span class="line">  14 0000001D 26C606040062                     mov byte [es:0x04],<span class="string">&#x27;b&#x27;</span></span><br><span class="line">  15 00000023 26C606050007                     mov byte [es:0x05],0x07</span><br><span class="line">  16 00000029 26C606060065                     mov byte [es:0x06],<span class="string">&#x27;e&#x27;</span></span><br><span class="line">  17 0000002F 26C606070007                     mov byte [es:0x07],0x07</span><br><span class="line">  18 00000035 26C60608006C                     mov byte [es:0x08],<span class="string">&#x27;l&#x27;</span></span><br><span class="line">  19 0000003B 26C606090007                     mov byte [es:0x09],0x07</span><br><span class="line">  20 00000041 26C6060A0020                     mov byte [es:0x0a],<span class="string">&#x27; &#x27;</span></span><br><span class="line">  21 00000047 26C6060B0007                     mov byte [es:0x0b],0x07</span><br><span class="line">  22 0000004D 26C6060C006F                     mov byte [es:0x0c],<span class="string">&quot;o&quot;</span></span><br><span class="line">  23 00000053 26C6060D0007                     mov byte [es:0x0d],0x07</span><br><span class="line">  24 00000059 26C6060E0066                     mov byte [es:0x0e],<span class="string">&#x27;f&#x27;</span></span><br><span class="line">  25 0000005F 26C6060F0007                     mov byte [es:0x0f],0x07</span><br><span class="line">  26 00000065 26C606100066                     mov byte [es:0x10],<span class="string">&#x27;f&#x27;</span></span><br><span class="line">  27 0000006B 26C606110007                     mov byte [es:0x11],0x07</span><br><span class="line">  28 00000071 26C606120073                     mov byte [es:0x12],<span class="string">&#x27;s&#x27;</span></span><br><span class="line">  29 00000077 26C606130007                     mov byte [es:0x13],0x07</span><br><span class="line">  30 0000007D 26C606140065                     mov byte [es:0x14],<span class="string">&#x27;e&#x27;</span></span><br><span class="line">  31 00000083 26C606150007                     mov byte [es:0x15],0x07</span><br><span class="line">  32 00000089 26C606160074                     mov byte [es:0x16],<span class="string">&#x27;t&#x27;</span></span><br><span class="line">  33 0000008F 26C606170007                     mov byte [es:0x17],0x07</span><br><span class="line">  34 00000095 26C60618003A                     mov byte [es:0x18],<span class="string">&#x27;:&#x27;</span></span><br><span class="line">  35 0000009B 26C606190007                     mov byte [es:0x19],0x07</span><br><span class="line">  36                                  </span><br><span class="line">  37 000000A1 B8[2E01]                         mov ax,number                 <span class="comment"># 取得标号number的偏移地址</span></span><br><span class="line">  38 000000A4 BB0A00                           mov bx,10</span><br><span class="line">  39                                  </span><br><span class="line">  40                                           <span class="comment"># 设置数据段的基地址</span></span><br><span class="line">  41 000000A7 8CC9                             mov cx,cs</span><br><span class="line">  42 000000A9 8ED9                             mov ds,cx</span><br><span class="line">  43                                  </span><br><span class="line">  44                                           <span class="comment"># 求个位上的数字</span></span><br><span class="line">  45 000000AB BA0000                           mov dx,0</span><br><span class="line">  46 000000AE F7F3                             div bx</span><br><span class="line">  47 000000B0 8816[2E7D]                       mov [0x7c00+number+0x00],dl   <span class="comment"># 保存个位上的数字</span></span><br><span class="line">  48                                  </span><br><span class="line">  49                                           <span class="comment"># 求十位上的数字</span></span><br><span class="line">  50 000000B4 31D2                             xor dx,dx</span><br><span class="line">  51 000000B6 F7F3                             div bx</span><br><span class="line">  52 000000B8 8816[2F7D]                       mov [0x7c00+number+0x01],dl   <span class="comment"># 保存十位上的数字</span></span><br><span class="line">  53                                  </span><br><span class="line">  54                                           <span class="comment"># 求百位上的数字</span></span><br><span class="line">  55 000000BC 31D2                             xor dx,dx</span><br><span class="line">  56 000000BE F7F3                             div bx</span><br><span class="line">  57 000000C0 8816[307D]                       mov [0x7c00+number+0x02],dl   <span class="comment"># 保存百位上的数字</span></span><br><span class="line">  58                                  </span><br><span class="line">  59                                           <span class="comment"># 求千位上的数字</span></span><br><span class="line">  60 000000C4 31D2                             xor dx,dx</span><br><span class="line">  61 000000C6 F7F3                             div bx</span><br><span class="line">  62 000000C8 8816[317D]                       mov [0x7c00+number+0x03],dl   <span class="comment"># 保存千位上的数字</span></span><br><span class="line">  63                                  </span><br><span class="line">  64                                           <span class="comment"># 求万位上的数字 </span></span><br><span class="line">  65 000000CC 31D2                             xor dx,dx</span><br><span class="line">  66 000000CE F7F3                             div bx</span><br><span class="line">  67 000000D0 8816[327D]                       mov [0x7c00+number+0x04],dl   <span class="comment"># 保存万位上的数字</span></span><br><span class="line">  68                                  </span><br><span class="line">  69                                           <span class="comment"># 以下用十进制显示标号的偏移地址</span></span><br><span class="line">  70 000000D4 A0[327D]                         mov al,[0x7c00+number+0x04]</span><br><span class="line">  71 000000D7 0430                             add al,0x30</span><br><span class="line">  72 000000D9 26A21A00                         mov [es:0x1a],al</span><br><span class="line">  73 000000DD 26C6061B0004                     mov byte [es:0x1b],0x04</span><br><span class="line">  74                                           </span><br><span class="line">  75 000000E3 A0[317D]                         mov al,[0x7c00+number+0x03]</span><br><span class="line">  76 000000E6 0430                             add al,0x30</span><br><span class="line">  77 000000E8 26A21C00                         mov [es:0x1c],al</span><br><span class="line">  78 000000EC 26C6061D0004                     mov byte [es:0x1d],0x04</span><br><span class="line">  79                                           </span><br><span class="line">  80 000000F2 A0[307D]                         mov al,[0x7c00+number+0x02]</span><br><span class="line">  81 000000F5 0430                             add al,0x30</span><br><span class="line">  82 000000F7 26A21E00                         mov [es:0x1e],al</span><br><span class="line">  83 000000FB 26C6061F0004                     mov byte [es:0x1f],0x04</span><br><span class="line">  84                                  </span><br><span class="line">  85 00000101 A0[2F7D]                         mov al,[0x7c00+number+0x01]</span><br><span class="line">  86 00000104 0430                             add al,0x30</span><br><span class="line">  87 00000106 26A22000                         mov [es:0x20],al</span><br><span class="line">  88 0000010A 26C606210004                     mov byte [es:0x21],0x04</span><br><span class="line">  89                                  </span><br><span class="line">  90 00000110 A0[2E7D]                         mov al,[0x7c00+number+0x00]</span><br><span class="line">  91 00000113 0430                             add al,0x30</span><br><span class="line">  92 00000115 26A22200                         mov [es:0x22],al</span><br><span class="line">  93 00000119 26C606230004                     mov byte [es:0x23],0x04</span><br><span class="line">  94                                           </span><br><span class="line">  95 0000011F 26C606240044                     mov byte [es:0x24],<span class="string">&#x27;D&#x27;</span></span><br><span class="line">  96 00000125 26C606250007                     mov byte [es:0x25],0x07</span><br><span class="line">  97                                            </span><br><span class="line">  98 0000012B E9FDFF                     infi: jmp near infi                 <span class="comment"># 无限循环</span></span><br><span class="line">  99                                        </span><br><span class="line"> 100 0000012E 0000000000                number db 0,0,0,0,0</span><br><span class="line"> 101                                    </span><br><span class="line"> 102 00000133 00&lt;rept&gt;                  <span class="built_in">times</span> 203 db 0</span><br><span class="line"> 103 000001FE 55AA                                db 0x55,0xaa</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;但是！细心的读者会发现 0x0000:0x7C00 所指示的内存单元，又可以表示为 0x07C0:0x0000。如下图所示：
+
+  <div align="center">
+    <img src="./pic/segment_switch.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;分析我们上面为什么要在地址代号的地方加上 0x7C00 的原因，是因为我们一直使用 0x0000:0x7C00 的角度去定位我们的程序，但是如果我们将角度切换为 0x07C0:0x0000，则我们既可以访问完全一样的内存位置，又可以避免这种别扭的 "+0x7C00" 的写法。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在，我们锁定问题的根源在于 Line 41 ~ 42，我们不应该把 DS 寄存器的值设置为 CS 的值 (i.e. 0x0000H)，而是应该设置为 0x07C0。这样一来，我们使用 DS:[代号] 的方式来访问段中的数据，就是完全没问题的了，修改后的代码如下所示：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 行号 汇编地址 机器码                                  汇编代码</span></span><br><span class="line"><span class="comment"># -------------------------------------------------------------------------------------------------</span></span><br><span class="line">   1                                           <span class="comment"># 代码清单5-1 </span></span><br><span class="line">   2                                           <span class="comment"># 文件名：c05_mbr.asm</span></span><br><span class="line">   3                                           <span class="comment"># 文件说明：硬盘主引导扇区代码</span></span><br><span class="line">   4                                           <span class="comment"># 创建日期：2011-3-31 21:15 </span></span><br><span class="line">   5                                           </span><br><span class="line">   6 00000000 B800B8                           mov ax,0xb800                 <span class="comment"># 指向文本模式的显示缓冲区</span></span><br><span class="line">   7 00000003 8EC0                             mov es,ax</span><br><span class="line">   8                                  </span><br><span class="line">   9                                           <span class="comment"># 以下显示字符串&quot;Label offset:&quot;</span></span><br><span class="line">  10 00000005 26C60600004C                     mov byte [es:0x00],<span class="string">&#x27;L&#x27;</span></span><br><span class="line">  11 0000000B 26C606010007                     mov byte [es:0x01],0x07</span><br><span class="line">  12 00000011 26C606020061                     mov byte [es:0x02],<span class="string">&#x27;a&#x27;</span></span><br><span class="line">  13 00000017 26C606030007                     mov byte [es:0x03],0x07</span><br><span class="line">  14 0000001D 26C606040062                     mov byte [es:0x04],<span class="string">&#x27;b&#x27;</span></span><br><span class="line">  15 00000023 26C606050007                     mov byte [es:0x05],0x07</span><br><span class="line">  16 00000029 26C606060065                     mov byte [es:0x06],<span class="string">&#x27;e&#x27;</span></span><br><span class="line">  17 0000002F 26C606070007                     mov byte [es:0x07],0x07</span><br><span class="line">  18 00000035 26C60608006C                     mov byte [es:0x08],<span class="string">&#x27;l&#x27;</span></span><br><span class="line">  19 0000003B 26C606090007                     mov byte [es:0x09],0x07</span><br><span class="line">  20 00000041 26C6060A0020                     mov byte [es:0x0a],<span class="string">&#x27; &#x27;</span></span><br><span class="line">  21 00000047 26C6060B0007                     mov byte [es:0x0b],0x07</span><br><span class="line">  22 0000004D 26C6060C006F                     mov byte [es:0x0c],<span class="string">&quot;o&quot;</span></span><br><span class="line">  23 00000053 26C6060D0007                     mov byte [es:0x0d],0x07</span><br><span class="line">  24 00000059 26C6060E0066                     mov byte [es:0x0e],<span class="string">&#x27;f&#x27;</span></span><br><span class="line">  25 0000005F 26C6060F0007                     mov byte [es:0x0f],0x07</span><br><span class="line">  26 00000065 26C606100066                     mov byte [es:0x10],<span class="string">&#x27;f&#x27;</span></span><br><span class="line">  27 0000006B 26C606110007                     mov byte [es:0x11],0x07</span><br><span class="line">  28 00000071 26C606120073                     mov byte [es:0x12],<span class="string">&#x27;s&#x27;</span></span><br><span class="line">  29 00000077 26C606130007                     mov byte [es:0x13],0x07</span><br><span class="line">  30 0000007D 26C606140065                     mov byte [es:0x14],<span class="string">&#x27;e&#x27;</span></span><br><span class="line">  31 00000083 26C606150007                     mov byte [es:0x15],0x07</span><br><span class="line">  32 00000089 26C606160074                     mov byte [es:0x16],<span class="string">&#x27;t&#x27;</span></span><br><span class="line">  33 0000008F 26C606170007                     mov byte [es:0x17],0x07</span><br><span class="line">  34 00000095 26C60618003A                     mov byte [es:0x18],<span class="string">&#x27;:&#x27;</span></span><br><span class="line">  35 0000009B 26C606190007                     mov byte [es:0x19],0x07</span><br><span class="line">  36                                  </span><br><span class="line">  37 000000A1 B8[2E01]                         mov ax,number                 <span class="comment"># 取得标号number的偏移地址</span></span><br><span class="line">  38 000000A4 BB0A00                           mov bx,10</span><br><span class="line">  39                                  </span><br><span class="line">  40                                           <span class="comment"># 设置数据段的基地址</span></span><br><span class="line">  41 000000A7 8CC9                             mov cx,0x07c0</span><br><span class="line">  42 000000A9 8ED9                             mov ds,cx</span><br><span class="line">  43                                  </span><br><span class="line">  44                                           <span class="comment"># 求个位上的数字</span></span><br><span class="line">  45 000000AB BA0000                           mov dx,0</span><br><span class="line">  46 000000AE F7F3                             div bx</span><br><span class="line">  47 000000B0 8816[2E7D]                       mov [number+0x00],dl   <span class="comment"># 保存个位上的数字</span></span><br><span class="line">  48                                  </span><br><span class="line">  49                                           <span class="comment"># 求十位上的数字</span></span><br><span class="line">  50 000000B4 31D2                             xor dx,dx</span><br><span class="line">  51 000000B6 F7F3                             div bx</span><br><span class="line">  52 000000B8 8816[2F7D]                       mov [number+0x01],dl   <span class="comment"># 保存十位上的数字</span></span><br><span class="line">  53                                  </span><br><span class="line">  54                                           <span class="comment"># 求百位上的数字</span></span><br><span class="line">  55 000000BC 31D2                             xor dx,dx</span><br><span class="line">  56 000000BE F7F3                             div bx</span><br><span class="line">  57 000000C0 8816[307D]                       mov [number+0x02],dl   <span class="comment"># 保存百位上的数字</span></span><br><span class="line">  58                                  </span><br><span class="line">  59                                           <span class="comment"># 求千位上的数字</span></span><br><span class="line">  60 000000C4 31D2                             xor dx,dx</span><br><span class="line">  61 000000C6 F7F3                             div bx</span><br><span class="line">  62 000000C8 8816[317D]                       mov [number+0x03],dl   <span class="comment"># 保存千位上的数字</span></span><br><span class="line">  63                                  </span><br><span class="line">  64                                           <span class="comment"># 求万位上的数字 </span></span><br><span class="line">  65 000000CC 31D2                             xor dx,dx</span><br><span class="line">  66 000000CE F7F3                             div bx</span><br><span class="line">  67 000000D0 8816[327D]                       mov [number+0x04],dl   <span class="comment"># 保存万位上的数字</span></span><br><span class="line">  68                                  </span><br><span class="line">  69                                           <span class="comment"># 以下用十进制显示标号的偏移地址</span></span><br><span class="line">  70 000000D4 A0[327D]                         mov al,[number+0x04]</span><br><span class="line">  71 000000D7 0430                             add al,0x30</span><br><span class="line">  72 000000D9 26A21A00                         mov [es:0x1a],al</span><br><span class="line">  73 000000DD 26C6061B0004                     mov byte [es:0x1b],0x04</span><br><span class="line">  74                                           </span><br><span class="line">  75 000000E3 A0[317D]                         mov al,[number+0x03]</span><br><span class="line">  76 000000E6 0430                             add al,0x30</span><br><span class="line">  77 000000E8 26A21C00                         mov [es:0x1c],al</span><br><span class="line">  78 000000EC 26C6061D0004                     mov byte [es:0x1d],0x04</span><br><span class="line">  79                                           </span><br><span class="line">  80 000000F2 A0[307D]                         mov al,[number+0x02]</span><br><span class="line">  81 000000F5 0430                             add al,0x30</span><br><span class="line">  82 000000F7 26A21E00                         mov [es:0x1e],al</span><br><span class="line">  83 000000FB 26C6061F0004                     mov byte [es:0x1f],0x04</span><br><span class="line">  84                                  </span><br><span class="line">  85 00000101 A0[2F7D]                         mov al,[number+0x01]</span><br><span class="line">  86 00000104 0430                             add al,0x30</span><br><span class="line">  87 00000106 26A22000                         mov [es:0x20],al</span><br><span class="line">  88 0000010A 26C606210004                     mov byte [es:0x21],0x04</span><br><span class="line">  89                                  </span><br><span class="line">  90 00000110 A0[2E7D]                         mov al,[number+0x00]</span><br><span class="line">  91 00000113 0430                             add al,0x30</span><br><span class="line">  92 00000115 26A22200                         mov [es:0x22],al</span><br><span class="line">  93 00000119 26C606230004                     mov byte [es:0x23],0x04</span><br><span class="line">  94                                           </span><br><span class="line">  95 0000011F 26C606240044                     mov byte [es:0x24],<span class="string">&#x27;D&#x27;</span></span><br><span class="line">  96 00000125 26C606250007                     mov byte [es:0x25],0x07</span><br><span class="line">  97                                            </span><br><span class="line">  98 0000012B E9FDFF                     infi: jmp near infi                 <span class="comment"># 无限循环</span></span><br><span class="line">  99                                        </span><br><span class="line"> 100 0000012E 0000000000                number db 0,0,0,0,0</span><br><span class="line"> 101                                    </span><br><span class="line"> 102 00000133 00&lt;rept&gt;                  <span class="built_in">times</span> 203 db 0</span><br><span class="line"> 103 000001FE 55AA                                db 0x55,0xaa</span><br></pre></td></tr></table></figure>
+</div>
+
+<!--ref-->
+<!--
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+1. golang.org, <a target="_blank" rel="noopener" href="https://golang.org/cmd/go/#hdr-GOPATH_environment_variable">GOPATH environment variable</a>
+</p>
+</div>-->
+
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>ASSEMBLY_BASIC_3_SEGMENT</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     table th{text-align:center;}     table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_learning_post{font-size: 16px">
+<meta property="og:type" content="website">
+<meta property="og:title" content="完整的IaaS云计算产品的组成部分">
+<meta property="og:url" content="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Product_IaaS_form/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     table th{text-align:center;}     table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_learning_post{font-size: 16px">
+<meta property="og:locale">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Product_IaaS_form/pic/xxx.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Product_IaaS_form/pic/cloud_product_form.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Product_IaaS_form/pic/XenCenter.gif">
+<meta property="article:published_time" content="2021-11-28T14:36:17.724Z">
+<meta property="article:modified_time" content="2021-11-28T14:36:17.724Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Product_IaaS_form/pic/xxx.png">
+
+<link rel="canonical" href="https://zobinhuang.com/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Product_IaaS_form/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>完整的IaaS云计算产品的组成部分 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">完整的IaaS云计算产品的组成部分
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_Advanced_Network/">TECH_ADVANCED_NETWORK</a></li>
+            <li><a href="/sec_learning_backup/Tech_Advanced_Network/Backup/">BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/">CLOUD_COMPUTING</a></li>
+          <li>CLOUD_PRODUCT_IAAS_FORM</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    table th{text-align:center;}
+    table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+</style>
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+<h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Mar.24 2021</i></font></h4>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=30%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;目前，最主要的云服务产品是 IaaS 虚拟机。本文将阐述一套完整IaaS的解决方案的组成。
+</p>
+
+<!--标题-->
+<h2>1. 完整的IaaS云计算解决方案</h2>
+<div class="div_learning_post">
+<div align="center">
+  <img src="./pic/cloud_product_form.png" width=500px>
+</div>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;设计一套IaaS解决方案，其实考虑的问题就是 <b>如何 <font color="red">运行</font>和 <font color="red">管理</font> 大量的虚拟机并让远方的用户自助 <font color="red">使用</font> 这些虚拟机？</b>。针对标红的这三个部分，就分别对应了IaaS解决方案中的三个组成部分，如上图所示，下面对其进行详细阐述。
+</p>
+
+<h3>(1) 虚拟化平台</h3>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;虚拟化平台解决的是 <b>如何运行虚拟机</b> 的问题，包括硬件和软件两部分：
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(a) 硬件部分主要指的是服务器，网络和存储等，也就是上图所示的物理机部分。对于服务器，大的云计算提供商倾向于自己定制，这种针对特定应用定制的服务器具备更高的计算效率和更低的成本，因此目前的通用服务器硬件厂商面临很大的市场压力。
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(b) 对于软件部分，虚拟化平台软件安装在物理机器或者操作系统上面，它的功能是云服务提供商能通过它创建若干个虚拟机并运行这些虚拟机。
+
+<h3>(2) 管理工具</h3>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;管理工具就是一套软件，是用来管理云端的资源（服务器、存储、网络）和虚拟机的。虚拟机是资源申请的基本单位，因此管理平台的核心任务就是管理虚拟机，即进行创建、销毁、启动、关闭、资源分配、迁移、备份、克隆、快照及安全控制等操作。
+</p>
+
+<h3>(3) 交付部分</h3>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;交付部分解决的是 <b>用户如何使用云端的计算资源的问题</b>。主要有三部分组成：<b>通信协议</b>，<b>访问网关</b> 和 <b>客户端</b>。通信协议就是规定终端与云端的通信规则，协议的好坏与终端用户的体验息息相关，也是最具技术含量的部分，目前也就三四家大企业才有能拿得出手的协议。访问网关相当于云端的大门，终端用户必须由此“门”进入云端。客户端是指安装在云终端上的软件，专门负责与云端的通信——接收用户的输入并发到云端，然后接收云端的返回结果并显示在云终端屏幕上。
+</p>
+
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;上面提到的是云计算系统的三个“主心骨”，实现了云计算的基本功能，但是在生产环境中，还必须满足性能和产能的要求，因此下面这些附加部分也是不可或缺的：负债均衡、故障转移、身份认证、权限控制、入侵检测等。
+</p>
+</div>
+
+<h2>2. 开源的服务器虚拟化组件</h2>
+<div class="div_learning_post">
+&nbsp;&nbsp;&nbsp;&nbsp;在云端，虚拟化属于基础设施层，具体包括服务器虚拟化、网络虚拟化和存储虚拟化，虚拟的目的是为了池化物理资源。在服务器虚拟化领域，VMware（现已被 EMC 收购）已耕耘了很多年，把持了大部分的市场。后来者微软、思杰和红帽公司都想有所突破。下面我们对开源的服务器虚拟化组件做简单介绍。
+</p>
+<h4>(a) XenServer</h4>
+<div align="center">
+  <img src="./pic/XenCenter.gif" width=500px>
+</div>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;XenServer 是思杰 (Citrix) 开源的基于 Xen (一个剑桥大学开发的开放源代码虚拟机监视器) 的虚拟平台，直接安装在物理的计算节点上，然后在上面创建更多的虚拟机。XenCenter 是云计算管理平台，通过它来管理众多的安装了 XenServer 的服务器（计算节点）、网络、存储及虚拟机。XenCenter 把通过计算节点池来管理服务器，属于同一个池的服务器共享存储，而且最好是相同配置的机器，池里的虚拟机保存在共享存储中，一个虚拟机允许在池中的任何一台服务器上运行。如上图所示，包含三个服务器池，池中的每台服务器必须安装 XenServer，这些池通过一台安装了 XenCenter 的服务器来集中管理：创建池、把服务器添加到池或者从池中移除、在池中创建虚拟机、创建虚拟机模板、热迁移虚拟机、创建虚拟机快照等。
+</p>
+<h4>(b) Red Hat Virtualization (RHV)</h4>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;这是红帽公司发布的基于 KVM 的虚拟化平台软件。RHV 包含 <b>虚拟化管理工具（Red Hat Virtualization Manager，RHVM）</b>、<b>虚拟化软件（Red Hat Virtualization Host，RHVH）</b> 和 <b>虚拟化存储（Red Hat Virtualization Storage，RHVS）</b> 三个主要组件。其中，虚拟化软件 (RHVH)直接安装在物理计算节点上，然后可在 RHVH 上运行虚拟机，如上图所示，通过 RHVM 集中管理众多的 RHVH 服务器。
+</p>
+
+<h4>(c) Red Hat Virtualization (RHV)</h4>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;
+</p>
+
+<h4>(d) Red Hat Virtualization (RHV)</h4>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;
+</p>
+</div>
+<!--ref-->
+<!--
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+1. David Money Harris, Sarah L, Harris, 机械工业出版社, <b>数字设计和计算机体系结构</b>
+</p>
+</div>-->
+
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_Advanced_Network/">TECH_ADVANCED_NETWORK</a></li>
+            <li><a href="/sec_learning_backup/Tech_Advanced_Network/Backup/">BACKUP</a></li>
+            <li><a href="/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/">CLOUD_COMPUTING</a></li>
+          <li>CLOUD_PRODUCT_IAAS_FORM</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

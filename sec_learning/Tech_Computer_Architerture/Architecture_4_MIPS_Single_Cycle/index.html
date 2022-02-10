@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="单周期 MIPS 处理器的设计">
+<meta property="og:url" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/xxx.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/design_principle.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/datapath_part.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/fetch_instruction.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/i_type.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/read_source_oprand.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/sign_extended_immediate.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/compute_memory_address.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/write_back_to_register_file.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/next_instruction.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/write_data.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/r_type.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/beq.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/full_datapath.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/complete_processor.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/control_unit.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/example_r_type.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/example_load.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/example_beq.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/j_type_support.png">
+<meta property="og:image" content="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/pic/lw_critical_path.png">
+<meta property="article:published_time" content="2021-12-21T14:15:24.089Z">
+<meta property="article:modified_time" content="2021-12-21T14:15:24.089Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="https://zobinhuang.com/sec_learning/Tech_Computer_Architerture/Architecture_4_MIPS_Single_Cycle/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>单周期 MIPS 处理器的设计 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">单周期 MIPS 处理器的设计
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Computer_Architerture/">TECH_COMPUTER_ARCHITERTURE</a></li>
+          <li>ARCHITECTURE_4_MIPS_SINGLE_CYCLE</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_border{
+      margin-bottom: 20px;
+      padding: 10px 10px; 
+      font-size: 16px; 
+      word-spacing:0px;  
+      border:1px solid black;
+    }
+    .div_learning_post_background{
+      background-color:#E3E2E2;
+      padding: 10px 40px; 
+      font-size: 16px;
+      word-spacing:0px;  
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+    .div_learning_post_background p{
+      margin: 0px;
+    }
+</style>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Dec.17 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_intro"><font color="blue"><b>基本思路</b></font></a>：介绍了本文讨论的对单周期 MIPS 处理器进行设计的思路;
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_prepare"><font color="blue"><b>准备工作</b></font></a>：在进行设计之前，讨论了基本的设计原则和评估原则;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.1 <a href="#2_datapath_1"><font color="blue">逻辑设计惯例</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.2 <a href="#2_datapath_2"><font color="blue">State Element</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.3 <a href="#2_datapath_3"><font color="blue">MIPS 微架构</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.3 <a href="#2_datapath_4"><font color="blue">性能评估方法</font></a>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_datapath"><font color="blue"><b>数据通路</b></font></a>：介绍了单周期 MIPS 处理器的数据通路的构建过程;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.1 <a href="#3_datapath_1"><font color="blue">读取指令</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.2 <a href="#3_datapath_2"><font color="blue">读取源操作数</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.3 <a href="#3_datapath_3"><font color="blue">拓展立即数宽度</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.4 <a href="#3_datapath_4"><font color="blue">计算内存地址</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.5 <a href="#3_datapath_5"><font color="blue">写数据回 (Write Back) Register File</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.6 <a href="#3_datapath_6"><font color="blue">决定下一条指令的地址</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.7 <a href="#3_datapath_7"><font color="blue">写数据到内存单元</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.8 <a href="#3_datapath_8"><font color="blue">对 R-Type 指令进行支持的数据通路</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.9 <a href="#3_datapath_9"><font color="blue">对 <code>beq</code> 指令进行支持的数据通路</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.10 <a href="#3_datapath_10"><font color="blue">总结</font></a>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 4. <a href="#4_control_unit"><font color="blue"><b>控制单元</b></font></a>：介绍了单周期 MIPS 处理器的 Control Unit 的构建过程;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.1 <a href="#4_control_unit_1"><font color="blue">控制单元设计</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.2 <a href="#4_control_unit_2"><font color="blue">指令执行实例</font></a>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 5. <a href="#5_more_instruction"><font color="blue"><b>对更多指令的支持</b></font></a>：拓展了 MIPS 处理器对 <code>addi</code> 和 <code>j</code> 指令的支持，以演示如何拓展处理器对更多指令的支持;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.1 <a href="#5_more_instruction_1"><font color="blue">增加对指令 <code>addi</code> 的支持</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.2 <a href="#5_more_instruction_2"><font color="blue">增加对指令 <code>j</code> 的支持</font></a>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 6. <a href="#6_performance"><font color="blue"><b>单周期处理器的性能分析</b></font></a>：以 <code>lw</code> 指令为例，分析了单周期 MIPS 处理器的性能;
+  </div>
+</div>
+
+<!--标题-->
+<h2><a name="1_intro">1. 基本思路</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上一篇文章中，我们看到了作为 MIPS 程序员的最后一道工具 —— MIPS 架构。在这篇文章中，我们将看到如何构建出一个最简单的能够运行 MIPS 指令集子集的处理器 —— 单周期 MIPS 处理器。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本文描述的 MIPS 处理器能运行的 MIPS 程序子集如下所示：
+
+  <ol>
+    <li>R-Type 用于算术/逻辑运算的指令: <code>add</code>, <code>sub</code>, <code>and</code>, <code>or</code>, <code>slt</code></li>
+    <li>内存操作指令: <code>lw</code>, <code>sw</code></li>
+    <li>分支指令 <code>beq</code></li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在设计思路上，我们首先会构建处理器的 <font color="blue">数据通路 (datapath)</font>，数据通路指的是数据在处理器中流经的各个组合/时序逻辑单元，包括内存、寄存器、ALU 和 多路选择器 (Multiplexer) 等。然后我们会关心根据不同指令以控制指令数据在 datapath 上的流动的 <font color="blue">控制单元</font> 的构建，最终形成一个完整的基础处理器。
+</div>
+
+
+<h2><a name="2_prepare">2. 准备工作</a></h2>
+<div class="div_learning_post">
+  <h3><a name="2_datapath_1">2.1 逻辑设计惯例</a></h3>
+
+  <div align="center">
+    <img src="./pic/design_principle.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，我们必须清楚时序逻辑电路设计的一般惯例。如上图所示，在一个时钟周期内，我们可以认为有两个时钟的上升沿，一个在周期开始时，一个在周期结束时。在第一个上升沿到来时，输出寄存器会把它在上一个时钟周期结束前收到的输入值输出到输出端，该输出值会在当前时钟周期内流经连接在该输出端口上的组合逻辑电路，并且基于一定的时序约束在当前时钟周期结束之前到达输入寄存器端口。在第二个时钟上升沿到来时，输入寄存器就会保存组合逻辑电路的运算结果，并且把该结果传递给下一级电路。
+
+  <h3><a name="2_datapath_2">2.2 State Element</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;通用处理器设计的一般方法是，首先准备一套 State Elements，包括各种 Memory 和 Architectural State (i.e. 寄存器) 等，然后在这些 State Elements 之间插入各种组合逻辑，以基于当前的 State 计算出下一个 State。如此反复循环，以使得通用计算系统得以运转。
+
+  <div align="center">
+    <img src="./pic/datapath_part.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示是四个基本的 State Elements 组件，我们下面分别进行讨论。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">Program Counter (PC)</font> 是一个用于存储 32-bits 指令地址的寄存器，其输出 <code>PC</code> 指向了当前执行的指令的地址，其输入 <code>PC'</code> 指向了下一条要执行的指令的地址。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">Instruction Memory</font> 用于存储当前处理器运行的指令序列。它有一个 32-bits 的指令地址端口 <code>A</code> 以及一个 32-bits 的指令输出端口 <code>RD</code>。在一个时钟周期内，<code>A</code> 的输入是我们上面所说的程序计数器的输出 <code>PC</code>，也即当前时钟周期处理器要运行的指令的地址，Instruction Memory 会在 <code>RD</code> 上输出相应的指令。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">eitser File</font> 是一个 32-element `\times` 32-bit 的寄存器堆。Regitser File 有两个 5-bits 的寄存器地址输入 <code>A1</code> 和 <code>A2</code>，寄存器堆会根据 <code>A1</code> 和 <code>A2</code> 的地址值在输出端口 <code>RD1</code> 和 <code>RD2</code> 上输出相应寄存器的存储值，也即读取选择的寄存器中存储的值，以作为一些指令中源寄存器的来源。同时 Regitser File 还有一个 5-bits 的寄存器地址输入端口 <code>A3</code>，以及一个 32-bits 的写入数据值 <code>WD3</code>。当控制信号 <code>WE3</code> 被使能时，Regitser File 会将 <code>WD3</code> 上的值写入由 <code>A3</code> 选取的寄存器中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">Data Memory</font> 用于存储数据。输出端口 <code>RD</code> 会根据地址输入端口 <code>A</code> 的输入值输出相应的数据。当  <code>WE</code> 引脚为高时，代表此时为写操作，故此时会向 <code>A</code> 所指向的内存单元中写入 <code>WD</code> 上的数据。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，在我们下面的分析中，我们要做这样一个假设：对于 State Element 的读取操作并不需要时钟来进行驱动，<font color="red">在送入地址值之后，State Element 会在一定的传播延迟 (propagation delay) 之后立即输出相关的值</font>。而对于写入操作，<font color="red">State Elements 只有在时钟上升沿到来时才会将数据写入相关的存储单元中</font>。
+
+  <h3><a name="2_datapath_3">2.3 MIPS 微架构</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在本文和后续的文章中，我们将探讨三种 MIPS 微架构:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">Single-cycle Microarchitecture</font>，单周期微架构，是本文讨论的主要内容，<font color="red">它在一个时钟周期内就执行一条完整的指令</font>。由于在一个时钟周期内就可以完成所有的指令计算工作，因此它并不需要存储任何 Non-architectural State。其缺点是整个系统的最小时钟周期 (i.e. 最高频率) 受限于运行时间最长的指令。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">Multi-cycle Microarchitecture</font>，多周期微架构，是下一篇文章讨论的内容。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">Pipelined-cycle Microarchitecture</font>，流水线微架构，是再下一篇文章讨论的内容。
+
+  <h3><a name="2_datapath_4">2.4 性能评估方法</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了评估处理器的处理性能，我们使用测量一个程序的执行时间的方法来进行评估。计算公式如下所示:
+
+  <div class="div_learning_post_border" align="center">
+    `Execution Time = #Instructions \cdot (\frac{Cycl es}{Instruction}) \cdot (\frac{S e c o n ds}{Cycl e})`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其中，<code>#Instructions</code> 即指令的条数，对于同一个高级程序，在不同的架构下进行编译之后产生的指令条数各不相同。在一些架构下 (e.g. x86)，会有一些比较复杂执行逻辑的指令，这样一来就减少了程序编译后产生的指令数目，然而这样的指令通常会有较高的硬件执行时间。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Cycles per Instruction，即 <code>CPI</code>，指的是在当前被分析的架构下，一条指令的平均执行时间。平时我们还会看到它的倒数形式 —— Instructions per Cycle，即处理器执行带宽。不同的架构会有不同的 CPI 值。值得注意的是在本系列对 MIPS 微架构的分析文章中，我们假设 Memory System 对 CPI 是不构成影响的，也即访存没有时延的理想内存模型。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Seconds per Cycle，即 CPU 时钟周期的长度 `T_c`。`T_c` 取决于处理器逻辑中的 <font color="blue">关键路径 (Critical Path)</font> 的运行时间。不同的微架构有不同的时钟周期。由于芯片制造商的技术能是的半导体的速度不断的提高，所以即使电路设计没有发生改变，处理器的运行频率也在不断发展。当然，对于现在来说，生产工艺的发展速度已经逼近瓶颈，摩尔定律的失效使得处理器频率的提升速度也逐渐趋缓。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们正式开启对单周期处理器的设计和思考。
+</div>
+
+<h2><a name="3_datapath">3. 数据通路</a></h2>
+<div class="div_learning_post">
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在本节中，我们将看到，在一个时钟周期开始后 (i.e. 上升沿结束后)，单周期的 MIPS 处理器是如何构建数据通路 State Element 之间的组合逻辑电路来实现各种功能的。
+
+  <h3><a name="3_datapath_1">3.1 读取指令</a></h3>
+  <div align="center">
+    <img src="./pic/fetch_instruction.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，PC 寄存器中存储了当前时钟周期处理器要执行的指令在 Instruction Memory 中存储的地址。因此如上图所示，PC 的输出端口 <code>PC</code> 直接接向了 Instruction Memory 的输入地址端口，以在其输出端口 <code>RD</code> 上输出相应指令 `Instr_{[31:0]}`。
+
+  <div align="center">
+    <img src="./pic/i_type.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面，我们假定读取出来的指令是一条 <code>lw</code> 指令 (i.e. I-Type 指令)，来开展后续的分析。I-Type 指令的指令格式如上图所示。我们在 <a href="/sec_learning/Tech_Computer_Architerture/Architecture_3_MIPS_ISA/index.html#3_assembly_language_2">I-Type</a> 中曾经介绍过该类型的指令。<code>lw</code> 指令允许程序员使用一个寄存器 (<code>rs</code> 字段指定, `Instr_{[25:21]}`) 和一个立即数 (<code>imm</code> 字段指定, `Instr_{[15:0]}`) 来定位内存单元的位置，并且将该内存单元的值读取到一个指定的寄存器 (<code>rt</code> 字段指定, `Instr_{[20:16]}`) 中。
+
+  <h3><a name="3_datapath_2">3.2 读取源操作数</a></h3>
+  <div align="center">
+    <img src="./pic/read_source_oprand.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们现在拿到了 <code>lw</code> 指令。对于 <code>lw</code> 指令的编码来说，其源寄存器在 <code>rs</code> 字段 (i.e. `Instr_{[25:21]}`)，该字段用于指定内存单元基地址。因此如上图所示，我们把从 Instruction Memory 读取到的指令的 `Instr_{[25:21]}` 字段指向了 Register File 的 5-bits 的寄存器地址输入 <code>A1</code>，以在其输出 <code>RD1</code> 获取到相应的寄存器值。
+
+  <h3><a name="3_datapath_3">3.3 拓展立即数宽度</a></h3>
+  <div align="center">
+    <img src="./pic/sign_extended_immediate.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 <code>lw</code> 指令来说，其允许程序员使用立即数来计算内存单元的偏移量，因此我们还必须从指令中提取立即数值，也即 `Instr_{[15:0]}`。由于后续 ALU 的运算输入是 32 位数据，所以我们还必须把读取到的 16-bits 立即数拓展到 32 位，以便送入 ALU 以进行运算。此时我们得到：`SignImm_{15:0} = Imm_{15:0}`，`SignImm_{31:16} = Imm_{15}`。
+
+  <h3><a name="3_datapath_4">3.4 计算内存地址</a></h3>
+  <div align="center">
+    <img src="./pic/compute_memory_address.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在拿到 32-bits 的内存单元基地址 `SrcA_{31:0}` 和 32-bits 的偏移量 `SrcB_{31:0}` 后，我们就可以利用 ALU 来计算出内存单元的最终位置了。如上图所示，注意到我们使用了 3-bits 的控制信号 <font color="blue">`ALUControl_{2:0}`</font> 来控制 ALU 执行的是加法操作。我们最终能在 ALU 的输出 `ALURes u l t_{31:0}` 上获取到最终的内存单元的位置。 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在获取到内存单元地址之后，我们就可以从 Data Memory 中将数据读取出来了，可以看到我们把 ALU 的计算结果送上了 Data Memory 的地址线。
+
+  <h3><a name="3_datapath_5">3.5 写数据回 (Write Back) Register File</a></h3>
+  <div align="center">
+    <img src="./pic/write_back_to_register_file.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在读取到相关的数据后，Data Memory 会将相关的结果进行输出。对于 <code>lw</code> 指令，我们需要把相关的数据写回到寄存器中去，因此 Data Memory 的输出端口接到了 Register File 的 <code>WD3</code> 端口，以在下一个时钟上升沿到来时完成写入。同时，我们还需要选择要写入的寄存器的位置，对于 <code>lw</code> 指令编码来说，这是在 <code>rt</code> 字段 (i.e. `Instr_{[20:16]}`) 指定的，因此如上图所示，我们把 `Instr_{[20:16]}` 接向了 Register File 的 <code>A3</code> 寄存器选择端口。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，由于要对寄存器进行写入操作，所以必须使能 <font color="blue">`RegWrite`</font> 控制信号，我们在后面将会看到产生该信号的 Control Unit 的设计。
+
+  <h3><a name="3_datapath_6">3.6 决定下一条指令的地址</a></h3>
+  <div align="center">
+    <img src="./pic/next_instruction.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于单周期处理器的 PC 来说，它需要连续输出处理器将要执行的指令的内存地址，因此我们必须给 PC 设计外围组合逻辑来实现这一功能。如上图所示，我们在从 PC 的输出端口 <code>PC</code> 端口拿到当前周期执行的指令地址之后，将该值使用全加器加 4 之后由输向了 PC 的输入端口 <code>PC'</code>，我们在这里考虑了相邻指令连续被执行的情况，一条指令的大小为 32 bits，也即 4 bytes。而对于跳转指令的情况，我们在后面会再予以考虑。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这样一来，我们就完成了针对 <code>lw</code> 指令的基本数据通路的构建。
+
+  <h3><a name="3_datapath_7">3.7 写数据到内存单元</a></h3>
+  <div align="center">
+    <img src="./pic/write_data.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成了 <code>lw</code> 指令的执行逻辑后，现在让我们把设计拓展到 <code>sw</code> 指令。相比较于 <code>Lw</code> 指令，<code>sw</code> 指令的功能是相反的：把寄存器的值保存到指定的内存单元去。与 <code>lw</code> 指令使用 <code>rt</code> 字段 (i.e. `Instr_{[20:16]}`) 来指定读取的寄存器类似，<code>sw</code> 指令使用 <code>rt</code> 字段 (i.e. `Instr_{[20:16]}`) 来指定要保存值到内存去的寄存器的编号，因此如上图所示，我们把 Instr_{[20:16]}` 同时接到了 Register File 的地址选择输入端口 <code>A2</code> 上去，以在输出端口 <code>RD2</code> 上获取到相应寄存器的值，并且将输出 <code>RD2</code> 接到 Data Memory 的 <code>WD</code> 数据输入端口，这样在下一个时钟上升沿到来时，就能将数据保存到 Data Memory 中去。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，对于 <code>sw</code> 指令，由于要对 Data Memory 进行写操作，那么我们需要使能控制信号 <font color="blue">`MemWrite`</font>; 并且由于不需要对任何寄存器进行写入操作，因此 <font color="blue">`RegWrite`</font> 控制信号将被关闭; 同时 <font color="blue">`ALUControl_{2:0}`</font> 控制信号将保持为加法控制信号不变。我们在后面将会产生这些控制信号的 Control Unit 的设计。
+
+  <h3><a name="3_datapath_8">3.8 对 R-Type 指令进行支持的数据通路</a></h3>
+  <div align="center">
+    <img src="./pic/r_type.png" width=80%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面我们完成了对 I-Type 指令 <code>lw</code> 和 <code>sw</code> 指令的数据通路的设计。基于上面的设计，我们本节将继续把数据通路拓展到 R-Type 指令，如 <code>add</code>, <code>sub</code>, <code>and</code>, <code>or</code> 和 <code>slt</code>。注意到上面罗列的 R-Type 指令的运行规律都是从 Register File 中读取两个寄存器值，然后使用 ALU 对这两个寄存器值进行一些运算之后，再把该值写回到相应的寄存器中去。不同的是，它们使用的是不同的 ALU 操作，因此事实上它们的不同点就在于 Control Unit 会产生不同的 <font color="blue">`ALUControl_{2:0}`</font> 控制信号。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面，我们将看到，为了在 I-Type 指令的基础上执行 R-Type 指令，我们需要对数据通路所做的修改。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上面的数据通路的设计中，ALU 的 <code>SrcB</code> 是来自于符号拓展器输出的 `SignImm_{31:0}` 值。在 R-Type 指令中，它应该来自于 Register File 输出的第二个寄存器值 <code>RD2</code>。因此，我们首先在 ALU 的 <code>SrcB</code> 输入之前加入了一个多路选择器，并且受到 <font color="blue">`ALUSrc`</font> 控制信号的控制：当控制信号为 0 时，ALU 接受来自 Regitser File 输出的寄存器值; 当控制信号为 1 时，ALU 接受来自符号拓展器的 `SignImm_{31:0}` 值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上面的数据通路的设计中，Register File 的写入数据输入 <code>WD3</code> 来自于 Data Memory 的输出，然而对于 R-Type 指令来说，Register File 写入的数据来自于 ALU 的输出 `ALUResu l t`。因此同样地，对于 Register File 的写入数据输入端口 <code>WD3</code> 的来源，我们同样需要一个多路选择器来进行区分，如上图所示。该多路选择器受到 <font color="blue">`Memt oReg`</font> 控制信号的控制：当控制信号为 0 时，Resgiter File 接受来自 ALU 输出的值作为寄存器写入值; 当控制信号为 1 时，Register File 接受来自 Data Memory 的输出值作为寄存器的输入值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上面的数据通路的设计中，Register File 的写入寄存器的选择信号 <code>A3</code> 来自于读取的指令的 <code>rt</code> 字段 (i.e. `Instr_{[20:16]}`)，而对于 R-Type 指令来说，写入的寄存器的选择信号则来自于读取的指令的 <code>rd</code> 字段 (i.e. `Instr_{[15:11]}`)。因此同样地，对于 Register File 的写入寄存器的选择信号 <code>A3</code> 的来源，我们同样需要一个多路选择器来进行区分，如上图所示。该多路选择器受到 <font color="blue">`RegDst`</font> 控制信号的控制：当控制信号为 0 时，Resgiter File 接受来自 <code>rt</code> 字段 (i.e. `Instr_{[20:16]}`) 的值作为写入寄存器的选择值; 当控制信号为 1 时，Register File 接受来自 <code>rd</code> 字段 (i.e. `Instr_{[15:11]}`) 作为写入寄存器的选择值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这样一来，在增加了三个多路选择器后，我们的数据通路现在就开始支持 R-Type 指令的执行了。
+
+  <h3><a name="3_datapath_9">3.9 对 <code>beq</code> 指令进行支持的数据通路</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成对 I-Type 和 R-Type 指令的运行支持后，我们现在继续优化数据通路，使其支持 <code>beq</code> 指令的运行。
+
+  <div align="center">
+    <img src="./pic/beq.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>beq</code> 指令使用的是 I-Type 指令的编码格式，其对两个寄存器的值 (由 <code>rs</code> (i.e. `Instr_{[25:21]}`) 和 <code>rt</code> (i.e. `Instr_{[20:16]}`) 指定)进行比较，如果它们是相等的，则会在 PC 输出的当前指令地址 <code>PC</code> <font color="red">自增 4 后</font> 再加上相应的偏移值，以实现程序跳转的效果。注意到这个偏移值可为正，也可为负。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，偏移值在指令编码中的 <code>imm</code> (i.e. `Instr_{[16:0]}`) 处指定，由于是一个 16-bits 有符号数 (two's complement)，并且需要进行 32-bits 加法运算，因此我们需要将它送入符号扩展器。对立即数的宽度扩展我们在上面已经完成了相关硬件的设计，因此我们在此处无需再对硬件进行修改。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，由于偏移值只是指定要 跳过/跳回 的指令的数量，由于我们要在 Instruction Memory 中进行寻址，所以我们还必须把该偏移值乘以 4 以得到要 跳过/跳回 的字节的数量，所以我们在符号扩展器输出的位置还加上了一个移位器，左移 2 位的操作即乘 4 操作，以得到程序的跳转字节数，我们将该值与 `PCPlus4` 值进行相加，最终得到跳转的指令的目的地址 `PCBranch`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们需要将运行 <code>beq</code> 指令得到的下一指令地址 <code>PC'</code> 和其它非跳转指令得到的下一指令地址 <code>PC'</code>区分开，因此此处我们在 PC 的输入端口 <code>PC'</code> 之前加上了一个多路选择器，受到 <font color="blue">`PCSrc`</font> 控制信号的控制: 当 <font color="blue">`PCSrc`</font> 为 0 时，下一指令的地址是常规的当前地址加 4 得到的下一条连续指令地址; 当 <font color="blue">`PCSrc`</font> 为 1 时，下一指令的地址是基于跳转指令计算得到的下一指令地址。值得注意的是，观察上图可以发现，<font color="blue">`PCSrc`</font> 控制信号又收到两个信号的控制: 控制信号 <font color="blue">`Branch`</font> 和 ALU 输出信号 Zero，前者用于指示当前运行的指令是一条分支指令，后者用于输出比较结果。如果这两者都为真，那么就需要进行跳转。
+
+  <h3><a name="3_datapath_10">3.10 总结</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;至此，我们就完成了针对 MIPS 指令子集的单周期处理器的数据通路的设计。我把单周期 MIPS 处理器的设计思路总结为: 
+
+  <ol>
+    <li>State Elements 的串联;</li>
+    <li>多路选择器的引入以控制 数据的写入/地址的选择;</li>
+    <li>控制信号对数据通路的作用;</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们首先明确了组合出基本数据通路的 State Elements：PC、Instruction Memory、Register File 以及 Data Memory。当我们对单周期处理器进行分析时，在它们其中，Instruction Memory 是只读器件，PC、Register File 和 Data Memory 是可写器件。对于可写器件，我们必须注意两个点：<font color="red">写入数据的来源</font>、<font color="red">写入地址的来源</font>。我们下面对在数据通路中引入的多路选择器进行总结。
+
+  <div align="center">
+    <img src="./pic/full_datapath.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们使用上图进行说明，Control Unit 部分的线路可以先忽略，我们在后面会进行介绍。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 PC，我们使用一个多路选择器 `MUX_{1}` 以对写入的下一条指令地址进行选择。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Register File，我们使用多路选择器以对写入的 <b>地址</b> 和 <b>数据</b> 的来源进行选择: 对于地址来说，我们在 Register File 的写寄存器地址输入口 <code>A3</code> 前面加入了一个多路选择器 `MUX_{2}`，以区分 R-Type 指令和 I-Type 指令对目标写入寄存器的指示字段; 对于数据来说，我们在 Register File 的数据写入口 <code>WD3</code> 前面加入了一个多路选择器 `MUX_{4}`，以区分写入结果来自于 ALU 输出和来自于 Data Memory 的指令。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Data Memory 来说，它的写入数据 <code>WD</code> 恒定来自于 Register File 的第二个寄存器输出端口 <code>RD2</code>，因此我们并不需要加上多路选择器来选择 Data Memory 的输入数据来源; 对于内存单元地址输入端口 <code>A</code> 来说，其输入值恒定来源于 ALU 的计算结果，因此我们同样也不需要加入多路选择器。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，我们还在 ALU 的第二个输入源操作数之前引入了一个多路选择器，以区分数据来源于 R-Type 指令指定的寄存器或者是 I-Type 指令指定的立即数 (p.s. 完成符号扩展后)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在本文后面的一节 <a href="#5_more_instruction_2">增加对指令 <code>j</code> 的支持</a> 中还会看到为了增加对 J-Type 指令的支持我们引入的新的多路选择器。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有了数据通路，有了多路选择器，现在我们欠的东风就是设计一个控制单元，用于控制各个多路选择器和使能信号，以实现在数据通路上的不同运行流程，我们在下一节中将看到控制单元的设计。
+</div>
+
+<h2><a name="4_control_unit">4. 控制单元</a></h2>
+<div class="div_learning_post">
+  <h3><a name="4_control_unit_1">4.1 控制单元设计</a></h3>
+
+  <div align="center">
+    <img src="./pic/complete_processor.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上面对 MIPS 处理器的数据通路的设计中，我们观察到了要正确地完成一条指令的执行，必须引入大量的控制信号。我们在本节中将看到 MIPS 处理器中是如何完成这些控制信号的提取和集成的。如上图所示，我们将引入一个组合逻辑电路模块 —— Control Unit 来完成整个 MIPS 单周期处理器的设计。 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们先对 MIPS 指令的编码格式作出分析。本质上来说，指令执行的时候数据通路上的控制信号，来自于 MIPS 指令中的 <code>Opcode</code> (i.e. `Instr_{[31:26]}`) 字段。另外，R-Type 指令同时还使用 <code>Funct</code> (i.e. `Instr_{[5:0]}`) 字段来指定 ALU 的运行方式。因此，我们设计的 Control Unit 本质上就是要利用好这两部分的控制信息。
+
+  <div align="center">
+    <img src="./pic/control_unit.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，我们把 Control Unit 整体分为两部分: <font color="blue">Main Decoder</font> 和 <font color="blue">ALU Decoder</font>。首先，Main Decoder 负责解析 <code>Opcode</code> (i.e. `Instr_{[31:26]}`) 字段，同时它还会决定输出给 ALU Decoder 的 <font color="blue">`ALUop_{1:0}`</font> 控制信号。我们把 Main Decoder 输出的控制信号整理如下：
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th><div align="center">控制信号</div></th>
+      <th><div align="center">含义</div></th>
+    </tr>
+    <tr>
+      <td><div align="center">`Memt oReg`</div></td>
+      <td><div align="center">选择写回 Register File 寄存器的来源：为 0 则来自于 ALU 的输出; 为 1 则来自于 Data Memory 的读取值;</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">`MemWrite`</div></td>
+      <td><div align="center">写 Data Memory 的使能信号：为 0 则不使能写入; 为 1 则使能写入;</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">`Branch`</div></td>
+      <td><div align="center">分支信号，与 ALU 输出信号 `Zero` 共同决定控制信号 `PCSrc`：为 0 时，下一指令的地址是常规的当前地址加 4 得到的下一条连续指令地址; 为 1 时，下一指令的地址是基于跳转指令计算得到的下一指令地址;</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">`ALUSrc`</div></td>
+      <td><div align="center">选择 ALU 第二个输入的 32-bits 数的来源：为 0 则来源于 Register File 的输出; 为 1 则来源于符号扩展器的输出;</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">`RegDst`</div></td>
+      <td><div align="center">选择写入寄存器的选择信号的来源：为 0 则来自于读取的指令的 <code>rt</code> 字段 (i.e. `Instr_{[20:16]}`); 为 1 则来自于读取的指令的 <code>rd</code> 字段 (i.e. `Instr_{[15:11]}`);</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">`RegWrite`</div></td>
+      <td><div align="center">写寄存器的使能信号：为 0 则不使能写入; 为 1 则使能写入;</div></td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于这些控制信号来说，它们是直接受到当前周期读取到的指令的控制的，具体如下：
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th><div align="center">指令</div></th>
+      <th><div align="center">Opcode</div></th>
+      <th><div align="center">`RegWrite`</div></th>
+      <th><div align="center">`RegDst`</div></th>
+      <th><div align="center">`ALUSrc`</div></th>
+      <th><div align="center">`Branch`</div></th>
+      <th><div align="center">`MemWrite`</div></th>
+      <th><div align="center">`Memt oReg`</div></th>
+      <th><div align="center">`ALUOp`</div></th>
+    </tr>
+    <tr>
+      <th><div align="center">R-Type</div></th>
+      <th><div align="center">000000</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">10</div></th>
+    </tr>
+    <tr>
+      <th><div align="center">lw</div></th>
+      <th><div align="center">100011</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">00</div></th>
+    </tr>
+    <tr>
+      <th><div align="center">sw</div></th>
+      <th><div align="center">101011</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">X</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">X</div></th>
+      <th><div align="center">00</div></th>
+    </tr>
+    <tr>
+      <th><div align="center">beq</div></th>
+      <th><div align="center">000100</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">X</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">X</div></th>
+      <th><div align="center">01</div></th>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 ALU Decoder 来说，它根据 <code>Funct</code> (i.e. `Instr_{[5:0]}`) 字段和 Main Decoder 输出的 <font color="blue">`ALUOp_{1:0}`</font> 控制信号负责控制 ALU 计算模块的行为。如下所示，是 <font color="blue">`ALUop_{1:0}`</font> 控制信号的真值表。
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th><div align="center">`ALUOp`</div></th>
+      <th><div align="center"><code>Funct</code></div></th>
+      <th><div align="center">`ALUControl` (含义)</div></th>
+    </tr>
+    <tr>
+      <td><div align="center">00</div></td>
+      <td><div align="center">X</div></td>
+      <td><div align="center">010 (add)</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">X1</div></td>
+      <td><div align="center">X</div></td>
+      <td><div align="center">110 (sub)</div></td>
+    </tr>
+    <tr>
+      <td colspan=3><div align="center"><font color="blue">1X: 由 <code>Funct</code> 字段决定 ALU 功能</font></div></td>
+    </tr>
+    <tr>
+      <td><div align="center">1X</div></td>
+      <td><div align="center">100000 (add)</div></td>
+      <td><div align="center">010 (add)</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">1X</div></td>
+      <td><div align="center">100010 (sub)</div></td>
+      <td><div align="center">110 (sub)</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">1X</div></td>
+      <td><div align="center">100100 (and)</div></td>
+      <td><div align="center">000 (and)</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">1X</div></td>
+      <td><div align="center">100101 (or)</div></td>
+      <td><div align="center">001 (or)</div></td>
+    </tr>
+    <tr>
+      <td><div align="center">1X</div></td>
+      <td><div align="center">101010 (slt)</div></td>
+      <td><div align="center">111 (set less than)</div></td>
+    </tr>
+  </table>
+
+  <h3><a name="4_control_unit_2">4.2 指令执行实例</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;至此我们已经基本完成了单周期 MIPS 处理器的设计，我们下面展示几条代表性指令在处理器中的执行过程。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一条 R-Type 指令的执行过程如下所示：
+
+  <div align="center">
+    <img src="./pic/example_r_type.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一条 <code>lw</code> 指令的执行过程如下所示：
+
+  <div align="center">
+    <img src="./pic/example_load.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一条 <code>beq</code> 指令的执行过程如下所示：
+
+  <div align="center">
+    <img src="./pic/example_beq.png" width=80%>
+  </div>
+
+</div>
+
+<h2><a name="5_more_instruction">5. 对更多指令的支持</a></h2>
+<div class="div_learning_post">
+  <h3><a name="5_more_instruction_1">5.1 增加对指令 <code>addi</code> 的支持</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上面实现的处理器中，针对 I-Type 指令，我们实现了 <code>lw</code> 和 <code>sw</code> 指令的数据通路设计。现在让我们考虑另一个 I-Type 指令 <code>addi</code>: 它实现了把一个寄存器值 (i.e. 由 <code>rs</code> 字段指定) 和一个立即数 (i.e. 由 <code>imm</code> 字段指定) 的相加值存储到一个寄存器 (i.e. 由 <code>rt</code> 字段指定) 中的功能。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于数据通路上已经有实现寄存器值和立即数值相加的基本能力，所以要实现对 <code>addi</code> 的支持实际上很简单，我们只需要在 Control Unit 上加上对 <code>addi</code> 的解码的组合逻辑即可。我们向 Main Decoder 的增值表中增加如下表项:
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th><div align="center">指令</div></th>
+      <th><div align="center">Opcode</div></th>
+      <th><div align="center">`RegWrite`</div></th>
+      <th><div align="center">`RegDst`</div></th>
+      <th><div align="center">`ALUSrc`</div></th>
+      <th><div align="center">`Branch`</div></th>
+      <th><div align="center">`MemWrite`</div></th>
+      <th><div align="center">`Memt oReg`</div></th>
+      <th><div align="center">`ALUOp`</div></th>
+    </tr>
+    <tr>
+      <th><div align="center">addi</div></th>
+      <th><div align="center">001000</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">00</div></th>
+    </tr>
+  </table>
+
+  <h3><a name="5_more_instruction_2">5.2 增加对指令 <code>j</code> 的支持</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>j</code> 指令是 J-Type 指令，其用于向 PC 寄存器中写入一个新的地址值。基于指令 <code>j</code> 进行跳转时，PC 中存储的 32-bits 地址值的最低 2 位 `PC_{1:0}` 恒为 0 (i.e. 存储的指令是 32-bits 对齐的)，接下来的 26 bits `PC_{[27:2]}` 是从指令 <code>j</code> 的 <code>imm</code> 字段 (i.e. `Instr_{[25:0]}`) 中进行提取的，最高的 4 bits `PC_{[31:28]}` 保留的是 PC 寄存器中原先的最高 4 位。由于在我们上面设计的数据通路中并没有这种逻辑的计算连接，因此当我们加入对 <code>j</code> 指令的支持的时候，我们需要对数据通路做出相应的修改。
+
+  <div align="center">
+    <img src="./pic/j_type_support.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，我们额外增加了一条数据通路分支和一个控制信号 <font color="blue">Jump</font>。我们首先提取出 <code>imm</code> 字段 (i.e. `Instr_{[25:0]}`)，向左移动 2 位后，得到一个 28-bits 长的值，然后我们将该值与 `PCPlus4` 的高 4 位进行合成，最终得到一个新的 32-bits 地址值。注意到在送入 PC 的下一指令地址输入端口 <code>PC'</code> 之前，我们使用了一个新的多路选择器来选择送入的地址值，并使用 <font color="blue">Jump</font> 信号来加以控制: 当信号为 0 时，送入的地址值是我们上面分析过的对 <code>beq</code> 指令和其它常规指令产生得到的地址值; 当信号为 1 时，送入的地址值是我们刚刚基于指令 <code>j</code> 得到的新的地址值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，由于引入了新的控制信号 <font color="blue">Jump</font>，Control Unit 中的 Main Decoder 的真值表更新如下：
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th><div align="center">指令</div></th>
+      <th><div align="center">Opcode</div></th>
+      <th><div align="center">`RegWrite`</div></th>
+      <th><div align="center">`RegDst`</div></th>
+      <th><div align="center">`ALUSrc`</div></th>
+      <th><div align="center">`Branch`</div></th>
+      <th><div align="center">`MemWrite`</div></th>
+      <th><div align="center">`Memt oReg`</div></th>
+      <th><div align="center">`Jump`</div></th>
+      <th><div align="center">`ALUOp`</div></th>
+    </tr>
+    <tr>
+      <th><div align="center">R-Type</div></th>
+      <th><div align="center">000000</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">10</div></th>
+    </tr>
+    <tr>
+      <th><div align="center">lw</div></th>
+      <th><div align="center">100011</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">00</div></th>
+    </tr>
+    <tr>
+      <th><div align="center">sw</div></th>
+      <th><div align="center">101011</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">X</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">X</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">00</div></th>
+    </tr>
+    <tr>
+      <th><div align="center">beq</div></th>
+      <th><div align="center">000100</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">X</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">X</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">01</div></th>
+    </tr>
+    <tr>
+      <th><div align="center">addi</div></th>
+      <th><div align="center">001000</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">00</div></th>
+    </tr>
+    <tr>
+      <th><div align="center">j</div></th>
+      <th><div align="center">000010</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">X</div></th>
+      <th><div align="center">X</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">0</div></th>
+      <th><div align="center">X</div></th>
+      <th><div align="center">1</div></th>
+      <th><div align="center">XX</div></th>
+    </tr>
+  </table>
+
+</div>
+
+<h2><a name="6_performance">6. 单周期处理器的性能分析</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在本节中，我们以指令 <code>lw</code> 为例，来分析单周期 MIPS 处理器的性能。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们通过指令 <code>lw</code> 运行的时间来得到对处理器性能的评估。为了得到运行时间，我们首先必须抓出运行某条指令在运行过程中的 <font color="blue">关键路径 (Critical Path)</font>，这是制约该条指令运行时间的因素。
+
+  <div align="center">
+    <img src="./pic/lw_critical_path.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，我们现在对运行 <code>lw</code> 的数据通路进行分析。在时钟上升沿到来的时候，就标志着当前指令周期的开始:
+
+  <ol>
+    <li>PC 寄存器需要根据上一个时钟周期输入的 <code>PC'</code> 值来输出新的指令地址，记该延迟为 `t_{pcqPC}`。这里的 "`pcq`" 的概念可以回顾我们在 <a href="/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_2_Sequential_Circuit/index.html">时序逻辑电路基础</a> 中的相关分析: `t_{pcq}` 是第一个时钟上升沿到所有触发器输出达到预期值的延迟;</li>
+    <li>Instruction Memory 需要根据从 PC 寄存器中读取到的指令地址输出相应的指令，记该延迟为 `t_{mem}`;</li>
+    <li>Register File 需要根据 <code>rs</code> 字段读取出相关寄存器的值，记该延迟为 `t_{RFread}`, 与此同时 <code>lw</code> 指令的 <code>imm</code> 字段还会经过符号扩展器，并且经由一个多路选择器到达 ALU 的 <code>SrcB</code> 输入端口，记该时延为 `t_{sext} + t_{m ux}`;</li>
+    <li>ALU 需要对 <code>SrcA</code> 上的寄存器值和 <code>SrcB</code> 上的立即数拓展符号值进行加法运算，记该时延为 `t_{ALU}`;</li>
+    <li>Data Memory 需要根据 ALU 运算后输出的结果作为地址值，输出相应的内存单元中存储的值，记该时延为 `t_{mem}`;</li>
+    <li>在把 Data Memory 输出的值保存到 Register File 中的寄存器之前，还必须经过一个多路选择器，记该时延为 `t_{m ux}`;</li>
+    <li>回顾我们在 <a href="/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_2_Sequential_Circuit/index.html">时序逻辑电路基础</a> 中分析过的 <font color="blue">建立时间</font> 的概念，我们还需要考虑 Register File 的相关触发器在下一个时钟上升沿到来之前的建立时间，以使得这些触发器能够在时钟上升沿到来时修改并输出正确的值，我们记该时延为 `t_{RFsetup}`</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;综上，我们可以把 <code>lw</code> 指令的关键路径的运行时延整理为:
+
+  <div align="center" class="div_learning_post_border">
+    `T_c = t_{pcqPC} + t_{mem} + max(t_{RFread}, t_{sext} + t_{m ux}) + t_{ALU} + t_{mem} + t_{m ux} + t_{RFsetup}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于从 PC、Memory 和 Register File 中读取指令的时间相比于其它操作都要长的多，所以我们可以把上面的式子简化为:
+
+  <div align="center" class="div_learning_post_border">
+    `T_c = t_{pcqPC} + 2t_{mem} + t_{RFread} + t_{ALU} + t_{m ux} + t_{RFsetup}`
+  </div>
+</div>
+
+<!--ref-->
+<!--
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+1. golang.org, <a target="_blank" rel="noopener" href="https://golang.org/cmd/go/#hdr-GOPATH_environment_variable">GOPATH environment variable</a>
+</p>
+</div>-->
+
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Computer_Architerture/">TECH_COMPUTER_ARCHITERTURE</a></li>
+          <li>ARCHITECTURE_4_MIPS_SINGLE_CYCLE</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
