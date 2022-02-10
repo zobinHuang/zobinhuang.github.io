@@ -33,20 +33,19 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/nginx_ssl.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/nginx_directory.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/gitlab_approve_user.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/gitlab_allow_webhook.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_init.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_plugin.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_gitlab_plugin.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_ssh_key_1.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/gitlab_token.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/config_jenkins_1.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/config_jenkins_2.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/config_jenkins_3.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/config_jenkins_4.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/config_jenkins_5.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/config_jenkins_6.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_create_project.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_config_token.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_build_add_ssh.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_ssh_exec_command.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/gitlab_webhook_config.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/xxx.png">
-<meta property="article:published_time" content="2022-02-10T15:50:49.218Z">
-<meta property="article:modified_time" content="2022-02-10T15:50:49.218Z">
+<meta property="article:published_time" content="2022-02-10T17:38:19.619Z">
+<meta property="article:modified_time" content="2022-02-10T17:38:19.619Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -464,6 +463,14 @@
   <div align="center">
     <img src="./pic/gitlab_approve_user.png" width=80%>
   </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们需要进入以下位置，配置允许 Webhook 访问本地主机:
+
+  <div align="center">
+    <img src="./pic/gitlab_allow_webhook.png" width=80%>
+  </div>
+
 </div>
 
 <h2 class="title">部署和配置 Jenkins</h2>
@@ -523,59 +530,46 @@
 
 <h2 class="title">对接 Gitlab 和 Jenkins</h2>
 <div class="div_learning_post">
-  <h3 class="title">配置 Gitlab Access Token</h3>
+  <h3 class="title">创建 Jenkins 任务</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我专门创建了一个 Gitlab 用户用于对接 Jenkins。在登入该账户以后，我们首先为其生成 Gitlab 的 Access Token，以便让 Jenkins 使用 Gitlab API。如下所示:
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们创建一个 Jenkins free-style 的任务:
 
   <div align="center">
-    <img src="./pic/gitlab_token.png" width=80%>
+    <img src="./pic/jenkins_create_project.png" width=80%>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;拿到生成的 API Token 后，我们来到 Jenkins，进入 Configure System:
+  &nbsp;&nbsp;&nbsp;&nbsp;我们需要设置构建触发器，设置其为触发远程构建，并且填入一个身份令牌。这里的令牌需要我们暂时先记着，后面我们在 Gitlab 那边配置 webhook 的时候将会用到。
 
   <div align="center">
-    <img src="./pic/config_jenkins_1.png" width=80%>
+    <img src="./pic/jenkins_config_token.png" width=80%>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;然后我们找到配置 Gitlab 的区域，先输入 Gitlab 部署的位置信息:
+  &nbsp;&nbsp;&nbsp;&nbsp;备注：[记得删掉]
+
+  <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Use the following URL to trigger build remotely: JENKINS_URL/job/hero-blog/build?token=TOKEN_NAME 或者 /buildWithParameters?token=TOKEN_NAME</span><br><span class="line"></span><br><span class="line">a1b2c3d19990812a1b2c3d</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们创建一个构建步骤，类别是 <code>Send files or execute commands over SSH</code>。
 
   <div align="center">
-    <img src="./pic/config_jenkins_2.png" width=80%>
+    <img src="./pic/jenkins_build_add_ssh.png" width=80%>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;然后我们添加我们刚刚拿到的 Gitlab Token:
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们添加如下命令:
 
   <div align="center">
-    <img src="./pic/config_jenkins_3.png" width=80%>
+    <img src="./pic/jenkins_ssh_exec_command.png" width=80%>
   </div>
 
-  <h3 class="title">测试连通情况</h3>
+  <h3 class="title">Gitlab 创建 Webhook</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;现在让我们测试连通情况，首先让我们创建一个 Jenkins free project:
+  &nbsp;&nbsp;&nbsp;&nbsp;然后现在让我们在 Gitlab 的相关工程中创建一个 Webhook:
 
   <div align="center">
-    <img src="./pic/config_jenkins_4.png" width=80%>
+    <img src="./pic/gitlab_webhook_config.png" width=80%>
   </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;然后我们对触发器进行配置，注意这里我们要记下 webhook 的 URL:
-
-  <div align="center">
-    <img src="./pic/config_jenkins_5.png" width=80%>
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;然后我们创建一个构建步骤，用于测试用，如下所示:
-
-  <div align="center">
-    <img src="./pic/config_jenkins_6.png" width=80%>
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;接着，我们在 Gitlab 上创建一个新的 project 用于测试，创建完成后，我们需要配置 integration。
 </div>
 
 <div class="div_ref" id="ref_container"></div>
