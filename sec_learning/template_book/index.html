@@ -28,8 +28,8 @@
 <meta property="og:description" content="选择您要翻阅的文章归档情况              系统知识         科研论文阅读         随笔文章(未归档)">
 <meta property="og:locale">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/template_book/pic/linux_logo.png">
-<meta property="article:published_time" content="2021-11-02T02:35:32.492Z">
-<meta property="article:modified_time" content="2021-11-02T02:35:32.492Z">
+<meta property="article:published_time" content="2022-02-11T17:19:06.059Z">
+<meta property="article:modified_time" content="2022-02-11T17:19:06.059Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -94,7 +94,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="تشغيل شريط التصفح">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -225,6 +225,7 @@
           <head>
     <link rel="stylesheet" type="text/css" href="../style/book.css" />
     <script type="text/javascript" src="../script/book.js"></script>
+    <script type="text/javascript" src="../script/load_book.js"></script>
 </head>
 
 <body>
@@ -233,7 +234,7 @@
     <img src="./pic/linux_logo.png" width=200px>
 </div>
 
-<body>
+<body onload="load_book()">
 
 <div class="div_switch_bar_container">
     <h4>选择您要翻阅的文章归档情况</h4>
@@ -356,10 +357,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          المحتويات
+          Inhaltsverzeichnis
         </li>
         <li class="sidebar-nav-overview">
-          عام
+          Übersicht
         </li>
       </ul>
 

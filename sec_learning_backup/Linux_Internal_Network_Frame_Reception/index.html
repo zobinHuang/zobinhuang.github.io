@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="L2 帧的接收过程">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Frame_Reception/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Frame_Reception/pic/xxx.png">
+<meta property="article:published_time" content="2022-02-10T14:39:10.840Z">
+<meta property="article:modified_time" content="2021-12-12T15:28:22.284Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Frame_Reception/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>L2 帧的接收过程 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project/" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly/" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship/" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay/" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">L2 帧的接收过程
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+          <li>LINUX_INTERNAL_NETWORK_FRAME_RECEPTION</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_border{
+      margin-bottom: 20px;
+      padding: 10px 10px; 
+      font-size: 16px; 
+      word-spacing:0px;  
+      border:1px solid black;
+    }
+    .div_learning_post_background{
+      background-color:#E3E2E2;
+      padding: 10px 40px; 
+      font-size: 16px;
+      word-spacing:0px;  
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+    .div_learning_post_background p{
+      margin: 0px;
+    }
+</style>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Dec.12 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.1 <a href="#1_xxx"><font color="blue">xxx</font></a>：xxx
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+
+  </div>
+</div>
+
+<br>
+
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在阅读本篇文章之前，我推荐您先阅读我的另外两篇文章: <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Intro/index.html">内核的中断和异常的基本原理</a> 和 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Handle/index.html">Linux 内核对中断和异常的处理</a> 以对 Linux 内核的中断机制有一定的理解。
+</div>
+
+<!--标题-->
+<h2><a name=" 1_napi">1. NAPI</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO: softnet, napi_struct
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们本节将以 intel 的 igb 驱动为例子来观察 NAPI 系统的工作流程。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，我们来看 igb 驱动注册的 ISR，如下所示，它是在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/drivers/net/ethernet/intel/igb/igb_main.c#L6867">drivers/net/ethernet/intel/igb/igb_main.c</a> 中定义的。
+
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">irqreturn_t</span> <span class="title">igb_msix_ring</span><span class="params">(<span class="keyword">int</span> irq, <span class="keyword">void</span> *data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">igb_q_vector</span> *<span class="title">q_vector</span> =</span> data;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Write the ITR value calculated from the previous interrupt. */</span></span><br><span class="line">  igb_write_itr(q_vector);</span><br><span class="line"></span><br><span class="line">  napi_schedule(&amp;q_vector-&gt;napi);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> IRQ_HANDLED;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以很主观的看出，ISR 里面要做的工作必须保证少且快速，以实现对 Interrupt 的快速响应。其中我们重点要关注的是对 <code>napi_schedule</code> 的调用，它是在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/include/linux/netdevice.h#L460">include/linux/netdevice.h</a> 中定义的。它实际上调用了 <code>__napi_schedule</code>，后者是在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/net/core/dev.c#L6537">net/core/dev.c</a> 中定义的，而 <code>__napi_schedule</code> 实际上则调用了 <code>____napi_schedule</code>，它也是在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/net/core/dev.c#L4392">net/core/dev.c</a> 中被定义的。它们的定义如下所示。
+
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// include/linux/netdevice.h</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">napi_schedule</span><span class="params">(struct napi_struct *n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (napi_schedule_prep(n))</span><br><span class="line">    __napi_schedule(n);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// net/core/dev.c</span></span><br><span class="line"><span class="keyword">void</span> __napi_schedule(struct napi_struct *n)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> flags;</span><br><span class="line"></span><br><span class="line">  local_irq_save(flags);</span><br><span class="line">  ____napi_schedule(this_cpu_ptr(&amp;softnet_data), n);</span><br><span class="line">  local_irq_restore(flags);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">void</span> ____napi_schedule(struct softnet_data *sd,</span><br><span class="line">            struct napi_struct *napi)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">thread</span>;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (test_bit(NAPI_STATE_THREADED, &amp;napi-&gt;state)) &#123;</span><br><span class="line">    <span class="comment">/* Paired with smp_mb__before_atomic() in</span></span><br><span class="line"><span class="comment">    * napi_enable()/dev_set_threaded().</span></span><br><span class="line"><span class="comment">    * Use READ_ONCE() to guarantee a complete</span></span><br><span class="line"><span class="comment">    * read on napi-&gt;thread. Only call</span></span><br><span class="line"><span class="comment">    * wake_up_process() when it&#x27;s not NULL.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    thread = READ_ONCE(napi-&gt;thread);</span><br><span class="line">    <span class="keyword">if</span> (thread) &#123;</span><br><span class="line">      <span class="comment">/* Avoid doing set_bit() if the thread is in</span></span><br><span class="line"><span class="comment">      * INTERRUPTIBLE state, cause napi_thread_wait()</span></span><br><span class="line"><span class="comment">      * makes sure to proceed with napi polling</span></span><br><span class="line"><span class="comment">      * if the thread is explicitly woken from here.</span></span><br><span class="line"><span class="comment">      */</span></span><br><span class="line">      <span class="keyword">if</span> (READ_ONCE(thread-&gt;__state) != TASK_INTERRUPTIBLE)</span><br><span class="line">        set_bit(NAPI_STATE_SCHED_THREADED, &amp;napi-&gt;state);</span><br><span class="line">      wake_up_process(thread);</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  list_add_tail(&amp;napi-&gt;poll_list, &amp;sd-&gt;poll_list);</span><br><span class="line">  __raise_softirq_irqoff(NET_RX_SOFTIRQ);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以看到，首先，在 <code>napi_schedule</code> 中，我们首先调用 <code>napi_schedule_prep</code> 来判断当前处理的 <code>napi_struct</code> 是否正在被轮询处理中，如果该函数返回为 0，那么就说明正在被处理中，理论上本不应该产生中断，可是却依然产生了，我们在这里相当于挡了一下意外情况。如果当前的 <code>napi_struct</code> 结构没有正在被轮询处理，则会进而调用 <code>__napi_schedule</code> 函数，它在一个关闭了对 Interrupt 的响应的条件下，又调用了 <code>____napi_schedule</code>，注意到此时传入给后者的参数中，一个是 per-cpu 的 <code>softnet_data</code> 结构，一个是当前正在处理的 <code>napi_struct</code>。在 <code>____napi_schedule</code> 中，我们会调用 <code>list_add_tail</code> 来把当前的 <code>mapi_struct</code> 的 <code>poll_list</code> 成员连接到当前 CPU 下的 <code>softnet_data</code> 的 <code>poll_list</code> 成员下，并且调用 <code>__raise_softirq_irqoff</code> 来拉高 bitmask <code>__softirq_pending</code> 中的 <code>NET_RX_SOFTIRQ</code> 标志，以标识该 Softirq 进入 Pending 状态。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对应于 Softirq <code>NET_RX_SOFTIRQ</code> 的处理函数是 <code>net_rx_action</code>，它是在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/net/core/dev.c#L7188">net/core/dev.c</a> 中定义的，其定义如下所示:
+
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> __latent_entropy <span class="keyword">void</span> <span class="title">net_rx_action</span><span class="params">(struct softirq_action *h)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">softnet_data</span> *<span class="title">sd</span> =</span> this_cpu_ptr(&amp;softnet_data);</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> time_limit = jiffies +</span><br><span class="line">    usecs_to_jiffies(netdev_budget_usecs);</span><br><span class="line">  <span class="keyword">int</span> budget = netdev_budget;</span><br><span class="line">  LIST_HEAD(<span class="built_in">list</span>);</span><br><span class="line">  LIST_HEAD(repoll);</span><br><span class="line"></span><br><span class="line">  local_irq_disable();</span><br><span class="line">  list_splice_init(&amp;sd-&gt;poll_list, &amp;<span class="built_in">list</span>);</span><br><span class="line">  local_irq_enable();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">napi_struct</span> *<span class="title">n</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (list_empty(&amp;<span class="built_in">list</span>)) &#123;</span><br><span class="line">      <span class="keyword">if</span> (!sd_has_rps_ipi_waiting(sd) &amp;&amp; list_empty(&amp;repoll))</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    n = list_first_entry(&amp;<span class="built_in">list</span>, struct napi_struct, poll_list);</span><br><span class="line">    budget -= napi_poll(n, &amp;repoll);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* If softirq window is exhausted then punt.</span></span><br><span class="line"><span class="comment">    * Allow this to run for 2 jiffies since which will allow</span></span><br><span class="line"><span class="comment">    * an average latency of 1.5/HZ.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">if</span> (unlikely(budget &lt;= <span class="number">0</span> ||</span><br><span class="line">          time_after_eq(jiffies, time_limit))) &#123;</span><br><span class="line">      sd-&gt;time_squeeze++;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  local_irq_disable();</span><br><span class="line"></span><br><span class="line">  list_splice_tail_init(&amp;sd-&gt;poll_list, &amp;<span class="built_in">list</span>);</span><br><span class="line">  list_splice_tail(&amp;repoll, &amp;<span class="built_in">list</span>);</span><br><span class="line">  list_splice(&amp;<span class="built_in">list</span>, &amp;sd-&gt;poll_list);</span><br><span class="line">  <span class="keyword">if</span> (!list_empty(&amp;sd-&gt;poll_list))</span><br><span class="line">    __raise_softirq_irqoff(NET_RX_SOFTIRQ);</span><br><span class="line"></span><br><span class="line">  net_rps_action_and_irq_enable(sd);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回顾我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Handle/index.html#3_Interrupt_Handler_3_1">Softirq</a> 中讨论 Softirq 时，分析的 <code>__do_softirq</code> 函数，由于 Softirq 是在关闭了抢占的环境下执行的，因此其通过控制自己重复检查 bitmask 以及运行时间控制了自己的迭代次数，以保证其他进程不会因为 Softirq 的运行而被延后过久。同样的，在 <code>net_rx_action</code> 中，我们可以观察到类似的代码，<code>net_rx_action</code> 通过 <code>budget</code> 来控制自己的循环次数，每一次对 <code>napi_poll</code> 的调用都会扣除掉一定的数值。当该数值小于 0 之后，或者总的运行时间超过一定额度之后，<code>net_rx_action</code> 就会终止自己的循环，这样的做法保证了 Kernel 中其他 Softirq 的处理时间。我们后面在对各个 device 的 <code>poll</code> 函数的分析中还会看到，每个 Device 在自己的 <code>poll</code> 函数中也会严格控制自己的循环次数，以保证对各个 Device 的轮询是公平的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们对 <code>napi_poll</code> 进行分析，它是在 <a href=""></a> 中被定义的。
+
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">napi_poll</span><span class="params">(struct napi_struct *n, struct list_head *repoll)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">bool</span> do_repoll = <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">void</span> *have;</span><br><span class="line">  <span class="keyword">int</span> work;</span><br><span class="line"></span><br><span class="line">  list_del_init(&amp;n-&gt;poll_list);</span><br><span class="line"></span><br><span class="line">  have = netpoll_poll_lock(n);</span><br><span class="line"></span><br><span class="line">  work = __napi_poll(n, &amp;do_repoll);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (do_repoll)</span><br><span class="line">    list_add_tail(&amp;n-&gt;poll_list, repoll);</span><br><span class="line"></span><br><span class="line">  netpoll_poll_unlock(have);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> work;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> __napi_poll(struct napi_struct *n, <span class="keyword">bool</span> *repoll)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">int</span> work, weight;</span><br><span class="line"></span><br><span class="line">  weight = n-&gt;weight;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* This NAPI_STATE_SCHED test is for avoiding a race</span></span><br><span class="line"><span class="comment">  * with netpoll&#x27;s poll_napi().  Only the entity which</span></span><br><span class="line"><span class="comment">  * obtains the lock and sees NAPI_STATE_SCHED set will</span></span><br><span class="line"><span class="comment">  * actually make the -&gt;poll() call.  Therefore we avoid</span></span><br><span class="line"><span class="comment">  * accidentally calling -&gt;poll() when NAPI is not scheduled.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  work = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">if</span> (test_bit(NAPI_STATE_SCHED, &amp;n-&gt;state)) &#123;</span><br><span class="line">    work = n-&gt;poll(n, weight);</span><br><span class="line">    trace_napi_poll(n, work, weight);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (unlikely(work &gt; weight))</span><br><span class="line">    pr_err_once(<span class="string">&quot;NAPI poll function %pS returned %d, exceeding its budget of %d.\n&quot;</span>,</span><br><span class="line">          n-&gt;poll, work, weight);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (likely(work &lt; weight))</span><br><span class="line">    <span class="keyword">return</span> work;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Drivers must not modify the NAPI state if they</span></span><br><span class="line"><span class="comment">  * consume the entire weight.  In such cases this code</span></span><br><span class="line"><span class="comment">  * still &quot;owns&quot; the NAPI instance and therefore can</span></span><br><span class="line"><span class="comment">  * move the instance around on the list at-will.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="keyword">if</span> (unlikely(napi_disable_pending(n))) &#123;</span><br><span class="line">    napi_complete(n);</span><br><span class="line">    <span class="keyword">return</span> work;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* The NAPI context has more processing work, but busy-polling</span></span><br><span class="line"><span class="comment">  * is preferred. Exit early.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="keyword">if</span> (napi_prefer_busy_poll(n)) &#123;</span><br><span class="line">    <span class="keyword">if</span> (napi_complete_done(n, work)) &#123;</span><br><span class="line">      <span class="comment">/* If timeout is not set, we need to make sure</span></span><br><span class="line"><span class="comment">      * that the NAPI is re-scheduled.</span></span><br><span class="line"><span class="comment">      */</span></span><br><span class="line">      napi_schedule(n);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> work;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (n-&gt;gro_bitmask) &#123;</span><br><span class="line">    <span class="comment">/* flush too old packets</span></span><br><span class="line"><span class="comment">    * If HZ &lt; 1000, flush all packets.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    napi_gro_flush(n, HZ &gt;= <span class="number">1000</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  gro_normal_list(n);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Some drivers may have called napi_schedule</span></span><br><span class="line"><span class="comment">  * prior to exhausting their budget.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="keyword">if</span> (unlikely(!list_empty(&amp;n-&gt;poll_list))) &#123;</span><br><span class="line">    pr_warn_once(<span class="string">&quot;%s: Budget exhausted after napi rescheduled\n&quot;</span>,</span><br><span class="line">          n-&gt;dev ? n-&gt;dev-&gt;name : <span class="string">&quot;backlog&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> work;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  *repoll = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> work;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</div>
+
+<h2><a name="1_xxx">x. xxx</a></h2>
+<div class="div_learning_post">
+  <h3><a name="1_xxx_1"></a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+
+<!--ref-->
+
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+<ol>
+<li>Joe Damato, <a target="_blank" rel="noopener" href="https://blog.packagecloud.io/eng/2016/06/22/monitoring-tuning-linux-networking-stack-receiving-data/#check-the-number-of-rx-queues-being-used">Monitoring and Tuning the Linux Networking Stack: Receiving Data</a></li>
+<li>The Linux Foundation, <a target="_blank" rel="noopener" href="https://wiki.linuxfoundation.org/networking/napi">NAPI</a></p>
+</div>
+
+</li>
+</ol>
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+          <li>LINUX_INTERNAL_NETWORK_FRAME_RECEPTION</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Inhaltsverzeichnis
+        </li>
+        <li class="sidebar-nav-overview">
+          Übersicht
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

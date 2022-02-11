@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_catalogue{padding: 10px 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Golang 并发编程">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_7_Go_Routines/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_catalogue{padding: 10px 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_7_Go_Routines/pic/xxx.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_7_Go_Routines/pic/pipeline.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_7_Go_Routines/pic/buffered_channel.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_7_Go_Routines/pic/full_buffered_channel.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_7_Go_Routines/pic/partially_buffered_channel.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_7_Go_Routines/pic/goroutinue_seq.png">
+<meta property="article:published_time" content="2022-02-10T14:39:11.366Z">
+<meta property="article:modified_time" content="2021-09-07T12:09:22.000Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_7_Go_Routines/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>Golang 并发编程 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project/" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly/" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship/" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay/" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">Golang 并发编程
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Program/">TECH_PROGRAM</a></li>
+          <li>GO_BASIC_7_GO_ROUTINES</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_boder{padding: 10px 10px; font-size: 16px; word-spacing:0px;  border:1px solid black;}
+</style>
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>协作者：ZobinHuang，更新日期：June.12 2021</i></font></h4>
+  <div align="left">
+  <font size="2px">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;这篇文章内容的一些部分是转载自<a target="_blank" rel="noopener" href="https://github.com/gopl-zh/gopl-zh.github.com">Go 语言圣经（中文版）</a>，并加上了本人在使用过程中的一些自己的理解和经验，最终整理成可读性更高的网页形式。在此向原作者和译者表示感谢，他们给社区提供了很棒的 Golang 入门参考。
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;原作者：Alan A. A. Donovan · Brian W. Kernighan;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;  译者：柴树杉，Github @chai2010，Twitter @chaishushan；Xargin, https://github.com/cch123；CrazySssst；foreversmart, njutree@gmail.com
+  </font>
+  </div>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=30%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">此文篇幅较长，故设置目录，有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 0. <a href="#0_preface"><font color="blue"><b>前言</b></font></a>：阐述了本章的内容；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_goroutinues"><font color="blue"><b>Goroutines</b></font></a>：简单介绍了 Goroutinues 的用法；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_concurrent_clock"><font color="blue"><b>示例: 并发的Clock服务</b></font></a>：实现一个简单的网络通信程序，使用 goroutinues 实现了一个支持多路接入的服务器；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_echo"><font color="blue"><b>示例: 并发的 Echo 服务</b></font></a>：实现一个简单的网络通信程序 ，在客户端和服务端同时使用 goroutinues ，实现了一个支持多路接入的服务器和一个可以支持同时输入与输出的客户端；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 4. <a href="#4_channels"><font color="blue"><b>Channels</b></font></a>：介绍了 Channels 的基本概念；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.1 <a href="#4_channels_1"><font color="blue">不带缓存的 Channels</font></a>：讨论了 Golang 中不带缓存的 Channel 的使用方法；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.2 <a href="#4_channels_2"><font color="blue">串联的 Channels（Pipeline）</font></a>：讨论了 Golang 中级联多个 goroutinues，使用多个 Channels 的场景；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.3 <a href="#4_channels_3"><font color="blue">单方向的 Channel</font></a>：讨论了 Golang 中单方向的 Channel 的使用方法；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.4 <a href="#4_channels_4"><font color="blue">带缓存的 Channels</font></a>：讨论了 Golang 中带缓存的 Channels 的使用方法，并理解什么时候使用无缓存，什么时候使用有缓存的 Channel 是合适的；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 5. <a href="#5_concurrent_cycle"><font color="blue"><b>并发的循环</b></font></a>：展示了在循环中发起并发操作并且企图在 main goroutinue 中接收 worker goroutinues 结果的问题；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 6. <a href="#6_web_bug"><font color="blue"><b>示例: 并发的Web爬虫</b></font></a>：通过一个并发网页爬虫的例子，展示了较为复杂的 goroutinue 和 Channels 的用法；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 7. <a href="#7_select"><font color="blue"><b>基于select的多路复用</b></font></a>：展示了在 Golang 中如何基于 select 来实现非阻塞的 Channels；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 8. <a href="#8_directory_traversal"><font color="blue"><b>示例: 并发的目录遍历</b></font></a>：展示了一个并发的目录遍历的例子，演示了如何通过并发与计数信号量的控制来实现一个高效稳定的文件夹检索器；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 9. <a href="#9_concurrent_exit"><font color="blue"><b>并发的退出</b></font></a>：展示了在 Golang 中如何同时退出多个 goroutinues；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 10. <a href="#10_context"><font color="blue"><b>Context</b></font></a>：阐述了当 gorotinues 的嵌套关系过于复杂时，如何追踪和取消 gorotinue 的方法；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 11. <a href="#11_chatting"><font color="blue"><b>示例: 聊天服务</b></font></a>
+  </div>
+</div>
+
+<!--标题-->
+<h2><a name="0_preface">0. 前言</a></h2>
+<div class="div_learning_post_boder">
+  <h3><a name="1_xxx_1"></a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;并发程序指同时进行多个任务的程序，随着硬件的发展，并发程序变得越来越重要。Web 服务器会一次处理成千上万的请求。平板电脑和手机 app 在渲染用户画面同时还会后台执行各种计算任务和网络请求。即使是传统的批处理问题——读取数据、计算、写输出，现在也会用并发来隐藏掉 I/O 的操作延迟以充分利用现代计算机设备的多个核心。计算机的性能每年都在以非线性的速度增长。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Go 语言中的并发程序可以用两种手段来实现。本章讲解 goroutine 和 channel，其支持“顺序通信进程”（communicating sequential processes）或被简称为 CSP。CSP 是一种现代的并发编程模型，在这种编程模型中值会在不同的运行实例（goroutine）中传递，尽管大多数情况下仍然是被限制在单一实例中。第 8 章覆盖更为传统的并发模型：多线程共享内存，如果你在其它的主流语言中写过并发程序的话可能会更熟悉一些。第 8 章也会深入介绍一些并发程序带来的风险和陷阱。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;尽管 Go 对并发的支持是众多强力特性之一，但跟踪调试并发程序还是很困难，在线性程序中形成的直觉往往还会使我们误入歧途。如果这是读者第一次接触并发，推荐稍微多花一些时间来思考这两个章节中的样例。
+</div>
+
+<h2><a name="1_goroutinues">1. Goroutines</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Go 语言中，每一个并发的执行单元叫作一个 goroutine。设想这里的一个程序有两个函数，一个函数做计算，另一个输出结果，假设两个函数没有相互之间的调用关系。一个线性的程序会先调用其中的一个函数，然后再调用另一个。如果程序中包含多个 goroutine，对两个函数的调用则可能发生在同一时刻。马上就会看到这样的一个程序。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果你使用过操作系统或者其它语言提供的线程，那么你可以简单地把 goroutine 类比作一个线程，这样你就可以写出一些正确的程序了。goroutine 和线程的本质区别会在第 8 章中讲。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当一个程序启动时，其主函数即在一个单独的 goroutine 中运行，我们叫它 main goroutine。新的 goroutine 会用 go 语句来创建。在语法上，go 语句是一个普通的函数或方法调用前加上关键字 go。go 语句会使其语句中的函数在一个新创建的 goroutine 中运行。而 go 语句本身会迅速地完成。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">f()    <span class="comment">// call f(); wait for it to return</span></span><br><span class="line"><span class="keyword">go</span> f() <span class="comment">// create a new goroutine that calls f(); don&#x27;t wait</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面的例子，main goroutine 将计算菲波那契数列的第 45 个元素值。由于计算函数使用低效的递归，所以会运行相当长时间，在此期间我们想让用户看到一个可见的标识来表明程序依然在正常运行，所以来做一个动画的小图标：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">go</span> spinner(<span class="number">100</span> * time.Millisecond)</span><br><span class="line">  <span class="keyword">const</span> n = <span class="number">45</span></span><br><span class="line">  fibN := fib(n) <span class="comment">// slow</span></span><br><span class="line">  fmt.Printf(<span class="string">&quot;\rFibonacci(%d) = %d\n&quot;</span>, n, fibN)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">spinner</span><span class="params">(delay time.Duration)</span></span> &#123;</span><br><span class="line">  <span class="keyword">for</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> _, r := <span class="keyword">range</span> <span class="string">`-\|/`</span> &#123;</span><br><span class="line">      fmt.Printf(<span class="string">&quot;\r%c&quot;</span>, r)</span><br><span class="line">      time.Sleep(delay)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fib</span><span class="params">(x <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> x &lt; <span class="number">2</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> x</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> fib(x<span class="number">-1</span>) + fib(x<span class="number">-2</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;动画显示了几秒之后，fib(45) 的调用成功地返回，并且打印结果：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Fibonacci(45) = 1134903170</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后主函数返回。<font color="red">主函数返回时，所有的 goroutine 都会被直接打断，程序退出。</font>除了从主函数退出或者直接终止程序之外，没有其它的编程方法能够让一个 goroutine 来打断另一个的执行，但是之后可以看到一种方式来实现这个目的，通过 goroutine 之间的通信来让一个 goroutine 请求其它的 goroutine，并让被请求的 goroutine 自行结束执行。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;留意一下这里的两个独立的单元是如何进行组合的，spinning 和菲波那契的计算。分别在独立的函数中，但两个函数会同时执行。
+</div>
+
+<h2><a name="2_concurent_clock">2. 示例: 并发的Clock服务</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;网络编程是并发大显身手的一个领域，由于服务器是最典型的需要同时处理很多连接的程序，这些连接一般来自于彼此独立的客户端。在本小节中，我们会讲解 go 语言的 net 包，这个包提供编写一个网络客户端或者服务器程序的基本组件，无论两者间通信是使用 TCP、UDP 或者 Unix domain sockets。注意，本节中不会过多地描述 net 包，如果你想要更加详细的内容，可以参考我的另一篇文章： <a href="/sec_learning/Program_Go/Go_Standard_Library_2_Net/index.html">Golang 网络标准库</a>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们的第一个例子是一个顺序执行的时钟服务器，它会每隔一秒钟将当前时间写到客户端：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">&quot;io&quot;</span></span><br><span class="line">  <span class="string">&quot;log&quot;</span></span><br><span class="line">  <span class="string">&quot;net&quot;</span></span><br><span class="line">  <span class="string">&quot;time&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  listener, err := net.Listen(<span class="string">&quot;tcp&quot;</span>, <span class="string">&quot;localhost:8000&quot;</span>)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Fatal(err)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> &#123;</span><br><span class="line">    conn, err := listener.Accept()</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      log.Print(err) <span class="comment">// e.g., connection aborted</span></span><br><span class="line">      <span class="keyword">continue</span></span><br><span class="line">    &#125;</span><br><span class="line">    handleConn(conn) <span class="comment">// handle one connection at a time</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handleConn</span><span class="params">(c net.Conn)</span></span> &#123;</span><br><span class="line">  <span class="keyword">defer</span> c.Close()</span><br><span class="line">  <span class="keyword">for</span> &#123;</span><br><span class="line">    _, err := io.WriteString(c, time.Now().Format(<span class="string">&quot;15:04:05\n&quot;</span>))</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="comment">// e.g., client disconnected</span></span><br><span class="line">    &#125;</span><br><span class="line">    time.Sleep(<span class="number">1</span> * time.Second)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Listen 函数创建了一个 net.Listener 的对象，这个对象会监听一个网络端口上到来的连接，在这个例子里我们用的是 TCP 的 localhost:8000 端口。listener 对象的 Accept 方法会直接阻塞，直到一个新的连接被创建，然后会返回一个 net.Conn 对象来表示这个连接。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;handleConn 函数会处理一个完整的客户端连接。在一个 for 死循环中，用 time.Now() 获取当前时刻，然后写到客户端。由于 net.Conn 实现了 io.Writer 接口，我们可以直接向其写入内容。这个死循环会一直执行，直到写入失败。最可能的原因是客户端主动断开连接。这种情况下 handleConn 函数会用 defer 调用关闭服务器侧的连接，然后返回到主函数，继续等待下一个连接请求。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;time.Time.Format 方法提供了一种格式化日期和时间信息的方式。它的参数是一个格式化模板，标识如何来格式化时间，而这个格式化模板限定为<b> Mon Jan 2 03:04:05PM 2006 UTC-0700</b>。有 8 个部分（周几、月份、一个月的第几天……）。可以以任意的形式来组合前面这个模板；出现在模板中的部分会作为参考来对时间格式进行输出。在上面的例子中我们只用到了小时、分钟和秒。time 包里定义了很多标准时间格式，比如 time.RFC1123。在进行格式化的逆向操作 time.Parse 时，也会用到同样的策略。（译注：这是 go 语言和其它语言相比比较奇葩的一个地方。你需要记住格式化字符串是1月2日下午3点4分5秒零六年UTC-0700，而不像其它语言那样 Y-m-d H:i:s 一样，当然了这里可以用1234567的方式来记忆，倒是也不麻烦。）
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了连接例子里的服务器，我们需要一个客户端程序，比如 netcat 这个工具（ nc 命令），这个工具可以用来执行网络连接操作。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ go build gopl.io/ch8/clock1</span><br><span class="line">$ ./clock1 &amp;</span><br><span class="line">$ nc localhost 8000</span><br><span class="line">13:58:54</span><br><span class="line">13:58:55</span><br><span class="line">13:58:56</span><br><span class="line">13:58:57</span><br><span class="line">^C</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;客户端将服务器发来的时间显示了出来，我们用 Control+C 来中断客户端的执行，在 Unix 系统上，你会看到 ^C 这样的响应。如果你的系统没有装 nc 这个工具，你可以用 telnet 来实现同样的效果，或者也可以用我们下面的这个用 go 写的简单的 telnet 程序，用 net.Dial 就可以简单地创建一个 TCP 连接：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Netcat1 is a read-only TCP client.</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">&quot;io&quot;</span></span><br><span class="line">  <span class="string">&quot;log&quot;</span></span><br><span class="line">  <span class="string">&quot;net&quot;</span></span><br><span class="line">  <span class="string">&quot;os&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  conn, err := net.Dial(<span class="string">&quot;tcp&quot;</span>, <span class="string">&quot;localhost:8000&quot;</span>)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Fatal(err)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">defer</span> conn.Close()</span><br><span class="line">  mustCopy(os.Stdout, conn)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mustCopy</span><span class="params">(dst io.Writer, src io.Reader)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> _, err := io.Copy(dst, src); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Fatal(err)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这个程序会从连接中读取数据，并将读到的内容写到标准输出中，直到遇到 end of file 的条件或者发生错误。mustCopy 这个函数我们在本节的几个例子中都会用到。让我们同时运行两个客户端来进行一个测试，这里可以开两个终端窗口，下面左边的是其中的一个的输出，右边的是另一个的输出：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ go build gopl.io/ch8/netcat1</span><br><span class="line">$ ./netcat1</span><br><span class="line">13:58:54                              $ ./netcat1</span><br><span class="line">13:58:55</span><br><span class="line">13:58:56</span><br><span class="line">^C</span><br><span class="line">                                      13:58:57</span><br><span class="line">                                      13:58:58</span><br><span class="line">                                      13:58:59</span><br><span class="line">                                      ^C</span><br><span class="line">$ killall clock1</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;killall 命令是一个 Unix 命令行工具，可以用给定的进程名来杀掉所有名字匹配的进程。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;第二个客户端必须等待第一个客户端完成工作，这样服务端才能继续向后执行；因为我们这里的服务器程序同一时间只能处理一个客户端连接。我们这里对服务端程序做一点小改动，使其支持并发：在 handleConn 函数调用的地方增加 go 关键字，让每一次 handleConn 的调用都进入一个独立的 goroutine。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">  conn, err := listener.Accept()</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Print(err) <span class="comment">// e.g., connection aborted</span></span><br><span class="line">    <span class="keyword">continue</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">go</span> handleConn(conn) <span class="comment">// handle connections concurrently</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handleConn</span><span class="params">(c net.Conn)</span></span> &#123;</span><br><span class="line">  <span class="keyword">defer</span> c.Close()</span><br><span class="line">  <span class="keyword">for</span> &#123;</span><br><span class="line">    _, err := io.WriteString(c, time.Now().Format(<span class="string">&quot;15:04:05\n&quot;</span>))</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="comment">// e.g., client disconnected</span></span><br><span class="line">    &#125;</span><br><span class="line">    time.Sleep(<span class="number">1</span> * time.Second)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在多个客户端可以同时接收到时间了：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ go build gopl.io/ch8/clock2</span><br><span class="line">$ ./clock2 &amp;</span><br><span class="line">$ go build gopl.io/ch8/netcat1</span><br><span class="line">$ ./netcat1</span><br><span class="line">14:02:54                               $ ./netcat1</span><br><span class="line">14:02:55                               14:02:55</span><br><span class="line">14:02:56                               14:02:56</span><br><span class="line">14:02:57                               ^C</span><br><span class="line">14:02:58</span><br><span class="line">14:02:59                               $ ./netcat1</span><br><span class="line">14:03:00                               14:03:00</span><br><span class="line">14:03:01                               14:03:01</span><br><span class="line">^C                                     14:03:02</span><br><span class="line">                                      ^C</span><br><span class="line">$ killall clock2</span><br></pre></td></tr></table></figure>
+</div>
+
+<h2><a name="3_echo">3. 示例: 并发的Echo服务</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;clock 服务器每一个连接都会起一个 goroutine。在本节中我们会创建一个 echo 服务器，这个服务在每个连接中会有多个 goroutine。大多数 echo 服务仅仅会返回他们读取到的内容，就像下面这个简单的 handleConn 函数所做的一样：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handleConn</span><span class="params">(c net.Conn)</span></span> &#123;</span><br><span class="line">  io.Copy(c, c) <span class="comment">// <span class="doctag">NOTE:</span> ignoring errors</span></span><br><span class="line">  c.Close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一个更有意思的 echo 服务应该模拟一个实际的 echo 的“回响”，并且一开始要用大写 HELLO 来表示“声音很大”，之后经过一小段延迟返回一个有所缓和的 Hello，然后一个全小写字母的 hello 表示声音渐渐变小直至消失，像下面这个版本的 handleConn (译注：笑看作者脑洞大开)：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">echo</span><span class="params">(c net.Conn, shout <span class="keyword">string</span>, delay time.Duration)</span></span> &#123;</span><br><span class="line">  fmt.Fprintln(c, <span class="string">&quot;\t&quot;</span>, strings.ToUpper(shout))</span><br><span class="line">  time.Sleep(delay)</span><br><span class="line">  fmt.Fprintln(c, <span class="string">&quot;\t&quot;</span>, shout)</span><br><span class="line">  time.Sleep(delay)</span><br><span class="line">  fmt.Fprintln(c, <span class="string">&quot;\t&quot;</span>, strings.ToLower(shout))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handleConn</span><span class="params">(c net.Conn)</span></span> &#123;</span><br><span class="line">  input := bufio.NewScanner(c)</span><br><span class="line">  <span class="keyword">for</span> input.Scan() &#123;</span><br><span class="line">    echo(c, input.Text(), <span class="number">1</span>*time.Second)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// <span class="doctag">NOTE:</span> ignoring potential errors from input.Err()</span></span><br><span class="line">  c.Close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们需要升级我们的客户端程序，这样它就可以发送终端的输入到服务器，并把服务端的返回输出到终端上，这使我们有了使用并发的另一个好机会：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  conn, err := net.Dial(<span class="string">&quot;tcp&quot;</span>, <span class="string">&quot;localhost:8000&quot;</span>)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Fatal(err)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">defer</span> conn.Close()</span><br><span class="line">  <span class="keyword">go</span> mustCopy(os.Stdout, conn)</span><br><span class="line">  mustCopy(conn, os.Stdin)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mustCopy</span><span class="params">(dst io.Writer, src io.Reader)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> _, err := io.Copy(dst, src); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Fatal(err)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当 main goroutine 从标准输入流中读取内容并将其发送给服务器时，另一个 goroutine 会读取并打印服务端的响应。当 main goroutine 碰到输入终止时，例如，用户在终端中按了 Control-D(^D)，在 windows 上是 Control-Z，这时程序就会被终止，尽管其它 goroutine 中还有进行中的任务。（在第 4 节中引入了 channels 后我们会明白如何让程序等待两边都结束。）
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面这个会话中，客户端的输入是左对齐的，服务端的响应会用缩进来区别显示。 客户端会向服务器“喊三次话”：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 服务端程序</span></span><br><span class="line">$ go build gopl.io/ch8/reverb1</span><br><span class="line">$ ./reverb1 &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端程序</span></span><br><span class="line">$ go build gopl.io/ch8/netcat2</span><br><span class="line">$ ./netcat2</span><br><span class="line">Hello?</span><br><span class="line">    HELLO?</span><br><span class="line">    Hello?</span><br><span class="line">    hello?</span><br><span class="line">Is there anybody there?</span><br><span class="line">    IS THERE ANYBODY THERE?</span><br><span class="line">Yooo-hooo!</span><br><span class="line">    Is there anybody there?</span><br><span class="line">    is there anybody there?</span><br><span class="line">    YOOO-HOOO!</span><br><span class="line">    Yooo-hooo!</span><br><span class="line">    yooo-hooo!</span><br><span class="line">^D</span><br><span class="line">$ killall reverb1</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注意客户端的第三次 shout 在前一个 shout 处理完成之前一直没有被处理，这貌似看起来不是特别“现实”。真实世界里的回响应该是会由三次 shout 的回声组合而成的。为了模拟真实世界的回响，我们需要更多的 goroutine 来做这件事情。这样我们就再一次地需要 go 这个关键词了，这次我们用它来调用 echo：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">echo</span><span class="params">(c net.Conn, shout <span class="keyword">string</span>, delay time.Duration)</span></span> &#123;</span><br><span class="line">  fmt.Fprintln(c, <span class="string">&quot;\t&quot;</span>, strings.ToUpper(shout))</span><br><span class="line">  time.Sleep(delay)</span><br><span class="line">  fmt.Fprintln(c, <span class="string">&quot;\t&quot;</span>, shout)</span><br><span class="line">  time.Sleep(delay)</span><br><span class="line">  fmt.Fprintln(c, <span class="string">&quot;\t&quot;</span>, strings.ToLower(shout))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handleConn</span><span class="params">(c net.Conn)</span></span> &#123;</span><br><span class="line">  input := bufio.NewScanner(c)</span><br><span class="line">  <span class="keyword">for</span> input.Scan() &#123;</span><br><span class="line">    <span class="keyword">go</span> echo(c, input.Text(), <span class="number">1</span>*time.Second)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// <span class="doctag">NOTE:</span> ignoring potential errors from input.Err()</span></span><br><span class="line">  c.Close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;go 后跟的函数的参数会在 go 语句自身执行时被求值；因此 input.Text() 会在 main goroutine 中被求值。 现在回响是并发并且会按时间来覆盖掉其它响应了：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 服务端程序</span></span><br><span class="line">$ go build gopl.io/ch8/reverb2</span><br><span class="line">$ ./reverb2 &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端程序</span></span><br><span class="line">$ ./netcat2</span><br><span class="line">Is there anybody there?</span><br><span class="line">    IS THERE ANYBODY THERE?</span><br><span class="line">Yooo-hooo!</span><br><span class="line">    Is there anybody there?</span><br><span class="line">    YOOO-HOOO!</span><br><span class="line">    is there anybody there?</span><br><span class="line">    Yooo-hooo!</span><br><span class="line">    yooo-hooo!</span><br><span class="line">^D</span><br><span class="line">$ killall reverb2</span><br></pre></td></tr></table></figure>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;让服务使用并发不只是处理多个客户端的请求，甚至在处理单个连接时也可能会用到，就像我们上面的两个 go 关键词的用法。然而在我们使用 go 关键词的同时，需要慎重地考虑 net.Conn 中的方法在并发地调用时是否安全，事实上对于大多数类型来说也确实不安全。我们会在下一章中详细地探讨并发安全性。
+</div>
+
+<h2><a name="4_channels">4. Channels</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果说 goroutine 是 Go 语言程序的并发体的话，那么 channels 则是它们之间的通信机制。一个 channel 是一个通信机制，它可以让一个 goroutine 通过它给另一个 goroutine 发送值信息。<b>每个 channel 都有一个特殊的类型，也就是 channels 可发送数据的类型。</b>一个可以发送 int 类型数据的 channel 一般写为 chan int。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;使用内置的 make 函数，我们可以创建一个 channel：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ch := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>) <span class="comment">// ch has type &#x27;chan int&#x27;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="red">和 map 类似，channel 也对应一个 make 创建的底层数据结构的引用。当我们复制一个 channel 或用于函数参数传递时，我们只是拷贝了一个 channel 引用，因此调用者和被调用者将引用同一个 channel 对象。</font>和其它的引用类型一样，channel 的零值也是 nil。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;两个相同类型的channel可以使用 == 运算符比较。如果两个 channel 引用的是相同的对象，那么比较的结果为真。一个 channel 也可以和 nil 进行比较。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一个 channel 有<b>发送</b>和<b>接受</b>两个主要操作，都是通信行为。一个发送语句将一个值从一个 goroutine 通过 channel 发送到另一个执行接收操作的 goroutine。发送和接收两个操作都使用 <- 运算符。在发送语句中，<- 运算符分割 channel 和要发送的值。在接收语句中，<- 运算符写在 channel 对象之前。一个不使用接收结果的接收操作也是合法的。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ch &lt;- x  <span class="comment">// a send statement</span></span><br><span class="line">x = &lt;-ch <span class="comment">// a receive expression in an assignment statement</span></span><br><span class="line">&lt;-ch     <span class="comment">// a receive statement; result is discarded</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Channel 还支持 <font color="red">close</font> 操作，用于关闭 channel，<font color="red">随后对基于该 channel 的任何发送操作都将导致 panic 异常。对一个已经被 close 过的 channel 进行接收操作依然可以接受到之前已经成功发送的数据</font>，如果 channel 中已经没有数据的话将产生一个零值的数据。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;使用内置的 close 函数就可以关闭一个 channel：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">close</span>(ch)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;以最简单方式调用 make 函数创建的是一个<b>无缓存的 channel</b>，但是我们也可以指定第二个整型参数，对应 channel 的容量。如果 channel 的容量大于零，那么该 channel 就是<b>带缓存的 channel</b>。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ch = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)    <span class="comment">// unbuffered channel</span></span><br><span class="line">ch = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">0</span>) <span class="comment">// unbuffered channel</span></span><br><span class="line">ch = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">3</span>) <span class="comment">// buffered channel with capacity 3</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们将先讨论无缓存的 channel，然后在 4.4 小节讨论带缓存的 channel。
+
+  <h3><a name="4_channels_1">4.1 不带缓存的Channels</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="red">一个基于无缓存 Channels 的发送操作将导致发送者 goroutine 阻塞，直到另一个 goroutine 在相同的 Channels 上执行接收操作</font>，当发送的值通过 Channels 成功传输之后，两个 goroutine 可以继续执行后面的语句。反之，<font color="red">如果接收操作先发生，那么接收者goroutine也将阻塞，直到有另一个goroutine在相同的Channels上执行发送操作。</font>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于无缓存 Channels 的发送和接收操作将导致两个 goroutine 做一次同步操作。因为这个原因，无缓存 Channels有时候也被称为<b>同步 Channels</b>。<font color="red">当通过一个无缓存 Channels 发送数据时，接收者收到数据发生在再次唤醒唤醒发送者 goroutine 之前</font>（译注：<b>happens before</b>，这是 Go 语言并发内存模型的一个关键术语！）。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在讨论并发编程时，当我们说 <b>x 事件在 y 事件之前发生（happens before）</b>，我们并不是说 x 事件在时间上比 y 时间更早，我们要表达的意思是要保证在此之前的事件都已经完成了，例如在此之前的更新某些变量的操作已经完成，你可以放心依赖这些已完成的事件了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当我们说<b>x 事件既不是在 y 事件之前发生也不是在 y 事件之后发生，我们就说 x 事件和 y 事件是并发的</b>。这并不是意味着 x 事件和 y 事件就一定是同时发生的，我们只是不能确定这两个事件发生的先后顺序。在下一章中我们将看到，当两个 goroutine 并发访问了相同的变量时，我们有必要保证某些事件的执行顺序，以避免出现某些并发问题。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上面第 3 章的客户端程序中，它在主 goroutine 中（译注：就是执行main函数的goroutine）将标准输入复制到 server，因此当客户端程序关闭标准输入时，后台 goroutine 可能依然在工作。我们需要让主 goroutine 等待后台 goroutine 完成工作后再退出，我们可以使用一个 channel 来同步两个 goroutine：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  conn, err := net.Dial(<span class="string">&quot;tcp&quot;</span>, <span class="string">&quot;localhost:8000&quot;</span>)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Fatal(err)</span><br><span class="line">  &#125;</span><br><span class="line">  done := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    io.Copy(os.Stdout, conn) <span class="comment">// <span class="doctag">NOTE:</span> ignoring errors</span></span><br><span class="line">    log.Println(<span class="string">&quot;done&quot;</span>)</span><br><span class="line">    done &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125; <span class="comment">// signal the main goroutine</span></span><br><span class="line">  &#125;()</span><br><span class="line"></span><br><span class="line">  mustCopy(conn, os.Stdin)</span><br><span class="line">  conn.Close()</span><br><span class="line">  &lt;-done <span class="comment">// wait for background goroutine to finish</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当用户关闭了标准输入，主 goroutine 中的 mustCopy 函数调用将返回，然后调用 conn.Close() 关闭读和写方向的网络连接。关闭网络连接中的写方向的连接将导致 server 程序收到一个文件（end-of-file）结束的信号。关闭网络连接中读方向的连接将导致后台 goroutine 的 io.Copy 函数调用返回一个 “read from closed connection” （“从关闭的连接读”）类似的错误，因此我们临时移除了错误日志语句。需要注意的是 go 语句调用了一个函数字面量，这是 Go 语言中启动 goroutine 常用的形式。）
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在后台 goroutine 返回之前，它先打印一个日志信息，然后向 done 对应的 channel 发送一个值。主 goroutine 在退出前先等待从 done 对应的 channel 接收一个值。因此，总是可以在程序退出前正确输出 “done” 消息。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于 channels 发送消息有两个重要方面。首先每个消息都有一个值，但是有时候通讯的事实和发生的时刻也同样重要。当我们更希望强调通讯发生的时刻时，我们将它称为<b>消息事件</b>。有些消息事件并不携带额外的信息，它仅仅是用作两个 goroutine 之间的同步，这时候我们可以用 struct{} 空结构体作为 channels 元素的类型，虽然也可以使用 bool 或 int 类型实现同样的功能， done <- 1 语句也比 done <- struct{}{} 更短。
+
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外可能有读者会好奇，我们在 channel 中传递的值，是原始数据的引用呢还是拷贝呢？我们下面测试一下。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  value := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</span><br><span class="line">  sync := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">  <span class="keyword">go</span> test1(value, sync)</span><br><span class="line"></span><br><span class="line">  v := <span class="number">2</span></span><br><span class="line">  fmt.Printf(<span class="string">&quot;value before send to chan: %d\n&quot;</span>, v)</span><br><span class="line"></span><br><span class="line">  value &lt;- v</span><br><span class="line">  &lt;-sync</span><br><span class="line"></span><br><span class="line">  fmt.Printf(<span class="string">&quot;value after send to chan: %d\n&quot;</span>, v)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">test1</span><span class="params">(in <span class="keyword">chan</span> <span class="keyword">int</span>, out <span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">  value := &lt;-in</span><br><span class="line"></span><br><span class="line">  value = <span class="number">3</span></span><br><span class="line"></span><br><span class="line">  fmt.Printf(<span class="string">&quot;modified value in gorotinue as: %d\n&quot;</span>, value)</span><br><span class="line"></span><br><span class="line">  out &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在 gorotinue 中修改了传过来的值，我们来看一下输出：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">value before send to chan: 2</span><br><span class="line">modified value <span class="keyword">in</span> gorotinue as: 3</span><br><span class="line">value after send to chan: 2</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以看见，虽然我们在 gorotinue 中修改了传过来的值，但是我们在 main gorotinue 中的值并没有发生改变。因此我们可以说，我们在 channel 中传递的是原始值的一份拷贝。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;但是注意，如果我们传输的是像 slice 这种引用类型的数据的话，即使传递的是原始值的拷贝 (这里是引用的拷贝)，实际上我们还是在操作原始数据 (相当于拷贝了指针)。
+
+  <h3><a name="4_channels_2">4.2 串联的 Channels（Pipeline）</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Channels 也可以用于将多个 goroutine 连接在一起，一个 Channel 的输出作为下一个 Channel 的输入。这种串联的 Channels 就是所谓的<b>管道（pipeline）</b>。下面的程序用两个 channels 将三个 goroutine 串联起来，如下图所示。
+
+  <div align="center">
+    <img src="./pic/pipeline.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;第一个 goroutine 是一个计数器，用于生成 0、1、2、…… 形式的整数序列，然后通过 channel 将该整数序列发送给第二个 goroutine；第二个 goroutine 是一个求平方的程序，对收到的每个整数求平方，然后将平方后的结果通过第二个 channel 发送给第三个 goroutine；第三个 goroutine 是一个打印程序，打印收到的每个整数。为了保持例子清晰，我们有意选择了非常简单的函数，当然三个 goroutine 的计算很简单，在现实中确实没有必要为如此简单的运算构建三个 goroutine。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  naturals := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</span><br><span class="line">  squares := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Counter</span></span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> x := <span class="number">0</span>; ; x++ &#123;</span><br><span class="line">      naturals &lt;- x</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;()</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Squarer</span></span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> &#123;</span><br><span class="line">      x := &lt;-naturals</span><br><span class="line">      squares &lt;- x * x</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;()</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Printer (in main goroutine)</span></span><br><span class="line">  <span class="keyword">for</span> &#123;</span><br><span class="line">    fmt.Println(&lt;-squares)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如您所料，上面的程序将生成 0、1、4、9、…… 形式的无穷数列。像这样的串联 Channels 的管道（Pipelines）可以用在需要长时间运行的服务中，每个长时间运行的 goroutine 可能会包含一个死循环，在不同 goroutine 的死循环内部使用串联的Channels 来通信。但是，如果我们希望通过 Channels 只发送有限的数列该如何处理呢？
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果发送者知道，没有更多的值需要发送到 channel 的话，那么让接收者也能及时知道没有多余的值可接收将是有用的，因为接收者可以停止不必要的接收等待。这可以通过内置的 close 函数来关闭 channel 实现：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">close</span>(naturals)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当一个 channel 被关闭后，再向该 channel 发送数据将导致 panic 异常。<font color="red">当一个被关闭的 channel 中已经发送的数据都被成功接收后，后续的接收操作将不再阻塞，它们会立即返回一个零值。</font>关闭上面例子中的 naturals 变量对应的 channel 并不能终止循环，它依然会收到一个永无休止的零值序列，然后将它们发送给打印者 goroutine。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;没有办法直接测试一个 channel 是否被关闭，但是<font color="red">接收操作有一个变体形式：它多接收一个结果，多接收的第二个结果是一个布尔值 ok，ture 表示成功从 channels 接收到值，false 表示 channels 已经被关闭并且里面没有值可接收。</font>使用这个特性，我们可以修改 squarer 函数中的循环代码，当 naturals 对应的 channel 被关闭并没有值可接收时跳出循环，并且也关闭 squares 对应的 channel。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Squarer</span></span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">for</span> &#123;</span><br><span class="line">    x, ok := &lt;-naturals</span><br><span class="line">    <span class="keyword">if</span> !ok &#123;</span><br><span class="line">      <span class="keyword">break</span> <span class="comment">// channel was closed and drained</span></span><br><span class="line">    &#125;</span><br><span class="line">    squares &lt;- x * x</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">close</span>(squares)</span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因为上面的语法是笨拙的，而上面我们说的这种处理模式很常见，因此 <font color="red">Go 语言的 range 循环可直接在 channels 上面迭代。</font>使用 range 循环是上面处理模式的简洁语法，它依次从 channel 接收数据，当 channel 被关闭并且没有值可接收时跳出循环。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在下面的改进中，我们的计数器 goroutine 只生成 100 个含数字的序列，然后关闭 naturals 对应的 channel，这将导致计算平方数的 squarer 对应的 goroutine 可以正常终止循环并关闭 squares 对应的 channel。（在一个更复杂的程序中，可以通过 defer 语句关闭对应的 channel。）最后，主 goroutine 也可以正常终止循环并退出程序。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  naturals := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</span><br><span class="line">  squares := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Counter</span></span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> x := <span class="number">0</span>; x &lt; <span class="number">100</span>; x++ &#123;</span><br><span class="line">      naturals &lt;- x</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">close</span>(naturals)</span><br><span class="line">  &#125;()</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Squarer</span></span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> x := <span class="keyword">range</span> naturals &#123;</span><br><span class="line">      squares &lt;- x * x</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">close</span>(squares)</span><br><span class="line">  &#125;()</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Printer (in main goroutine)</span></span><br><span class="line">  <span class="keyword">for</span> x := <span class="keyword">range</span> squares &#123;</span><br><span class="line">    fmt.Println(x)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其实你并不需要关闭每一个 channel。只有当需要告诉接收者 goroutine，所有的数据已经全部发送时才需要关闭 channel。<font color="red">不管一个 channel 是否被关闭，当它没有被引用时将会被 Go 语言的垃圾自动回收器回收。</font>（不要将关闭一个打开文件的操作和关闭一个 channel 操作混淆。对于每个打开的文件，都需要在不使用的时候调用对应的 Close 方法来关闭文件。）
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;试图重复关闭一个 channel 将导致 panic 异常，试图关闭一个 nil 值的 channel 也将导致 panic 异常。关闭一个 channels 还会触发一个<b>广播机制</b>，我们将在第 9 节讨论。
+
+  <h3><a name="4_channels_3">4.3 单方向的 Channel</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;随着程序的增长，人们习惯于将大的函数拆分为小的函数。我们前面的例子中使用了三个 goroutine，然后用两个 channels 来连接它们，它们都是 main 函数的局部变量。将三个 goroutine 拆分为以下三个函数是自然的想法：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">counter</span><span class="params">(out <span class="keyword">chan</span> <span class="keyword">int</span>)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">squarer</span><span class="params">(out, in <span class="keyword">chan</span> <span class="keyword">int</span>)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printer</span><span class="params">(in <span class="keyword">chan</span> <span class="keyword">int</span>)</span></span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其中计算平方的 squarer 函数在两个串联 Channels 的中间，因此拥有两个 channel 类型的参数，一个用于输入一个用于输出。两个 channel 都拥有相同的类型，但是它们的使用方式相反：一个只用于接收，另一个只用于发送。参数的名字 in 和 out 已经明确表示了这个意图，但是并无法保证 squarer 函数向一个 in 参数对应的 channel 只会发送数据或者从一个 out 参数对应的 channel 只会接收数据。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这种场景是典型的。当一个 channel 作为一个函数参数时，它一般总是被专门用于只发送或者只接收。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了表明这种意图并防止被滥用，Go 语言的类型系统提供了<b>单方向的 channel 类型</b>，分别用于只发送或只接收的 channel。<font color="red">类型 chan<- int 表示一个只发送 int 的 channel</font>，只能发送不能接收。相反，<font color="red">类型 <-chan int 表示一个只接收 int 的 channel</font>，只能接收不能发送。（箭头 <- 和关键字 chan 的相对位置表明了 channel 的方向。）这种限制将在编译期检测。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因为关闭操作只用于断言不再向 channel 发送新的数据，所以只有在发送者所在的 goroutine 才会调用 close 函数，<font color="red">因此对一个只接收的 channel 调用 close 将是一个编译错误。</font>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这是改进的版本，这一次参数使用了单方向 channel 类型：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">func</span> <span class="title">counter</span><span class="params">(out <span class="keyword">chan</span>&lt;- <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line"><span class="keyword">for</span> x := <span class="number">0</span>; x &lt; <span class="number">100</span>; x++ &#123;</span><br><span class="line">     out &lt;- x</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">close</span>(out)</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">func</span> <span class="title">squarer</span><span class="params">(out <span class="keyword">chan</span>&lt;- <span class="keyword">int</span>, in &lt;-<span class="keyword">chan</span> <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">   <span class="keyword">for</span> v := <span class="keyword">range</span> in &#123;</span><br><span class="line">     out &lt;- v * v</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">close</span>(out)</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">func</span> <span class="title">printer</span><span class="params">(in &lt;-<span class="keyword">chan</span> <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">   <span class="keyword">for</span> v := <span class="keyword">range</span> in &#123;</span><br><span class="line">     fmt.Println(v)</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   naturals := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</span><br><span class="line">   squares := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</span><br><span class="line">   <span class="keyword">go</span> counter(naturals)</span><br><span class="line">   <span class="keyword">go</span> squarer(squares, naturals)</span><br><span class="line">   printer(squares)</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;调用 counter（naturals）时，naturals 的类型将隐式地从 chan int 转换成 chan<- int。调用 printer(squares) 也会导致相似的隐式转换，这一次是转换为 <-chan int 类型只接收型的 channel。<font color="red">任何双向 channel 向单向 channel 变量的赋值操作都将导致该隐式转换。</font>这里并没有反向转换的语法：也就是不能将一个类似 chan<- int 类型的单向型的 channel 转换为 chan int 类型的双向型的 channel。
+
+  <h3><a name="4_channels_4">4.4 带缓存的 Channels</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;带缓存的 Channel 内部持有一个元素队列。队列的最大容量是在调用 make 函数创建 channel 时通过第二个参数指定的。下面的语句创建了一个可以持有三个字符串元素的带缓存 Channel。下图是 ch 变量对应的 channel 的图形表示形式。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ch = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">string</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+  <div align="center">
+    <img src="./pic/buffered_channel.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;向缓存 Channel 的发送操作就是向内部缓存队列的尾部插入元素，接收操作则是从队列的头部删除元素。<font color="red">如果内部缓存队列是满的，那么发送操作将阻塞直到因另一个 goroutine 执行接收操作而释放了新的队列空间。</font>相反，<font color="red">如果channel是空的，接收操作将阻塞直到有另一个goroutine执行发送操作而向队列插入元素。</font>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以在无阻塞的情况下连续向新创建的 channel 发送三个值：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ch &lt;- <span class="string">&quot;A&quot;</span></span><br><span class="line">ch &lt;- <span class="string">&quot;B&quot;</span></span><br><span class="line">ch &lt;- <span class="string">&quot;C&quot;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;此刻，channel 的内部缓存队列将是满的 (下图)，如果有第四个发送操作将发生阻塞。
+
+  <div align="center">
+    <img src="./pic/full_buffered_channel.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果我们接收一个值，
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fmt.Println(&lt;-ch) <span class="comment">// &quot;A&quot;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;那么 channel 的缓存队列将不是满的也不是空的 (下图)，因此对该 channel 执行的发送或接收操作都不会发生阻塞。通过这种方式，channel 的缓存队列解耦了接收和发送的 goroutine。
+
+  <div align="center">
+    <img src="./pic/partially_buffered_channel.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在某些特殊情况下，程序可能需要知道 channel 内部缓存的<b>容量</b> (不是长度)，可以用内置的 cap 函数获取：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fmt.Println(<span class="built_in">cap</span>(ch)) <span class="comment">// &quot;3&quot;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同样，对于内置的 len 函数，如果传入的是 channel，那么将返回 channel 内部缓存队列中有效元素的个数，即<b>长度</b>。因为在并发程序中该信息会随着接收操作而失效，但是它对某些故障诊断和性能优化会有帮助。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fmt.Println(<span class="built_in">len</span>(ch)) <span class="comment">// &quot;2&quot;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在继续执行两次接收操作后 channel 内部的缓存队列将又成为空的，如果有第四个接收操作将发生阻塞：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fmt.Println(&lt;-ch) <span class="comment">// &quot;B&quot;</span></span><br><span class="line">fmt.Println(&lt;-ch) <span class="comment">// &quot;C&quot;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在这个例子中，发送和接收操作都发生在同一个 goroutine 中，但是在真实的程序中它们一般由不同的 goroutine 执行。Go 语言新手有时候会将一个带缓存的 channel 当作同一个 goroutine 中的队列使用，虽然语法看似简单，但实际上这是一个错误。Channel 和 goroutine 的调度器机制是紧密相连的，如果没有其他 goroutine 从 channel 接收，发送者——或许是整个程序——将会面临永远阻塞的风险。如果你只是需要一个简单的队列，使用 slice 就可以了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面的例子展示了一个使用了带缓存 channel 的应用。它并发地向三个镜像站点发出请求，三个镜像站点分散在不同的地理位置。它们分别将收到的响应发送到带缓存 channel，最后接收者只接收第一个收到的响应，也就是最快的那个响应。因此 mirroredQuery 函数可能在另外两个响应慢的镜像站点响应之前就返回了结果。（顺便说一下，多个 goroutines 并发地向同一个 channel 发送数据，或从同一个 channel 接收数据都是常见的用法。）
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mirroredQuery</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">  responses := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">string</span>, <span class="number">3</span>)</span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; responses &lt;- request(<span class="string">&quot;asia.gopl.io&quot;</span>) &#125;()</span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; responses &lt;- request(<span class="string">&quot;europe.gopl.io&quot;</span>) &#125;()</span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; responses &lt;- request(<span class="string">&quot;americas.gopl.io&quot;</span>) &#125;()</span><br><span class="line">  <span class="keyword">return</span> &lt;-responses <span class="comment">// responses 中有数据就立刻返回 (return the quickest response)</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">request</span><span class="params">(hostname <span class="keyword">string</span>)</span> <span class="params">(response <span class="keyword">string</span>)</span></span> &#123; <span class="comment">/* ... */</span> &#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果我们使用了无缓存的 channel，那么两个慢的 goroutines 将会因为没有人接收而被永远卡住。这种情况，称为 <b>goroutines 泄漏</b>，这将是一个 BUG。和垃圾变量不同，泄漏的 goroutines 并不会被自动回收，因此确保每个不再需要的 goroutine 能正常退出是重要的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;关于无缓存或带缓存 channels 之间的选择，或者是带缓存 channels 的容量大小的选择，都可能影响程序的正确性。无缓存 channel 更强地保证了每个发送操作与相应的同步接收操作。但是对于带缓存 channel，这些操作是解耦的。同样，即使我们知道将要发送到一个 channel 的信息的数量上限，创建一个对应容量大小的带缓存 channel 也是不现实的，因为这要求在执行任何接收操作之前缓存所有已经发送的值。如果未能分配足够的缓存将导致程序死锁。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Channel 的缓存也可能影响程序的性能。想象一家蛋糕店有三个厨师，一个烘焙，一个上糖衣，还有一个将每个蛋糕传递到它下一个厨师的生产线。在狭小的厨房空间环境，每个厨师在完成蛋糕后必须等待下一个厨师已经准备好接受它；这类似于在一个无缓存的 channel 上进行沟通。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果在每个厨师之间有一个放置一个蛋糕的额外空间，那么每个厨师就可以将一个完成的蛋糕临时放在那里而马上进入下一个蛋糕的制作中；这类似于将 channel 的缓存队列的容量设置为 1。只要每个厨师的平均工作效率相近，那么其中大部分的传输工作将是迅速的，个体之间细小的效率差异将在交接过程中弥补。如果厨师之间有更大的额外空间——也是就更大容量的缓存队列——将可以在不停止生产线的前提下消除更大的效率波动，例如一个厨师可以短暂地休息，然后再加快赶上进度而不影响其他人。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另一方面，如果生产线的前期阶段一直快于后续阶段，那么它们之间的缓存在大部分时间都将是满的。相反，如果后续阶段比前期阶段更快，那么它们之间的缓存在大部分时间都将是空的。<font color="red">对于这类场景，额外的缓存并没有带来任何好处。</font>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;生产线的隐喻对于理解 channels 和 goroutines 的工作机制是很有帮助的。例如，如果第二阶段是需要精心制作的复杂操作，一个厨师可能无法跟上第一个厨师的进度，或者是无法满足第三阶段厨师的需求。要解决这个问题，我们可以再雇佣另一个厨师来帮助完成第二阶段的工作，他执行相同的任务但是独立工作。这类似于基于相同的 channels 创建另一个独立的 goroutine。
+</div>
+
+<h2><a name="5_concurrent_cycle">5. 并发的循环</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本节中，我们会探索一些用来在并行时循环迭代的常见并发模型。我们会探究从全尺寸图片生成一些缩略图的问题。下面的 ImageFile 函数来帮我们拉伸图片。我们不会说明这个函数的实现，我们只需要使用它。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> thumbnail</span><br><span class="line"></span><br><span class="line"><span class="comment">// ImageFile reads an image from infile and writes</span></span><br><span class="line"><span class="comment">// a thumbnail-size version of it in the same directory.</span></span><br><span class="line"><span class="comment">// It returns the generated file name, e.g., &quot;foo.thumb.jpg&quot;.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ImageFile</span><span class="params">(infile <span class="keyword">string</span>)</span> <span class="params">(<span class="keyword">string</span>, error)</span></span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面的程序会循环迭代一些图片文件名，并为每一张图片生成一个缩略图：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// makeThumbnails makes thumbnails of the specified files.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">makeThumbnails</span><span class="params">(filenames []<span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">  <span class="keyword">for</span> _, f := <span class="keyword">range</span> filenames &#123;</span><br><span class="line">    <span class="keyword">if</span> _, err := thumbnail.ImageFile(f); err != <span class="literal">nil</span> &#123;</span><br><span class="line">      log.Println(err)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;显然我们处理文件的顺序无关紧要，因为每一个图片的拉伸操作和其它图片的处理操作都是彼此独立的。像这种子问题都是完全彼此独立的问题被叫做<b>易并行问题（译注：embarrassingly parallel，直译的话更像是尴尬并行）</b>。易并行问题是最容易被实现成并行的一类问题（废话），并且最能够享受到并发带来的好处，能够随着并行的规模线性地扩展。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面让我们并行地执行这些操作，从而将文件 IO 的延迟隐藏掉，并用上多核 cpu 的计算能力来拉伸图像。我们的第一个并发程序只是使用了一个 go 关键字。这里我们先忽略掉错误，之后再进行处理。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// <span class="doctag">NOTE:</span> incorrect!</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">makeThumbnails2</span><span class="params">(filenames []<span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">  <span class="keyword">for</span> _, f := <span class="keyword">range</span> filenames &#123;</span><br><span class="line">    <span class="keyword">go</span> thumbnail.ImageFile(f) <span class="comment">// <span class="doctag">NOTE:</span> ignoring errors</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这个版本运行的实在有点太快，实际上，由于它比最早的版本使用的时间要短得多，即使当文件名的 slice 中只包含有一个元素。这就有点奇怪了，如果程序没有并发执行的话，那为什么一个并发的版本还是要快呢？<font color="red">答案其实是 makeThumbnails 在它还没有完成工作之前就已经返回了。它启动了所有的 goroutine，每一个文件名对应一个，但没有等待它们一直到执行完毕。</font>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;没有什么直接的办法能够等待 goroutine 完成，但是我们可以改变 goroutine 里的代码让其能够将完成情况报告给外部的 goroutine 知晓，使用的方式是向一个共享的 channel 中发送事件。因为我们已经确切地知道有 len(filenames) 个内部 goroutine，所以外部的 goroutine 只需要在返回之前对这些事件计数。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// makeThumbnails3 makes thumbnails of the specified files in parallel.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">makeThumbnails3</span><span class="params">(filenames []<span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">  ch := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">  <span class="keyword">for</span> _, f := <span class="keyword">range</span> filenames &#123;</span><br><span class="line">    <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(f <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">      thumbnail.ImageFile(f) <span class="comment">// <span class="doctag">NOTE:</span> ignoring errors</span></span><br><span class="line">      ch &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">    &#125;(f)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// Wait for goroutines to complete.</span></span><br><span class="line">  <span class="keyword">for</span> <span class="keyword">range</span> filenames &#123;</span><br><span class="line">    &lt;-ch</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="red">注意我们将f的值作为一个显式的变量传给了函数，而不是在循环的闭包中声明：</font>
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> _, f := <span class="keyword">range</span> filenames &#123;</span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    thumbnail.ImageFile(f) <span class="comment">// <span class="doctag">NOTE:</span> incorrect!</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回忆一下之前在第 4 章中，我们曾经说过的匿名函数中的<b>循环变量快照问题</b>。<font color="red"><b>【IMPORTANT】</b></font> 上面这个单独的变量 f 是被所有的匿名函数值所共享，且会被连续的循环迭代所更新的。当新的 goroutine 开始执行字面函数时，for 循环可能已经更新了 f 并且开始了另一轮的迭代或者（更有可能的）已经结束了整个循环，所以当这些 goroutine 开始读取 f 的值时，它们所看到的值已经是 slice 的最后一个元素了。显式地添加这个参数，我们能够确保使用的 f 是当 go 语句执行时的“当前”那个 f。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果我们想要从每一个 worker goroutine 往主 goroutine 中返回值时该怎么办呢？当我们调用 thumbnail.ImageFile 创建文件失败的时候，它会返回一个错误。下一个版本的 makeThumbnails 会返回其在做拉伸操作时接收到的第一个错误：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// makeThumbnails4 makes thumbnails for the specified files in parallel.</span></span><br><span class="line"><span class="comment">// It returns an error if any step failed.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">makeThumbnails4</span><span class="params">(filenames []<span class="keyword">string</span>)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">  errors := <span class="built_in">make</span>(<span class="keyword">chan</span> error)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> _, f := <span class="keyword">range</span> filenames &#123;</span><br><span class="line">    <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(f <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">      _, err := thumbnail.ImageFile(f)</span><br><span class="line">      errors &lt;- err</span><br><span class="line">    &#125;(f)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> <span class="keyword">range</span> filenames &#123;</span><br><span class="line">    <span class="keyword">if</span> err := &lt;-errors; err != <span class="literal">nil</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> err <span class="comment">// <span class="doctag">NOTE:</span> incorrect: goroutine leak!</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这个程序有一个微妙的bug。当它遇到第一个非 nil 的 error 时会直接将 error 返回到调用方，使得没有一个 goroutine 去排空 errors channel。这样剩下的 worker goroutine 在向这个 channel 中发送值时，都会永远地阻塞下去，并且永远都不会退出。这种情况叫做 goroutine泄露，可能会导致整个程序卡住或者跑出 out of memory 的错误。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最简单的解决办法就是用一个具有合适大小的 buffered channel，这样这些 worker goroutine 向 channel 中发送错误时就不会被阻塞。（一个可选的解决办法是创建一个另外的 goroutine，当 main goroutine 返回第一个错误的同时去排空 channel。）
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下一个版本的 makeThumbnails 使用了一个 buffered channel 来返回生成的图片文件的名字，附带生成时的错误。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// makeThumbnails5 makes thumbnails for the specified files in parallel.</span></span><br><span class="line"><span class="comment">// It returns the generated file names in an arbitrary order,</span></span><br><span class="line"><span class="comment">// or an error if any step failed.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">makeThumbnails5</span><span class="params">(filenames []<span class="keyword">string</span>)</span> <span class="params">(thumbfiles []<span class="keyword">string</span>, err error)</span></span> &#123;</span><br><span class="line">  <span class="keyword">type</span> item <span class="keyword">struct</span> &#123;</span><br><span class="line">    thumbfile <span class="keyword">string</span></span><br><span class="line">    err       error</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ch := <span class="built_in">make</span>(<span class="keyword">chan</span> item, <span class="built_in">len</span>(filenames))</span><br><span class="line">  <span class="keyword">for</span> _, f := <span class="keyword">range</span> filenames &#123;</span><br><span class="line">    <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(f <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">      <span class="keyword">var</span> it item</span><br><span class="line">      it.thumbfile, it.err = thumbnail.ImageFile(f)</span><br><span class="line">      ch &lt;- it</span><br><span class="line">    &#125;(f)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> <span class="keyword">range</span> filenames &#123;</span><br><span class="line">    it := &lt;-ch</span><br><span class="line">    <span class="keyword">if</span> it.err != <span class="literal">nil</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">nil</span>, it.err</span><br><span class="line">    &#125;</span><br><span class="line">    thumbfiles = <span class="built_in">append</span>(thumbfiles, it.thumbfile)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> thumbfiles, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面，我们最后一个版本的 makeThumbnails 返回了新文件们的大小总计数（bytes）。和前面的版本都不一样的一点是我们在这个版本里没有把文件名放在 slice 里，而是通过一个 string 的 channel 传过来，所以我们无法对循环的次数进行预测。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了知道最后一个 goroutine 什么时候结束（最后一个结束并不一定是最后一个开始），我们需要一个递增的计数器，在每一个 goroutine 启动时加一，在 goroutine 退出时减一。<font color="red">这需要一种特殊的计数器，这个计数器需要在多个 goroutine 操作时做到安全并且提供在其减为零之前一直等待的一种方法。</font>这种计数类型被称为 <b>sync.WaitGroup</b>，下面的代码就用到了这种方法：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// makeThumbnails6 makes thumbnails for each file received from the channel.</span></span><br><span class="line"><span class="comment">// It returns the number of bytes occupied by the files it creates.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">makeThumbnails6</span><span class="params">(filenames &lt;-<span class="keyword">chan</span> <span class="keyword">string</span>)</span> <span class="title">int64</span></span> &#123;</span><br><span class="line">  sizes := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int64</span>)</span><br><span class="line">  <span class="keyword">var</span> wg sync.WaitGroup <span class="comment">// number of working goroutines</span></span><br><span class="line">  <span class="keyword">for</span> f := <span class="keyword">range</span> filenames &#123;</span><br><span class="line">    wg.Add(<span class="number">1</span>)</span><br><span class="line">    <span class="comment">// worker</span></span><br><span class="line">    <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(f <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">      <span class="keyword">defer</span> wg.Done()</span><br><span class="line">      thumb, err := thumbnail.ImageFile(f)</span><br><span class="line">      <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Println(err)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      info, _ := os.Stat(thumb) <span class="comment">// OK to ignore error</span></span><br><span class="line">      sizes &lt;- info.Size()</span><br><span class="line">    &#125;(f)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// closer</span></span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    wg.Wait()</span><br><span class="line">    <span class="built_in">close</span>(sizes)</span><br><span class="line">  &#125;()</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> total <span class="keyword">int64</span></span><br><span class="line">  <span class="keyword">for</span> size := <span class="keyword">range</span> sizes &#123;</span><br><span class="line">    total += size</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> total</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注意 Add 和 Done 方法的不对称。Add 是为计数器加一，必须在 worker goroutine 开始之前调用，而不是在 goroutine中；否则的话我们没办法确定 Add 是在 "closer"  goroutine 调用 Wait 之前被调用。并且 Add 还有一个参数，但 Done 却没有任何参数；其实它和 Add(-1) 是等价的。我们使用 defer 来确保计数器即使是在出错的情况下依然能够正确地被减掉。上面的程序代码结构是当我们使用并发循环，但又不知道迭代次数时很通常而且很地道的写法。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;sizes channel 携带了每一个文件的大小到 main goroutine，在 main goroutine 中使用了 range loop 来计算总和。观察一下我们是怎样创建一个 closer goroutine，并让其在所有 worker goroutine 们结束之后再关闭 sizes channel 的。两步操作：wait 和 close，必须是基于 sizes 的循环的并发。考虑一下另一种方案：如果等待操作被放在了 main goroutine 中，在循环之前，这样的话就永远都不会结束了，因为 wg.Wait() 将会阻塞 main goroutine，那么 sizes 将永远不会被清空。而如果在循环之后，那么又变成了不可达的部分，因为没有任何东西去关闭这个 channel，这个循环就永远都不会终止。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下图表明了 makethumbnails6 函数中事件的序列。纵列表示 goroutine。窄线段代表 sleep，粗线段代表活动。斜线箭头代表用来同步两个 goroutine 的事件。时间向下流动。注意 main goroutine 是如何大部分的时间被唤醒执行其 range 循环，等待 worker 发送值或者 closer 来关闭 channel 的。
+
+  <div align="center">
+    <img src="./pic/goroutinue_seq.png" width=500px>
+  </div>
+</div>
+
+<h2><a name="6_web_bug">6. 示例: 并发的Web爬虫</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在第 4 章，我们做了一个简单的 web 爬虫，用 bfs(广度优先)算法来抓取整个网站。在本节中，我们会让这个爬虫并行化，这样每一个彼此独立的抓取命令可以并行进行 IO，最大化利用网络资源。crawl 函数和我们在第 4 章看到的中的是一样的。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">crawl</span><span class="params">(url <span class="keyword">string</span>)</span> []<span class="title">string</span></span> &#123;</span><br><span class="line">  fmt.Println(url)</span><br><span class="line">  list, err := links.Extract(url)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Print(err)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> list</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;主函数和第 4 章中的 breadthFirst (广度优先)类似。像之前一样，一个 worklist 是一个记录了需要处理的元素的队列，每一个元素都是一个需要抓取的 URL 列表，不过这一次我们用 channel 代替 slice 来做这个队列。每一个对 crawl 的调用都会在他们自己的 goroutine 中进行并且会把他们抓到的链接发送回 worklist。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  worklist := <span class="built_in">make</span>(<span class="keyword">chan</span> []<span class="keyword">string</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Start with the command-line arguments.</span></span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; worklist &lt;- os.Args[<span class="number">1</span>:] &#125;()</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// Crawl the web concurrently.</span></span><br><span class="line">  seen := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">bool</span>)</span><br><span class="line">  <span class="keyword">for</span> list := <span class="keyword">range</span> worklist &#123;</span><br><span class="line">    <span class="keyword">for</span> _, link := <span class="keyword">range</span> list &#123;</span><br><span class="line">      <span class="keyword">if</span> !seen[link] &#123;</span><br><span class="line">        seen[link] = <span class="literal">true</span></span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(link <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">          worklist &lt;- crawl(link)</span><br><span class="line">        &#125;(link)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注意这里的 crawl 所在的 goroutine 会将 link 作为一个显式的参数传入，来避免“循环变量快照”的问题。<font color="red">另外注意这里将命令行参数传入 worklist 也是在一个另外的 goroutine 中进行的，这是为了避免 channel 两端的 main goroutine 与 crawler goroutine 都尝试向对方发送内容，却没有一端接收内容时发生死锁。</font>当然，这里我们也可以用 buffered channel 来解决问题，这里不再赘述。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在爬虫可以高并发地运行起来，并且可以产生一大坨的 URL 了，不过还是会有俩问题。一个问题是在运行一段时间后可能会出现在 log 的错误信息里的：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ go build gopl.io/ch8/crawl1</span><br><span class="line">$ ./crawl1 http://gopl.io/</span><br><span class="line">http://gopl.io/</span><br><span class="line">https://golang.org/<span class="built_in">help</span>/</span><br><span class="line">https://golang.org/doc/</span><br><span class="line">https://golang.org/blog/</span><br><span class="line">...</span><br><span class="line">2015/07/15 18:22:12 Get ...: dial tcp: lookup blog.golang.org: no such host</span><br><span class="line">2015/07/15 18:22:12 Get ...: dial tcp 23.21.222.120:443: socket: too many open files</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最初的错误信息是一个让人莫名的 DNS 查找失败，即使这个域名是完全可靠的。而随后的错误信息揭示了原因：这个程序一次性创建了太多网络连接，超过了每一个进程的打开文件数限制，既而导致了在调用 net.Dial 像 DNS 查找失败这样的问题。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这个程序实在是太并行了。无穷无尽地并行化并不是什么好事情，因为不管怎么说，你的系统总是会有一些个限制因素，比如 CPU 核心数会限制你的计算负载，比如你的硬盘转轴和磁头数限制了你的本地磁盘 IO 操作频率，比如你的网络带宽限制了你的下载速度上限，或者是你的一个 web 服务的服务容量上限等等。为了解决这个问题，我们可以限制并发程序所使用的资源来使之适应自己的运行环境。对于我们的例子来说，最简单的方法就是限制对 links.Extract 在同一时间最多不会有超过 n 次调用，这里的 n 一般小于文件描述符的上限值，比如 20。这和一个夜店里限制客人数目是一个道理，只有当有客人离开时，才会允许新的客人进入店内。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以用一个<b>有容量限制的 buffered channel </b>来控制并发，这类似于操作系统里的计数信号量概念。从概念上讲，channel 里的 n 个空槽代表 n 个可以处理内容的 token（通行证），从 channel 里接收一个值会释放其中的一个 token，并且生成一个新的空槽位。这样保证了在没有接收介入时最多有 n 个发送操作。（这里可能我们拿 channel 里填充的槽来做 token 更直观一些，不过还是这样吧。）由于 channel 里的元素类型并不重要，我们用一个零值的 struct{} 来作为其元素。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;让我们重写 crawl 函数，将对 links.Extract 的调用操作用获取、释放 token 的操作包裹起来，来确保同一时间对其只有 20 个调用。信号量数量和其能操作的 IO 资源数量应保持接近。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tokens is a counting semaphore used to</span></span><br><span class="line"><span class="comment">// enforce a limit of 20 concurrent requests.</span></span><br><span class="line"><span class="keyword">var</span> tokens = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;, <span class="number">20</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">crawl</span><span class="params">(url <span class="keyword">string</span>)</span> []<span class="title">string</span></span> &#123;</span><br><span class="line">  fmt.Println(url)</span><br><span class="line">  tokens &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125; <span class="comment">// acquire a token</span></span><br><span class="line">  list, err := links.Extract(url)</span><br><span class="line">  &lt;-tokens <span class="comment">// release the token</span></span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Print(err)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> list</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;第二个问题是这个程序永远都不会终止，即使它已经爬到了所有初始链接衍生出的链接。（当然，除非你慎重地选择了合适的初始化 URL，你应该还没有意识到这个问题。）为了使这个程序能够终止，我们需要在 worklist 为空或者没有 crawl 的 goroutine 在运行时退出主循环。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  worklist := <span class="built_in">make</span>(<span class="keyword">chan</span> []<span class="keyword">string</span>)</span><br><span class="line">  <span class="keyword">var</span> n <span class="keyword">int</span> <span class="comment">// number of pending sends to worklist</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Start with the command-line arguments.</span></span><br><span class="line">  n++</span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; worklist &lt;- os.Args[<span class="number">1</span>:] &#125;()</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Crawl the web concurrently.</span></span><br><span class="line">  seen := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">bool</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> ; n &gt; <span class="number">0</span>; n-- &#123;</span><br><span class="line">    list := &lt;-worklist</span><br><span class="line">    <span class="keyword">for</span> _, link := <span class="keyword">range</span> list &#123;</span><br><span class="line">      <span class="keyword">if</span> !seen[link] &#123;</span><br><span class="line">        seen[link] = <span class="literal">true</span></span><br><span class="line">        n++</span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(link <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">          worklist &lt;- crawl(link)</span><br><span class="line">        &#125;(link)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这个版本中，计数器 n 对 worklist 的发送操作数量进行了限制。每一次我们发现有元素需要被发送到 worklist时，我们都会对 n 进行 ++ 操作，在向 worklist 中发送初始的命令行参数之前，我们也进行过一次 ++ 操作。这里的操作 ++ 是在每启动一个 crawler 的 goroutine之前。主循环会在 n 减为 0 时终止，这时候说明没活可干了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在这个并发爬虫会比第 4 章中的深度优先搜索版快上 20 倍，而且不会出什么错，并且在其完成任务时也会正确地终止。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面的程序是避免过度并发的另一种思路。这个版本使用了原来的 crawl 函数，但没有使用计数信号量，取而代之用了 20 个常驻的 crawler goroutine，这样来保证最多 20 个 HTTP 请求在并发。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  worklist := <span class="built_in">make</span>(<span class="keyword">chan</span> []<span class="keyword">string</span>)  <span class="comment">// lists of URLs, may have duplicates</span></span><br><span class="line">  unseenLinks := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">string</span>) <span class="comment">// de-duplicated URLs</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Add command-line arguments to worklist.</span></span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; worklist &lt;- os.Args[<span class="number">1</span>:] &#125;()</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Create 20 crawler goroutines to fetch each unseen link.</span></span><br><span class="line">  <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">20</span>; i++ &#123;</span><br><span class="line">    <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">      <span class="keyword">for</span> link := <span class="keyword">range</span> unseenLinks &#123;</span><br><span class="line">        foundLinks := crawl(link)</span><br><span class="line">        <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; worklist &lt;- foundLinks &#125;()</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// The main goroutine de-duplicates worklist items</span></span><br><span class="line">  <span class="comment">// and sends the unseen ones to the crawlers.</span></span><br><span class="line">  seen := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">bool</span>)</span><br><span class="line">  <span class="keyword">for</span> list := <span class="keyword">range</span> worklist &#123;</span><br><span class="line">    <span class="keyword">for</span> _, link := <span class="keyword">range</span> list &#123;</span><br><span class="line">      <span class="keyword">if</span> !seen[link] &#123;</span><br><span class="line">        seen[link] = <span class="literal">true</span></span><br><span class="line">        unseenLinks &lt;- link</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;所有的爬虫 goroutine 现在都是被同一个 channel - unseenLinks 喂饱的了。主 goroutine 负责拆分它从 worklist 里拿到的元素，然后把没有抓过的经由 unseenLinks channel 发送给一个爬虫的 goroutine。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;seen 这个 map 被限定在 main goroutine 中；也就是说这个 map 只能在 main goroutine 中进行访问。类似于其它的信息隐藏方式，这样的约束可以让我们从一定程度上保证程序的正确性。例如，内部变量不能够在函数外部被访问到；变量（§2.3.4）在没有发生变量逃逸（译注：局部变量被全局变量引用地址导致变量被分配在堆上）的情况下是无法在函数外部访问的；一个对象的封装字段无法被该对象的方法以外的方法访问到。在所有的情况下，信息隐藏都可以帮助我们约束我们的程序，使其不发生意料之外的情况。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;crawl 函数爬到的链接在一个专有的 goroutine 中被发送到 worklist 中来避免死锁。为了节省篇幅，这个例子的终止问题我们先不进行详细阐述了。
+</div>
+
+<h2><a name="7_select">7. 基于select的多路复用</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面的程序会进行火箭发射的倒计时。time.Tick 函数返回一个 channel，程序会周期性地像一个节拍器一样向这个 channel 发送事件。每一个事件的值是一个时间戳，不过更有意思的是其传送方式。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  fmt.Println(<span class="string">&quot;Commencing countdown.&quot;</span>)</span><br><span class="line">  tick := time.Tick(<span class="number">1</span> * time.Second)</span><br><span class="line">  <span class="keyword">for</span> countdown := <span class="number">10</span>; countdown &gt; <span class="number">0</span>; countdown-- &#123;</span><br><span class="line">    fmt.Println(countdown)</span><br><span class="line">    &lt;-tick  <span class="comment">//tick 是一个 chan，每隔 1s 收到一次，因此这里的阻塞时间是 1s</span></span><br><span class="line">  &#125;</span><br><span class="line">  launch()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们让这个程序支持在倒计时中，用户按下 return 键时直接中断发射流程。首先，我们启动一个 goroutine，这个 goroutine 会尝试从标准输入中读入一个单独的 byte 并且，如果成功了，会向名为 abort 的 channel 发送一个值。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">abort := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">  os.Stdin.Read(<span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1</span>)) <span class="comment">// read a single byte</span></span><br><span class="line">  abort &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在每一次计数循环的迭代都需要等待两个 channel 中的其中一个返回事件了：当一切正常时的 ticker channel（就像 NASA jorgon 的 "nominal"，译注：这梗估计我们是不懂了）或者异常时返回的 abort 事件。我们无法做到从每一个 channel 中接收信息，如果我们这么做的话，如果第一个 channel 中没有事件发过来那么程序就会立刻被阻塞，这样我们就无法收到第二个 channel 中发过来的事件。这时候我们需要<b>多路复用（multiplex）</b>这些操作了，为了能够多路复用，我们使用了 select 语句。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line"><span class="keyword">case</span> &lt;-ch1:</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">case</span> x := &lt;-ch2:</span><br><span class="line">  <span class="comment">// ...use x...</span></span><br><span class="line"><span class="keyword">case</span> ch3 &lt;- y:</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面是 select 语句的一般形式。和 switch 语句稍微有点相似，也会有几个 case 和最后的 default 选择分支。每一个 case 代表一个通信操作（在某个 channel 上进行发送或者接收），并且会包含一些语句组成的一个语句块。一个接收表达式可能只包含接收表达式自身（译注：不把接收到的值赋值给变量什么的），就像上面的第一个 case，或者包含在一个简短的变量声明中，像第二个 case 里一样；第二种形式让你能够引用接收到的值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;select 会等待 case 中有能够执行的 case 时去执行。当条件满足时，select 才会去通信并执行 case 之后的语句；这时候其它通信是不会执行的。一个没有任何 case 的 select 语句写作 select{}，会永远地等待下去。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;让我们回到我们的火箭发射程序。time.After 函数会立即返回一个 channel，并起一个新的 goroutine 在经过特定的时间后向该 channel 发送一个独立的值。下面的 select 语句会一直等待直到两个事件中的一个到达，无论是 abort 事件或者一个 10 秒经过的事件。如果 10 秒经过了还没有 abort 事件进入，那么火箭就会发射。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">//create abort channel</span></span><br><span class="line">  abort := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    os.Stdin.Read(<span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1</span>)) <span class="comment">// read a single byte</span></span><br><span class="line">    abort &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">  &#125;()</span><br><span class="line"></span><br><span class="line">  fmt.Println(<span class="string">&quot;Commencing countdown.  Press return to abort.&quot;</span>)</span><br><span class="line">  <span class="keyword">select</span> &#123;</span><br><span class="line">  <span class="keyword">case</span> &lt;-time.After(<span class="number">10</span> * time.Second):</span><br><span class="line">    <span class="comment">// Do nothing.</span></span><br><span class="line">  <span class="keyword">case</span> &lt;-abort:</span><br><span class="line">    fmt.Println(<span class="string">&quot;Launch aborted!&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  launch()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面这个例子更微妙。ch 这个 channel 的 buffer 大小是 1，所以会交替的为空或为满，所以只有一个 case 可以进行下去，无论 i 是奇数或者偶数，它都会打印 0 2 4 6 8。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ch := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">1</span>)</span><br><span class="line"><span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">  <span class="keyword">select</span> &#123;</span><br><span class="line">  <span class="keyword">case</span> x := &lt;-ch:</span><br><span class="line">    fmt.Println(x) <span class="comment">// &quot;0&quot; &quot;2&quot; &quot;4&quot; &quot;6&quot; &quot;8&quot;</span></span><br><span class="line">  <span class="keyword">case</span> ch &lt;- i:</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="red">如果多个 case 同时就绪时，select 会随机地选择一个执行，这样来保证每一个 channel 都有平等的被 select 的机会。</font>增加前一个例子的 buffer 大小会使其输出变得不确定，因为当 buffer 既不为满也不为空时，select 语句的执行情况就像是抛硬币的行为一样是随机的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面让我们的发射程序打印倒计时。这里的 select 语句会使每次循环迭代等待一秒来执行退出操作。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">//create abort channel</span></span><br><span class="line">  abort := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    os.Stdin.Read(<span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1</span>)) <span class="comment">// read a single byte</span></span><br><span class="line">    abort &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">  &#125;()</span><br><span class="line"></span><br><span class="line">  fmt.Println(<span class="string">&quot;Commencing countdown.  Press return to abort.&quot;</span>)</span><br><span class="line">  tick := time.Tick(<span class="number">1</span> * time.Second)</span><br><span class="line">  <span class="keyword">for</span> countdown := <span class="number">10</span>; countdown &gt; <span class="number">0</span>; countdown-- &#123;</span><br><span class="line">    fmt.Println(countdown)</span><br><span class="line">    <span class="keyword">select</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> &lt;-tick:</span><br><span class="line">      <span class="comment">// Do nothing.</span></span><br><span class="line">    <span class="keyword">case</span> &lt;-abort:</span><br><span class="line">      fmt.Println(<span class="string">&quot;Launch aborted!&quot;</span>)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  launch()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;time.Tick 函数表现得好像它创建了一个在循环中调用 time.Sleep 的 goroutine，每次被唤醒时发送一个事件。当 countdown 函数返回时，它会停止从 tick 中接收事件，但是 ticker 这个 goroutine 还依然存活，继续徒劳地尝试向 channel 中发送值，然而这时候已经没有其它的 goroutine 会从该 channel 中接收值了 —— 这被称为 goroutine 泄露。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Tick 函数挺方便，但是只有当程序整个生命周期都需要这个时间时我们使用它才比较合适。否则的话，我们应该使用下面的这种模式：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ticker := time.NewTicker(<span class="number">1</span> * time.Second)</span><br><span class="line">&lt;-ticker.C    <span class="comment">// receive from the ticker&#x27;s channel</span></span><br><span class="line">ticker.Stop() <span class="comment">// cause the ticker&#x27;s goroutine to terminate</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有时候我们希望能够从 channel 中发送或者接收值，并避免因为发送或者接收导致的阻塞，尤其是当 channel 没有准备好写或者读时。select 语句就可以实现这样的功能。select 会有一个 default 来设置当其它的操作都不能够马上被处理时程序需要执行哪些逻辑。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面的 select 语句会在 abort channel 中有值时，从其中接收值，无值时什么都不做，这是一个<b>非阻塞的接收操作</b>；反复地做这样的操作叫做 <b>“轮询channel”</b>。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line"><span class="keyword">case</span> &lt;-abort:</span><br><span class="line">  fmt.Printf(<span class="string">&quot;Launch aborted!\n&quot;</span>)</span><br><span class="line">  <span class="keyword">return</span></span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">  <span class="comment">// do nothing</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;channel 的零值是 nil。也许会让你觉得比较奇怪，nil 的 channel 有时候也是有一些用处的。因为对一个 nil 的 channel 发送和接收操作会永远阻塞，在 select 语句中操作 nil 的 channel 永远都不会被 select 到。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这使得我们<font color="red">可以用 nil 来激活或者禁用 case</font>，来达成处理其它输入或输出事件时超时和取消的逻辑。我们会在下一节中看到一个例子。
+</div>
+
+<h2><a name="8_directory_traversal">8. 示例: 并发的目录遍历</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在本小节中，我们会创建一个程序来生成指定目录的硬盘使用情况报告，这个程序和 Unix 里的 du 工具比较相似。大多数工作用下面这个 walkDir 函数来完成，这个函数使用 dirents 函数来枚举一个目录下的所有入口。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// walkDir recursively walks the file tree rooted at dir</span></span><br><span class="line"><span class="comment">// and sends the size of each found file on fileSizes.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">walkDir</span><span class="params">(dir <span class="keyword">string</span>, fileSizes <span class="keyword">chan</span>&lt;- <span class="keyword">int64</span>)</span></span> &#123;</span><br><span class="line">  <span class="keyword">for</span> _, entry := <span class="keyword">range</span> dirents(dir) &#123;</span><br><span class="line">    <span class="keyword">if</span> entry.IsDir() &#123;</span><br><span class="line">      subdir := filepath.Join(dir, entry.Name())</span><br><span class="line">      walkDir(subdir, fileSizes)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      fileSizes &lt;- entry.Size()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// dirents returns the entries of directory dir.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">dirents</span><span class="params">(dir <span class="keyword">string</span>)</span> []<span class="title">os</span>.<span class="title">FileInfo</span></span> &#123;</span><br><span class="line">  entries, err := ioutil.ReadDir(dir)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    fmt.Fprintf(os.Stderr, <span class="string">&quot;du1: %v\n&quot;</span>, err)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> entries</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;ioutil.ReadDir 函数会返回一个 os.FileInfo 类型的 slice，os.FileInfo 类型也是 os.Stat 这个函数的返回值。对每一个子目录而言，walkDir 会递归地调用其自身，同时也在递归里获取每一个文件的信息。walkDir 函数会向 fileSizes 这个 channel 发送一条消息。这条消息包含了文件的字节大小。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面的主函数，用了两个 goroutine。后台的 goroutine 调用 walkDir 来遍历命令行给出的每一个路径并最终关闭 fileSizes 这个 channel。主 goroutine 会对其从 channel 中接收到的文件大小进行累加，并输出其和。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">&quot;flag&quot;</span></span><br><span class="line">  <span class="string">&quot;fmt&quot;</span></span><br><span class="line">  <span class="string">&quot;io/ioutil&quot;</span></span><br><span class="line">  <span class="string">&quot;os&quot;</span></span><br><span class="line">  <span class="string">&quot;path/filepath&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// Determine the initial directories.</span></span><br><span class="line">  flag.Parse()</span><br><span class="line">  roots := flag.Args()</span><br><span class="line">  <span class="keyword">if</span> <span class="built_in">len</span>(roots) == <span class="number">0</span> &#123;</span><br><span class="line">    roots = []<span class="keyword">string</span>&#123;<span class="string">&quot;.&quot;</span>&#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Traverse the file tree.</span></span><br><span class="line">  fileSizes := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int64</span>)</span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> _, root := <span class="keyword">range</span> roots &#123;</span><br><span class="line">      walkDir(root, fileSizes)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">close</span>(fileSizes)</span><br><span class="line">  &#125;()</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Print the results.</span></span><br><span class="line">  <span class="keyword">var</span> nfiles, nbytes <span class="keyword">int64</span></span><br><span class="line">  <span class="keyword">for</span> size := <span class="keyword">range</span> fileSizes &#123;</span><br><span class="line">    nfiles++</span><br><span class="line">    nbytes += size</span><br><span class="line">  &#125;</span><br><span class="line">  printDiskUsage(nfiles, nbytes)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printDiskUsage</span><span class="params">(nfiles, nbytes <span class="keyword">int64</span>)</span></span> &#123;</span><br><span class="line">  fmt.Printf(<span class="string">&quot;%d files  %.1f GB\n&quot;</span>, nfiles, <span class="keyword">float64</span>(nbytes)/<span class="number">1e9</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这个程序会在打印其结果之前卡住很长时间。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ go build gopl.io/ch8/du1</span><br><span class="line">$ ./du1 <span class="variable">$HOME</span> /usr /bin /etc</span><br><span class="line">213201 files  62.7 GB</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果在运行的时候能够让我们知道处理进度的话想必更好。但是，如果简单地把 printDiskUsage 函数调用移动到循环里会导致其打印出成百上千的输出。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面这个 du 的变种会间歇打印内容，不过只有在调用时提供了 -v 的 flag 才会显示程序进度信息。在 roots 目录上循环的后台 goroutine 在这里保持不变。主 goroutine 现在使用了计时器来每 500ms 生成事件，然后用 select 语句来等待文件大小的消息来更新总大小数据，或者一个计时器的事件来打印当前的总大小数据。如果 -v 的 flag 在运行时没有传入的话，tick 这个 channel 会保持为 nil，这样在 select 里的 case 也就相当于被禁用了。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> verbose = flag.Bool(<span class="string">&quot;v&quot;</span>, <span class="literal">false</span>, <span class="string">&quot;show verbose progress messages&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// ...start background goroutine...</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Print the results periodically.</span></span><br><span class="line">  <span class="keyword">var</span> tick &lt;-<span class="keyword">chan</span> time.Time</span><br><span class="line">  <span class="keyword">if</span> *verbose &#123;</span><br><span class="line">    tick = time.Tick(<span class="number">500</span> * time.Millisecond)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">var</span> nfiles, nbytes <span class="keyword">int64</span></span><br><span class="line">loop:</span><br><span class="line">  <span class="keyword">for</span> &#123;</span><br><span class="line">    <span class="keyword">select</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> size, ok := &lt;-fileSizes:</span><br><span class="line">      <span class="keyword">if</span> !ok &#123;</span><br><span class="line">        <span class="keyword">break</span> loop <span class="comment">// fileSizes was closed</span></span><br><span class="line">      &#125;</span><br><span class="line">      nfiles++</span><br><span class="line">      nbytes += size</span><br><span class="line">    <span class="keyword">case</span> &lt;-tick:</span><br><span class="line">      printDiskUsage(nfiles, nbytes)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  printDiskUsage(nfiles, nbytes) <span class="comment">// final totals</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="red">由于我们的程序不再使用 range 循环，第一个 select 的 case 必须显式地判断 fileSizes 的 channel 是不是已经被关闭了，这里可以用到 channel 接收的二值形式。</font>如果channel已经被关闭了的话，程序会直接退出循环。这里的 break 语句用到了<b>标签 break</b>，这样可以同时终结 select 和 for 两个循环；如果没有用标签就 break 的话只会退出内层的 select 循环，而外层的 for 循环会使之进入下一轮 select 循环。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在程序会悠闲地为我们打印更新流：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ go build gopl.io/ch8/du2</span><br><span class="line">$ ./du2 -v <span class="variable">$HOME</span> /usr /bin /etc</span><br><span class="line">28608 files  8.3 GB</span><br><span class="line">54147 files  10.3 GB</span><br><span class="line">93591 files  15.1 GB</span><br><span class="line">127169 files  52.9 GB</span><br><span class="line">175931 files  62.2 GB</span><br><span class="line">213201 files  62.7 GB</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然而这个程序还是会花上很长时间才会结束。其实我们完全可以并发调用 walkDir，从而发挥磁盘系统的并行性能。下面这个第三个版本的 du，会对每一个 walkDir 的调用创建一个新的 goroutine。它使用 sync.WaitGroup 来对仍旧活跃的 walkDir 调用进行计数，另一个 goroutine 会在计数器减为零的时候将 fileSizes 这个 channel 关闭。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// ...determine roots...</span></span><br><span class="line">  <span class="comment">// Traverse each root of the file tree in parallel.</span></span><br><span class="line">  fileSizes := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int64</span>)</span><br><span class="line">  <span class="keyword">var</span> n sync.WaitGroup</span><br><span class="line">  <span class="keyword">for</span> _, root := <span class="keyword">range</span> roots &#123;</span><br><span class="line">    n.Add(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">go</span> walkDir(root, &amp;n, fileSizes)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    n.Wait()</span><br><span class="line">    <span class="built_in">close</span>(fileSizes)</span><br><span class="line">  &#125;()</span><br><span class="line">  <span class="comment">// ...select loop...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">walkDir</span><span class="params">(dir <span class="keyword">string</span>, n *sync.WaitGroup, fileSizes <span class="keyword">chan</span>&lt;- <span class="keyword">int64</span>)</span></span> &#123;</span><br><span class="line">  <span class="keyword">defer</span> n.Done()</span><br><span class="line">  <span class="keyword">for</span> _, entry := <span class="keyword">range</span> dirents(dir) &#123;</span><br><span class="line">    <span class="keyword">if</span> entry.IsDir() &#123;</span><br><span class="line">      n.Add(<span class="number">1</span>)</span><br><span class="line">      subdir := filepath.Join(dir, entry.Name())</span><br><span class="line">      <span class="keyword">go</span> walkDir(subdir, n, fileSizes)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      fileSizes &lt;- entry.Size()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="red">由于这个程序在高峰期会创建成百上千的 goroutine，我们需要修改 dirents 函数，用</font><b>计数信号量</b><font color="red">来阻止他同时打开太多的文件</font>，就像我们在第 7 节中的并发爬虫一样：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sema is a counting semaphore for limiting concurrency in dirents.</span></span><br><span class="line"><span class="keyword">var</span> sema = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;, <span class="number">20</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// dirents returns the entries of directory dir.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">dirents</span><span class="params">(dir <span class="keyword">string</span>)</span> []<span class="title">os</span>.<span class="title">FileInfo</span></span> &#123;</span><br><span class="line">  sema &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;        <span class="comment">// acquire token</span></span><br><span class="line">  <span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; &lt;-sema &#125;() <span class="comment">// release token</span></span><br><span class="line">  <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这个版本比之前那个快了好几倍，尽管其具体效率还是和你的运行环境，机器配置相关。
+</div>
+
+<h2><a name="9_concurrent_exit">9. 并发的退出</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有时候我们需要通知 goroutine 停止它正在干的事情，比如一个正在执行计算的 web 服务，然而它的客户端已经断开了和服务端的连接。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Go 语言并没有提供在一个 goroutine 中终止另一个 goroutine 的方法，因为这样会导致goroutine之间的共享变量落在未定义的状态上。在第 7 小节中的 rocket launch 程序中，我们往名字叫 abort 的 channel 里发送了一个简单的值，在 countdown 的 goroutine 中会把这个值理解为自己的退出信号。但是如果我们想要退出两个或者任意多个 goroutine 怎么办呢？
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一种可能的手段是向 abort 的 channel 里发送和 goroutine 数目一样多的事件来退出它们。如果这些 goroutine 中已经有一些自己退出了，那么会导致我们的 channel 里的事件数比 goroutine 还多，这样导致我们的发送直接被阻塞。另一方面，如果这些 goroutine 又生成了其它的 goroutine，我们的 channel 里的数目又太少了，所以有些 goroutine 可能会无法接收到退出消息。一般情况下我们是很难知道在某一个时刻具体有多少个 goroutine 在运行着的。另外，当一个 goroutine 从 abort channel 中接收到一个值的时候，他会消费掉这个值，这样其它的 goroutine 就没法看到这条信息。<font color="red">为了能够达到我们退出多个 goroutine 的目的，我们需要更靠谱的策略，来通过一个 channel 把消息广播出去，这样 goroutine 们能够看到这条事件消息</font>，并且在事件完成之后，可以知道这件事已经发生过了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回忆一下，当我们关闭了一个 channel 并且消费掉了所有已发送的值，操作 channel 之后的代码可以立即被执行，并且会产生零值。我们可以将这个机制扩展一下，来作为我们的广播机制：不要向 channel 发送值，而是<font color="red">用关闭一个channel来进行广播</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;只要一些小修改，我们就可以把退出逻辑加入到前一节的 du 程序。首先，我们创建一个退出的 channel，不需要向这个 channel 发送任何值，但其所在的闭包内要写明程序需要退出。我们同时还定义了一个工具函数，cancelled，这个函数在被调用的时候会轮询退出状态。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> done = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">cancelled</span><span class="params">()</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">  <span class="keyword">select</span> &#123;</span><br><span class="line">  <span class="keyword">case</span> &lt;-done:</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">  <span class="keyword">default</span>:</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们创建一个从标准输入流中读取内容的 goroutine，这是一个比较典型的连接到终端的程序。每当有输入被读到（比如用户按了回车键），这个 goroutine 就会把取消消息通过关闭 done 的 channel 广播出去。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Cancel traversal when input is detected.</span></span><br><span class="line"><span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">  os.Stdin.Read(<span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1</span>)) <span class="comment">// read a single byte</span></span><br><span class="line">  <span class="built_in">close</span>(done)</span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们需要使我们的 goroutine 来对取消进行响应。在 main goroutine 中，我们添加了 select 的第三个 case 语句，尝试从 done channel 中接收内容。如果这个 case 被满足的话，在 select 到的时候即会返回，<font color="red">但在结束之前我们需要把 fileSizes channel 中的内容“排”空，在 channel 被关闭之前，舍弃掉所有值。这样可以保证对 walkDir 的调用不要被向 fileSizes 发送信息阻塞住，可以正确地完成。</font>
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">  <span class="keyword">select</span> &#123;</span><br><span class="line">  <span class="keyword">case</span> &lt;-done:</span><br><span class="line">    <span class="comment">// Drain fileSizes to allow existing goroutines to finish.</span></span><br><span class="line">    <span class="keyword">for</span> <span class="keyword">range</span> fileSizes &#123;</span><br><span class="line">      <span class="comment">// Do nothing.</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  <span class="keyword">case</span> size, ok := &lt;-fileSizes:</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;walkDir 这个 goroutine 一启动就会轮询取消状态，如果取消状态被设置的话会直接返回，并且不做额外的事情。这样我们将所有在取消事件之后创建的 goroutine 改变为无操作。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">walkDir</span><span class="params">(dir <span class="keyword">string</span>, n *sync.WaitGroup, fileSizes <span class="keyword">chan</span>&lt;- <span class="keyword">int64</span>)</span></span> &#123;</span><br><span class="line">  <span class="keyword">defer</span> n.Done()</span><br><span class="line">  <span class="keyword">if</span> cancelled() &#123;</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> _, entry := <span class="keyword">range</span> dirents(dir) &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 walkDir 函数的循环中我们对取消状态进行轮询可以带来明显的益处，可以避免在取消事件发生时还去创建 goroutine。取消本身是有一些代价的，想要快速的响应需要对程序逻辑进行侵入式的修改。确保在取消发生之后不要有代价太大的操作可能会需要修改你代码里的很多地方，但是在一些重要的地方去检查取消事件也确实能带来很大的好处。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对这个程序的一个简单的性能分析可以揭示瓶颈在 dirents 函数中获取一个信号量。下面的 select 可以让这种操作可以被取消，并且可以将取消时的延迟从几百毫秒降低到几十毫秒。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">dirents</span><span class="params">(dir <span class="keyword">string</span>)</span> []<span class="title">os</span>.<span class="title">FileInfo</span></span> &#123;</span><br><span class="line">  <span class="keyword">select</span> &#123;</span><br><span class="line">  <span class="keyword">case</span> sema &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;: <span class="comment">// acquire token</span></span><br><span class="line">  <span class="keyword">case</span> &lt;-done:</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span> <span class="comment">// cancelled</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; &lt;-sema &#125;() <span class="comment">// release token</span></span><br><span class="line">  <span class="comment">// ...read directory...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在当取消发生时，所有后台的 goroutine 都会迅速停止并且主函数会返回。当然，当主函数返回时，一个程序会退出，而我们又无法在主函数退出的时候确认其已经释放了所有的资源（译注：因为程序都退出了，你的代码都没法执行了）。这里有一个方便的窍门我们可以一用：取代掉直接从主函数返回，我们调用一个 panic，然后 runtime 会把每一个 goroutine 的栈 dump 下来。如果 main goroutine 是唯一一个剩下的 goroutine 的话，他会清理掉自己的一切资源。但是如果还有其它的 goroutine 没有退出，他们可能没办法被正确地取消掉，也有可能被取消但是取消操作会很花时间，所以这里的一个调研还是很有必要的。我们用 panic 来获取到足够的信息来验证我们上面的判断，看看最终到底是什么样的情况。
+</div>
+
+<h2><a name="10_context">10. Context</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 <a href="#9_concurrent_exit">并发的退出</a> 一章中，我们知道我们可以通过使用 close(chan) 的方法来广播消息，来实现由于超时、取消操作或者一些异常情况而进行抢占操作或者中断等的后续操作。但是如果 gorotinue 的嵌套关系过于复杂 (gorotinue 内部又创建了 gorotinue，如此递归)，那么将会导致广播消息的方案变得十分不实用。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Golang 标准库中提供了 package context 用于解决上述问题，如果您对这部分抱有兴趣，可以移步我的另一篇文章 <a href="/sec_learning/Program_Go/Go_Standard_Library_3_Context/index.html">Golang Context 标准库</a>。
+</div>
+
+<h2><a name="11_chatting">11. 示例: 聊天服务</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们用一个聊天服务器来终结本章节的内容，这个程序可以让一些用户通过服务器向其它所有用户广播文本消息。这个程序中有四种 goroutine。main 和 broadcaster 各自是一个 goroutine 实例，每一个客户端的连接都会有一个 handleConn 和 clientWriter 的 goroutine。broadcaster 是 select 用法的不错的样例，因为它需要处理三种不同类型的消息。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面演示的 main goroutine 的工作，是 listen 和 accept (译注：网络编程里的概念)从客户端过来的连接。对每一个连接，程序都会建立一个新的 handleConn 的 goroutine，就像我们在本章开头的并发的 echo 服务器里所做的那样。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  listener, err := net.Listen(<span class="string">&quot;tcp&quot;</span>, <span class="string">&quot;localhost:8000&quot;</span>)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Fatal(err)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">go</span> broadcaster()</span><br><span class="line">  <span class="keyword">for</span> &#123;</span><br><span class="line">    conn, err := listener.Accept()</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      log.Print(err)</span><br><span class="line">      <span class="keyword">continue</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">go</span> handleConn(conn)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后是 broadcaster 的 goroutine。他的内部变量 clients 会记录当前建立连接的客户端集合。其记录的内容是每一个客户端的消息发出 channel 的“资格”信息。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> client <span class="keyword">chan</span>&lt;- <span class="keyword">string</span> <span class="comment">// an outgoing message channel</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">  entering = <span class="built_in">make</span>(<span class="keyword">chan</span> client)</span><br><span class="line">  leaving  = <span class="built_in">make</span>(<span class="keyword">chan</span> client)</span><br><span class="line">  messages = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">string</span>) <span class="comment">// all incoming client messages</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">broadcaster</span><span class="params">()</span></span> &#123;</span><br><span class="line">  clients := <span class="built_in">make</span>(<span class="keyword">map</span>[client]<span class="keyword">bool</span>) <span class="comment">// all connected clients</span></span><br><span class="line">  <span class="keyword">for</span> &#123;</span><br><span class="line">    <span class="keyword">select</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> msg := &lt;-messages:</span><br><span class="line">      <span class="comment">// Broadcast incoming message to all</span></span><br><span class="line">      <span class="comment">// clients&#x27; outgoing message channels.</span></span><br><span class="line">      <span class="keyword">for</span> cli := <span class="keyword">range</span> clients &#123;</span><br><span class="line">        cli &lt;- msg</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="keyword">case</span> cli := &lt;-entering:</span><br><span class="line">      clients[cli] = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> cli := &lt;-leaving:</span><br><span class="line">      <span class="built_in">delete</span>(clients, cli)</span><br><span class="line">      <span class="built_in">close</span>(cli)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;broadcaster 监听来自全局的 entering 和 leaving 的 channel 来获知客户端的到来和离开事件。当其接收到其中的一个事件时，会更新 clients 集合，当该事件是离开行为时，它会关闭客户端的消息发送 channel。broadcaster 也会监听全局的消息 channel，所有的客户端都会向这个 channel 中发送消息。当 broadcaster 接收到什么消息时，就会将其广播至所有连接到服务端的客户端。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在让我们看看每一个客户端的 goroutine。handleConn 函数会为它的客户端创建一个消息发送 channel 并通过 entering channel 来通知客户端的到来。然后它会读取客户端发来的每一行文本，并通过全局的消息 channel 来将这些文本发送出去，并为每条消息带上发送者的前缀来标明消息身份。当客户端发送完毕后，handleConn 会通过 leaving 这个 channel 来通知客户端的离开并关闭连接。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handleConn</span><span class="params">(conn net.Conn)</span></span> &#123;</span><br><span class="line">  ch := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">string</span>) <span class="comment">// outgoing client messages</span></span><br><span class="line">  <span class="keyword">go</span> clientWriter(conn, ch)</span><br><span class="line"></span><br><span class="line">  who := conn.RemoteAddr().String()</span><br><span class="line">  ch &lt;- <span class="string">&quot;You are &quot;</span> + who</span><br><span class="line">  messages &lt;- who + <span class="string">&quot; has arrived&quot;</span></span><br><span class="line">  entering &lt;- ch</span><br><span class="line"></span><br><span class="line">  input := bufio.NewScanner(conn)</span><br><span class="line">  <span class="keyword">for</span> input.Scan() &#123;</span><br><span class="line">    messages &lt;- who + <span class="string">&quot;: &quot;</span> + input.Text()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// <span class="doctag">NOTE:</span> ignoring potential errors from input.Err()</span></span><br><span class="line"></span><br><span class="line">  leaving &lt;- ch</span><br><span class="line">  messages &lt;- who + <span class="string">&quot; has left&quot;</span></span><br><span class="line">  conn.Close()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">clientWriter</span><span class="params">(conn net.Conn, ch &lt;-<span class="keyword">chan</span> <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">  <span class="keyword">for</span> msg := <span class="keyword">range</span> ch &#123;</span><br><span class="line">    fmt.Fprintln(conn, msg) <span class="comment">// <span class="doctag">NOTE:</span> ignoring network errors</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，handleConn 为每一个客户端创建了一个 clientWriter 的 goroutine，用来接收向客户端发送消息的 channel 中的广播消息，并将它们写入到客户端的网络连接。客户端的读取循环会在 broadcaster 接收到 leaving 通知并关闭了 channel 后终止。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面演示的是当服务器有两个活动的客户端连接，并且在两个窗口中运行的情况，使用 netcat 来聊天：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ go build gopl.io/ch8/chat</span><br><span class="line">$ go build gopl.io/ch8/netcat3</span><br><span class="line">$ ./chat &amp;</span><br><span class="line">$ ./netcat3</span><br><span class="line">You are 127.0.0.1:64208               $ ./netcat3</span><br><span class="line">127.0.0.1:64211 has arrived           You are 127.0.0.1:64211</span><br><span class="line">Hi!</span><br><span class="line">127.0.0.1:64208: Hi!                  127.0.0.1:64208: Hi!</span><br><span class="line">                                      Hi yourself.</span><br><span class="line">127.0.0.1:64211: Hi yourself.         127.0.0.1:64211: Hi yourself.</span><br><span class="line">^C</span><br><span class="line">                                      127.0.0.1:64208 has left</span><br><span class="line">$ ./netcat3</span><br><span class="line">You are 127.0.0.1:64216               127.0.0.1:64216 has arrived</span><br><span class="line">                                      Welcome.</span><br><span class="line">127.0.0.1:64211: Welcome.             127.0.0.1:64211: Welcome.</span><br><span class="line">                                      ^C</span><br><span class="line">127.0.0.1:64211 has left”</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当与 n 个客户端保持聊天 session 时，这个程序会有 2n+2 个并发的 goroutine，然而这个程序却并不需要显式的锁。clients 这个 map 被限制在了一个独立的 goroutine broadcaster 中，所以它不能被并发地访问。多个 goroutine 共享的变量只有这些 channel 和 net.Conn 的实例，两个东西都是并发安全的。我们会在下一章中更多地讲解约束，并发安全以及 goroutine 中共享变量的含义。
+</div>
+<!--ref-->
+
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+<ol>
+<li>github.com, <a target="_blank" rel="noopener" href="https://github.com/gopl-zh/gopl-zh.github.com/tree/master/ch8">Go语言圣经(中文版) Chapter 8</a></p>
+</div>
+
+</li>
+</ol>
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Program/">TECH_PROGRAM</a></li>
+          <li>GO_BASIC_7_GO_ROUTINES</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Inhaltsverzeichnis
+        </li>
+        <li class="sidebar-nav-overview">
+          Übersicht
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

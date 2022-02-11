@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_licence{font-size: 16px; wo">
+<meta property="og:type" content="website">
+<meta property="og:title" content="摸透 Go Package, Module 和 Go 的常用环境变量含义">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Env_1_Module_Package_EnvValue/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_licence{font-size: 16px; wo">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Env_1_Module_Package_EnvValue/pic/xxx.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Env_1_Module_Package_EnvValue/pic/go_module.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Env_1_Module_Package_EnvValue/pic/package_import.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Env_1_Module_Package_EnvValue/pic/gopath_instance.png">
+<meta property="article:published_time" content="2022-02-10T14:39:11.346Z">
+<meta property="article:modified_time" content="2021-09-07T12:09:22.000Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Env_1_Module_Package_EnvValue/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>摸透 Go Package, Module 和 Go 的常用环境变量含义 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project/" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly/" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship/" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay/" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">摸透 Go Package, Module 和 Go 的常用环境变量含义
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Program/">TECH_PROGRAM</a></li>
+          <li>GO_ENV_1_MODULE_PACKAGE_ENVVALUE</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_boder{font-size: 16px; word-spacing:0px;  border:1px solid black;}
+</style>
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+<h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：May 10 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=30%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+
+<h2>1. Go Package 和 Go Module 的概念</h2>
+<div class="div_learning_post">
+  <h3>(1) 何为 Go Package？</h3>
+  <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Go Package 其实就是函数、类型、变量和常量的集合。一个 Go Package 中可能有好几个 Go 文件，通常组织在同一个文件夹下，文件夹名即为 PACKAGE_NAME。这些 Go 文件通过在文件头声明: "package PACKAGE_NAME" 来声明它们同属于 Package PACKAGE_NAME。别处的 Go 文件使用正确的路径 (何为正确的路径？下面会介绍) import PACKAGE_NAME 后，就能够正常使用在这个 Package 中定义的函数、类型、变量和常量等内容。
+  </p>
+
+  <h3>(2) go tools (Go 的命令行工具)</h3>
+  <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Go 也提供了一些命令行工具来辅助我们管理工程和编译文件。我们在这里先介绍他们，因为在后面的内容中我们将时不时会用到它们。下面对一些重要的 go tools 进行介绍。
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;(a) <font color="blue"><b>go build [-o output] [build flags] [packages]</b></font>: 
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;用于编译 Packages。<font color="red"><b>go build</b></font>会编译传入参数 <font color="red"><b>[packages]</b></font> 文件本体和所有的在 import 声明中导入的 Packages。<font color="red"><b>go build</b></font> 在编译后不会将生成的可执行文件进行安装 (放置到 /bin 目录)。如果编译的 Packages 中包含 main Package (见下文)，则会生成一个可执行文件在当前目录；如果没有 main Package，则只会执行编译，检查代码是否有错误，并不会生成任何可执行文件。当传入的 <font color="red"><b>[packages]</b></font> 是一个装着多个 .go 文件的文件夹时，<font color="red"><b>go build</b></font> 会把他们当作属于同一个 Package 的一串 .go 文件来处理。
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;(b) <font color="blue"><b>go install [build flags] [packages]</b></font>:
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;<font color="red"><b>go install</b></font> 会编译 + 安装指定的 Packages。其与 <font color="red"><b>go build</b></font> 的区别就是在编译成功后会把可执行文件安装到系统的指定路径中。具体的安装目录是：
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(i) 如果 GOBIN 环境变量有被设置的话，则会被安装到 GOBIN 所指示的路径。GOBIN 变量默认是空的。
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(ii) 如果 GOBIN 环境变量没有被设置的话，则会被安装至 $GOPATH/bin 目录下。
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * 我们下文中会对 Go 常用的一些环境变量做一些介绍。
+  </p>
+
+  <h3>(3) 特殊的 Go Package: main</h3>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ROOTPATH</span><br><span class="line">    | - main.go [package: main]</span><br><span class="line">    | - pkg</span><br><span class="line">         | - package_a</span><br><span class="line">         |      | - xxx.go [package: package_a]</span><br><span class="line">         |</span><br><span class="line">         | - package_b</span><br><span class="line">                | - xxx.go [package: package_b]</span><br></pre></td></tr></table></figure>
+  <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;在一个 Go 程序中，有一个特殊的必须得存在的 Package: main。Go 编译器在编译 Go 程序时，会找到 Package main 中的的func main()，这也就是整个程序的入口。通常来说，我们会把 Package 源代码文件分别放置在根目录下的对应名称的文件夹下，然后把 属于 Package main 的源文件放在根目录下，然后在根目录下的源文件去 import 相应的 Packges，如上图所示，下面的论述会给出具体例子。
+  </p>
+
+  <h3>(4) 何为 Go Module</h3>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ROOTPATH</span><br><span class="line">    | - go.mod [module: MODULE_NAME]</span><br><span class="line">    | - pkg</span><br><span class="line">         | - package_a</span><br><span class="line">         |      | - xxx.go [package: package_a]</span><br><span class="line">         |</span><br><span class="line">         | - package_b</span><br><span class="line">                | - xxx.go [package: package_b]</span><br></pre></td></tr></table></figure>
+  <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Go 在 v1.11 之后就引入了 Go Module 作为其 Package 的管理模式。首先我们解释一下 Module 的一些概念。Go 的 Module 实际上就是若干 Packages 的集合，通常我们会用一个 repo 来放置一个 Go Module。一个 Go Module 的目录树基本上如上图所示，其根目录下有一个 go.mod 文件，这个文件有两个功能：
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(i) 表明该 Module 的 Module Path，这个 Module Path 用于标识这个 Module，相当于名字。如果这个 Module 不是用于发布的 Module，则这个 Module Path 可能就是简简单单的用户自定义名字；如果这个 Module  适用于发布到各种 repo 托管网站上给别人使用的，那这个 Module Path 就会像是：github.com/user_name/repo_name 之类的样子。Go 的 Module 有一个很强大的功能：当它发现用户 import 了一个公开发布的 Module 时，它自动就会顺着这个 Module Path 把这个 Module 下载到本地来。因此对于公开发布的 Module，必须命名为这种可以被解析并下载的格式。
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(ii) 表明该 Module 依赖的其它 Module 的 Module Path。
+  </p>
+
+  <div>
+    <img src="./pic/go_module.png" width=100%>
+  </div>
+
+  <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;我们来看看两个例子。如上图所示，左边的是一个名为 Bob 的 Module，其下面有一个名为 Alex 的 Package，这个例子很简单地告诉了我们 Module 和 Package 的关系。来看右边的带有一点迷惑性的真实例子，这是用于 Web 开发的 Module gin 的例子，我们可以看到这个 Module 叫作 gin，其下面有一个 Package 也叫作 gin，值得读者进行注意区分，我们在下一小节会着重讲述 Import Packages 的原理，所以理解 Module 和 Package 是两种不同的东西很重要，即使它们可能重名。
+  </p>
+
+  <h3>(5) 看透 Go Package 的 Import</h3>
+  <div align="center">
+    <img src="./pic/package_import.png" width=100%>
+  </div>
+  <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;此时，基于上面的理解，我们来看一下 Go Package 在 Import 时候的注意事项。总结起来就一句话：<font color="red"><b>import 的是目录，调用的是包名</b></font>。如上面的例子所示，我们在 $ROOTPATH/src/dir_1 和 $ROOTPATH/src/dir_2，下面分别有属于 Package test_module 的文件 (实际上这么安排是不合理的，属于同一个 Package 的文件理应位于同一个文件夹下，此处仅是为了说明)。我们分别在根目录下的属于 Package main 的文件中将 Package test_module Import 进来，我们以 test_1.go 为例。注意到我们是 Import 进来了包含 属于 Package test_module 的 go 源码文件的目录，而不是源码文件。而且值得注意的是，我们 Import 的是 "test/src/dir_1"，其中 "test" 是我们 Module 的名字 (根目录下有一个 go.mod，我们的根目录本身就是一个 Module)，"/src/dir_1" 用于定位在该 Module 下的某一个 Package (定位目录里是不会体现 Package 的名字的)，这就是我们定位一个 Module 中的某一个 Package 时的写法。假如我们要定位在 Github 上发布的 Module gin 的 Package gin，我们的写法就会是 "import ("github.com/gin-gonic/gin")"，再强调一次，结尾的 gin 是 Module 名，而不是 Packge 名。在这个仓库中，Package gin 的 Go 源码文件本身就分布在根目录下，因此定位到根目录就足够了。
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;另外值得注意的是，一个 import 路径下只能有一个 package，否则 import 将会报错。当我们 Import 成功后，我们就能够使用对应 Package 中的内容，在使用时，我们得在对应的 函数/变量/常量/类型 前加上 Package 名，如上图的 test_module.PrintTest1()。并且还有一个很重要的点是，在一个 Package 中，只有 函数名/变量名/常量名/类型名 的首字母是大写的，这个名称才能在 Import 这个 Package 的代码里被使用。
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;而且，在上面的 test_1.go 的例子中，假如说我们在 "test/src/dir_1" 后面继续添加 "test/src/dir_2"，这个时候编译器是会报错的，提示我们 Package test_module 已经被导入过了，不能重复导入。这也就是为什么属于同一个 Package 的 go 源码文件一定尽量保证放置于同一个文件夹下的原因。
+
+  </p>
+
+</div>
+
+<h2>2. 相关环境变量</h2>
+<div class="div_learning_post">
+  <h3>(1) GOPATH</h3>
+  <div>
+    <img src="./pic/gopath_instance.png" width=100%>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;GOPATH 环境变量用于告诉 go 编译器在编译的时候的检索目录，go 编译器将会检索 GOPATH 下所有目录的 go 源文件来找到所使用到的 Package。GOPATH 的默认值一般是在 用户目录下的 go 文件夹 (<b>$HOME/go</b> on Unix, <b>%USERPROFILE%\go</b> on Windows)。回忆我们上文讲到，当 go 发现用户 import 了一个公开发布的 Module 时，它自动就会顺着这个 Module Path 把这个 Module 下载到本地来。如上图所示，就是一个例子。我们在 GOPATH 下找到了被自动下载到本地的 Module mux 的源码。也就是说，go 在真正编译用户的代码之前，会把本地没有的但是被用户 Import 的远程 Module 先通过命令 go get xxx 下载到本地的 GOPATH 里的对应位置中，然后开始编译操作。
+  </p>
+
+  <h3>(2) GOBIN</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;GOBIN 环境变量用于告诉 go 编译器在生成可执行文件时 (对应 go install xxx.go 命令)，存放可执行文件的位置。默认情况下，GOBIN 是空的，go 编译器生成的可执行文件默认存放在 $GOPATH/bin 下面。当 GOPATH 里有大于等于两条检索目录时，GOBIN 就必须被设置，否则编译器将不知道该把可执行文件放在哪里。
+  ```
+  </p>
+</div>
+
+
+<!--ref-->
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+<ol>
+<li>golang.org, <a target="_blank" rel="noopener" href="https://golang.org/cmd/go/#hdr-GOPATH_environment_variable">GOPATH environment variable</a></li>
+<li>Github, <a target="_blank" rel="noopener" href="https://golang.org/cmd/go/#hdr-GOPATH_environment_variable">SettingGOPATH</a></li>
+<li>Stack Overflow <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/7970390/what-should-be-the-values-of-gopath-and-goroot">What should be the values of GOPATH and GOROOT?</a></li>
+<li>li24yang75, <a target="_blank" rel="noopener" href="https://www.open-open.com/lib/view/open1502093726330.html">初探 Go 的编译命令执行过程</a></li>
+<li>golang.org, <a target="_blank" rel="noopener" href="https://golang.org/doc/code#ImportingLocal">How to Write Go Code</a></li>
+<li>golang.org, <a target="_blank" rel="noopener" href="https://golang.org/cmd/go/">Command go</a></li>
+<li>CSDN harryhare, <a target="_blank" rel="noopener" href="https://blog.csdn.net/harryhare/article/details/83897655?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.vipsorttest&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.vipsorttest">一个例子明白go 的package</a></p>
+</div>
+
+</li>
+</ol>
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Program/">TECH_PROGRAM</a></li>
+          <li>GO_ENV_1_MODULE_PACKAGE_ENVVALUE</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Inhaltsverzeichnis
+        </li>
+        <li class="sidebar-nav-overview">
+          Übersicht
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

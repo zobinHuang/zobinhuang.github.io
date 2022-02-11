@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="选择您要翻阅的文章归档情况              工程系统知识         科研论文阅读         随笔文章(未归档)               工程系统知识                                            汇编语言基础">
+<meta property="og:type" content="website">
+<meta property="og:title" content="指令集架构 &amp; Linux内核">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/index_copy.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="选择您要翻阅的文章归档情况              工程系统知识         科研论文阅读         随笔文章(未归档)               工程系统知识                                            汇编语言基础">
+<meta property="og:locale">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/pic/linux_logo.png">
+<meta property="article:published_time" content="2022-02-11T18:27:52.556Z">
+<meta property="article:modified_time" content="2022-02-11T18:27:52.556Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/pic/linux_logo.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/index_copy">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>指令集架构 & Linux内核 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project/" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly/" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship/" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay/" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">指令集架构 & Linux内核
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+            <li>INDEX_COPY</li>
+          
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+    <link rel="stylesheet" type="text/css" href="../style/book.css" />
+    <script type="text/javascript" src="../script/book.js"></script>
+</head>
+
+<body>
+
+<div align="center">
+    <img src="./pic/linux_logo.png" width=200px>
+</div>
+
+<div class="div_switch_bar_container">
+    <h4>选择您要翻阅的文章归档情况</h4>
+    <div class="div_buttons_container">
+        <button id="system" type="button" onclick="selectPostClass(id);">工程系统知识</button>
+        <button id="paper" type="button" onclick="selectPostClass(id);">科研论文阅读</button>
+        <button id="non_archived" type="button" onclick="selectPostClass(id);">随笔文章(未归档)</button>
+    </div>
+</div>
+
+<br>
+
+<div id="system-knowledge">
+    <h2><font color="blue">工程系统知识</font></h2>
+    <div class="div_learning">
+        <table border="0" align="center">
+            <tr>
+                <th><div align="center"><h1><b>汇编语言基础</b></h1></div></th>
+            </tr>
+            <tr>
+                <td>
+                    <div align="center"><font color="blue">x86 实模式汇编</font></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Assembly_1_Intro/index.html"><b>Chapter 1: Intro —— 先聊聊汇编部分博客的思路</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 讨论汇编部分博客的思路，并且给出了 NASM 和 MASM 汇编风格代码解析的参考资料；
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Assembly_2_Computer_Arch/index.html"><b>Chapter 2: 学习汇编之前需要理解的计算机组成原理</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 为了能够使用汇编程序操作各种计算机底层原理，我们在开始分析汇编程序之前必须先理解一些基础的计算机底层的原理；
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Assembly_3_How_CPU_Execute/index.html"><b>Chapter 3: CPU 是如何与内存和外围设备交互的？程序又是如何运行的？</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 详细学习了 CPU 与内存交互、运行指令、读取数据 和 访问 I/O 设备寄存器的原理和方法；
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Assembly_4_Segment/index.html"><b>Chapter 4: 再谈分段：为了内存重定位</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 从程序在内存中实现重定位的角度出发，描述将程序进行分段的 Motivation；
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Assembly_5_Internal_Interrupt/index.html"><b>Chapter 5: 内中断</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 理解 8086 CPU 中的内中断原理以及相关指令；
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Assembly_6_Outside_Interrupt/index.html"><b>Chapter 6: 外中断</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 理解 8086 CPU 中的外中断原理以及相关指令；
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div align="center"><font color="blue">x86 32 位保护模式汇编</font></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Assembly_7_Intel_32_CPU_And_IA_32/index.html"><b>Chapter 7: Intel 32 位处理器以及 IS-32 指令集架构</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 在指令集架构的层面上，介绍了 Intel 32 处理器的内部资源，以及相关的 IA-32 指令；
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Assembly_8_Protect_Mode/index.html"><b>Chapter 8: Intel 32 位处理器保护模式</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 介绍了 32 位处理器从实模式跑向保护模式的详细过程，并且介绍了处理器在保护模式下对访问内存和修改寄存器等操作所进行的保护；
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Assembly_9_Simple_Kernel/index.html"><b>Chapter 9: 引导加载并运行一个简单的内核</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 使用了一个具体的例子，演示了从 MBR 到内核，再到用户程序的过程；
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Assembly_10_Task_And_Privilege/index.html"><b>Chapter 10: 任务和特权级别 <font color="red">[重要文章]</font></b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 深刻剖析了 32 位处理器的特权级机制，演示了在特权级和多任务背景下加载任务的全过程；
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Assembly_11_Task_Switch/index.html"><b>Chapter 11: 任务切换</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 分析了 32 位处理器进行任务切换的具体过程；
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Assembly_12_Page/index.html"><b>Chapter 12: 分页机制和动态页面分配</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 分析了处理器基于分页机制的内存访问方法；
+                </td>
+            </tr>      
+             <tr>
+                <td>
+                    <a href="./Assembly_13_Interrupt/index.html"><b>Chapter 13: 中断和异常的处理与抢占式多任务</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 介绍了 32 位处理器的中断和异常机制；
+                </td>
+            </tr>           
+        </table>
+        <br>
+        <table border="0" align="center">
+            <tr>
+                <th><div align="center"><h1><b>Linux Kernel</b></h1></div></th>
+            </tr>
+            <tr>
+                <td>
+                    <div align="center"><font color="blue">对 Multi-core 的支持</font></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div align="center"><font color="blue">TODO</font></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div align="center"><font color="blue">Interrupt and Exception</font></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Linux_Kernel_Interrupt_and_Exception_Intro/index.html"><b>一文弄懂 Linux Kernel 的中断系统原理 (结合源码)</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp;结合硬件原理，介绍了中断与异常的基本原理和底层硬件处理过程
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Linux_Kernel_Interrupt_and_Exception_Handle/index.html"><b>Linux 内核对中断和异常的处理</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp;分析了在 Linux 内核中对中断和异常的处理方法
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div align="center"><font color="blue">Kernel Synchronization</font></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Linux_Kernel_Synchronization_RCU/index.html"><b>Read-Copy Update (RCU) 同步机制</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp;分析了针对读多写少场景进行优化的同步机制 Read-Copy Update (RCU)
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table border="0" align="center">
+            <tr>
+                <th><div align="center"><h1><b>Linux Network Subsystem</b></h1></div></th>
+            </tr>
+            <tr>
+                <td>
+                    <div align="center"><font color="blue">Background of Linux Internel Network</font></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Linux_Internal_Network_Key_Data_Structure/index.html"><b>Linux 内核网络关键数据结构</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp;分析了两个关键的数据结构:<code>sk_buff</code> 和 <code>net_device</code>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div align="center"><font color="blue">Initialization of Linux Network Subsystem</font></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Linux_Internal_Network_Notification_Chain/index.html"><b>Linux 内核通知链 (Notification Chain)</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Linux_Internal_Network_Network_Device_Initialization/index.html"><b>网络设备初始化</b><font color="red">[未完成]</font></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div align="center"><font color="blue">Transmission and Reception</font></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Linux_Internal_Network_Frame_Reception/index.html"><b>L2 帧的接受过程</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div id="paper-reading">
+    <h2>科研论文阅读</h2>
+    <div class="div_learning">
+        <table border="0" align="center">
+            <tr>
+                <th><div align="center"><h1><b>Roadmap</b></h1></div></th>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Paper_Walk_Through/index.html"><b>Walk Through of Papers for OS (WTPOS)</b></a>
+                    <br> 收集、归纳和总结近年来的操作系统领域的相关顶会论文
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div id="non-archived-knowledge">
+    <h2><font color="blue">未归档文章</font></h2>
+    <div class="div_learning">
+        <table border="0" align="center">
+            <tr>
+                <td>
+                    <a href="./Non_Archived_Segment_And_Section/index.html"><b>Section 与 Segment：从 链接器 到 Runtime 的角度出发</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 简单分析了 Section (节) 和 Segment (段) 的区别，很多情况下它们被混为一谈，以至于造成混淆
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="./Linux_Internal_Implementation_of_VNI/index.html"><b>实现一个虚拟网络接口 (Virtual Network Interface, VNI)</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+            <li>INDEX_COPY</li>
+          
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Inhaltsverzeichnis
+        </li>
+        <li class="sidebar-nav-overview">
+          Übersicht
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

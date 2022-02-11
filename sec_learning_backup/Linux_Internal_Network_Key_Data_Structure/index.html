@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Linux 内核网络关键数据结构">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/pic/xxx.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/pic/sk_buff_double_linked_list.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/pic/sk_buff_pointer.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/pic/sk_buf_align.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/pic/free_skb.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/pic/skb_reserve.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/pic/skb_reserve_tcp.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/pic/skb_put.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/pic/skb_push.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/pic/skb_pull.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/pic/skb_clone.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/pic/pskb_copy.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/pic/skb_copy.png">
+<meta property="article:published_time" content="2022-02-10T14:39:10.777Z">
+<meta property="article:modified_time" content="2021-11-28T14:36:17.719Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>Linux 内核网络关键数据结构 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project/" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly/" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship/" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay/" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">Linux 内核网络关键数据结构
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+          <li>LINUX_INTERNAL_NETWORK_KEY_DATA_STRUCTURE</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_border{
+      margin-bottom: 20px;
+      padding: 10px 10px; 
+      font-size: 16px; 
+      word-spacing:0px;  
+      border:1px solid black;
+    }
+    .div_learning_post_background{
+      background-color:#E3E2E2;
+      padding: 10px 40px; 
+      font-size: 16px;
+      word-spacing:0px;  
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+    .div_learning_post_background p{
+      margin: 0px;
+    }
+</style>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Nov.16 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=30%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_sk_buff"><font color="blue"><b>sk_buff</b></font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.1 <a href="#1_sk_buff_1"><font color="blue">基本介绍</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2 <a href="#1_sk_buff_2"><font color="blue">Double Linked List 的组织方式</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3 <a href="#1_sk_buff_3"><font color="blue">和对应的 Data Buffer 的关联</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.4 <a href="#1_sk_buff_4"><font color="blue">sk_buff 的分配和销毁方式</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.5 <a href="#1_sk_buff_5"><font color="blue">对 data buffer 的相关操作</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.6 <a href="#1_sk_buff_6"><font color="blue">描述 data buffer 自身的元数据</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.7 <a href="#1_sk_buff_7"><font color="blue">sk_buff 的 Clone</font></a>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_net_device"><font color="blue"><b>net_device</b></font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.1 <a href="#2_net_device_1"><font color="blue">sk_buff 的 Clone</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.2 <a href="#2_net_device_2"><font color="blue">标识字段</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.3 <a href="#2_net_device_3"><font color="blue">net_device 的组织</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.4 <a href="#2_net_device_4"><font color="blue">操作函数接口</font></a>
+  </div>
+</div>
+
+<br>
+
+<div class="div_learning_post">
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注明：
+  <ul>
+    <li>对 <code>sk_buff</code> 和 <code>net_device</code> 的内核源码研究是研究内核网络的基础;</li>
+    <li>本文的分析基于内核版本 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source">v5.14.18</a> 展开;</li>
+  </ul>
+</div>
+
+<!--标题-->
+<h2><a name="1_sk_buff">1. sk_buff</a></h2>
+<div class="div_learning_post">
+  <h3><a name="1_sk_buff_1">1.1 基本介绍</a></h3>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>struct sk_buff</code> 在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/include/linux/skbuff.h#L720">include/linux/skbuff.h</a> 中被定义，用于作为一个网络数据包的描述元数据，其各个成员被内核网络的各个层次用于管理和控制网络数据包，而实际的网络数据包数据则存放在一个与当前 <code>sk_buff</code> 对应的 data buffer 中。<code>sk_buff</code> 在一个网络数据包的收发中贯穿始终，通过高效率的指针操作，避免了昂贵的数据拷贝操作。
+
+
+
+  <h3><a name="1_sk_buff_2">1.2 Double Linked List 的组织方式</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于数据包有很多个，那么必然也存在多个 <code>sk_buff</code> 结构，那么 <code>sk_buff</code> 是如何组织的呢？
+
+  <div align="center">
+    <img src="./pic/sk_buff_double_linked_list.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;内核将 <code>sk_buff</code> 维护成了双向链表，如上图所示。我们常常会听到内核利用的是循环队列来处理网络数据包，如 Socket 收发队列等，实际上指的就是由 <code>sk_buff</code> 组成的双向链表结构。将 <code>sk_buff</code> 组织为双向列表能够加速一个 从一个队列转移到另一个队列的过程。一个 <code>sk_buff</code> 双向链表由一个特殊的结构体：<code>struct sk_buff_head</code> 唯一确定，其在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/include/linux/skbuff.h#L293">include/linux/skbuff.h</a> 中被定义，其具体定义如下所示。其中，<code>qlen</code> 成员用于描述双向链表中包含的 <code>sk_buff</code> 的个数; <code>lock</code> 成员是一个自旋锁变量，用于防止对这个双向链表的同时访问。
+
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sk_buff_head</span> &#123;</span></span><br><span class="line">  <span class="comment">/* These two members must be first. */</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">sk_buff</span>	*<span class="title">next</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">sk_buff</span>	*<span class="title">prev</span>;</span></span><br><span class="line"></span><br><span class="line">  __u32		qlen;</span><br><span class="line">  <span class="keyword">spinlock_t</span>	lock;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同样地，在 <code>sk_buff</code> 中，也有类似的用于双向链表的成员变量：<code>struct sk_buff    *next</code> 和 <code>struct sk_buff    *prev</code>，这里不再赘述。值得注意的是，<code>sk_buff</code> 还有一个指针成员 <code>struct sk_buff    *list</code>，用于指向我们上面提到的链表头部结构 <code>struct sk_buff_head</code>，这是为了使得能够快速的从一个 <code>sk_buff</code> 结构出发找到整个双向链表。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;内核提供了一系列的函数，用于操作这些由 <code>sk_buff</code> 组成的双向链表，或者称之为 <font color="blue">队列</font>。常用的函数包括：
+
+  <ul>
+    <li><code>skb_queue_head_init</code>: 初始化一个新的 <code>sk_buff_head</code> 结构，也即初始化出了一个新的空队列;</li>
+    <li><code>skb_queue_head</code>, <code>skb_queue_tail</code>: 在队列的头部/尾部增添新的 <code>sk_buff</code> 结构;</li>
+    <li><code>skb_queue_dequeue</code>, <code>skb_dequeue_tail</code>: 从队列的头部/尾部出队 <code>sk_buff</code> 结构;</li>
+    <li><code>skb_queue_purge</code>: 清空一个队列;</li>
+    <li><code>skb_queue_walk</code>: 本质是一个宏定义，用于在队列中循环;</li>
+  </ul> 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;内核在实现上面这些函数的时候，都是保证其原子性的。具体的方法是：上面这些函数事实上都是一些包装函数 (wrapper)，在它们的具体实现中，首先都会请求相应队列的自旋锁，然后再调用内部封装的函数来实现具体的功能。保证这些操作的原子性的原因是因为如果这些操作被异步事件中断，然后这些异步事件对相应的队列做了入队和出对的操作，那么这样将会引起冒险，导致数据结构被破坏。
+
+  <h3><a name="1_sk_buff_3">1.3 和对应的 Data Buffer 的关联</a></h3>
+
+  <div align="center">
+    <img src="./pic/sk_buff_pointer.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了把一个 <code>sk_buff</code> 结构和对应的 Data Buffer 关联起来，<code>sk_buff</code> 中维护了四个指针成员。如上图所示，<code>head</code> 成员和 <code>end</code> 成员分别指向了分配给当前数据包的整个 Data Buffer 的起始和结尾地址；而 <code>data</code> 成员和 <code>tail</code> 则指向了 Data Buffer 中实际数据的起始和结尾地址。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在理解了 <code>sk_buff</code> 和对应 Data Buffer 的关系后，我们来看与长度相关的一些字段：<code>unsigned int len</code> 用于描述 Data Buffer 的总长度，这个总长度既包括了由 <code>head</code> 和 <code>end</code> 包含的 Data Buffer 的长度，也包括了 Fragments Buffer 的长度，我们在后面会对后者进行介绍；<code>unsigned int data_len</code> 只用于描述 Fragments Buffer 的长度；<code>unsigned int mac_len</code> 用于描述 MAC Header 的长度；<code>unsigned int truesize</code> 可以被理解为 <code>len + sizeof(sk_buff)</code>，即包括 <code>sk_buff</code> 和 Data Buffer 在内的总长度。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>sk_buff</code> 在网络包收发的过程中是逐层传递的，以接收方向为例，即在 Driver`\rightarrow`L3`\rightarrow`L4 的过程中，Network Subsystem 会在 <code>sk_buff</code> 所指向的 Data Buffer 中逐层去除头部，而去除的过程是通过修改我们上面提到过的 <code>data</code> 指针来实现的，并没有真的把 Data Buffer 的相应区间给释放掉 (i.e. 这是很浪费 CPU Cycle 的)。这样一来，一个直觉就是 <code>sk_buff</code> 中需要有相应的字段，用于指向各层头部在 Data Buffer 中的位置，以方便在 <code>data</code> 指针被修改后有机会继续追踪被舍弃的头部。因此，在 <code>sk_buff</code> 中，<code>__u16     transport_header</code> (在内核的旧版本中名为 <code>union &#123;...&#125; h</code>) 用于在 Data Buffer 中指向三层以上的头部 (e.g. TCP, UDP 或 ICMP) 的起始地址；<code>__u16     network_header</code> (在内核的旧版本中名为 <code>union &#123;...&#125; nh</code>) 用于在 Data Buffer 中指向三层头部 (e.g. IPv4, IPv6 或 ARP)；<code>__u16     mac_header</code> (在内核的旧版本中名为 <code>union &#123;...&#125; mac</code>) 用于在 Data Buffer 中指向二层的头部。<code>skb_transport_header(skb)</code>、<code>skb_network_header(skb)</code> 和 <code>skb_mac_header(skb)</code> 分别用于返回一个 <code>sk_buff</code> 结构的上述成员。 
+
+  <h3><a name="1_sk_buff_4">1.4 sk_buff 的分配和销毁方式</a></h3>
+
+  <div class="div_learning_post_border">
+  <div align="center"><h3><code>sk_buff</code> 的分配</h3></div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;内核通过调用 <code>struct sk_buff* alloc_skb</code> 函数来分配 <code>sk_buff</code> 和对应的 data buffer 的，而它实际上是对 <code>struct sk_buff* __alloc_skb</code> 函数 的包装 (wrapper)，后者是在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/net/core/skbuff.c#L395">/net/core/skbuff.c</a> 中定义的，其简化版的定义如下所示。简单来看，其就是先为 <code>sk_buff</code> 分配了内存空间，然后为 data buffer 分配了内存空间，最后将 <code>sk_buff</code> 和 data buffer 使用我们上述的四个指针结构对应起来。
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sk_buff</span> *__<span class="title">alloc_skb</span>(<span class="title">unsigned</span> <span class="title">int</span> <span class="title">size</span>, <span class="title">gfp_t</span> <span class="title">gfp_mask</span>, <span class="title">int</span> <span class="title">flags</span>, <span class="title">int</span> <span class="title">node</span>)&#123;</span></span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* 分配 sk_buff */</span></span><br><span class="line">  <span class="keyword">if</span> ((flags &amp; (SKB_ALLOC_FCLONE | SKB_ALLOC_NAPI)) == SKB_ALLOC_NAPI &amp;&amp;</span><br><span class="line">      likely(node == NUMA_NO_NODE || node == numa_mem_id()))</span><br><span class="line">    skb = napi_skb_cache_get();</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    skb = kmem_cache_alloc_node(cache, gfp_mask &amp; ~GFP_DMA, node);</span><br><span class="line">  <span class="keyword">if</span> (unlikely(!skb))</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">  prefetchw(skb);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* 分配 data buffer */</span></span><br><span class="line">  size = SKB_DATA_ALIGN(size);</span><br><span class="line">  size += SKB_DATA_ALIGN(<span class="keyword">sizeof</span>(struct skb_shared_info));</span><br><span class="line">  data = kmalloc_reserve(size, gfp_mask, node, &amp;pfmemalloc);</span><br><span class="line">  <span class="keyword">if</span> (unlikely(!data))</span><br><span class="line">    <span class="keyword">goto</span> nodata;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* 绑定 sk_buff 和对应的 data buffer */</span></span><br><span class="line">  __build_skb_around(skb, data, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> skb;</span><br><span class="line"></span><br><span class="line">  nodata:</span><br><span class="line">    kmem_cache_free(cache, skb);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，在分配 data buffer 之前，函数使用了 <code>SKB_DATA_ALIGN</code> 宏强制将分配的内存区域空间进行了对齐。其效果如下所示：
+
+  <div align="center">
+    <img src="./pic/sk_buf_align.png" width=700px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了观察对 <code>__alloc_skb</code> 函数的使用的实际例子，我们把眼光放向网卡设备驱动。当驱动程序收上来一个数据包时，为了将数据包准备好送给内核网络的子系统，就必须要将网络数据包用 <code>sk_buff</code> 管理起来。驱动程序是通过调用 <code>struct sk_buff* dev_alloc_skb</code> 函数来获得 <code>sk_buff</code> 的，而它实际上是对 <code>struct sk_buff* __netdev_alloc_skb</code> 函数 的包装 (wrapper)，后者是在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/net/core/skbuff.c#L477">/net/core/skbuff.c</a> 中定义的，其简化版的定义如下所示。
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* include/linux/skbuff.h */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> struct sk_buff *<span class="title">dev_alloc_skb</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> length)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> netdev_alloc_skb(<span class="literal">NULL</span>, length);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* include/linux/skbuff.h */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> struct sk_buff *<span class="title">netdev_alloc_skb</span><span class="params">(struct net_device *dev,</span></span></span><br><span class="line"><span class="function"><span class="params">                <span class="keyword">unsigned</span> <span class="keyword">int</span> length)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> __netdev_alloc_skb(dev, length, GFP_ATOMIC);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* net/code/skbuff.c */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sk_buff</span> *__<span class="title">netdev_alloc_skb</span>(<span class="keyword">struct</span> <span class="title">net_device</span> *<span class="title">dev</span>, <span class="title">unsigned</span> <span class="title">int</span> <span class="title">len</span>,</span></span><br><span class="line"><span class="class">          <span class="title">gfp_t</span> <span class="title">gfp_mask</span>)</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line"></span><br><span class="line">  skb = __alloc_skb(len, gfp_mask, SKB_ALLOC_RX, NUMA_NO_NODE);</span><br><span class="line">  <span class="keyword">if</span> (!skb)</span><br><span class="line">    <span class="keyword">goto</span> skb_fail;</span><br><span class="line">  <span class="keyword">goto</span> skb_success;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line"></span><br><span class="line">  skb_success:</span><br><span class="line">    skb_reserve(skb, NET_SKB_PAD);</span><br><span class="line">    skb-&gt;dev = dev;</span><br><span class="line"></span><br><span class="line">  skb_fail:</span><br><span class="line">    <span class="keyword">return</span> skb;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;简单来看，在处于中间的包装函数 <code>netdev_alloc_skb</code> 我们可以看到，其为 <code>__netdev_alloc_skb</code> 的第三个参数传入了 <code>GFP_ATOMIC</code>，这是在请求原子性操作的含义，因为通常来说分配 <code>sk_buff</code> 这个动作通常是在 Interrupt Routinue 中完成的，所以需要保证操作的原子性。而在 <code>__netdev_alloc_skb</code> 函数中，我们可以看见起始它就是简单地调用了 <code>__alloc_skb</code> 函数来获得一个 <code>sk_buff</code> 和对应大小的 data buffer。在获取成功后，又调用了我们在后面将会介绍到的 <code>skb_reserve</code> 函数来在 data buffer 的前面预留长度为 <code>NET_SKB_PAD</code> 的空间 (p.s. <code>#define NET_SKB_PAD     max(32, L1_CACHE_BYTES)</code>)。
+
+  </div>
+
+  <br>
+
+  <div class="div_learning_post_border">
+  <div align="center"><h3><code>sk_buff</code> 的销毁</h3></div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有创建就有销毁，内核通过调用 <code>kfree_skb</code> 函数来释放一个 <code>sk_buff</code>，其是在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/net/core/skbuff.c#L767">net/core/skbuff.c</a> 中被定义的。<code>kfree_skb</code> 的具体定义如下所示。这里穿插一下，<code>sk_buff</code> 使用 <code>user</code> 成员来记录当前的 <code>sk_buff</code> 正在被多少个实体所使用，需要进行记录的原因是为了避免在一个 <code>sk_buff</code> 正在被使用的情况下被错误地释放，并且值得注意的是这个 <code>user</code> 成员只是记录 <code>sk_buff</code> 的被引用情况，并不包括 data buffer 的被引用情况，data buffer 的被引用情况是由描述 data buffer 元数据的结构体 <code>skb_shared_info</code> 的成员 <code>dataref</code> 描述的，我们在后面将会进行介绍。回到我们的主题，<code>kfree_skb</code> 只有在一个 <code>sk_buff</code> 的 <code>user</code> 为 1 的时候，也即只有一个实体在使用当前 <code>sk_buff</code> 并且请求进行释放的时候，才会真正的将 <code>sk_buff</code> 给释放掉，否则只是简单地将 <code>user</code> 成员自减 1。这一切都是在 <code>skb_unref</code> 函数中完成的。
+
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">kfree_skb</span><span class="params">(struct sk_buff *skb)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!skb_unref(skb))</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  trace_kfree_skb(skb, __builtin_return_address(<span class="number">0</span>));</span><br><span class="line">  __kfree_skb(skb);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;总的来看，内核释放一个 <code>sk_buff</code> 的过程如下所示。当发现 <code>sk_buff</code> 的被引用记录已经到底时 (i.e. <code>skb->user</code> 成员 为 1)， <code>__kfree_skb</code> 函数将被调用，在其中分别调用了 <code>skb_release_all(skb)</code> 和 <code>kfree_skbmem(skb)</code> 函数，它们分别在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/net/core/skbuff.c#L737">skb_release_all</a> 和 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/net/core/skbuff.c#L693">kfree_skbmem</a> 中被定义。
+
+  <div align="center">
+    <img src="./pic/free_skb.png" width=700px>
+  </div>
+
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 <code>skb_release_all(skb)</code> 中，其首先会先释放掉由当前 <code>sk_buff</code> 中 <code>_skb_refdst</code> 成员指向的 <code>dst_entry</code> 结构，后者用于 Routing Subsystem，我们在后面相应部分的文章中将会进行介绍；接着其会调用由 <code>sk_buff</code> 中 <code>void (*destructor)(struct sk_buff *skb)</code> 成员指向的 destructor 函数；然后它会继续调用 <code>skb_release_data(skb)</code> 函数，来释放掉 data buffer，这个释放过程有些许曲折：我们在后面将会看到，一个 <code>sk_buff</code> 结构是可以被 Clone 的，也就是说允许复制出指向同一个 data buffer 的 <code>sk_buff</code>，以供不同的处理需求使用，因此在释放 data buffer 之前，还需要判断：(1) 这个 <code>sk_buff</code> 是否有其它 Clone 实体 以及 (2) 其它 Clone 实体是否以及被释放 (如果有的话)。对于前者的判断，可以基于 <code>sk_buff</code> 的 <code>cloned</code> 成员来实现，对于后者的判断，可以基于用于描述 data buffer 元数据的结构体 <code>struct skb_shared_info</code> 的 <code>dataref</code> 成员来实现，<code>dataref</code> 成员用于记录一个 data buffer 一共被多少的 <code>sk_buff</code> 所指向，我们在后面将会继续介绍 <code>struct skb_shared_info</code> 结构体。当 (1) 当前 <code>sk_buff</code> 没有 Clone 实体，或者 (2) 当前对应的 data buffer 的被引用次数仅为 1 时，当前 data buffer 便会被释放。值得注意的是被释放的 data buffer 包括了主 data buffer (i.e. 由 <code>sk_buff->head</code> 和 <code>sk_buff->end</code> 包围的缓冲区) 和 fragment data buffer。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上述的 <code>skb_release_all(skb)</code> 函数实际上的主要功能是释放了 data buffer，而对于 <code>sk_buff</code> 本体则仍然没有被释放。<code>sk_buff</code> 的释放实际上指的是把它占用的空间收归回 buffer pool (cache) 中，以供以后创建 <code>sk_buff</code> 使用，这样的设计可以加速 <code>sk_buff</code> 的创建。<code>sk_buff</code> 的回收工作是由 <code>kfree_skbmem(skb)</code> 来完成的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，同样地，对于驱动程序来说，同样也有一个 wrapper 函数：驱动程序将调用 <code>dev_kfree_skb</code> 函数来释放相应的 <code>sk_buff</code> 结构，这个函数是在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/include/linux/skbuff.h#L1206">include/linux/skbuff.h</a> 中定义的，由于它实际上就是简单地调用了 <code>__kfree_skb</code> 函数，所以此处不再赘述。
+  </div>
+
+  <h3><a name="1_sk_buff_5">1.5 对 data buffer 的相关操作</a></h3>  
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;内核同样提供了一些函数用于 data buffer 的操作，下面我们对它们的功能进行介绍。
+
+  <div class="div_learning_post_border">
+  <div align="center"><h3><code>skb_reserve</code></h3></div>
+
+  <div align="center">
+    <img src="./pic/skb_reserve.png" width=700px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>skb_reserve</code> 用于在 data buffer 的前部预留一定的空间，以在发送数据的时候给还没有添加的头部预留空间，或者强制使得数据进行对齐 (align)。如上图所示，<code>skb_reserve</code> 是通过调整 <code>sk_buff</code> 的 <code>data</code> 和 <code>tail</code> 指针来实现的预留空间。值得注意的是，<code>skb_reserve</code> 通常是在 data buffer 刚被分配之后就被马上调用，也就是说调用 <code>skb_reserve</code> 的时候，<code>data</code> 和 <code>tail</code> 指针通常指向的还是同一个地址。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上图所展示的例子源自以太网网卡驱动程序的接收函数：由于以太网帧头是 14 字节，因此接收程序通常会在 data buffer 的最前面预留 2 个字节，这样一来三层的头部就能实现 16-Byte alignment 了。
+
+  <div align="center">
+    <img src="./pic/skb_reserve_tcp.png" width=700px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上图是使用 <code>skb_reserve</code> 的另一个例子 —— 一个 TCP 数据包从 socket layer 向下逐层发送的 data buffer 的变化过程，具体阐述如下所示：
+
+  <ol>
+    <li>当用户态程序调用系统调用接口请求发送 TCP 数据时，内核首先会根据 TCP Maximum Segment Size 来分配一个 data buffer，对应上图的 (a);</li>
+    <li>在 data buffer 分配完成后，内核会调用 <code>skb_reserve</code> 来给 L4、L3 和 L2 的头部预留一定的空间，对应上图的 (b)。这个预留的空间的大小考虑了最坏 (i.e. 最长) 的情况，即 <code>MAX_TCP_HEADER</code> 宏的大小;</li>
+    <li>接着，内核将用户程序要发送的数据从用户空间的 buffer 拷贝到 data buffer 中，对应上图的 (c);</li>
+    <li>交给 TCP 层添加 TCP 头部，对应了上图的 (d);</li>
+    <li>交给 IP 层添加 IP 头部，对应了上图的 (e);</li>
+    <li>交给二层 (Neighboring Layer) 添加二层头部，对应了上图的 (f)。</li>
+  </ol>
+  </div>
+
+  <div class="div_learning_post_border">
+    <div align="center"><h3><code>skb_put</code></h3></div>
+    <div align="center">
+      <img src="./pic/skb_put.png" width=700px>
+    </div>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;<code>skb_put</code> 用于在 data buffer 的尾部添加数据。但是值得注意的是，<code>skb_reserve</code> 不会真的向 data buffer 中添加数据，而是只会移动 <code>sk_buff</code> 的 <code>tail</code> 的成员，向这个新数据区域中拷贝数据的操作是需要显式调用其他的函数来实现的。
+  </div>
+
+  <div class="div_learning_post_border">
+    <div align="center"><h3><code>skb_push</code></h3></div>
+    <div align="center">
+      <img src="./pic/skb_push.png" width=700px>
+    </div>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;<code>skb_push</code> 用于在 data buffer 的前部添加数据。同样地值得注意的是，<code>skb_push</code> 不会真的向 data buffer 中添加数据，而是只会移动 <code>sk_buff</code> 的 <code>data</code> 的成员，向这个新数据区域中拷贝数据的操作是需要显式调用其他的函数来实现的。
+  </div>
+
+  <div class="div_learning_post_border">
+    <div align="center"><h3><code>skb_pull</code></h3></div>
+    <div align="center">
+      <img src="./pic/skb_pull.png" width=700px>
+    </div>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;<code>skb_pull</code> 用于从 data buffer 的前部中删除一块数据区域。同样地值得注意的是，<code>skb_pull</code> 不会真的释放 data buffer 中的相应区域，而是只会移动 <code>sk_buff</code> 的 <code>data</code> 的成员来实现高效率的删除操作。
+  </div>
+
+  <h3><a name="1_sk_buff_6">1.6 描述 data buffer 自身的元数据</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;事实上，紧跟在 data buffer 后面的有一个叫做 <code>skb_shared_info</code> 的结构体，如上图所示。这个结构体用于存储描述 data buffer 的一些元数据，它是在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/include/linux/skbuff.h#L515">include/linux/skbuff.h</a> 中被定义的，具体定义如下所示：
+
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">skb_shared_info</span> &#123;</span></span><br><span class="line">  __u8		flags;</span><br><span class="line">  __u8		meta_len;</span><br><span class="line">  __u8		nr_frags;</span><br><span class="line">  __u8		tx_flags;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">short</span>	gso_size;</span><br><span class="line">  <span class="comment">/* Warning: this field is not always filled in (UFO)! */</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">short</span>	gso_segs;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">sk_buff</span>	*<span class="title">frag_list</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">skb_shared_hwtstamps</span> <span class="title">hwtstamps</span>;</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span>	gso_type;</span><br><span class="line">  u32		tskey;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">  * Warning : all fields before dataref are cleared in __alloc_skb()</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="keyword">atomic_t</span>	dataref;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Intermediate layers must ensure that destructor_arg</span></span><br><span class="line"><span class="comment">  * remains valid until skb destructor */</span></span><br><span class="line">  <span class="keyword">void</span> *		destructor_arg;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* must be last field, see pskb_expand_head() */</span></span><br><span class="line">  <span class="keyword">skb_frag_t</span>	frags[MAX_SKB_FRAGS];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们下面对一些比较重要的字段进行解释。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>dataref</code> 字段我们在上面稍微有所提及，用于描述当前 data buffer 被多少个 <code>sk_buff</code> 所使用，我们在后面将会看到，<code>sk_buff</code> 是可以被 Clone 的，因此存在多个 <code>sk_buff</code> 引用同一个 data buffer 的情况，尽管各个 <code>sk_buff</code> 中的数据可能有所不同。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>nr_flags</code>，<code>frag_list</code> 和 <code>frags</code> 适用于处理 IP 分片 (Fragment) 的，我们在上面曾经提及过，关于 IP Fragment 的具体内容在后面的文章中会进行详细阐述。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，我们要想访问一个 data buffer 对应的 <code>skb_shared_info</code> 结构，我们需要从一个 <code>sk_buff</code> 出发，使用宏 <code>skb_shinfo</code> 对其进行访问，其具体定义如下所示
+
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> skb_shinfo(SKB)	((struct skb_shared_info *)(skb_end_pointer(SKB)))</span></span><br></pre></td></tr></table></figure>
+  <h3><a name="1_sk_buff_7">1.7 sk_buff 的 Clone</a></h3>
+
+  <div align="center">
+    <img src="./pic/skb_clone.png" width=700px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于一份网络数据 (i.e. 一个 data buffer)，有可能同时会有多个处理进程对其进行处理。不同的处理进程可能对 <code>sk_buff</code> 中的不同元数据有不同的记录。针对这种情况，为了实现上的高效率，内核使能了针对 <code>sk_buff</code> 的 Clone 操作，我们可以通过调用 <code>skb_clone</code> 函数来实现这种操作，它是在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.12.19/source/net/core/skbuff.c#L1480">net/core/skbuff.c</a> 中被定义的。原生的和被 Clone 的 <code>sk_buff</code> 指向同一个 data buffer，内核通过记录 data buffer 的被引用数来防止一个 data buffer 被过早地释放，我们在上面分析 <code>skb_shared_info</code> 结构体的 <code>dataref</code> 成员的时候就已经分析过了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，是 Clone <code>sk_buff</code> 的示意图。被 Clone 的 <code>sk_buff</code> 不会加入任何双向链表，也不会属于任何 socket。原生的和 Clone 出来的 <code>sk_buff</code> 的 <code>cloned</code> 成员都被设置为 1，以代表它们存在 Clone 实体。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当一个 <code>sk_buff</code> 被 Clone 时，它们所指向的 data buffer 中的内容就不应该再被修改，也就是说使用这个 data buffer 的不同进程可以在不上锁的情况下就直接访问该 data buffer。如果实在有需要修改 data buffer 的情况，那么那个进程就不仅需要 Clone <code>sk_buff</code>，也需要对 data buffer 进行 Clone。为了克隆 data buffer，有以下两种选择：
+
+  <div class="div_concurrent_img">
+    <img src="./pic/pskb_copy.png" width=400px>
+    <img src="./pic/skb_copy.png" width=400px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/include/linux/skbuff.h#L3204">include/linux/skbuff.h</a> 中定义的函数 <code>pskb_copy</code> 可以用于 Clone 由 <code>sk_buff->head</code> 和 <code>sk_buff->end</code> 括起来的 data buffer，并且返回一个对应的 <code>sk_buff</code> 结构体。其过程如上第一张图片所示。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/net/core/skbuff.c#L1577">source/net/core/skbuff.c</a> 中定义的函数 <code>skb_copy</code> 可以用于 Clone 包括 <code>sk_buff->head</code> 和 <code>sk_buff->end</code> 括起来的 data buffer 和 fragment data buffer 在内的数据缓冲区，并且返回一个对应的 <code>sk_buff</code> 结构体。其过程如上第二张图片所示。
+</div>
+
+<h2><a name="2_net_device">2. net_device</a></h2>
+<div class="div_learning_post">
+  <h3><a name="2_net_device_1">2.1 基本介绍</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;结构体 <code>net_device</code> 在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source/include/linux/netdevice.h#L1932">include/linux/netdevice.h</a> 中被定义，用于存储与一个 network device (p.s. 以下简称 device) 相关的所有信息。<code>net_device</code> 可用于描述真实 device (e.g. Ethernet NIC) 和虚拟 device (e.g. bonding 和 VLAN 设备)。<code>net_device</code> 是一个通用的定义，具体的设备驱动会会根据自己的需要填充 <code>net_device</code> 中的各个成员，并且对流出的函数接口予以具体实现。
+
+  <h3><a name="2_net_device_2">2.2 标识字段</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>ifindex</code> 成员是一个唯一的标识符：当一个 <code>net_device</code> 被注册进内核时会通过调用 <code>dev_new_index</code> 来获取这个唯一的标识符。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>iflink</code> 成员通常被 tunnel device 所使用，用于指明这个 tunnel device 真正以来的物理 device。
+
+  <h3><a name="2_net_device_3">2.3 net_device 的组织</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;内核将所有的 <code>net_device</code> 组织成为一个单向链表结构，成员 <code>dev_list</code> 用于指向这个全局链表结构。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，内核还将 <code>net_device</code> 塞进了一个哈希函数的哈希桶中，成员 <code>index_hlist</code> 用于指向相应的哈希桶。
+
+  <h3><a name="2_net_device_4">2.4 操作函数接口</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>net_device</code> 定义了很多函数指针成员，各个厂商的设备驱动会对这些函数选择性的予以实现。这些函数指针成员可以被理解为面向对象编程中接口的概念。常用的接口如下所示：
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th width=40%><div align="center">成员名</div></th>
+      <th width=60%><div align="center">作用</div></th>
+    </tr>
+    <tr>
+      <td>
+        <div align="center">
+          <code>struct ethtool_ops *ethtool_ops</code>
+        </div>
+      </td>
+      <td>
+        这个结构中包含了一系列用于 获取/设置 各种不同的 device 参数的函数指针
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div align="center">
+          <code>struct net_device_ops *netdev_ops</code>
+        </div>
+      </td>
+      <td>
+        这个结构中包含了一系列 device 的基础操作函数指针，常见的接口包括：
+        <ol>
+          <li><code>ndo_init</code>: 当一个 <code>net_device</code> 被注册时被调用;</li>
+          <li><code>ndo_uninit</code>: 当一个 <code>net_device</code> 被解注册或者注册失败时被调用;</li>
+          <li><code>ndo_open</code>: 当一个 device 被开启 (up) 时被调用;</li>
+          <li><code>ndo_stop</code>: 当一个 device 被关闭 (down) 时被调用;</li>
+          <li><code>ndo_start_xmit</code>: 当有数据包要被传输时被调用;</li>
+          <li><code>ndo_set_mac_address</code>: 当要设置 device 二层地址的时候被调用 (p.s. 如果 device 允许的话);</li>
+          <li><code>ndo_do_ioctl</code>: <code>ioctl</code> 是一个用于向 device 发送命令的系统调用，这个函数在处理 <code>ioctl</code> 的时候被调用;</li>
+          <li><code>ndo_change_mtu</code>: 当要设置二层最大传输单元 (MTU) 时被调用;</li>
+          <li><code>ndo_tx_timeout</code>: 当一个发送 Watchdog 期满的时候被调用 (i.e. 说明某次发送用时过长);</li>
+          <li>...</li>
+        </ol>
+      </td>
+    </tr>
+  </table>
+
+  <h3><a name="2_net_device_5">2.5 其他字段</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其它字段在有需要的时候再进行整理。
+
+</div>
+
+
+<!--ref-->
+
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+<ol>
+<li>The Linux Foundation, <a target="_blank" rel="noopener" href="https://wiki.linuxfoundation.org/networking/sk_buff">sk_buff</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.linux.it/~rubini/docs/vinter/vinter.html">https://www.linux.it/~rubini/docs/vinter/vinter.html</a></p>
+</div>
+
+</li>
+</ol>
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning_backup/">SEC_LEARNING_BACKUP</a></li>
+          <li>LINUX_INTERNAL_NETWORK_KEY_DATA_STRUCTURE</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Inhaltsverzeichnis
+        </li>
+        <li class="sidebar-nav-overview">
+          Übersicht
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

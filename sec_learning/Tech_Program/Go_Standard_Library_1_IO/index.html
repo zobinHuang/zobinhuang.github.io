@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Golang I&#x2F;O 标准库">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Standard_Library_1_IO/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Standard_Library_1_IO/pic/xxx.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Standard_Library_1_IO/pic/bufio.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Standard_Library_1_IO/pic/bufio_writer.jpg">
+<meta property="article:published_time" content="2022-02-10T14:39:11.504Z">
+<meta property="article:modified_time" content="2021-09-07T12:09:22.000Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Standard_Library_1_IO/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>Golang I/O 标准库 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project/" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly/" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship/" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay/" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">Golang I/O 标准库
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Program/">TECH_PROGRAM</a></li>
+          <li>GO_STANDARD_LIBRARY_1_IO</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_boder{padding: 10px 10px; font-size: 16px; word-spacing:0px;  border:1px solid black;}
+</style>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Aug.5 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=30%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_data_stream"><font color="blue"><b>什么是数据流 (data stream)</b></font></a>：向读者同步了数据流的概念
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_io"><font color="blue"><b>package io: 提供 I/O 原语的基本接口</b></font></a>：罗列了 package io 中提供的接口、结构体和函数
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_io_ioutil"><font color="blue"><b>package io/ioutil: 提供方便的 I/O 操作函数集</b></font></a>：罗列了 package io/ioutil 中的函数
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 4. <a href="#4_format_io"><font color="blue"><b>package fmt: 提供格式化的 I/O 函数</b></font></a>：分析了 package fmt 所提供的格式化 I/O 的功能
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.1 <a href="#4_format_io_1"><font color="blue">占位符一览</font></a>：列举出了格式化输出常用的占位符，方便查询；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.2 <a href="#4_format_io_2"><font color="blue">Print 序列函数</font></a>：阐述了 fmt 包中的 Print 序列函数 Fprint / Fprintf / Fprintln / Sprint / Sprintf / Sprintln / Print / Printf / Println；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.3 <a href="#4_format_io_3"><font color="blue">Scan 序列函数</font></a>阐述了 fmt 包中的 Scan 序列函数 Fscan / Fscanf / Fscanln / Sscan / Sscanf / Sscanln / Scan / Scanf / Scanln；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.4 <a href="#4_format_io_4"><font color="blue">Stringer 接口</font></a>：阐述了 package fmt 中的 Stringer 接口；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.5 <a href="#4_format_io_5"><font color="blue">Formatter 接口</font></a>：阐述了 package fmt 中的 Formatter 接口；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 5. <a href="#5_bufio"><font color="blue"><b>package bufio: 提供了缓存 I/O 的能力</b></font></a>：分析了 package bufio 所提供的带缓冲区的 I/O 的功能
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.1 <a href="#5_bufio_1"><font color="blue">bufio.Reader 类型和方法</font></a>：；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.1.1 <a href="#5_bufio_1_1"><font color="blue">bufio.Reader 实现原理</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.1.2 <a href="#5_bufio_1_2"><font color="blue">bufio.Reader 实现的接口</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.1.3 <a href="#5_bufio_1_3"><font color="blue">bufio.NewReader: 实例化 bufio.Reader</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.1.4 <a href="#5_bufio_1_4"><font color="blue">bufio.Reader.ReadSlice</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.1.5 <a href="#5_bufio_1_5"><font color="blue">bufio.Reader.ReadBytes</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.1.6 <a href="#5_bufio_1_6"><font color="blue">bufio.Reader.ReadString</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.1.7 <a href="#5_bufio_1_7"><font color="blue">bufio.Reader.Peek: 实例化 bufio.Reader</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.1.8 <a href="#5_bufio_1_8"><font color="blue">bufio.Scanner 引言</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.2 <a href="#5_bufio_2"><font color="blue">Writer 类型和方法</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.2.1 <a href="#5_bufio_2_1"><font color="blue">bufio.Writer 的原理</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.2.2 <a href="#5_bufio_2_2"><font color="blue">bufio.Writer 实现的接口</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.2.3 <a href="#5_bufio_2_3"><font color="blue">bufio.Writer.Available</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.2.4 <a href="#5_bufio_2_4"><font color="blue">bufio.Writer.Buffered</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.2.5 <a href="#5_bufio_2_5"><font color="blue">bufio.Writer.Flush</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.3 <a href="#5_bufio_3"><font color="blue">Scanner 类型和方法</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.3.1 <a href="#5_bufio_3_1"><font color="blue">Scanner 原理</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.3.2 <a href="#5_bufio_3_2"><font color="blue">Scanner 实例化</font></a>；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.3.3 <a href="#5_bufio_3_3"><font color="blue">Scanner 的方法</font></a>；
+  </div>
+</div>
+
+<!--标题-->
+<h2><a name="1_data_stream">1. 什么是数据流 (data stream)？</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在开始讨论 I/O 接口之前，我们必须明确：Linux 系统下的数据流是什么？
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们给出定义：<b><font color="red">数据流是 Byte 的集合。</font></b>我们回顾一句名言："Linux 中一切皆文件"。Linus Torvalds 后来认为这句话应该是："Linux 中一切皆数据流"。因此我理解，由于文件是一堆 Byte 的集合，因此存储在磁盘中不动的文件可以被理解为一种静态数据流，而比如说位于内存中的动态的键盘缓冲区就可以被理解为动态数据流。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;像 Golang 一样的高级编程语言通常为我们封装好了用于 I/O 操作的底层库函数实现，而这些 I/O 库函数的操作对象就是数据流，可以是文件、可以是某个系统内存缓冲区(e.g. 标准输入缓冲区)，也可以是程序自身在内存中的数据(e.g. 某个字符串)，它们都是一堆 Byte 的集合。因此我们明确：我们本文所讨论的 Golang I/O 标准库，其操作的对象是 Byte 的集合，具体表现可以是文件、缓冲区、程序变量等。 
+</div>
+
+<h2><a name="2_io">2. package io: 提供 I/O 原语的基本接口</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;io 包为基本的 I/O 操作提供了基本的接口。再次明确基础知识：<font color="red">接口是对功能的约定。</font>因此 io 包中提供的是对 I/O 操作功能的约定，即 I/O 接口。正如我们上面所说的，任何操作 Byte 集合的动作都可以视作 I/O 操作，标准库中其它很多涉及数据操作的包都实现了 package io 的这些 I/O 接口，只是它们的实现方式各有千秋。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们整理出这些接口：
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <caption>package io 中定义的接口</caption>
+    <tr>
+      <th width="10%">接口名称</th>
+      <th width="50%">定义</th>
+      <th>功能</th>
+    </tr>
+    <tr>
+      <td width="10%">Reader</td>
+      <td width="50%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Reader <span class="keyword">interface</span> &#123;</span><br><span class="line">    Read(p []<span class="keyword">byte</span>) (n <span class="keyword">int</span>, err error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </td>
+      <td>Read 从某个数据流将 len(p) 个字节读取到缓冲区 p 中，具体从哪个数据流取决于具体实现方式</td>
+    </tr>
+    <tr>
+      <td width="10%">Writer</td>
+      <td width="50%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Writer <span class="keyword">interface</span> &#123;</span><br><span class="line">    Write(p []<span class="keyword">byte</span>) (n <span class="keyword">int</span>, err error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </td>
+      <td>Write 将 len(p) 个字节从 p 中写入到某个数据流中，具体写入哪个数据流取决于具体实现方式</td>
+    </tr>
+    <tr>
+      <td width="10%">ReaderAt</td>
+      <td width="50%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ReaderAt <span class="keyword">interface</span> &#123;</span><br><span class="line">    ReadAt(p []<span class="keyword">byte</span>, off <span class="keyword">int64</span>) (n <span class="keyword">int</span>, err error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </td>
+      <td>ReadAt 从某个数据流的偏移量 off 处开始，将 len(p) 个字节读取到 p 中。具体从哪个数据流取决于具体实现方式</td>
+    </tr>
+    <tr>
+      <td width="10%">WriterAt</td>
+      <td width="50%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> WriterAt <span class="keyword">interface</span> &#123;</span><br><span class="line">    WriteAt(p []<span class="keyword">byte</span>, off <span class="keyword">int64</span>) (n <span class="keyword">int</span>, err error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </td>
+      <td>WriteAt 从 p 中将 len(p) 个字节写入到某个数据流的偏移量为 off 的地方，具体写入哪个数据流取决于具体实现方式</td>
+    </tr>
+    <tr>
+      <td width="10%">ReaderFrom</td>
+      <td width="50%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ReaderFrom <span class="keyword">interface</span> &#123;</span><br><span class="line">    ReadFrom(r Reader) (n <span class="keyword">int64</span>, err error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </td>
+      <td>ReadFrom 从 r 中读取数据，<font color="red">直到 EOF 或发生错误</font>。其返回值 n 为读取的字节数。</td>
+    </tr>
+    <tr>
+      <td width="10%">WriterTo</td>
+      <td width="50%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> WriterTo <span class="keyword">interface</span> &#123;</span><br><span class="line">    WriteTo(w Writer) (n <span class="keyword">int64</span>, err error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </td>
+      <td>WriteTo 将数据写入 w 中，<font color="red">直到没有数据可写或发生错误</font>。</td>
+    </tr>
+    <tr>
+      <td width="10%">Seeker</td>
+      <td width="50%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Seeker <span class="keyword">interface</span> &#123;</span><br><span class="line">    Seek(offset <span class="keyword">int64</span>, whence <span class="keyword">int</span>) (ret <span class="keyword">int64</span>, err error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </td>
+      <td>Seek 设置下一次 Read 或 Write 的偏移量为 offset，它的解释取决于参数 whence：0 表示相对于文件的起始处，1 表示相对于当前的偏移，而 2 表示相对于其结尾处。Seek 返回新的偏移量和一个错误，如果有的话。</td>
+    </tr>
+    <tr>
+      <td width="10%">Closer</td>
+      <td width="50%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Closer <span class="keyword">interface</span> &#123;</span><br><span class="line">    Close() error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </td>
+      <td>该接口比较简单，只有一个 Close() 方法，用于关闭数据流。文件 (os.File)、归档（压缩包）、数据库连接、Socket 等需要手动关闭的资源都实现了 Closer 接口。</td>
+    </tr>
+    <tr>
+      <td width="10%">ByteReader<br>ByteWriter</td>
+      <td width="50%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ByteReader <span class="keyword">interface</span> &#123;</span><br><span class="line">    ReadByte() (c <span class="keyword">byte</span>, err error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ByteWriter <span class="keyword">interface</span> &#123;</span><br><span class="line">    WriteByte(c <span class="keyword">byte</span>) error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </td>
+      <td>(从某个数据流/向某个数据流)读/写一个字节</td>
+    </tr>
+    <tr>
+      <td width="10%">ByteScanner</td>
+      <td width="50%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ByteScanner <span class="keyword">interface</span> &#123;</span><br><span class="line">    ByteReader <span class="comment">// 内嵌了 ByteReader 接口</span></span><br><span class="line">    UnreadByte() error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </td>
+      <td>比 ByteReader 接口多了个 UnreadByte 方法，其作用是将上一次 ReadByte 的字节还原，使得再次调用 ReadByte 时效果一样。类似的关系还有 RuneReader 和 RuneScanner，不再赘述</td>
+    </tr>
+    <tr>
+      <td width="10%">ReadCloser<br>ReadSeeker<br>ReadWriteCloser<br>ReadWriteSeeker<br>ReadWriter<br>WriteCloser<br>WriteSeeker</td>
+      <td width="50%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ReadWriter <span class="keyword">interface</span> &#123;</span><br><span class="line">    Reader</span><br><span class="line">    Writer</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </td>
+      <td>复合接口，不再赘述</td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 package io 中还提供了一些结构体类型，整理如下：
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <caption>package io 中定义的结构体</caption>
+    <tr>
+      <th width="10%">结构体名</th>
+      <th width="30%">定义</th>
+      <th width="60%">功能</th>
+    </tr>
+    <tr>
+      <td width="10%">SectionReader</td>
+      <td width="30%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> SectionReader <span class="keyword">struct</span> &#123;</span><br><span class="line">    <span class="comment">// 该类型最终的 Read/ReadAt 最终都是通过 r 的 ReadAt 实现</span></span><br><span class="line">    r     ReaderAt    </span><br><span class="line">    <span class="comment">// NewSectionReader 会将 base 设置为 off</span></span><br><span class="line">    base  <span class="keyword">int64</span> </span><br><span class="line">    <span class="comment">// 从 r 中的 off 偏移处开始读取数据      </span></span><br><span class="line">    off   <span class="keyword">int64</span>       </span><br><span class="line">    <span class="comment">// limit - off = SectionReader 流的长度</span></span><br><span class="line">    limit <span class="keyword">int64</span>       </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </td>
+      <td>SectionReader 实现了 Read, Seek 和 ReadAt 的同时内嵌了 ReaderAt 接口。它可以从 r 中的偏移量 off 处读取 n 个字节后以 EOF 停止，它可以帮助我们方便重复操作某一段 (section) 数据流，或者同时需要 ReadAt 和 Seek 的功能。</td>
+    </tr>
+    <tr>
+      <td width="10%">LimitedReader</td>
+      <td width="30%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> LimitedReader <span class="keyword">struct</span> &#123;</span><br><span class="line">    <span class="comment">// underlying reader，</span></span><br><span class="line">    <span class="comment">// 最终的读取操作通过 R.Read 完成，在创建结构体的时候需要需要手动指派</span></span><br><span class="line">    R Reader </span><br><span class="line">     <span class="comment">// max bytes remaining</span></span><br><span class="line">    N <span class="keyword">int64</span> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </td>
+      <td>LimitedReader 只实现了 Read 方法，它用于从 R 读取但最多只能返回 N 字节数据</td>
+    </tr>
+    <tr>
+      <td width="10%">PipeReader<br>PipeWriter</td>
+      <td width="30%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> PipeReader <span class="keyword">struct</span> &#123;</span><br><span class="line">    p *pipe</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> PipeWriter <span class="keyword">struct</span> &#123;</span><br><span class="line">    p *pipe</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </td>
+      <td>
+      PipeReader（一个没有任何导出字段的 struct）是管道 (i.e. 操作系统管道) 的读取端。它实现了 io.Reader 和 io.Closer 接口。它从管道中读取数据。该方法会堵塞，直到管道写入端开始写入数据或写入端被关闭。
+      <br>PipeWriter（一个没有任何导出字段的 struct）是管道 (i.e. 操作系统管道) 的写入端。它实现了 io.Writer 和 io.Closer 接口。它可以写数据到管道中。该方法会堵塞，直到管道读取端读完所有数据或读取端被关闭。
+      </td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;此外，package io 还提供了一些好用的函数：
+
+  <table>
+    <caption>package io 中定义的函数</caption>
+    <tr>
+      <td width="10%">Copy<br>CopyN</td>
+      <td width="30%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Copy</span><span class="params">(dst Writer, src Reader)</span> <span class="params">(written <span class="keyword">int64</span>, err error)</span></span></span><br></pre></td></tr></table></figure>
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CopyN</span><span class="params">(dst Writer, src Reader, n <span class="keyword">int64</span>)</span> <span class="params">(written <span class="keyword">int64</span>, err error)</span></span></span><br></pre></td></tr></table></figure>
+      </td>
+      <td>
+      Copy 将 src 复制到 dst，直到在 src 上到达 EOF 或发生错误。它返回复制的字节数，如果有错误的话，还会返回在复制时遇到的第一个错误。
+      <br>CopyN 将 n 个字节(或到一个error)从 src 复制到 dst。 它返回复制的字节数以及在复制时遇到的最早的错误。
+      <br>
+      </td>
+    </tr>
+    <tr>
+      <td width="10%">ReadAtLeast<br>ReadFull</td>
+      <td width="30%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ReadAtLeast</span><span class="params">(r Reader, buf []<span class="keyword">byte</span>, min <span class="keyword">int</span>)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br></pre></td></tr></table></figure>
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ReadFull</span><span class="params">(r Reader, buf []<span class="keyword">byte</span>)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span>    </span><br></pre></td></tr></table></figure>
+      </td>
+      <td>
+      ReadAtLeast 将 r 读取到 buf 中，直到读了最少 min 个字节为止。它返回复制的字节数，如果读取的字节较少，还会返回一个错误。
+      <br>ReadFull 精确地从 r 中将 len(buf) 个字节读取到 buf 中。它返回复制的字节数，如果读取的字节较少，还会返回一个错误。
+      </td>
+    </tr>
+    <tr>
+      <td width="10%">WriteString</td>
+      <td width="30%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">WriteString</span><span class="params">(w Writer, s <span class="keyword">string</span>)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br></pre></td></tr></table></figure>
+      </td>
+      <td>WriteString 将 s 的内容写入 w 中，当 w 实现了 WriteString 方法时，会直接调用该方法，否则执行 w.Write([]byte(s))。</td>
+    </tr>
+    <tr>
+      <td width="10%">MultiReader<br>MultiWriter</td>
+      <td width="30%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">MultiReader</span><span class="params">(readers ...Reader)</span> <span class="title">Reader</span></span></span><br><span class="line"><span class="keyword">type</span> multiReader <span class="keyword">struct</span> &#123;</span><br><span class="line">    readers []Reader</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">MultiWriter</span><span class="params">(writers ...Writer)</span> <span class="title">Writer</span></span></span><br><span class="line"><span class="keyword">type</span> multiWriter <span class="keyword">struct</span> &#123;</span><br><span class="line">    writers []Writer</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </td>
+      <td>
+      MultiReader 用于将多个 Reader 组合成为一个 Reader，然后在调用这个组合后的 Reader 的 Read 函数时，第一次调用获取的是第一个组合前 Reader 的内容，第二次调用获取的是第二个组合前 Reader 的内容，在所有的 Reader 内容都被读完后，Reader 会返回 EOF。
+      <br>MultiWriter 用于将多个 Writer 组合成为一个 Writer，然后在调用这个组合后的 Writer 的 Write 函数时，会向所有的 Writer 写入同样的内容
+      </td>
+    </tr>
+  </table>
+</div>
+
+<h2><a name="3_io_ioutil">3. package io/ioutil: 提供方便的 I/O 操作函数集</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;package io/ioutil 在上文阐述的 package io 基础上，提供了更多的常用、方便的IO操作函数。列举阐述如下：
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <caption>package io/ioutil 中定义的函数</caption>
+    <tr>
+      <th width="10%">函数名</th>
+      <th width="30%">函数签名</th>
+      <th width="60%">功能</th>
+    </tr>
+    <tr>
+      <td width="10%">NopCloser</td>
+      <td width="30%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NopCloser</span><span class="params">(r io.Reader)</span> <span class="title">io</span>.<span class="title">ReadCloser</span></span></span><br></pre></td></tr></table></figure>
+      </td>
+      <td width="60%">NopCloser 用于包装一个 io.Reader，返回一个 io.ReadCloser ，而相应的 Close 方法啥也不做，只是返回 nil。用在有时候我们需要传递一个 io.ReadCloser 的实例，而我们仅有 io.Reader 的实例的情况下</td>
+    </tr>
+    <tr>
+      <td width="10%">ReadAll</td>
+      <td width="30%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ReadAll</span><span class="params">(r io.Reader)</span> <span class="params">([]<span class="keyword">byte</span>, error)</span></span></span><br></pre></td></tr></table></figure>
+      </td>
+      <td width="60%">从io.Reader 中一次读取所有数据</td>
+    </tr>
+    <tr>
+      <td width="10%">ReadDir</td>
+      <td width="30%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ReadDir</span><span class="params">(name <span class="keyword">string</span>)</span> <span class="params">([]DirEntry, error)</span></span></span><br></pre></td></tr></table></figure>
+      </td>
+      <td width="60%">用于读取目录并返回排好序的文件和子目录名（[]os.FileInfo）</td>
+    </tr>
+    <tr>
+      <td width="10%">ReadFile<br>WriteFile</td>
+      <td width="30%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">WriteFile</span><span class="params">(filename <span class="keyword">string</span>, data []<span class="keyword">byte</span>, perm os.FileMode)</span> <span class="title">error</span></span></span><br></pre></td></tr></table></figure>
+      </td>
+      <td width="60%">
+      ReadFile 从 filename 指定的文件中读取数据并返回文件的内容。成功的调用返回的 err 为 nil 而非 EOF。
+      <br>WriteFile 将 data 写入 filename 文件中，当文件不存在时会根据 perm 指定的权限进行创建一个,文件存在时会先清空文件内容。
+      </td>
+    </tr>
+    <tr>
+      <td width="10%">TempDir<br>TempFile</td>
+      <td width="30%">
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TempDir</span><span class="params">(dir, pattern <span class="keyword">string</span>)</span> <span class="params">(name <span class="keyword">string</span>, err error)</span></span></span><br></pre></td></tr></table></figure>
+      <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TempFile</span><span class="params">(dir, pattern <span class="keyword">string</span>)</span> <span class="params">(f *os.File, err error)</span></span></span><br></pre></td></tr></table></figure>
+      </td>
+      <td width="60%">
+      TempDir 用于创建临时目录。若第一个参数如果为空，表明在系统默认的临时目录（ os.TempDir ）中创建临时目录；第二个参数指定临时目录名的前缀，该函数返回临时目录的路径。
+      <br>TempFile 用于创建临时文件。若第一个参数如果为空，表明在系统默认的临时目录（ os.TempDir ）中创建临时文件；第二个参数指定临时文件名的前缀，该函数返回临时文件的路径。
+      <br>创建者创建的临时文件和临时目录要负责删除这些临时目录和文件。
+      </td>
+    </tr>
+  </table>
+</div>
+
+<h2><a name="4_format_io">4. package fmt: 提供格式化的 I/O 函数</a></h2>
+<div class="div_learning_post">
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;package fmt 中提供了很多格式化的 I/O 函数。所谓 "格式化" 就是可以使用 "占位符 (e.g. %d, %f...)" 来实现格式化的字符/字节输入/输出。
+
+  <h3><a name="4_format_io_1">4.1 占位符一览</a></h3>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本小节列举的例子中所使用的 类型/变量 定义如下：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Website <span class="keyword">struct</span> &#123;</span><br><span class="line">  Name <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义结构体变量</span></span><br><span class="line"><span class="keyword">var</span> site = Website&#123;Name:<span class="string">&quot;studygolang&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们列举出常用的占位符，方便查询：
+
+<table>
+<thead>
+<tr>
+<th align="center">占位符</th>
+<th align="center">说明</th>
+<th align="center">举例</th>
+<th align="center">输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">%v</td>
+<td align="center">相应值的默认格式,在打印结构体时，”加号” 标记（%+v）会添加字段名</td>
+<td align="center">Printf(“%v”, site)，Printf(“%+v”, site)</td>
+<td align="center">{studygolang}，{Name:studygolang}</td>
+</tr>
+<tr>
+<td align="center">%#v</td>
+<td align="center">相应值的Go语法表示</td>
+<td align="center">Printf(“#v”, site)</td>
+<td align="center">main.Website{Name:”studygolang”}</td>
+</tr>
+<tr>
+<td align="center">%T</td>
+<td align="center">相应值的类型的Go语法表示</td>
+<td align="center">Printf(“%T”, site)</td>
+<td align="center">main.Website</td>
+</tr>
+<tr>
+<td align="center">%%</td>
+<td align="center">字面上的百分号，并非值的占位符</td>
+<td align="center">Printf(“%%”)</td>
+<td align="center">%</td>
+</tr>
+<tr>
+<td align="center">%t</td>
+<td align="center">单词 true 或 false</td>
+<td align="center">Printf(“%t”, true)</td>
+<td align="center">true</td>
+</tr>
+<tr>
+<td align="center">%b</td>
+<td align="center">二进制表示</td>
+<td align="center">Printf(“%b”, 5)</td>
+<td align="center">101</td>
+</tr>
+<tr>
+<td align="center">%c</td>
+<td align="center">相应 Unicode 码点所表示的字符</td>
+<td align="center">Printf(“%c”, 0x4E2D)</td>
+<td align="center">中</td>
+</tr>
+<tr>
+<td align="center">%d</td>
+<td align="center">十进制表示</td>
+<td align="center">Printf(“%d”, 0x12)</td>
+<td align="center">18</td>
+</tr>
+<tr>
+<td align="center">%o</td>
+<td align="center">八进制表示</td>
+<td align="center">Printf(“%o”, 10)</td>
+<td align="center">12</td>
+</tr>
+<tr>
+<td align="center">%q</td>
+<td align="center">单引号围绕的字符字面值，由 Go 语法安全地转义</td>
+<td align="center">Printf(“%q”, 0x4E2D)</td>
+<td align="center">‘中’</td>
+</tr>
+<tr>
+<td align="center">%x</td>
+<td align="center">十六进制表示，字母形式为小写 a-f</td>
+<td align="center">Printf(“%x”, 13)</td>
+<td align="center">d</td>
+</tr>
+<tr>
+<td align="center">%X</td>
+<td align="center">十六进制表示，字母形式为大写 A-F</td>
+<td align="center">Printf(“%x”, 13)</td>
+<td align="center">D</td>
+</tr>
+<tr>
+<td align="center">%U</td>
+<td align="center">Unicode 格式：U+1234，等同于 “U+%04X”</td>
+<td align="center">Printf(“%U”, 0x4E2D)</td>
+<td align="center">U+4E2D</td>
+</tr>
+<tr>
+<td align="center">%b</td>
+<td align="center">无小数部分的，指数为二的幂的科学计数法，与 strconv.FormatFloat 的 ‘b’ 转换格式一致。例如 -123456p-78</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">%e</td>
+<td align="center">科学计数法，例如 -1234.456e+78</td>
+<td align="center">Printf(“%e”, 10.2)</td>
+<td align="center">1.020000e+01</td>
+</tr>
+<tr>
+<td align="center">%E</td>
+<td align="center">科学计数法，例如 -1234.456E+78</td>
+<td align="center">Printf(“%E”, 10.2)</td>
+<td align="center">1.020000E+01</td>
+</tr>
+<tr>
+<td align="center">%f</td>
+<td align="center">有小数点而无指数，例如 123.456</td>
+<td align="center">Printf(“%f”, 10.2)</td>
+<td align="center">10.200000</td>
+</tr>
+<tr>
+<td align="center">%g</td>
+<td align="center">根据情况选择 %e 或 %f 以产生更紧凑的（无末尾的0）输出</td>
+<td align="center">Printf(“%g”, 10.20)</td>
+<td align="center">10.2</td>
+</tr>
+<tr>
+<td align="center">%G</td>
+<td align="center">根据情况选择 %E 或 %f 以产生更紧凑的（无末尾的0）输出</td>
+<td align="center">Printf(“%G”, 10.20+2i)</td>
+<td align="center">(10.2+2i)</td>
+</tr>
+<tr>
+<td align="center">%s</td>
+<td align="center">输出字符串表示（string类型或[]byte)</td>
+<td align="center">Printf(“%s”, []byte(“Go语言中文网”))</td>
+<td align="center">Go语言中文网</td>
+</tr>
+<tr>
+<td align="center">%q</td>
+<td align="center">双引号围绕的字符串，由Go语法安全地转义</td>
+<td align="center">Printf(“%q”, “Go语言中文网”)</td>
+<td align="center">“Go语言中文网”</td>
+</tr>
+<tr>
+<td align="center">%x</td>
+<td align="center">十六进制，小写字母，每字节两个字符</td>
+<td align="center">Printf(“%x”, “golang”)</td>
+<td align="center">676f6c616e67</td>
+</tr>
+<tr>
+<td align="center">%X</td>
+<td align="center">十六进制，大写字母，每字节两个字符</td>
+<td align="center">Printf(“%X”, “golang”)</td>
+<td align="center">676F6C616E67</td>
+</tr>
+<tr>
+<td align="center">%p</td>
+<td align="center">十六进制表示，前缀 0x</td>
+<td align="center">Printf(“%p”, &amp;site)</td>
+<td align="center">0x4f57f0</td>
+</tr>
+<tr>
+<td align="center">+</td>
+<td align="center">总打印数值的正负号；对于%q（%+q）保证只输出ASCII编码的字符</td>
+<td align="center">Printf(“%+q”, “中文”)</td>
+<td align="center">“\u4e2d\u6587”</td>
+</tr>
+<tr>
+<td align="center">-</td>
+<td align="center">在右侧而非左侧填充空格（左对齐该区域）</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">#</td>
+<td align="center">备用格式：为八进制添加前导 0（%#o），为十六进制添加前导 0x（%#x）或 0X（%#X），为 %p（%#p）去掉前导 0x；如果可能的话，%q（%#q）会打印原始（即反引号围绕的）字符串；如果是可打印字符，%U（%#U）会写出该字符的 Unicode 编码形式（如字符 x 会被打印成 U+0078 ‘x’）</td>
+<td align="center">Printf(“%#U”, ‘中’)</td>
+<td align="center">U+4E2D ‘中’</td>
+</tr>
+<tr>
+<td align="center">‘ ‘</td>
+<td align="center">（空格）为数值中省略的正负号留出空白（% d）以十六进制（% x, % X）打印字符串或切片时，在字节之间用空格隔开</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">0</td>
+<td align="center">填充前导的0而非空格；对于数字，这会将填充移到正负号之后</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+  <h3><a name="4_format_io_2">4.2 Print 序列函数</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这里说的 Print 序列函数包括：Fprint/Fprintf/Fprintln/Sprint/Sprintf/Sprintln/Print/Printf/Println。之所以将放在一起介绍，是因为它们的使用方式类似、参数意思也类似。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Fprint</span><span class="params">(w io.Writer, a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Fprintf</span><span class="params">(w io.Writer, format <span class="keyword">string</span>, a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Fprintln</span><span class="params">(w io.Writer, a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Fprint/Fprintf/Fprintln 函数的第一个参数接收一个 io.Writer 类型，会将内容输出到 io.Writer 中去。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Print</span><span class="params">(a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Printf</span><span class="params">(format <span class="keyword">string</span>, a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Println</span><span class="params">(a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Print/Printf/Println 函数是将内容输出到标准输出中，因此，直接调用 F类函数 做这件事，并将 os.Stdout 作为第一个参数传入。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Sprint</span><span class="params">(a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">string</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Sprintf</span><span class="params">(format <span class="keyword">string</span>, a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">string</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Sprintln</span><span class="params">(a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">string</span></span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Sprint/Sprintf/Sprintln 是格式化内容为 string 类型，而并不输出到某处，需要格式化字符串并返回时，可以用这组函数。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在这三组函数中，分别有三种类型的后缀，它们的功能如下：
+
+  <ul>
+    <li>S/F/Printf 函数通过指定的格式输出或格式化内容</li>
+    <li>S/F/Print 函数只是使用默认的格式输出或格式化内容</li>
+    <li>S/F/Println函数使用默认的格式输出或格式化内容，同时会在最后加上"换行符"</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;简单来说，要想使用占位符来实现格式化输出，则必须使用 S/F/Printf。
+
+  <h3><a name="4_format_io_3">4.3 Scan 序列函数</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;该序列函数和 Print 序列函数相对应，包括：Fscan/Fscanf/Fscanln/Sscan/Sscanf/Sscanln/Scan/Scanf/Scanln。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Fscan</span><span class="params">(r io.Reader, a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Fscanf</span><span class="params">(r io.Reader, format <span class="keyword">string</span>, a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Fscanln</span><span class="params">(r io.Reader, a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Fscan/Fscanf/Fscanln 函数的第一个参数接收一个 io.Reader 类型，从其读取内容并赋值给相应的实参。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Scan</span><span class="params">(a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Scanf</span><span class="params">(format <span class="keyword">string</span>, a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Scanln</span><span class="params">(a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span> </span><br></pre></td></tr></table></figure>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Scan/Scanf/Scanln 正是从标准输入获取内容，因此，直接调用 F类函数 做这件事，并将 os.Stdin 作为第一个参数传入。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Sscan</span><span class="params">(str <span class="keyword">string</span>, a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Sscanf</span><span class="params">(str <span class="keyword">string</span>, format <span class="keyword">string</span>, a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Sscanln</span><span class="params">(str <span class="keyword">string</span>, a ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br></pre></td></tr></table></figure>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Sscan/Sscanf/Sscanln 则直接从字符串中获取内容。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了更好地说明它们的区别，我们从另一个唯独来区分这九个函数：
+
+  <h5>(1)无后缀：Scan/FScan/Sscan</h5>
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> (</span><br><span class="line">    name <span class="keyword">string</span></span><br><span class="line">    age  <span class="keyword">int</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">n, _ := fmt.Sscan(<span class="string">&quot;polaris 28&quot;</span>, &amp;name, &amp;age)</span><br><span class="line"><span class="comment">// 可以将&quot;polaris 28&quot;中的空格换成&quot;\n&quot;试试</span></span><br><span class="line"><span class="comment">// n, _ := fmt.Sscan(&quot;polaris\n28&quot;, &amp;name, &amp;age)</span></span><br><span class="line"></span><br><span class="line">fmt.Println(n, name, age)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;输出为：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2 polaris 28</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;不管"polaris 28"是用空格分隔还是"\n"分隔，输出一样。也就是说，Scan/FScan/Sscan 这组函数将连续由空格分隔的值存储为连续的实参（换行符也记为空格）。
+
+  <h5>(2)f 后缀：Scanf/FScanf/Sscanf</h5>
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> (</span><br><span class="line">    name <span class="keyword">string</span></span><br><span class="line">    age  <span class="keyword">int</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">n, _ := fmt.Sscanf(<span class="string">&quot;polaris 28&quot;</span>, <span class="string">&quot;%s%d&quot;</span>, &amp;name, &amp;age)</span><br><span class="line"><span class="comment">// 可以将&quot;polaris 28&quot;中的空格换成&quot;\n&quot;试试</span></span><br><span class="line"><span class="comment">// n, _ := fmt.Sscanf(&quot;polaris\n28&quot;, &quot;%s%d&quot;, &amp;name, &amp;age)</span></span><br><span class="line">fmt.Println(n, name, age)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;输出：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2 polaris 28</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果将"空格"分隔改为"\n"分隔，则输出为：1 polaris 0。可见，Scanf/FScanf/Sscanf 这组函数将连续由空格分隔的值存储为连续的实参， <font color="red">其格式由 format 决定</font>，换行符处停止扫描(Scan)。
+
+  <h5>(3)ln 后缀：Scanln/FScanln/Sscanln</h5>
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> (</span><br><span class="line">    name <span class="keyword">string</span></span><br><span class="line">    age  <span class="keyword">int</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">n, _ := fmt.Sscanln(<span class="string">&quot;polaris 28&quot;</span>, &amp;name, &amp;age)</span><br><span class="line"><span class="comment">// 可以将&quot;polaris 28&quot;中的空格换成&quot;\n&quot;试试</span></span><br><span class="line"><span class="comment">// n, _ := fmt.Sscanln(&quot;polaris\n28&quot;, &amp;name, &amp;age)</span></span><br><span class="line">fmt.Println(n, name, age)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;输出如下：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2 polaris 28</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Scanln/FScanln/Sscanln 表现和上一组一样，遇到 "\n" 停止（对于 Scanln，表示从标准输入获取内容，最后需要回车）。
+
+  <h3><a name="4_format_io_4">4.4 Stringer 接口</a></h3>
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">type</span> Stringer <span class="keyword">interface</span> &#123;</span><br><span class="line">    String() <span class="keyword">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Stringer 类型包含的 String() 主要用于打印该类型的一些属性。一个类型只要有 String() string 方法，我们就说它实现了 Stringer 接口。而在上文我们已经说到，如果想用上面列举的格式化输出函数来格式化输出某种类型的值，只要该类型实现了 String() 方法，那么会调用 String() 方法进行处理。
+
+  <h3><a name="4_format_io_5">4.5 Formatter 接口</a></h3>
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Formatter <span class="keyword">interface</span> &#123;</span><br><span class="line">    Format(f State, c <span class="keyword">rune</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;通过实现 Formatter 接口可以做到自定义输出格式（自定义占位符），例子如下所示：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name <span class="keyword">string</span></span><br><span class="line">    Age  <span class="keyword">int</span></span><br><span class="line">    Sex  <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(this *Person)</span> <span class="title">String</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">    buffer := bytes.NewBufferString(<span class="string">&quot;This is &quot;</span>)</span><br><span class="line">    buffer.WriteString(this.Name + <span class="string">&quot;, &quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> this.Sex == <span class="number">0</span> &#123;</span><br><span class="line">        buffer.WriteString(<span class="string">&quot;He &quot;</span>)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        buffer.WriteString(<span class="string">&quot;She &quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    buffer.WriteString(<span class="string">&quot;is &quot;</span>)</span><br><span class="line">    buffer.WriteString(strconv.Itoa(this.Age))</span><br><span class="line">    buffer.WriteString(<span class="string">&quot; years old.&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> buffer.String()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(this *Person)</span> <span class="title">Format</span><span class="params">(f fmt.State, c <span class="keyword">rune</span>)</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> c == <span class="string">&#x27;L&#x27;</span> &#123;</span><br><span class="line">      f.Write([]<span class="keyword">byte</span>(this.String()))</span><br><span class="line">      f.Write([]<span class="keyword">byte</span>(<span class="string">&quot; Person has three fields.&quot;</span>))</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 没有此句，会导致 fmt.Printf(&quot;%s&quot;, p) 啥也不输出</span></span><br><span class="line">      f.Write([]<span class="keyword">byte</span>(fmt.Sprintln(this.String())))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">p := &amp;Person&#123;<span class="string">&quot;polaris&quot;</span>, <span class="number">28</span>, <span class="number">0</span>&#125;</span><br><span class="line">fmt.Printf(<span class="string">&quot;%L&quot;</span>, p)</span><br></pre></td></tr></table></figure>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;输出为：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">This is polaris, He is 28 years old. Person has three fields.</span><br></pre></td></tr></table></figure>
+</div>
+
+<h2><a name="5_bufio">5. package bufio: 提供了缓存 I/O 的能力</a></h2>
+<div class="div_learning_post">
+
+  <div align="center">
+    <img src="./pic/bufio.png" width=700px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;package bufio 包实现了缓存 I/O。当我们在讨论 package bufio 的优点的时候，我们的背景是放在文件这种数据流的背景下。与 package io 提供的接口对比，package io 的接口实现的是 "数据 -> 文件"，而 package bufio 实现的是 "数据 -> 缓冲区 -> 文件"。缓冲区的设计是为了在内存中存储多次的写入，最后一口气把缓冲区内容写入文件，从而避免了多次触发文件 io 导致的性能问题。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;package bufio 包中包含了 bufio.Reader <font color="red">结构</font> 和 bufio.Writer <font color="red">结构</font>，以及相关的函数来实现带有缓冲区的 I/O 操作，下面我们进行阐述。
+
+  <h3><a name="5_bufio_1">5.1 bufio.Reader 类型和方法</a></h3>
+
+  <h5><a name="5_bufio_1_1">(1) bufio.Reader 实现原理</a></h5>
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Reader <span class="keyword">struct</span> &#123;</span><br><span class="line">    buf          []<span class="keyword">byte</span>        <span class="comment">// 缓存</span></span><br><span class="line">    rd           io.Reader    <span class="comment">// 底层的io.Reader</span></span><br><span class="line">    <span class="comment">// r: 从 buf 中读走的字节（偏移）；w: buf 中填充内容的偏移；</span></span><br><span class="line">    <span class="comment">// w - r 是 buf 中可被读的长度（缓存数据的大小），也是 Buffered()方法的返回值</span></span><br><span class="line">    <span class="comment">// r, w 即读入和写入的位置索引来判断是否缓存区内容被全部读出。</span></span><br><span class="line">    r, w         <span class="keyword">int</span></span><br><span class="line">    err          error        <span class="comment">// 读过程中遇到的错误</span></span><br><span class="line">    lastByte     <span class="keyword">int</span>        <span class="comment">// 最后一次读到的字节（ReadByte/UnreadByte)</span></span><br><span class="line">    lastRuneSize <span class="keyword">int</span>        <span class="comment">// 最后一次读到的Rune的大小 (ReadRune/UnreadRune)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;bufio.Read(p []byte) 相当于读取大小len(p)的内容，思路如下：
+
+  <ol>
+    <li>当缓存区有内容的时，将缓存区内容全部填入 p 并清空缓存区</li>
+    <li>当缓存区没有内容的时候且 len(p) `>` len(buf) ,即要读取的内容比缓存区还要大，直接去文件读取即可</li>
+    <li>当缓存区没有内容的时候且 len(p) `<` len(buf),即要读取的内容比缓存区小，缓存区从文件读取内容充满缓存区，并将 p 填满 (此时缓存区有剩余内容)。以后再次读取时缓存区有内容，将缓存区内容全部填入 p 并清空缓存区（此时和情况 1 一样）</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;bufio.Read 源码如下：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Read reads data into p.</span></span><br><span class="line"><span class="comment">// It returns the number of bytes read into p.</span></span><br><span class="line"><span class="comment">// The bytes are taken from at most one Read on the underlying Reader,</span></span><br><span class="line"><span class="comment">// hence n may be less than len(p).</span></span><br><span class="line"><span class="comment">// To read exactly len(p) bytes, use io.ReadFull(b, p).</span></span><br><span class="line"><span class="comment">// At EOF, the count will be zero and err will be io.EOF.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Reader)</span> <span class="title">Read</span><span class="params">(p []<span class="keyword">byte</span>)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span> &#123;</span><br><span class="line">    n = <span class="built_in">len</span>(p)</span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>, b.readErr()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// b.r == b.w 代表缓冲区的数据都被读走了</span></span><br><span class="line">    <span class="comment">// 应该触发新的 I/O 读取</span></span><br><span class="line">    <span class="keyword">if</span> b.r == b.w &#123;</span><br><span class="line">        <span class="keyword">if</span> b.err != <span class="literal">nil</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>, b.readErr()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 企图读取的长度超过缓冲区大小，直接即进行 I/O 读取</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(p) &gt;= <span class="built_in">len</span>(b.buf) &#123;</span><br><span class="line">            <span class="comment">// Large read, empty buffer.</span></span><br><span class="line">            <span class="comment">// Read directly into p to avoid copy.</span></span><br><span class="line">            n, b.err = b.rd.Read(p)</span><br><span class="line">            <span class="keyword">if</span> n &lt; <span class="number">0</span> &#123;</span><br><span class="line">                <span class="built_in">panic</span>(errNegativeRead)</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> n &gt; <span class="number">0</span> &#123;</span><br><span class="line">                b.lastByte = <span class="keyword">int</span>(p[n<span class="number">-1</span>])</span><br><span class="line">                b.lastRuneSize = <span class="number">-1</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> n, b.readErr()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// One read.</span></span><br><span class="line">        <span class="comment">// Do not use b.fill, which will loop.</span></span><br><span class="line">        b.r = <span class="number">0</span></span><br><span class="line">        b.w = <span class="number">0</span></span><br><span class="line">        n, b.err = b.rd.Read(b.buf)</span><br><span class="line">        <span class="keyword">if</span> n &lt; <span class="number">0</span> &#123;</span><br><span class="line">            <span class="built_in">panic</span>(errNegativeRead)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> n == <span class="number">0</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>, b.readErr()</span><br><span class="line">        &#125;</span><br><span class="line">        b.w += n</span><br><span class="line">    &#125;</span><br><span class="line">​    </span><br><span class="line">    <span class="comment">// 将 I/O 缓冲区中的内容拷贝到目标缓冲区中</span></span><br><span class="line">    <span class="comment">// copy as much as we can</span></span><br><span class="line">    n = <span class="built_in">copy</span>(p, b.buf[b.r:b.w])</span><br><span class="line">    b.r += n</span><br><span class="line">    b.lastByte = <span class="keyword">int</span>(b.buf[b.r<span class="number">-1</span>])</span><br><span class="line">    b.lastRuneSize = <span class="number">-1</span></span><br><span class="line">    <span class="keyword">return</span> n, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <h5><a name="5_bufio_1_2">(2) bufio.Reader 实现的接口</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;bufio.Reader 实现了 io.Reader io.WriterTo io.ByteScanner io.RuneScanner 等我们上面讲过的接口。bufio.Reader 实现的方法如下：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NewReaderSize 将 rd 封装成一个带缓存的 bufio.Reader 对象，</span></span><br><span class="line"><span class="comment">// 缓存大小由 size 指定（如果小于 16 则会被设置为 16）。</span></span><br><span class="line"><span class="comment">// 如果 rd 的基类型就是有足够缓存的 bufio.Reader 类型，则直接将</span></span><br><span class="line"><span class="comment">// rd 转换为基类型返回。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewReaderSize</span><span class="params">(rd io.Reader, size <span class="keyword">int</span>)</span> *<span class="title">Reader</span></span></span><br><span class="line">​</span><br><span class="line"><span class="comment">// NewReader 相当于 NewReaderSize(rd, 4096)</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewReader</span><span class="params">(rd io.Reader)</span> *<span class="title">Reader</span></span></span><br><span class="line">​</span><br><span class="line"><span class="comment">// Peek 返回缓存的一个切片，该切片引用缓存中前 n 个字节的数据，</span></span><br><span class="line"><span class="comment">// 该操作不会将数据读出，只是引用，引用的数据在下一次读取操作之</span></span><br><span class="line"><span class="comment">// 前是有效的。如果切片长度小于 n，则返回一个错误信息说明原因。</span></span><br><span class="line"><span class="comment">// 如果 n 大于缓存的总大小，则返回 ErrBufferFull。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Reader)</span> <span class="title">Peek</span><span class="params">(n <span class="keyword">int</span>)</span> <span class="params">([]<span class="keyword">byte</span>, error)</span></span></span><br><span class="line">​</span><br><span class="line"><span class="comment">// Read 从 b 中读出数据到 p 中，返回读出的字节数和遇到的错误。</span></span><br><span class="line"><span class="comment">// 如果缓存不为空，则只能读出缓存中的数据，不会从底层 io.Reader</span></span><br><span class="line"><span class="comment">// 中提取数据，如果缓存为空，则：</span></span><br><span class="line"><span class="comment">// 1、len(p) &gt;= 缓存大小，则跳过缓存，直接从底层 io.Reader 中读</span></span><br><span class="line"><span class="comment">// 出到 p 中。</span></span><br><span class="line"><span class="comment">// 2、len(p) &lt; 缓存大小，则先将数据从底层 io.Reader 中读取到缓存</span></span><br><span class="line"><span class="comment">// 中，再从缓存读取到 p 中。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Reader)</span> <span class="title">Read</span><span class="params">(p []<span class="keyword">byte</span>)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span></span><br><span class="line">​</span><br><span class="line"><span class="comment">// Buffered 返回缓存中未读取的数据的长度。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Reader)</span> <span class="title">Buffered</span><span class="params">()</span> <span class="title">int</span></span></span><br><span class="line">​</span><br><span class="line"><span class="comment">// ReadBytes 功能同 ReadSlice，只不过返回的是缓存的拷贝。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Reader)</span> <span class="title">ReadBytes</span><span class="params">(delim <span class="keyword">byte</span>)</span> <span class="params">(line []<span class="keyword">byte</span>, err error)</span></span></span><br><span class="line">​</span><br><span class="line"><span class="comment">// ReadString 功能同 ReadBytes，只不过返回的是字符串。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Reader)</span> <span class="title">ReadString</span><span class="params">(delim <span class="keyword">byte</span>)</span> <span class="params">(line <span class="keyword">string</span>, err error)</span></span></span><br><span class="line">​</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们分析一下这些函数的使用方法。
+
+  <h5><a name="5_bufio_1_3">(3) bufio.NewReader: 实例化 bufio.Reader</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以通过 NewReader 函数来实例化一个 bufio.Reader 对象。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewReader</span><span class="params">(rd io.Reader)</span> *<span class="title">Reader</span></span></span><br></pre></td></tr></table></figure>
+  <h5><a name="5_bufio_1_4">(4) bufio.Reader.ReadSlice</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 package bufio 中，提供了 bufio.Reader 的一些方法：ReadSlice、ReadBytes、ReadString 等。我们先以 ReadSlice 为例：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Reader)</span> <span class="title">ReadSlice</span><span class="params">(delim <span class="keyword">byte</span>)</span> <span class="params">(line []<span class="keyword">byte</span>, err error)</span></span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;ReadSlice 从输入中读取，直到遇到第一个界定符（delim）为止，返回一个指向缓存中字节的 slice，在下次调用读操作（read）时，这些字节会无效。请看下面的例子：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">reader := bufio.NewReader(strings.NewReader(<span class="string">&quot;http://studygolang.com. \nIt is the home of gophers&quot;</span>))</span><br><span class="line">line, _ := reader.ReadSlice(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">fmt.Printf(<span class="string">&quot;the line:%s\n&quot;</span>, line)</span><br><span class="line"><span class="comment">// 这里可以换上任意的 bufio 的 Read/Write 操作</span></span><br><span class="line">n, _ := reader.ReadSlice(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">fmt.Printf(<span class="string">&quot;the line:%s\n&quot;</span>, line)</span><br><span class="line">fmt.Println(<span class="keyword">string</span>(n))</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;输出结果如下：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">the line:http://studygolang.com. <span class="comment"># Line 3 的输出</span></span><br><span class="line"></span><br><span class="line">the line:It is the home of gophers <span class="comment"># Line 6 的输出</span></span><br><span class="line">It is the home of gophers <span class="comment"># Line 7 的输出</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可见，第一次 ReadSlice 的结果 line 在第二次 ReadSlice 被调用后发生了改变，这是因为 line 是一个指向 bufio.Reader 缓冲区的 slice，是一个引用类型，而不是缓冲区的一份 copy。bufio.Reader 缓冲区发生改变时，我们从 line 中获取的内容自然也就发生了改变。
+
+  <h5><a name="5_bufio_1_5">(5) bufio.Reader.ReadBytes</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;再来看 ReadBytes
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Reader)</span> <span class="title">ReadBytes</span><span class="params">(delim <span class="keyword">byte</span>)</span> <span class="params">(line []<span class="keyword">byte</span>, err error)</span></span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;ReadBytes 和 ReadSlice 的区别在于 ReadBytes 返回的是一份缓冲区的 copy。再看下面的例子：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">reader := bufio.NewReader(strings.NewReader(<span class="string">&quot;http://studygolang.com. \nIt is the home of gophers&quot;</span>))</span><br><span class="line">line, _ := reader.ReadBytes(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">fmt.Printf(<span class="string">&quot;the line:%s\n&quot;</span>, line)</span><br><span class="line"><span class="comment">// 这里可以换上任意的 bufio 的 Read/Write 操作</span></span><br><span class="line">n, _ := reader.ReadBytes(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">fmt.Printf(<span class="string">&quot;the line:%s\n&quot;</span>, line)</span><br><span class="line">fmt.Println(<span class="keyword">string</span>(n))</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;输出为：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">the line:http://studygolang.com. </span><br><span class="line"></span><br><span class="line">the line:http://studygolang.com. </span><br><span class="line"></span><br><span class="line">It is the home of gophers</span><br></pre></td></tr></table></figure>
+  <h5><a name="5_bufio_1_6">(6) bufio.Reader.ReadString</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;再来看 ReadString
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Reader)</span> <span class="title">ReadString</span><span class="params">(delim <span class="keyword">byte</span>)</span> <span class="params">(line <span class="keyword">string</span>, err error)</span></span> &#123;</span><br><span class="line">    bytes, err := b.ReadBytes(delim)</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">string</span>(bytes), err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;它调用了 ReadBytes 方法，并将结果的 []byte 转为 string 类型。不再赘述。
+
+  <h5><a name="5_bufio_1_7">(7) bufio.Reader.Peek: 实例化 bufio.Reader</a></h5>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;从方法的名称可以猜到，该方法只是 "窥探" 一下 Reader 中没有读取的 n 个字节。好比栈数据结构中的取栈顶元素，但不出栈。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Reader)</span> <span class="title">Peek</span><span class="params">(n <span class="keyword">int</span>)</span> <span class="params">([]<span class="keyword">byte</span>, error)</span></span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同上面介绍的 ReadSlice一样，返回的 []byte 只是 buffer 中的引用，在下次IO操作后会无效，可见该方法（以及ReadSlice这样的，返回buffer引用的方法）对多 goroutine 是不安全的，也就是在多并发环境下，不能依赖其结果。
+
+  <h5><a name="5_bufio_1_8">(8) bufio.Scanner 引言</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;从上面的 ReadSlice, ReadBytes 和 ReadString 方法我们可以看到，bufio.Reader 结构体中所有读取数据的方法，都包含了 delim 分隔符。有时候我们只是想简单地读取一行，上面所说的这三个函数用起来很不方便，或者说它们的实现太复杂了。所以 Google 对此在 go1.1 版本中加入了 bufio.Scanner 结构体，用于更加方便地读取数据。我们将在 <a href="/sec_learning/Program_Go/Go_Standard_Library_1_IO/index.html#5_bufio_3">Scanner 类型和方法</a> 中进行介绍。
+
+  <h3><a name="5_bufio_2">5.2 Writer 类型和方法</a></h3>
+
+  <h5><a name="5_bufio_2_1">(1) bufio.Writer 的原理</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;bufio.Writer 是bufio中对io.Writer 的封装
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Writer implements buffering for an io.Writer object.</span></span><br><span class="line"><span class="comment">// If an error occurs writing to a Writer, no more data will be</span></span><br><span class="line"><span class="comment">// accepted and all subsequent writes, and Flush, will return the error.</span></span><br><span class="line"><span class="comment">// After all data has been written, the client should call the</span></span><br><span class="line"><span class="comment">// Flush method to guarantee all data has been forwarded to</span></span><br><span class="line"><span class="comment">// the underlying io.Writer.</span></span><br><span class="line"><span class="keyword">type</span> Writer <span class="keyword">struct</span> &#123;</span><br><span class="line">    err error</span><br><span class="line">    buf []<span class="keyword">byte</span></span><br><span class="line">    n   <span class="keyword">int</span></span><br><span class="line">    wr  io.Writer</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;bufio.Write(p []byte) 的思路如下：
+
+  <div align="center">
+    <img src="./pic/bufio_writer.jpg" width=700px>
+  </div>
+
+  <ol>
+    <li>判断 buf 中可用容量是否可以放下 p</li>
+    <li>如果能放下，直接把 p 拼接到 buf 后面，即把内容放到缓冲区</li>
+    <li>如果缓冲区的可用容量不足以放下，且此时缓冲区是空的，直接把 p 写入文件即可</li>
+    <li>如果缓冲区的可用容量不足以放下，且此时缓冲区有内容，则用 p 把缓冲区填满，把缓冲区所有内容写入文件，并清空缓冲区</li>
+    <li>判断 p 的剩余内容大小能否放到缓冲区，如果能放下（此时和步骤 1 情况一样）则把内容放到缓冲区</li>
+    <li>如果 p 的剩余内容依旧大于缓冲区，（注意此时缓冲区是空的，情况和步骤 3 一样）则把 p 的剩余内容直接写入文件</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;源码如下：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Write writes the contents of p into the buffer.</span></span><br><span class="line"><span class="comment">// It returns the number of bytes written.</span></span><br><span class="line"><span class="comment">// If nn &lt; len(p), it also returns an error explaining</span></span><br><span class="line"><span class="comment">// why the write is short.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Writer)</span> <span class="title">Write</span><span class="params">(p []<span class="keyword">byte</span>)</span> <span class="params">(nn <span class="keyword">int</span>, err error)</span></span> &#123;</span><br><span class="line">    <span class="comment">// b.Available() 为buf可用容量，等于 len(buf) - n</span></span><br><span class="line">    <span class="keyword">for</span> <span class="built_in">len</span>(p) &gt; b.Available() &amp;&amp; b.err == <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> n <span class="keyword">int</span></span><br><span class="line">        <span class="keyword">if</span> b.Buffered() == <span class="number">0</span> &#123;</span><br><span class="line">            <span class="comment">// Large write, empty buffer.</span></span><br><span class="line">            <span class="comment">// Write directly from p to avoid copy.</span></span><br><span class="line">            n, b.err = b.wr.Write(p)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            n = <span class="built_in">copy</span>(b.buf[b.n:], p)</span><br><span class="line">            b.n += n</span><br><span class="line">            b.Flush() <span class="comment">// b.Flush() 会将缓存区内容写入文件</span></span><br><span class="line">        &#125;</span><br><span class="line">        nn += n</span><br><span class="line">        p = p[n:]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> b.err != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> nn, b.err</span><br><span class="line">    &#125;</span><br><span class="line">    n := <span class="built_in">copy</span>(b.buf[b.n:], p)</span><br><span class="line">    b.n += n</span><br><span class="line">    nn += n</span><br><span class="line">    <span class="keyword">return</span> nn, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <h5><a name="5_bufio_2_2">(2) bufio.Writer 实现的接口</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;bufio.Writer 实现了接口： io.Writer, io.ReaderFrom, io.ByteWriter。bufio.Writer 实现的方法列举如下：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NewWriterSize 将 wr 封装成一个带缓存的 bufio.Writer 对象，</span></span><br><span class="line"><span class="comment">// 缓存大小由 size 指定（如果小于 4096 则会被设置为 4096）。</span></span><br><span class="line"><span class="comment">// 如果 wr 的基类型就是有足够缓存的 bufio.Writer 类型，则直接将</span></span><br><span class="line"><span class="comment">// wr 转换为基类型返回。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewWriterSize</span><span class="params">(wr io.Writer, size <span class="keyword">int</span>)</span> *<span class="title">Writer</span></span></span><br><span class="line">​</span><br><span class="line"><span class="comment">// NewWriter 相当于 NewWriterSize(wr, 4096)</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewWriter</span><span class="params">(wr io.Writer)</span> *<span class="title">Writer</span></span></span><br><span class="line">​</span><br><span class="line"><span class="comment">// WriteString 功能同 Write，只不过写入的是字符串</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Writer)</span> <span class="title">WriteString</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="params">(<span class="keyword">int</span>, error)</span></span></span><br><span class="line">​</span><br><span class="line"><span class="comment">// WriteRune 向 b 写入 r 的 UTF-8 编码，返回 r 的编码长度。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Writer)</span> <span class="title">WriteRune</span><span class="params">(r <span class="keyword">rune</span>)</span> <span class="params">(size <span class="keyword">int</span>, err error)</span></span></span><br><span class="line">​</span><br><span class="line"><span class="comment">// Flush 将缓存中的数据提交到底层的 io.Writer 中</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Writer)</span> <span class="title">Flush</span><span class="params">()</span> <span class="title">error</span></span></span><br><span class="line">​</span><br><span class="line"><span class="comment">// Available 返回缓存中未使用的空间的长度</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Writer)</span> <span class="title">Available</span><span class="params">()</span> <span class="title">int</span></span></span><br><span class="line">​</span><br><span class="line"><span class="comment">// Buffered 返回缓存中未提交的数据的长度</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Writer)</span> <span class="title">Buffered</span><span class="params">()</span> <span class="title">int</span></span></span><br><span class="line">​</span><br><span class="line"><span class="comment">// Reset 将 b 的底层 Writer 重新指定为 w，同时丢弃缓存中的所有数据，复位</span></span><br><span class="line"><span class="comment">// 所有标记和错误信息。相当于创建了一个新的 bufio.Writer。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *Writer)</span> <span class="title">Reset</span><span class="params">(w io.Writer)</span></span></span><br><span class="line">​</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+  <h5><a name="5_bufio_2_3">(3) bufio.Writer.Available</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Available 方法获取 I/O 缓冲区中还未使用的字节数（缓存大小 - 字段 n 的值）
+
+  <h5><a name="5_bufio_2_4">(4) bufio.Writer.Buffered</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Buffered 方法获取写入当前 I/O 缓冲区中的字节数（字段 n 的值）
+
+  <h5><a name="5_bufio_2_5">(5) bufio.Writer.Flush</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;该方法将缓存中的所有数据写入底层的 io.Writer 对象中。<font color="red">使用 bufio.Writer 时，在所有的 Write 操作完成之后，应该调用 Flush 方法使得缓存都写入 io.Writer 对象中</font>。
+
+  <h3><a name="5_bufio_3">5.3 Scanner 类型和方法</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;bufio.Scanner 的主要作用是使用带缓存的 I/O 的办法，把数据流分割成一个个标记并除去它们之间的分隔符。相当于一个用于格式化的 bufio.Reader。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了去除分隔符，Go 语言提供了四种 ScanWords 方法，ScanBytes(返回单个字节作为一个 token), ScanLines(返回一行文本), ScanRunes(返回单个 UTF-8 编码的 rune 作为一个 token)和ScanWords(返回通过"空格"分词的单词)。bufio.Scanner 的使用例子如下所示：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    scanner:=bufio.NewScanner(</span><br><span class="line">        strings.NewReader(<span class="string">&quot;ABCDEFG\nHIJKELM&quot;</span>),</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* ScanWords 是四种方式之一，你也可以自定义, 实现 SplitFunc 方法*/</span></span><br><span class="line">    scanner.Split(ScanWords)</span><br><span class="line">    <span class="keyword">for</span> scanner.Scan()&#123;</span><br><span class="line">        fmt.Println(scanner.Text()) <span class="comment">// scanner.Bytes()</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <h5><a name="5_bufio_3_1">(1) Scanner 原理</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Scanner 定义如下：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Scanner <span class="keyword">struct</span> &#123;</span><br><span class="line">    r            io.Reader <span class="comment">// The reader provided by the client.</span></span><br><span class="line">    split        SplitFunc <span class="comment">// The function to split the tokens.</span></span><br><span class="line">    maxTokenSize <span class="keyword">int</span>       <span class="comment">// Maximum size of a token; modified by tests.</span></span><br><span class="line">    token        []<span class="keyword">byte</span>    <span class="comment">// Last token returned by split.</span></span><br><span class="line">    buf          []<span class="keyword">byte</span>    <span class="comment">// Buffer used as argument to split.</span></span><br><span class="line">    start        <span class="keyword">int</span>       <span class="comment">// First non-processed byte in buf.</span></span><br><span class="line">    end          <span class="keyword">int</span>       <span class="comment">// End of data in buf.</span></span><br><span class="line">    err          error     <span class="comment">// Sticky error.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这里 split、maxTokenSize 和 token 需要讲解一下。在讲解之前，需要先讲解 split 字段的类型 SplitFunc。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;SplitFunc 类型定义如下：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> SplitFunc <span class="function"><span class="keyword">func</span><span class="params">(data []<span class="keyword">byte</span>, atEOF <span class="keyword">bool</span>)</span> <span class="params">(advance <span class="keyword">int</span>, token []<span class="keyword">byte</span>, err error)</span></span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;SplitFunc 定义了 用于对输入进行分词的 split 函数的签名。参数 data 是还未处理的数据，atEOF 标识 Reader 是否还有更多数据（是否到了EOF）。返回值 advance 表示从输入中读取的字节数，token 表示下一个结果数据，err 则代表可能的错误。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;比如，对于数据 "studygolang\tpolaris\tgolangchina"，通过 "\t" 进行分词，那么会得到三个 token，它们的内容分别是：studygolang、polaris 和 golangchina。而 SplitFunc 的功能是：进行分词，并返回未处理的数据中第一个 token。对于这个数据，就是返回 studygolang。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 data 中没有一个完整的 token，例如，在扫描行（scanning lines）时没有换行符，SplitFunc 会返回(0,nil,nil)通知 Scanner 读取更多数据到 slice 中，然后在这个更大的 slice 中同样的读取点处，从输入中重试读取。如下面要讲解的 split 函数的源码中有这样的代码：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Request more data.</span></span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>, <span class="literal">nil</span>, <span class="literal">nil</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;正如我们在最开始的例子展示的那样，在 bufio 包中预定义了一些 split 函数，也就是说，在 Scanner 结构中的 split 字段，可以通过这些预定义的 split 赋值，同时 Scanner 类型的 Split 方法也可以接收这些预定义函数作为参数。所以，我们可以说，这些预定义 split 函数都是 SplitFunc 类型的实例。这些函数包括：ScanBytes、ScanRunes、ScanWords 和 ScanLines。（由于都是 SplitFunc 的实例，自然这些函数的签名都和 SplitFunc 一样）这些函数如下所示：
+
+  <ul>
+    <li>ScanBytes 返回单个字节作为一个 token</li>
+    <li>ScanRunes 返回单个 UTF-8 编码的 rune 作为一个 token。返回的 rune 序列（token）和 range string类型 返回的序列是等价的，也就是说，对于无效的 UTF-8 编码会解释为 U+FFFD = "\xef\xbf\xbd"</li>
+    <li>ScanWords 返回通过 "空格" 分词的单词。如：study golang，调用会返回 study。注意，这里的"空格" 是 unicode.IsSpace()，即包括：'\t', '\n', '\v', '\f', '\r', ' ', U+0085 (NEL), U+00A0 (NBSP)</li>
+    <li>ScanLines 返回一行文本，不包括行尾的换行符。这里的换行包括了Windows下的"\r\n"和Unix下的"\n"</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一般地，我们不会单独使用这些函数，而是提供给 Scanner 实例使用。现在我们回到 Scanner 的 split、maxTokenSize 和 token 字段上来。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;split 字段（SplitFunc 类型实例），很显然，代表了当前 Scanner 使用的分词策略，可以使用上面介绍的预定义 SplitFunc 实例赋值，也可以自定义 SplitFunc 实例。（当然，要给 split 字段赋值，必须调用 Scanner 的 Split 方法）
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;maxTokenSize 字段表示通过 split 分词后的一个 token 允许的最大长度。在该包中定义了一个常量 MaxScanTokenSize = 64 * 1024，这是允许的最大 token 长度（64k）
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;token 字段 上文已经解释了这个是什么意思。
+
+  <h5><a name="5_bufio_3_2">(2) Scanner 实例化</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;bufio 提供了下面的函数用于 Scanner 实例化：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewScanner</span><span class="params">(r io.Reader)</span> *<span class="title">Scanner</span></span></span><br></pre></td></tr></table></figure>
+  <h5><a name="5_bufio_3_3">(3) Scanner 的方法</a></h5>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Split 方法 前面我们提到过可以通过 Split 方法为 Scanner 实例设置分词行为。由于 Scanner 实例的默认 split 总是 ScanLines，如果我们想要用其他的 split，可以通过 Split 方法做到。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scanner.Split(bufio.ScanWords)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Scan 方法该方法好比 iterator 中的 Next 方法，它用于将 Scanner 获取下一个 token，以便 Bytes 和 Text 方法可用。当扫描停止时，它返回 false，这时候，要么是到了输入的末尾要么是遇到了一个错误。注意，当 Scan 返回 false 时，通过 Err 方法可以获取第一个遇到的错误（但如果错误是 io.EOF，Err 方法会返回 nil）。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Bytes 和 Text 方法这两个方法的行为一致，都是返回最近的 token，无非 Bytes 返回的是 []byte，Text 返回的是 string。该方法应该在 Scan 调用后调用，而且，下次调用 Scan 会覆盖这次的 token。比如：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scanner := bufio.NewScanner(strings.NewReader(<span class="string">&quot;http://studygolang.com. \nIt is the home of gophers&quot;</span>))</span><br><span class="line"><span class="keyword">if</span> scanner.Scan() &#123;</span><br><span class="line">    scanner.Scan()</span><br><span class="line">    fmt.Printf(<span class="string">&quot;%s&quot;</span>, scanner.Text())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;返回的是：It is the home of gophers 而不是 http://studygolang.com.
+</div>
+
+
+<!--ref-->
+
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+<ol>
+<li>知乎, <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/73690883">GO 语言基础进阶教程：bufio 包</a></p></li>
+<li>知乎, <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/130973387">深入理解 Go 标准库之 bufio.Scanner</a></li>
+<li>Go 语言中文网, <a target="_blank" rel="noopener" href="http://books.studygolang.com/The-Golang-Standard-Library-by-Example/chapter01/01.0.html">输入输出 (Input/Output)</a></div>
+
+</li>
+</ol>
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Program/">TECH_PROGRAM</a></li>
+          <li>GO_STANDARD_LIBRARY_1_IO</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Inhaltsverzeichnis
+        </li>
+        <li class="sidebar-nav-overview">
+          Übersicht
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

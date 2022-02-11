@@ -2,6 +2,216 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/post_index.json</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/JavaScript_4_Fetch/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/JavaScript_3_Ajax/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/JavaScript_2_Async/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/JavaScript_1_Crash/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/index_copy.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/post_index.json</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/post_index.json</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/template_book/post_index.json</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/post_index.json</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/post_index.json</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/pic/index_1.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/template_book/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Algorithm_Intro_4_Hash/ref.json</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Algorithm_Intro_4_Hash/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Algorithm_Intro_3_Divide_and_conquer/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Algorithm_Intro_2_Asymptotic_notation_and_recurrences/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Algorithm_Intro_1_Intro_and_algorithm_analyse/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Python_Import_Specification/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Python_Circular_Import/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/GNU_attribute_keyword/index.html</loc>
+    
+    <lastmod>2022-02-11</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/index.html</loc>
     
     <lastmod>2022-02-11</lastmod>
@@ -12,13 +222,6 @@
     <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/ref.json</loc>
     
     <lastmod>2022-02-11</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/index.html</loc>
-    
-    <lastmod>2022-02-10</lastmod>
     
   </url>
   
@@ -37,98 +240,42 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Interrupt_Interrupt_and_Exception_Intro/index.html</loc>
     
     <lastmod>2022-02-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Intro/index.html</loc>
-    
-    <lastmod>2022-02-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Intro/ref.json</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Interrupt_Interrupt_and_Exception_Intro/ref.json</loc>
     
     <lastmod>2022-02-04</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/index.html</loc>
-    
-    <lastmod>2022-02-02</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Intro/index%20copy_.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Interrupt_Interrupt_and_Exception_Intro/index%20copy_.html</loc>
     
     <lastmod>2022-01-23</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Music_Production_Record/index.html</loc>
-    
-    <lastmod>2022-01-21</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Music_Production_Record/Vocal_6_Tips/ref.json</loc>
-    
-    <lastmod>2022-01-21</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Music_Production_Record/Vocal_6_Tips/index.html</loc>
-    
-    <lastmod>2022-01-21</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/index.html</loc>
-    
-    <lastmod>2022-01-21</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Music_Production_Record/post_index.json</loc>
-    
-    <lastmod>2022-01-21</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Music_Production_Record/Paper_Walk_Through/index.html</loc>
-    
-    <lastmod>2022-01-21</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Data_Structure_And_Algorithm_Algorithm_Intro_backup/4_hash/index.html</loc>
     
     <lastmod>2022-01-19</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Data_Structure_And_Algorithm_Algorithm_Intro_backup/index.html</loc>
     
     <lastmod>2022-01-19</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/4_hash/ref.json</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Data_Structure_And_Algorithm_Algorithm_Intro_backup/4_hash/ref.json</loc>
     
     <lastmod>2022-01-19</lastmod>
     
@@ -163,14 +310,7 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/Architecture_8_Cache/index.html</loc>
-    
-    <lastmod>2021-12-29</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Architecture_8_Cache/index.html</loc>
     
     <lastmod>2021-12-29</lastmod>
     
@@ -219,7 +359,7 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Internal_Implementation_of_VNI/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Implementation_of_VNI/index.html</loc>
     
     <lastmod>2021-12-16</lastmod>
     
@@ -233,14 +373,14 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Internal_Network_Frame_Reception/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Frame_Reception/index.html</loc>
     
     <lastmod>2021-12-12</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Handle/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Kernel_Interrupt_and_Exception_Handle/index.html</loc>
     
     <lastmod>2021-12-12</lastmod>
     
@@ -254,21 +394,21 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Basic_Network/TCP_IP_Transport_Layer_1_TCP_Intro/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Tech_Basic_Network/TCP_IP_Transport_Layer_1_TCP_Intro/index.html</loc>
     
     <lastmod>2021-12-06</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Basic_Network/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Tech_Basic_Network/index.html</loc>
     
     <lastmod>2021-12-04</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Internal_Network_Network_Device_Initialization/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Network_Device_Initialization/index.html</loc>
     
     <lastmod>2021-12-01</lastmod>
     
@@ -471,13 +611,6 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/template_book/post_index.json</loc>
-    
-    <lastmod>2021-11-28</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Driver_1_Build_Simple/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
@@ -485,21 +618,7 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/template_book/Paper_Walk_Through/index.html</loc>
-    
-    <lastmod>2021-11-28</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/script/book_index.json</loc>
-    
-    <lastmod>2021-11-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/post_index.json</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -520,21 +639,21 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Internal_Network_Key_Data_Structure/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Internal_Network_Notification_Chain/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Network_Notification_Chain/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Synchronization_RCU/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Synchronization_RCU/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -618,13 +737,6 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Database_And_Storage/post_index.json</loc>
-    
-    <lastmod>2021-11-28</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_10_Task_And_Privilege/kernel.html</loc>
     
     <lastmod>2021-11-28</lastmod>
@@ -632,21 +744,28 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Database_And_Storage/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Tech_Database_And_Storage/post_index.json</loc>
     
     <lastmod>2021-11-28</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/Paper_Inference_Accelerator/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Tech_Database_And_Storage/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Database_And_Storage/Paper_Walk_Through/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Tech_Database_And_Storage/Paper_Walk_Through/index.html</loc>
+    
+    <lastmod>2021-11-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Paper_Inference_Accelerator/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -695,14 +814,7 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/index.html</loc>
-    
-    <lastmod>2021-11-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/post_index.json</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Math_Conmunication_Network_Math_Basic_1_Linear_Programming/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -730,14 +842,14 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/Go_Third_Party_Library_1_gin/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Third_Party_Library_1_gin/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/index_backup.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Data_Structure_And_Algorithm_Algorithm_Intro_backup/index_backup.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -796,20 +908,6 @@
     <loc>http://www.zobinhuang.com:10082/sec_project/index.html</loc>
     
     <lastmod>2021-11-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/index.html</loc>
-    
-    <lastmod>2021-11-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/template_book/index.html</loc>
-    
-    <lastmod>2021-11-02</lastmod>
     
   </url>
   
@@ -1066,21 +1164,21 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Basic_Network/TCP_IP_Underlying_Layer_1_Intro/index.html</loc>
-    
-    <lastmod>2021-09-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Basic_Network/TCP_IP_Application_Layer_1_WWW_And_HTTP/index.html</loc>
-    
-    <lastmod>2021-09-07</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_JWT/index.html</loc>
+    
+    <lastmod>2021-09-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Tech_Basic_Network/TCP_IP_Underlying_Layer_1_Intro/index.html</loc>
+    
+    <lastmod>2021-09-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Tech_Basic_Network/TCP_IP_Application_Layer_1_WWW_And_HTTP/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -1171,287 +1269,287 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Python/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Program_Python/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Python/Package_Management_2_Circular_Import/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Program_Python/Package_Management_1_Import_Specification/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Python/Package_Management_1_Import_Specification/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Program_Python/Package_Management_2_Circular_Import/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_JavaScript_And_Node/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Go_Collection/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_JavaScript_And_Node/JavaScript_4_Fetch/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Program_JavaScript_And_Node/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_JavaScript_And_Node/JavaScript_3_Ajax/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Program_JavaScript_And_Node/JavaScript_1_Crash/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_JavaScript_And_Node/JavaScript_2_Async/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Program_JavaScript_And_Node/JavaScript_2_Async/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_JavaScript_And_Node/JavaScript_1_Crash/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Program_JavaScript_And_Node/JavaScript_4_Fetch/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Program_JavaScript_And_Node/JavaScript_3_Ajax/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/Go_Standard_Library_3_Context/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_3_Compound_Type/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/Go_Standard_Library_2_Net/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_4_Function/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/Go_Standard_Library_1_IO/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_5_Method/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/Go_Env_1_Module_Package_EnvValue/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_9_Go_Package/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/Go_Basic_9_Go_Package/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_8_Go_Shared_Variables/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/Go_Basic_8_Go_Shared_Variables/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_7_Go_Routines/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/Go_Basic_7_Go_Routines/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_6_Interface/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/Go_Basic_6_Interface/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Env_1_Module_Package_EnvValue/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/Go_Basic_5_Method/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Standard_Library_1_IO/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/Go_Basic_4_Function/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Standard_Library_3_Context/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/Go_Basic_3_Compound_Type/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Standard_Library_2_Net/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/Go_Basic_2_Basic_Data/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/AI_CUDA/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/Go_Basic_1_Basic_Concept/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/AI_ML_Andrew_Ng/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_Go/Go_Basic_10_Unit_Test/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/AI_ML_Andrew_Ng/1_2_supervised_learning/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_GNU_And_Makefile/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/AI_ML_Andrew_Ng/2_2_cost_function/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_GNU_And_Makefile/cpp/primer_plus_c9_memory_model_and_namespace/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/AI_ML_Andrew_Ng/1_1_intro/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_GNU_And_Makefile/cpp/primer_plus_c17_input_output_file/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/AI_ML_Andrew_Ng/1_3_unsupervised_learning/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Program_GNU_And_Makefile/GNU_Details_1_attribute_keyword/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/AI_ML_Andrew_Ng/2_1_modle/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Data_Structure/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/AI_CUDA/Environment_Setup_1_Install_on_Win10/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Data_Structure/Basic_Tree/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Data_Structure_And_Algorithm_Data_Structure/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Data_Structure/Basic_Graph/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Data_Structure_And_Algorithm_Data_Structure/Basic_Graph/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/3_Divide_and_conquer/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Data_Structure_And_Algorithm_Data_Structure/Basic_Tree/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/2_Asymptotic_notation_and_recurrences/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Program_GNU_And_Makefile/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Data_Structure_And_Algorithm_Algorithm_Intro/1_Intro_and_algorithm_analyse/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Program_GNU_And_Makefile/GNU_Details_1_attribute_keyword/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/AI_ML_Andrew_Ng/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Program_GNU_And_Makefile/cpp/primer_plus_c17_input_output_file/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/AI_ML_Andrew_Ng/2_2_cost_function/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Program_GNU_And_Makefile/cpp/primer_plus_c9_memory_model_and_namespace/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/AI_ML_Andrew_Ng/2_1_modle/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Data_Structure_And_Algorithm_Algorithm_Intro_backup/1_Intro_and_algorithm_analyse/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/AI_ML_Andrew_Ng/1_3_unsupervised_learning/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Data_Structure_And_Algorithm_Algorithm_Intro_backup/3_Divide_and_conquer/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/AI_ML_Andrew_Ng/1_2_supervised_learning/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Data_Structure_And_Algorithm_Algorithm_Intro_backup/2_Asymptotic_notation_and_recurrences/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/AI_ML_Andrew_Ng/1_1_intro/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_2_Basic_Data/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/AI_CUDA/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_1_Basic_Concept/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/AI_CUDA/Environment_Setup_1_Install_on_Win10/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_10_Unit_Test/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     

@@ -20,16 +20,16 @@
     var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="选择您要翻阅的文章归档情况              工程系统知识         科研论文阅读         随笔文章(未归档)             工程系统知识     1. 运维与部署                                              Docker">
+  <meta name="description" content="选择您要翻阅的文章归档情况              系统知识         科研论文阅读         随笔文章(未归档)">
 <meta property="og:type" content="website">
 <meta property="og:title" content="高性能后台开发">
 <meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/index.html">
 <meta property="og:site_name" content="Zobin">
-<meta property="og:description" content="选择您要翻阅的文章归档情况              工程系统知识         科研论文阅读         随笔文章(未归档)             工程系统知识     1. 运维与部署                                              Docker">
+<meta property="og:description" content="选择您要翻阅的文章归档情况              系统知识         科研论文阅读         随笔文章(未归档)">
 <meta property="og:locale">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/pic/microservices_logo.png">
-<meta property="article:published_time" content="2022-02-07T17:35:33.559Z">
-<meta property="article:modified_time" content="2022-02-07T17:35:33.559Z">
+<meta property="article:published_time" content="2022-02-11T17:19:25.206Z">
+<meta property="article:modified_time" content="2022-02-11T17:19:25.206Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -94,7 +94,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="تشغيل شريط التصفح">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -225,6 +225,7 @@
           <head>
     <link rel="stylesheet" type="text/css" href="../style/book.css" />
     <script type="text/javascript" src="../script/book.js"></script>
+    <script type="text/javascript" src="../script/load_book.js"></script>
 </head>
 
 <body>
@@ -233,142 +234,34 @@
     <img src="./pic/microservices_logo.png" width=200px>
 </div>
 
+<body onload="load_book()">
 
 <div class="div_switch_bar_container">
     <h4>选择您要翻阅的文章归档情况</h4>
     <div class="div_buttons_container">
-        <button id="system" type="button" onclick="selectPostClass(id);">工程系统知识</button>
+        <button id="system" type="button" onclick="selectPostClass(id);">系统知识</button>
         <button id="paper" type="button" onclick="selectPostClass(id);">科研论文阅读</button>
         <button id="non_archived" type="button" onclick="selectPostClass(id);">随笔文章(未归档)</button>
     </div>
 </div>
 
-<div id="system-knowledge">
-    <h2><font color="blue">工程系统知识</font></h2>
-    <h3>1. 运维与部署</h3>
-    <div class="div_learning">  
-        <table border="0" align="center">
-            <tr>
-                <th><div align="center"><h1>Docker</h1></div></th>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Container_1_Docker_Intro/index.html"><b>Chapter 1: 容器技术简介</b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp;介绍了 Docker 的历史、Motivation 以及在 DevOps 语义下的优势；
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Container_2_Docker_Install/index.html"><b>Chapter 2: Docker 简介以及部署</b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp;介绍了 Docker 的基本概念和安装；
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Container_3_Docker_Command/index.html"><b>Chapter 3: Docker 的常用命令</b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp;罗列出了 Docker 基本命令的使用方法；
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Container_4_Docker_Deploy_Example/index.html"><b>Chapter 4: 实例：部署 Nginx, Tomcat 和 Elasticsearch</b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp;通过部署 Nginx，Tomcat 和 Elasticsearch 强化了对 Docker 的使用；
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Container_5_Docker_Portainer/index.html"><b>Chapter 5: Docker 可视化操作工具的安装：Portainer</b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp;部署 Docker 可视化管理工具 Portainer；
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Container_6_Docker_Analyze_of_Image_And_Container/index.html"><b>Chapter 6: Docker 镜像实质和容器运行原理</b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp;剖析了 Docker 镜像的分层实质，以及 Docker 容器的运行原理；
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Container_7_Docker_Commit/index.html"><b>Chapter 7: 使用 Docker Commit 制作自己的镜像</b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp;学习如何使用 docker commit 将容器提交为新的镜像
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Container_8_Docker_volume/index.html"><b>Chapter 8: Docker 容器数据卷</b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 学习了 Docker 数据卷的概念，理解如何把容器内部的文件目录映射到宿主机上实现持久化存储
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Container_9_Docker_DockerFile/index.html"><b>Chapter 9: DockerFile</b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 学习了如何编写 DockerFile，并且从零构建了一个 Tomcat 镜像；
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Container_10_Docker_Push_Image/index.html"><b>Chapter 10: 发布 Docker Image</b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp;学习了如何将制作好的 Docker Image 发布到 DockerHub 和阿里云；
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Container_11_Docker_Network/index.html"><b>Chapter 11: Docker 网络</b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 学习了有关 Docker 网络的原理和具体使用方法；
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Container_12_Redis_Deploy/index.html"><b>Chapter 12: 实例：部署 Redis 集群</b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 尝试使用 docker 部署了一个 "三主三从" 的高可用的 redis 集群；
-                </td>
-            </tr>
-        </table>
-    </div>
-</div>
+<br>
 
-<div id="non-archived-knowledge">
-    <h2><font color="blue">未归档文章</font></h2>
-    <div class="div_learning"> 
+<div id="system-knowledge">
+    <!-- <h2><font color="blue">系统知识</font></h2>
+    <div class="div_learning">
         <table border="0" align="center">
             <tr>
-                <td>
-                    <a href="./Non_Archived_DDNS_with_Tencent_Cloud/index.html"><b>如何通过 DNSPod API 来实现 DDNS</b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 通过编写 Python 脚本，实现了利用 DNSPod API 完成 DDNS 解析
-                </td>
+                <th><div align="center"><h1><b>Title</b></h1></div></th>
             </tr>
             <tr>
                 <td>
-                    <a href="./Non_Archived_Gitlab_Jenkins_Devops/index.html"><b>在家中部署基于 Gitlab 和 Jenkins 的 Devops 平台</b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 搭建 DevOps 平台的记录
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Non_Archived_OAuth2_Intro/index.html"><b>详解 OAuth2</b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp; 通过例子深入详细理解 OAuth2 认证与授权方案流程
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Non_Archived_CORS/index.html"><b>CORS 跨域问题 <font color="red">[未完成]</font></b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp;分析了 CORS 的起因以及解决方法；
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Non_Archived_Backend_Architecture/index.html"><b>浅谈后端服务开发结构：Handler, Service 和 DAL (例子基于 Golang)</font></b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp;浅谈了后端服务开发的分层思路，结合 Golang 程序进行了说明；
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="./Non_Archived_JWT/index.html"><b>详解 JWT：JSON Web Token</font></b></a>
-                    <br> &nbsp;&nbsp;&nbsp;&nbsp;分析了基于 Token 的鉴权机制相比于传统基于 Session 的鉴权机制的优点；分析了 JWT 的详细过程
+                    <a href=""><b>Chapter 1: </b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp;
                 </td>
             </tr>
         </table>
-    </div>
+    </div> -->
 </div>
 
 <div id="paper-reading">
@@ -376,13 +269,30 @@
     <div class="div_learning">
         <table border="0" align="center">
             <tr>
-                <th><div align="center"><h1><b>xxx</b></h1></div></th>
+                <th><div align="center"><h1><b>Roadmap</b></h1></div></th>
             </tr>
             <tr>
                 <td>
-                    <a href="./Paper_Network_Measurement_SIGCOMM_20_BeauCoup/index.html"><b>paper [conf'20] 精读笔记</b></a>
-                    <br><b><font color="blue">📌 论文地址：</font></b><a href="">paper</a>
-                    <br><b><font color="blue">📌 Intro：</font></b>intro
+                    <a href="./Paper_Walk_Through/index.html"><b>Walk Through of Papers for XX (WTPXX)</b></a>
+                    <br> 收集、归纳和总结近年来的xxx领域的相关顶会论文
+                </td>
+            </tr>
+        </table>
+    </div>
+    --->
+</div>
+
+<div id="non-archived-knowledge">
+    <!-- <h2><font color="blue">未归档文章</font></h2>
+    <div class="div_learning">
+        <table border="0" align="center">
+            <tr>
+                <th><div align="center"><h1><b>Title</b></h1></div></th>
+            </tr>
+            <tr>
+                <td>
+                    <a href=""><b>xxx</b></a>
+                    <br> &nbsp;&nbsp;&nbsp;&nbsp;
                 </td>
             </tr>
         </table>
@@ -447,10 +357,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          المحتويات
+          Inhaltsverzeichnis
         </li>
         <li class="sidebar-nav-overview">
-          عام
+          Übersicht
         </li>
       </ul>
 

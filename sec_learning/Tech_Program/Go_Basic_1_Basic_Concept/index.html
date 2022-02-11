@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_catalogue{padding: 10px 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Golang 程序结构">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_1_Basic_Concept/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_catalogue{padding: 10px 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_1_Basic_Concept/pic/xxx.png">
+<meta property="article:published_time" content="2022-02-10T14:39:11.506Z">
+<meta property="article:modified_time" content="2021-09-07T12:09:21.000Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Go_Basic_1_Basic_Concept/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>Golang 程序结构 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project/" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly/" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship/" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay/" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">Golang 程序结构
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Program/">TECH_PROGRAM</a></li>
+          <li>GO_BASIC_1_BASIC_CONCEPT</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_boder{padding: 10px 10px; font-size: 16px; word-spacing:0px;  border:1px solid black;}
+</style>
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>协作者：ZobinHuang，更新日期：June.5 2021</i></font></h4>
+  <div align="left">
+  <font size="2px">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;这篇文章内容的一些部分是转载自<a target="_blank" rel="noopener" href="https://github.com/gopl-zh/gopl-zh.github.com">Go 语言圣经（中文版）</a>，并加上了本人在使用过程中的一些自己的理解和经验，最终整理成可读性更高的网页形式。在此向原作者和译者表示感谢，他们给社区提供了很棒的 Golang 入门参考。
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;原作者：Alan A. A. Donovan · Brian W. Kernighan;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;  译者：柴树杉，Github @chai2010，Twitter @chaishushan；Xargin, https://github.com/cch123；CrazySssst；foreversmart, njutree@gmail.com
+  </font>
+  </div>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=30%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">此文篇幅较长，故设置目录，有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 0. <a href="#0_preface"><font color="blue"><b>前言</b></font></a>：介绍了本章所阐述的内容
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_name"><font color="blue"><b>命名</b></font></a>：分析了 Golang 中的命名规范
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_declaration"><font color="blue"><b>声明</b></font></a>：讨论了 Golang 中关于变量、常量、函数等的声明语句
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_variable"><font color="blue"><b>变量</b></font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.1 <a href="#3_variable_1"><font color="blue">简短变量声明</font></a>：讨论了 := 的用法
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.2 <a href="#3_variable_2"><font color="blue">指针</font></a>：讨论了 Golang 中指针的特性
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.3 <a href="#3_variable_3"><font color="blue">new 函数</font></a>：讨论了使用 new() 函数创建变量的一些特性
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.4 <a href="#3_variable_2"><font color="blue">变量生命周期</font></a>：讨论了在运行时中变量的生命周期问题
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 4. <a href="#4_assignment"><font color="blue"><b>赋值</b></font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.1 <a href="#4_assignment_1"><font color="blue">元组赋值</font></a>：讨论一次性给多个变量赋值的问题
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.2 <a href="#4_assignment_2"><font color="blue">可赋值性</font></a>：讨论了变量赋值的合法性问题 (怎样的赋值是合法的)
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 5. <a href="#5_type"><font color="blue"><b>类型</b></font></a>：讨论了 Golang 中创建和使用类型的问题
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 6. <a href="#6_package"><font color="blue"><b>包和文件</b></font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.1 <a href="#3_variable_2"><font color="blue">导入包</font></a>：讨论了 Golang 中 import package 的问题
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.2 <a href="#3_variable_2"><font color="blue">包的初始化</font></a>：讨论了多级 import 下包级变量的初始化问题
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 7. <a href="#7_scope"><font color="blue"><b>作用域</b></font></a>：讨论了 Golang 在编译时变量的作用域问题
+  </div>
+</div>
+
+<br>
+
+<h2><a name="0_preface">0. 前言</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Go语言和其他编程语言一样，一个大的程序是由很多小的基础构件组成的。变量保存值，简单的加法和减法运算被组合成较复杂的表达式。基础类型被聚合为数组或结构体等更复杂的数据结构。然后使用 if 和 for 之类的控制语句来组织和控制表达式的执行流程。然后多个语句被组织到一个个函数中，以便代码的隔离和复用。函数以源文件和包的方式被组织。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在本章中，我们将深入讨论 Go 程序基础结构方面的一些细节。每个示例程序都是刻意写的简单，这样我们可以减少复杂的算法或数据结构等不相关的问题带来的干扰，从而可以专注于 Go 语言本身的学习。
+</div>
+
+<!--标题-->
+<h2><a name="1_name">1. 命名</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Go语言中的函数名、变量名、常量名、类型名、语句标号和包名等所有的命名，都遵循一个简单的命名规则：<font color="red">一个名字必须以一个字母（Unicode字母）或下划线开头</font>，后面可以跟任意数量的字母、数字或下划线。大写字母和小写字母是不同的：heapSort和Heapsort是两个不同的名字。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Go语言中类似 if 和 switch 的关键字有25个；关键字不能用于自定义名字，只能在特定语法结构中使用。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">break</span>      <span class="keyword">default</span>       <span class="function"><span class="keyword">func</span>     <span class="title">interface</span>   <span class="title">select</span></span></span><br><span class="line"><span class="keyword">case</span>       <span class="keyword">defer</span>         <span class="keyword">go</span>       <span class="keyword">map</span>         <span class="keyword">struct</span></span><br><span class="line"><span class="keyword">chan</span>       <span class="keyword">else</span>          <span class="keyword">goto</span>     <span class="keyword">package</span>     <span class="keyword">switch</span></span><br><span class="line"><span class="keyword">const</span>      <span class="keyword">fallthrough</span>   <span class="keyword">if</span>       <span class="keyword">range</span>       <span class="keyword">type</span></span><br><span class="line"><span class="keyword">continue</span>   <span class="keyword">for</span>           <span class="keyword">import</span>   <span class="keyword">return</span>      <span class="keyword">var</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;此外，还有大约30多个预定义的名字，比如int和true等，主要对应内建的常量、类型和函数。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//内建常量</span></span><br><span class="line"><span class="literal">true</span>    <span class="literal">false</span>   <span class="literal">iota</span>        <span class="literal">nil</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//内建类型</span></span><br><span class="line"><span class="keyword">int</span>     <span class="keyword">int8</span>    <span class="keyword">int16</span>       <span class="keyword">int32</span>     <span class="keyword">int64</span></span><br><span class="line"><span class="keyword">uint</span>    <span class="keyword">uint8</span>   <span class="keyword">uint16</span>      <span class="keyword">uint32</span>    <span class="keyword">uint64</span> <span class="keyword">uintptr</span></span><br><span class="line"><span class="keyword">float32</span> <span class="keyword">float64</span> <span class="keyword">complex128</span>  <span class="keyword">complex64</span></span><br><span class="line"><span class="keyword">bool</span>    <span class="keyword">byte</span>    <span class="keyword">rune</span>        <span class="keyword">string</span>    error</span><br><span class="line"></span><br><span class="line"><span class="comment">//内建函数</span></span><br><span class="line"><span class="built_in">make</span>    <span class="built_in">len</span>   <span class="built_in">cap</span>   <span class="built_in">new</span>   <span class="built_in">append</span>  <span class="built_in">copy</span>  <span class="built_in">close</span>   <span class="built_in">delete</span></span><br><span class="line"><span class="built_in">complex</span> <span class="built_in">real</span>  <span class="built_in">imag</span></span><br><span class="line"><span class="built_in">panic</span>   <span class="built_in">recover</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这些内部预先定义的名字并不是关键字，你可以在定义中重新使用它们。在一些特殊的场景中重新定义它们也是有意义的，但是也要注意避免过度而引起语义混乱。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果一个名字是在函数内部定义，那么它就只在函数内部有效。如果是在函数外部定义，那么将在当前包的所有文件中都可以访问。<font color="red">名字的开头字母的大小写决定了名字在包外的可见性</font>。如果一个名字是大写字母开头的（译注：必须是在函数外部定义的包级名字；包级函数名本身也是包级名字），那么它将是导出的，也就是说可以被外部的包访问，例如fmt包的Printf函数就是导出的，可以在fmt包外部访问。<font color="red">包本身的名字一般总是用小写字母</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;名字的长度没有逻辑限制，但是Go语言的风格是尽量使用短小的名字，对于局部变量尤其是这样；你会经常看到i之类的短名字，而不是冗长的theLoopIndex命名。通常来说，如果一个名字的作用域比较大，生命周期也比较长，那么用长的名字将会更有意义。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在习惯上，Go语言程序员推荐使用 <font color="red"><b>驼峰式</b></font> 命名，当名字由几个单词组成时优先使用大小写分隔，而不是优先用下划线分隔。因此，在标准库有QuoteRuneToASCII和parseRequestLine这样的函数命名，但是一般不会用quote_rune_to_ASCII和parse_request_line这样的命名。而像ASCII和HTML这样的缩略词则避免使用大小写混合的写法，它们可能被称为htmlEscape、HTMLEscape或escapeHTML，但不会是escapeHtml。
+</div>
+
+<h2><a name="2_declaration">2. 声明</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;声明语句定义了程序的各种实体对象以及部分或全部的属性。<b>Go语言主要有四种类型的声明语句：var、const、type和func</b>，分别对应变量、常量、类型和函数实体对象的声明。这一章我们重点讨论变量和类型的声明 (i.e. var, type)，Chapter 2 将讨论常量的声明，Chapter 3 将讨论函数的声明。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一个Go语言编写的程序对应一个或多个以.go为文件后缀名的源文件。每个源文件中以包的声明语句开始，说明该源文件是属于哪个包。包声明语句之后是import语句导入依赖的其它包，然后是包一级的类型、变量、常量、函数的声明语句，包一级的各种类型的声明语句的顺序无关紧要（译注：函数内部的名字则必须先声明之后才能使用）。例如，下面的例子中声明了一个常量、一个函数和两个变量：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Boiling prints the boiling point of water.</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> boilingF = <span class="number">212.0</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">var</span> f = boilingF</span><br><span class="line">  <span class="keyword">var</span> c = (f - <span class="number">32</span>) * <span class="number">5</span> / <span class="number">9</span></span><br><span class="line">  fmt.Printf(<span class="string">&quot;boiling point = %g°F or %g°C\n&quot;</span>, f, c)</span><br><span class="line">  <span class="comment">// Output:</span></span><br><span class="line">  <span class="comment">// boiling point = 212°F or 100°C</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其中常量 boilingF 是在包一级范围声明语句声明的，然后f和c两个变量是在 main 函数内部声明的声明语句声明的。<font color="red">在包一级声明语句声明的名字可在整个包对应的每个源文件中访问</font>，而不是仅仅在其声明语句所在的源文件中访问。相比之下，局部声明的名字就只能在函数内部很小的范围被访问。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一个函数的声明由一个函数名字、参数列表（由函数的调用者提供参数变量的具体值）、一个可选的返回值列表和包含函数定义的函数体组成。如果函数没有返回值，那么返回值列表是省略的。执行函数从函数的第一个语句开始，依次顺序执行直到遇到return返回语句，如果没有返回语句则是执行到函数末尾，然后返回到函数调用者。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们已经看到过很多函数声明和函数调用的例子了，在 Chapter 4 将深入讨论函数的相关细节，这里只简单解释下。下面的 fToC 函数封装了温度转换的处理逻辑，这样它只需要被定义一次，就可以在多个地方多次被使用。在这个例子中，main 函数就调用了两次 fToC 函数，分别使用在局部定义的两个常量作为调用函数的参数。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">const</span> freezingF, boilingF = <span class="number">32.0</span>, <span class="number">212.0</span></span><br><span class="line">  fmt.Printf(<span class="string">&quot;%g°F = %g°C\n&quot;</span>, freezingF, fToC(freezingF)) <span class="comment">// &quot;32°F = 0°C&quot;</span></span><br><span class="line">  fmt.Printf(<span class="string">&quot;%g°F = %g°C\n&quot;</span>, boilingF, fToC(boilingF))   <span class="comment">// &quot;212°F = 100°C&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fToC</span><span class="params">(f <span class="keyword">float64</span>)</span> <span class="title">float64</span></span> &#123;</span><br><span class="line">  <span class="keyword">return</span> (f - <span class="number">32</span>) * <span class="number">5</span> / <span class="number">9</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  </p>
+</div>
+
+<h2><a name="3_variable">3. 变量</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;var声明语句可以创建一个特定类型的变量，然后给变量附加一个名字，并且设置变量的初始值。变量声明的一般语法如下：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> 变量名字 类型 = 表达式</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其中 “类型” 或 “= 表达式” 两个部分可以省略其中的一个。如果省略的是类型信息，那么将根据初始化表达式来推导变量的类型信息。<b>如果初始化表达式被省略，那么将用零值初始化该变量。 数值类型变量对应的零值是 0，布尔类型变量对应的零值是 false，字符串类型对应的零值是空字符串，接口或引用类型（包括 slice、指针、map、chan 和函数）变量对应的零值是 nil，数组或结构体等聚合类型对应的零值是每个元素或字段都是对应该类型的零值</b>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;零值初始化机制可以确保每个声明的变量总是有一个良好定义的值，因此在 Go 语言中不存在未初始化的变量。这个特性可以简化很多代码，而且可以在没有增加额外工作的前提下确保边界条件下的合理行为。例如：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> s <span class="keyword">string</span></span><br><span class="line">fmt.Println(s) <span class="comment">// &quot;&quot;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这段代码将打印一个空字符串，而不是导致错误或产生不可预知的行为。Go 语言程序员应该让一些聚合类型的零值也具有意义，这样可以保证不管任何类型的变量总是有一个合理有效的零值状态。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;也可以在一个声明语句中同时声明一组变量，或用一组初始化表达式声明并初始化一组变量。如果省略每个变量的类型，将可以声明多个类型不同的变量（类型由初始化表达式推导）：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> i, j, k <span class="keyword">int</span>                 <span class="comment">// int, int, int</span></span><br><span class="line"><span class="keyword">var</span> b, f, s = <span class="literal">true</span>, <span class="number">2.3</span>, <span class="string">&quot;four&quot;</span> <span class="comment">// bool, float64, string</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;初始化表达式可以是字面量或任意的表达式。在<b>包级别声明的变量</b>会在 main 入口函数执行前完成初始化，<b>局部变量</b>将在声明语句被执行到的时候完成初始化。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一组变量也可以通过调用一个函数，由函数返回的多个返回值初始化：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f, err = os.Open(name) <span class="comment">// os.Open returns a file and an error</span></span><br></pre></td></tr></table></figure>
+  <h3><a name="3_variable_1">3.1 简短变量声明</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在函数内部，有一种称为 <b>简短变量声明</b> 语句的形式可用于声明和初始化局部变量。它以“名字 := 表达式”形式声明变量，变量的类型根据表达式来自动推导。下面是 lissajous 函数中的三个简短变量声明语句：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">anim := gif.GIF&#123;LoopCount: nframes&#125;</span><br><span class="line">freq := rand.Float64() * <span class="number">3.0</span></span><br><span class="line">t := <span class="number">0.0</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因为简洁和灵活的特点，简短变量声明被广泛用于大部分的局部变量的声明和初始化。var形式的声明语句往往是用于需要显式指定变量类型的地方，或者因为变量稍后会被重新赋值而初始值无关紧要的地方。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">i := <span class="number">100</span>                    <span class="comment">// an int</span></span><br><span class="line"><span class="keyword">var</span> boiling <span class="keyword">float64</span> = <span class="number">100</span>   <span class="comment">// a float64</span></span><br><span class="line"><span class="keyword">var</span> names []<span class="keyword">string</span></span><br><span class="line"><span class="keyword">var</span> err error</span><br><span class="line"><span class="keyword">var</span> p Point</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;和var形式声明语句一样，简短变量声明语句也可以用来声明和初始化一组变量：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">i, j := <span class="number">0</span>, <span class="number">1</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;但是这种<b>同时声明多个变量的方式应该限制只在可以提高代码可读性的地方使用</b>，比如for语句的循环的初始化语句部分。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;请记住 <b>“:=”是一个变量声明语句，而“=”是一个变量赋值操作</b>，也不要混淆 <b>多个变量的声明</b> 和 <b>元组的多重赋值 (详见 4.1)</b>，后者是将右边各个表达式的值赋值给左边对应位置的各个变量：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">i, j = j, i <span class="comment">// 交换 i 和 j 的值</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;和普通 var 形式的变量声明语句一样，简短变量声明语句也可以用函数的返回值来声明和初始化变量，像下面的 os.Open 函数调用将返回两个值：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">f, err := os.Open(name)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ...use f...</span></span><br><span class="line">f.Close()</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这里有一个比较微妙的地方：简短变量声明左边的变量可能并不是全部都是刚刚声明的。<b>如果有一些已经在相同的词法域声明过了，那么简短变量声明语句对这些已经声明过的变量就只有赋值行为了</b>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在下面的代码中，第一个语句声明了 in 和 err 两个变量。在第二个语句只声明了 out 一个变量，然后对已经声明的 err 进行了赋值操作。
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">in, err := os.Open(infile)</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">out, err := os.Create(outfile)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;简短变量声明语句中必须至少要声明一个新的变量，下面的代码将不能编译通过：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">f, err := os.Open(infile)</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">f, err := os.Create(outfile) <span class="comment">// compile error: no new variables</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;解决的方法是第二个简短变量声明语句改用普通的多重赋值语句。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>简短变量声明语句只有对已经在同级词法域声明过的变量才和赋值操作语句等价，如果变量是在外部词法域声明的，那么简短变量声明语句将会在当前词法域重新声明一个新的变量</b>。我们在本章后面将会看到类似的例子。
+  </p>
+
+  <h3><a name="3_variable_2">3.2 指针</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一个变量对应一个保存了变量对应类型值的内存空间。普通变量在声明语句创建时被绑定到一个变量名，比如叫x的变量，但是还有很多变量始终以表达式方式引入，例如x[i]或x.f变量。所有这些表达式一般都是读取一个变量的值，除非它们是出现在赋值语句的左边，这种时候是给对应变量赋予一个新的值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一个指针的值是另一个变量的地址。一个指针对应变量在内存中的存储位置。并不是每一个值都会有一个内存地址，但是对于每一个变量必然有对应的内存地址。通过指针，我们可以直接读或更新对应变量的值，而不需要知道该变量的名字（如果变量有名字的话）。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果用 “var x int” 声明语句声明一个 x 变量，那么 &x 表达式（取 x 变量的内存地址）将产生一个指向该整数变量的指针，指针对应的数据类型是 *int，指针被称之为 “指向int类型的指针”。如果指针名字为 p ，那么可以说 “p指针指向变量x”，或者说 “p指针保存了x变量的内存地址”。同时 *p 表达式对应 p 指针指向的变量的值。一般 *p 表达式读取指针指向的变量的值，这里为 int 类型的值，同时因为 *p 对应一个变量，所以该表达式也可以出现在赋值语句的左边，表示更新指针所指向的变量的值。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x := <span class="number">1</span></span><br><span class="line">p := &amp;x         <span class="comment">// p, of type *int, points to x</span></span><br><span class="line">fmt.Println(*p) <span class="comment">// &quot;1&quot;</span></span><br><span class="line">*p = <span class="number">2</span>          <span class="comment">// equivalent to x = 2</span></span><br><span class="line">fmt.Println(x)  <span class="comment">// &quot;2&quot;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于聚合类型每个成员——比如结构体的每个字段、或者是数组的每个元素，它们也都是各自对应一个变量，因此可以被取地址。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;变量有时候被称为可寻址的值。即使变量由表达式临时生成，表达式也必须得能接受 & 取地址操作。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;任何类型的指针的零值都是nil。如果 p 指向某个有效变量，那么 p != nil 测试为真。<b>指针之间也是可以进行相等测试的</b>，只有当它们指向同一个变量或全部是nil时才相等。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x, y <span class="keyword">int</span></span><br><span class="line">fmt.Println(&amp;x == &amp;x, &amp;x == &amp;y, &amp;x == <span class="literal">nil</span>) <span class="comment">// &quot;true false false&quot;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Go 语言中，<b><font color="red">返回函数中局部变量的地址也是安全的</font></b>。例如下面的代码，调用 f 函数时创建局部变量 v，在局部变量地址被返回之后依然有效，因为指针 p 依然引用这个变量，这点与 C/C++ 不同。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> p = f()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">f</span><span class="params">()</span> *<span class="title">int</span></span> &#123;</span><br><span class="line">  v := <span class="number">1</span></span><br><span class="line">  <span class="keyword">return</span> &amp;v</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;每次调用f函数都将返回不同的结果：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fmt.Println(f() == f()) <span class="comment">// &quot;false&quot;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因为指针包含了一个变量的地址，因此如果将指针作为调用函数的参数，那将可以在函数中通过该指针来更新变量的值。例如下面这个例子就是通过指针来更新变量的值，然后返回更新后的值，可用在一个表达式中（译注：这是对 C 语言中 ++v 操作的模拟，这里只是为了说明指针的用法，incr 函数模拟的做法并不推荐）：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">incr</span><span class="params">(p *<span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">  *p++ <span class="comment">// 非常重要：只是增加p指向的变量的值，并不改变p指针！！！</span></span><br><span class="line">  <span class="keyword">return</span> *p</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">v := <span class="number">1</span></span><br><span class="line">incr(&amp;v)              <span class="comment">// side effect: v is now 2</span></span><br><span class="line">fmt.Println(incr(&amp;v)) <span class="comment">// &quot;3&quot; (and v is 3)</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;每次我们对一个变量取地址，或者复制指针，我们都是为原变量创建了新的别名。例如，*p 就是变量 v 的别名。指针特别有价值的地方在于我们可以不用名字而访问一个变量，但是这是一把双刃剑：要找到一个变量的所有访问者并不容易，我们必须知道变量全部的别名（译注：这是 Go 语言的垃圾回收器所做的工作）。不仅仅是指针会创建别名，很多其他引用类型也会创建别名，例如 slice、map 和 chan，甚至结构体、数组和接口都会创建所引用变量的别名。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;指针是实现标准库中 flag 包的关键技术，它使用命令行参数来设置对应变量的值，而这些对应命令行标志参数的变量可能会零散分布在整个程序中。为了说明这一点，我们以下面的程序为例，它使用 flag 包打印出了命令行中出现的参数，其中包含了两个可选的命令行参数：-n 用于忽略行尾的换行符，-s sep用于指定分隔字符（默认是空格）：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This script prints its command-line arguments.</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">&quot;flag&quot;</span></span><br><span class="line">  <span class="string">&quot;fmt&quot;</span></span><br><span class="line">  <span class="string">&quot;strings&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> n = flag.Bool(<span class="string">&quot;n&quot;</span>, <span class="literal">false</span>, <span class="string">&quot;omit trailing newline&quot;</span>)</span><br><span class="line"><span class="keyword">var</span> sep = flag.String(<span class="string">&quot;s&quot;</span>, <span class="string">&quot; &quot;</span>, <span class="string">&quot;separator&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  flag.Parse()</span><br><span class="line">  fmt.Print(strings.Join(flag.Args(), *sep))</span><br><span class="line">  <span class="keyword">if</span> !*n &#123;</span><br><span class="line">    fmt.Println()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;调用 flag.Bool 函数会创建一个新的对应布尔型标志参数的变量。它有三个属性：第一个是命令行标志参数的名字 “n”，然后是该标志参数的默认值（这里是false），最后是该标志参数对应的描述信息。如果用户在命令行输入了一个无效的标志参数，或者输入 -h 或 -help 参数，那么将打印所有标志参数的名字、默认值和描述信息。类似的，调用 flag.String 函数将创建一个对应字符串类型的标志参数变量，同样包含命令行标志参数对应的参数名、默认值、和描述信息。<b>程序中的 sep 和 n 变量分别是指向对应命令行标志参数变量的指针</b>，因此必须用 *sep 和 *n 形式的指针语法间接引用它们。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当程序运行时，<b>必须在使用标志参数对应的变量之前先调用 flag.Parse 函数，用于更新每个标志参数对应变量的值（之前是默认值）</b>。<b>对于非标志参数的普通命令行参数可以通过调用 flag.Args() 函数来访问，返回值对应一个字符串类型的slice</b>。如果在 flag.Parse 函数解析命令行参数时遇到错误，默认将打印相关的提示信息，然后调用 os.Exit(2) 终止程序。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;让我们运行一些echo测试用例：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ go build gopl.io/ch2/echo4</span><br><span class="line">$ ./echo4 a bc def</span><br><span class="line">a bc def</span><br><span class="line">$ ./echo4 -s / a bc def</span><br><span class="line">a/bc/def</span><br><span class="line">$ ./echo4 -n a bc def</span><br><span class="line">a bc def$</span><br><span class="line">$ ./echo4 -<span class="built_in">help</span></span><br><span class="line">Usage of ./echo4:</span><br><span class="line">  -n    omit trailing newline</span><br><span class="line">  -s string</span><br><span class="line">        separator (default <span class="string">&quot; &quot;</span>)</span><br></pre></td></tr></table></figure>
+
+  <h3><a name="3_variable_3">3.3 new函数</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另一个创建变量的方法是调用内建的 new 函数。表达式 new(T) 将创建一个 T 类型的匿名变量，初始化为 T 类型的零值，然后返回变量地址，返回的指针类型为 *T。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">p := <span class="built_in">new</span>(<span class="keyword">int</span>)   <span class="comment">// p, *int 类型, 指向匿名的 int 变量</span></span><br><span class="line">fmt.Println(*p) <span class="comment">// &quot;0&quot;</span></span><br><span class="line">*p = <span class="number">2</span>          <span class="comment">// 设置 int 匿名变量的值为 2</span></span><br><span class="line">fmt.Println(*p) <span class="comment">// &quot;2&quot;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;用 new 创建变量和普通变量声明语句方式创建变量没有什么区别，除了不需要声明一个临时变量的名字外，我们还可以在表达式中使用 new(T)。换言之，new函数类似是一种语法糖，而不是一个新的基础概念。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面的两个newInt函数有着相同的行为：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">newInt</span><span class="params">()</span> *<span class="title">int</span></span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">new</span>(<span class="keyword">int</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">newInt</span><span class="params">()</span> *<span class="title">int</span></span> &#123;</span><br><span class="line">  <span class="keyword">var</span> dummy <span class="keyword">int</span></span><br><span class="line">  <span class="keyword">return</span> &amp;dummy</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;每次调用 new 函数都是返回一个新的变量的地址，因此下面两个地址是不同的：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">p := <span class="built_in">new</span>(<span class="keyword">int</span>)</span><br><span class="line">q := <span class="built_in">new</span>(<span class="keyword">int</span>)</span><br><span class="line">fmt.Println(p == q) <span class="comment">// &quot;false&quot;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当然也可能有特殊情况：如果两个类型都是空的，也就是说类型的大小是0，例如struct{}和[0]int，有可能有相同的地址（依赖具体的语言实现）（译注：请谨慎使用大小为0的类型，因为如果类型的大小为0的话，可能导致 Go 语言的自动垃圾回收器有不同的行为，具体请查看 runtime.SetFinalizer 函数相关文档）。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;new函数使用通常相对比较少，因为对于结构体来说，直接用字面量语法创建新变量的方法会更灵活。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于 new 只是一个预定义的函数，它并不是一个关键字，因此我们可以将 new 名字重新定义为别的类型。例如下面的例子：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">delta</span><span class="params">(old, <span class="built_in">new</span> <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123; <span class="keyword">return</span> <span class="built_in">new</span> - old &#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于 new 被定义为 int 类型的变量名，因此在 delta 函数内部是无法使用内置的 new 函数的。
+
+  <h3><a name="3_variable_4">3.4 变量的生命周期</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;变量的生命周期指的是在程序运行期间变量有效存在的时间段。<font color="red">对于在包一级声明的变量来说，它们的生命周期和整个程序的运行周期是一致的</font>。而相比之下，<font color="red">局部变量的生命周期则是动态的：每次从创建一个新变量的声明语句开始，直到该变量不再被引用为止，然后变量的存储空间可能被回收</font>。函数的参数变量和返回值变量都是局部变量。它们在函数每次被调用的时候创建。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;例如，下面的代码片段：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> t := <span class="number">0.0</span>; t &lt; cycles*<span class="number">2</span>*math.Pi; t += res &#123;</span><br><span class="line">  x := math.Sin(t)</span><br><span class="line">  y := math.Sin(t*freq + phase)</span><br><span class="line">  img.SetColorIndex(size+<span class="keyword">int</span>(x*size+<span class="number">0.5</span>), size+<span class="keyword">int</span>(y*size+<span class="number">0.5</span>),</span><br><span class="line">    blackIndex)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;译注：函数的右小括弧也可以另起一行缩进，同时<b>为了防止编译器在行尾自动插入分号而导致的编译错误，可以在末尾的参数变量后面显式插入逗号</b>。像下面这样：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> t := <span class="number">0.0</span>; t &lt; cycles*<span class="number">2</span>*math.Pi; t += res &#123;</span><br><span class="line">  x := math.Sin(t)</span><br><span class="line">  y := math.Sin(t*freq + phase)</span><br><span class="line">  img.SetColorIndex(</span><br><span class="line">    size+<span class="keyword">int</span>(x*size+<span class="number">0.5</span>), size+<span class="keyword">int</span>(y*size+<span class="number">0.5</span>),</span><br><span class="line">    blackIndex,   <span class="comment">// 最后插入的逗号不会导致编译错误，这是 Go 编译器的一个特性</span></span><br><span class="line">  )               <span class="comment">// 小括弧另起一行缩进，和大括弧的风格保存一致</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在循环的开始会创建临时变量 t，然后在每次循环迭代中创建临时变量 x 和 y。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;那么Go语言的自动垃圾收集器是如何知道一个变量是何时可以被回收的呢？这里我们可以避开完整的技术细节，基本的实现思路是，<font color="red">从每个包级的变量和每个当前运行函数的每一个局部变量开始，通过指针或引用的访问路径遍历，是否可以找到该变量。如果不存在这样的访问路径，那么说明该变量是不可达的，也就是说它是否存在并不会影响程序后续的计算结果</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因为一个变量的有效周期只取决于是否可达，因此一个循环迭代内部的局部变量的生命周期可能超出其局部作用域。同时，<font color="red">局部变量可能在函数返回之后依然存在</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;编译器会自动选择在栈上还是在堆上分配局部变量的存储空间，但可能令人惊讶的是，这个选择并不是由用 var 还是 new 声明变量的方式决定的。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> global *<span class="keyword">int</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">f</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">var</span> x <span class="keyword">int</span></span><br><span class="line">  x = <span class="number">1</span></span><br><span class="line">  global = &amp;x</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">g</span><span class="params">()</span></span> &#123;</span><br><span class="line">  y := <span class="built_in">new</span>(<span class="keyword">int</span>)</span><br><span class="line">  *y = <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="red">f 函数里的 x 变量必须在堆上分配</font>，因为它在函数退出后依然可以通过包一级的 global 变量找到，虽然它是在函数内部定义的；用 Go 语言的术语说，这个 x 局部变量从函数 f 中<b>逃逸</b>了。相反，当 g 函数返回时，变量 *y 将是不可达的，也就是说可以马上被回收的。因此，*y 并没有从函数 g 中逃逸，编译器可以选择在栈上分配 *y 的存储空间（译注：也可以选择在堆上分配，然后由 Go 语言的 GC 回收这个变量的内存空间），虽然这里用的是 new 方式。其实在任何时候，你并不需为了编写正确的代码而要考虑变量的逃逸行为，要记住的是，逃逸的变量需要额外分配内存，同时对性能的优化可能会产生细微的影响。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Go 语言的自动垃圾收集器对编写正确的代码是一个巨大的帮助，但也并不是说你完全不用考虑内存了。<b>你虽然不需要显式地分配和释放内存，但是要编写高效的程序你依然需要了解变量的生命周期。例如，如果将指向短生命周期对象的指针保存到具有长生命周期的对象中，特别是保存到全局变量时，会阻止对短生命周期对象的垃圾回收（从而可能影响程序的性能）</b>。
+</div>
+
+<h2><a name="4_assignment">4. 赋值</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;使用赋值语句可以更新一个变量的值，最简单的赋值语句是将要被赋值的变量放在=的左边，新值的表达式放在=的右边。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x = <span class="number">1</span>                       <span class="comment">// 命名变量的赋值</span></span><br><span class="line">*p = <span class="literal">true</span>                   <span class="comment">// 通过指针间接赋值</span></span><br><span class="line">person.name = <span class="string">&quot;bob&quot;</span>         <span class="comment">// 结构体字段赋值</span></span><br><span class="line">count[x] = count[x] * scale <span class="comment">// 数组、slice或map的元素赋值</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;特定的二元算术运算符和赋值语句的复合操作有一个简洁形式，例如上面最后的语句可以重写为：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">count[x] *= scale</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>这样可以省去对变量表达式的重复计算</b>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;数值变量也可以支持++递增和--递减语句（<font color="red">译注：自增和自减是语句，而不是表达式，因此x = i++之类的表达式是错误的</font>）：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">v := <span class="number">1</span></span><br><span class="line">v++    <span class="comment">// 等价方式 v = v + 1；v 变成 2</span></span><br><span class="line">v--    <span class="comment">// 等价方式 v = v - 1；v 变成 1</span></span><br></pre></td></tr></table></figure>
+  <p>
+
+  <h3><a name="4_assignment_1">4.1 元组赋值</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;元组赋值是另一种形式的赋值语句，它允许同时更新多个变量的值。在赋值之前，赋值语句右边的所有表达式将会先进行求值，然后再统一更新左边对应变量的值。这对于处理有些同时出现在元组赋值语句左右两边的变量很有帮助，例如我们可以这样交换两个变量的值：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x, y = y, x</span><br><span class="line"></span><br><span class="line">a[i], a[j] = a[j], a[i]</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;或者是计算两个整数值的的最大公约数（GCD, greatest common divisor 的缩写，欧几里德的 GCD 是最早的非平凡算法）：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">gcd</span><span class="params">(x, y <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">  <span class="keyword">for</span> y != <span class="number">0</span> &#123;</span><br><span class="line">    x, y = y, x%y</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> x</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;或者是计算斐波纳契数列（Fibonacci）的第N个数：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fib</span><span class="params">(n <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">  x, y := <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">  <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; n; i++ &#123;</span><br><span class="line">    x, y = y, x+y</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> x</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;元组赋值也可以使一系列琐碎赋值更加紧凑（译注: 特别是在for循环的初始化部分），
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">i, j, k = <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;但如果表达式太复杂的话，应该尽量避免过度使用元组赋值；因为每个变量单独赋值语句的写法可读性会更好。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有些表达式会产生多个值，比如调用一个有多个返回值的函数。当这样一个函数调用出现在元组赋值右边的表达式中时（译注：右边不能再有其它表达式），左边变量的数目必须和右边一致。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f, err = os.Open(<span class="string">&quot;foo.txt&quot;</span>) <span class="comment">// function call returns two values</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;通常，这类函数会用额外的返回值来表达某种错误类型，例如 os.Open 是用额外的返回值返回一个 error 类型的错误，还有一些是用来返回布尔值，通常被称为 ok。在稍后我们将看到的三个操作都是类似的用法。如果 map 查找、类型断言或通道接收出现在赋值语句的右边，它们都可能会产生两个结果，有一个额外的布尔结果表示操作是否成功：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">v, ok = m[key]             <span class="comment">// map lookup</span></span><br><span class="line">v, ok = x.(T)              <span class="comment">// type assertion</span></span><br><span class="line">v, ok = &lt;-ch               <span class="comment">// channel receive</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;译注：map查找、类型断言或通道接收出现在赋值语句的右边时，并不一定是产生两个结果，也可能只产生一个结果。对于只产生一个结果的情形，map查找失败时会返回零值，类型断言失败时会发生运行时panic异常，通道接收失败时会返回零值（阻塞不算是失败）。例如下面的例子：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">v = m[key]                <span class="comment">// map查找，失败时返回零值</span></span><br><span class="line">v = x.(T)                 <span class="comment">// type断言，失败时 panic 异常</span></span><br><span class="line">v = &lt;-ch                  <span class="comment">// 管道接收，失败时返回零值（阻塞不算是失败）</span></span><br><span class="line"></span><br><span class="line">_, ok = m[key]            <span class="comment">// map返回2个值</span></span><br><span class="line">_, ok = mm[<span class="string">&quot;&quot;</span>], <span class="literal">false</span>     <span class="comment">// map返回1个值</span></span><br><span class="line">_ = mm[<span class="string">&quot;&quot;</span>]                <span class="comment">// map返回1个值</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;和变量声明一样，我们可以用下划线空白标识符_来丢弃不需要的值。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">_, err = io.Copy(dst, src) <span class="comment">// 丢弃字节数</span></span><br><span class="line">_, ok = x.(T)              <span class="comment">// 只检测类型，忽略具体值</span></span><br></pre></td></tr></table></figure>
+  <h3><a name="4_assignment_2">4.2 可赋值性</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;赋值语句是显式的赋值形式，但是程序中还有很多地方会发生<b>隐式的赋值行为</b>：函数调用会隐式地将调用参数的值赋值给函数的参数变量，一个返回语句会隐式地将返回操作的值赋值给结果变量，一个复合类型的字面量也会产生赋值行为。例如下面的语句：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">medals := []<span class="keyword">string</span>&#123;<span class="string">&quot;gold&quot;</span>, <span class="string">&quot;silver&quot;</span>, <span class="string">&quot;bronze&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;隐式地对slice的每个元素进行赋值操作，类似这样写的行为：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">medals[<span class="number">0</span>] = <span class="string">&quot;gold&quot;</span></span><br><span class="line">medals[<span class="number">1</span>] = <span class="string">&quot;silver&quot;</span></span><br><span class="line">medals[<span class="number">2</span>] = <span class="string">&quot;bronze&quot;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;map 和 chan 的元素，虽然不是普通的变量，但是也有类似的隐式赋值行为。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;不管是隐式还是显式地赋值，在赋值语句左边的变量和右边最终的求到的值必须有相同的数据类型。更直白地说，<b>只有右边的值对于左边的变量是可赋值的，赋值语句才是允许的</b>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可赋值性的规则对于不同类型有着不同要求，对每个新类型特殊的地方我们会专门解释。对于目前我们已经讨论过的类型，它的规则是简单的：类型必须完全匹配，nil可以赋值给任何指针或引用类型的变量。常量则有更灵活的赋值规则，因为这样可以避免不必要的显式的类型转换。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于两个值是否可以用 == 或 != 进行相等比较的能力也和可赋值能力有关系：<b>对于任何类型的值的相等比较，第二个值必须是对第一个值类型对应的变量是可赋值的，反之亦然</b>。和前面一样，我们会对每个新类型比较特殊的地方做专门的解释。
+</div>
+
+<h2><a name="5_type">5. 类型</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;变量或表达式的类型定义了对应存储值的属性特征，例如数值在内存的存储大小（或者是元素的bit个数），它们在内部是如何表达的，是否支持一些操作符，以及它们自己关联的方法集等。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在任何程序中都会存在一些变量有着相同的内部结构，但是却表示完全不同的概念。例如，一个int类型的变量可以用来表示一个循环的迭代索引、或者一个时间戳、或者一个文件描述符、或者一个月份；一个float64类型的变量可以用来表示每秒移动几米的速度、或者是不同温度单位下的温度；一个字符串可以用来表示一个密码或者一个颜色的名称。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一个类型声明语句创建了一个新的类型名称，和现有类型具有相同的底层结构。<b>新命名的类型提供了一个方法，用来分隔不同概念的类型，这样即使它们底层类型相同也是不兼容的</b>。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> 类型名字 底层类型</span><br></pre></td></tr></table></figure>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;类型声明语句一般出现在包一级，因此如果新创建的类型名字的首字符大写，则在包外部也可以使用。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;译注：对于中文汉字，Unicode标志都作为小写字母处理，因此中文的命名默认不能导出；不过国内的用户针对该问题提出了不同的看法，根据 RobPike 的回复，在 Go2 中有可能会将中日韩等字符当作大写字母处理。下面是 RobPik 在 Issue763 的回复：
+
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;A solution that's been kicking around for a while:
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;For Go 2 (can't do it before then): Change the definition to “lower case letters and _ are package-local; all else is exported”. Then with non-cased languages, such as Japanese, we can write 日本语 for an exported name and _日本语 for a local name. This rule has no effect, relative to the Go 1 rule, with cased languages. They behave exactly the same.
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了说明类型声明，我们将不同温度单位分别定义为不同的类型：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Package tempconv performs Celsius and Fahrenheit temperature computations.</span></span><br><span class="line"><span class="keyword">package</span> tempconv</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Celsius <span class="keyword">float64</span>    <span class="comment">// 摄氏温度</span></span><br><span class="line"><span class="keyword">type</span> Fahrenheit <span class="keyword">float64</span> <span class="comment">// 华氏温度</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">  AbsoluteZeroC Celsius = <span class="number">-273.15</span> <span class="comment">// 绝对零度</span></span><br><span class="line">  FreezingC     Celsius = <span class="number">0</span>       <span class="comment">// 结冰点温度</span></span><br><span class="line">  BoilingC      Celsius = <span class="number">100</span>     <span class="comment">// 沸水温度</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CToF</span><span class="params">(c Celsius)</span> <span class="title">Fahrenheit</span></span> &#123; <span class="keyword">return</span> Fahrenheit(c*<span class="number">9</span>/<span class="number">5</span> + <span class="number">32</span>) &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">FToC</span><span class="params">(f Fahrenheit)</span> <span class="title">Celsius</span></span> &#123; <span class="keyword">return</span> Celsius((f - <span class="number">32</span>) * <span class="number">5</span> / <span class="number">9</span>) &#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在这个包声明了两种类型：Celsius 和 Fahrenheit 分别对应不同的温度单位。它们虽然有着相同的底层类型 float64，但是它们是不同的数据类型，<b>因此它们不可以被相互比较或混在一个表达式运算</b>。刻意区分类型，可以避免一些像无意中使用不同单位的温度混合计算导致的错误；因此需要一个类似 Celsius(t) 或 Fahrenheit(t) 形式的显式转型操作才能将 float64 转为对应的类型。<b>Celsius(t) 和 Fahrenheit(t) 是类型转换操作，它们并不是函数调用。类型转换不会改变值本身，但是会使它们的语义发生变化。</b>另一方面，CToF和FToC两个函数则是对不同温度单位下的温度进行换算，它们会返回不同的值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于每一个类型 T，都有一个对应的类型转换操作 T(x)，用于将 x 转为 T 类型（译注：如果 T 是指针类型，可能会需要用小括弧包装 T，比如 (*int)(0)）。<b>只有当两个类型的底层基础类型相同时，才允许这种转型操作，或者是两者都是指向相同底层结构的指针类型，这些转换只改变类型而不会影响值本身。</b>如果 x 是可以赋值给 T 类型的值，那么 x 必然也可以被转为 T 类型，但是一般没有这个必要。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;数值类型之间的转型也是允许的，并且在字符串和一些特定类型的 slice 之间也是可以转换的，在下一章我们会看到这样的例子。这类转换可能改变值的表现。例如，将一个浮点数转为整数将丢弃小数部分，将一个字符串转为 []byte 类型的 slice 将拷贝一个字符串数据的副本。<b>在任何情况下，运行时不会发生转换失败的错误（译注: 错误只会发生在编译阶段）</b>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>底层数据类型决定了内部结构和表达方式，也决定是否可以像底层类型一样对内置运算符的支持</b>。这意味着，Celsius 和 Fahrenheit 类型的算术运算行为和底层的 float64 类型是一样的，正如我们所期望的那样。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">fmt.Printf(<span class="string">&quot;%g\n&quot;</span>, BoilingC-FreezingC) <span class="comment">// &quot;100&quot; °C</span></span><br><span class="line">boilingF := CToF(BoilingC)</span><br><span class="line">fmt.Printf(<span class="string">&quot;%g\n&quot;</span>, boilingF-CToF(FreezingC)) <span class="comment">// &quot;180&quot; °F</span></span><br><span class="line">fmt.Printf(<span class="string">&quot;%g\n&quot;</span>, boilingF-FreezingC)       <span class="comment">// compile error: type mismatch</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;比较运算符 == 和 < 也可以用来比较一个命名类型的变量和另一个有相同类型的变量，或有着相同底层类型的<font color="red">未命名类型的值</font>之间做比较。但是如果两个值有着不同的类型，则不能直接进行比较：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> c Celsius</span><br><span class="line"><span class="keyword">var</span> f Fahrenheit</span><br><span class="line">fmt.Println(c == <span class="number">0</span>)          <span class="comment">// &quot;true&quot;</span></span><br><span class="line">fmt.Println(f &gt;= <span class="number">0</span>)          <span class="comment">// &quot;true&quot;</span></span><br><span class="line">fmt.Println(c == f)          <span class="comment">// compile error: type mismatch</span></span><br><span class="line">fmt.Println(c == Celsius(f)) <span class="comment">// &quot;true&quot;!</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注意最后那个语句。尽管看起来像函数调用，但是 Celsius(f) 是类型转换操作，它并不会改变值，仅仅是改变值的类型而已。测试为真的原因是因为 c 和 g 都是零值。
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一个命名的类型可以提供书写方便，特别是可以避免一遍又一遍地书写复杂类型（译注：例如用匿名的结构体定义变量）。虽然对于像 float64 这种简单的底层类型没有简洁很多，但是如果是复杂的类型将会简洁很多，特别是我们即将讨论的结构体类型。
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;命名类型还可以为该类型的值定义新的行为。这些行为表示为一组关联到该类型的函数集合，我们称为类型的方法集。我们将在第五章中讨论方法的细节，这里只说些简单用法。
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面的声明语句，Celsius 类型的参数 c 出现在了函数名的前面，表示声明的是 Celsius 类型的一个名叫 String 的方法，该方法返回该类型对象 c 带着 °C 温度单位的字符串：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c Celsius)</span> <span class="title">String</span><span class="params">()</span> <span class="title">string</span></span> &#123; <span class="keyword">return</span> fmt.Sprintf(<span class="string">&quot;%g°C&quot;</span>, c) &#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;许多类型都会定义一个 String 方法，因为当使用 fmt 包的打印方法时，将会优先使用该类型对应的 String 方法返回的结果打印，我们将在后面的文章中进行讲述。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">c := FToC(<span class="number">212.0</span>)</span><br><span class="line">fmt.Println(c.String()) <span class="comment">// &quot;100°C&quot;</span></span><br><span class="line">fmt.Printf(<span class="string">&quot;%v\n&quot;</span>, c)   <span class="comment">// &quot;100°C&quot;; no need to call String explicitly</span></span><br><span class="line">fmt.Printf(<span class="string">&quot;%s\n&quot;</span>, c)   <span class="comment">// &quot;100°C&quot;</span></span><br><span class="line">fmt.Println(c)          <span class="comment">// &quot;100°C&quot;</span></span><br><span class="line">fmt.Printf(<span class="string">&quot;%g\n&quot;</span>, c)   <span class="comment">// &quot;100&quot;; does not call String</span></span><br><span class="line">fmt.Println(<span class="keyword">float64</span>(c)) <span class="comment">// &quot;100&quot;; does not call String</span></span><br></pre></td></tr></table></figure>
+</div>
+
+<h2><a name="6_package">6. 包和文件</a></h2>
+<div class="div_learning_post_boder">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Go 语言中的包和其他语言的库或模块的概念类似，目的都是为了支持模块化、封装、单独编译和代码重用。一个包的源代码保存在一个或多个以 .go 为文件后缀名的源文件中，<b>通常一个包所在目录路径的后缀是包的导入路径</b>；例如包 gopl.io/ch1/helloworld 对应的目录路径是 $GOPATH/src/gopl.io/ch1/helloworld。
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;每个包都对应一个独立的名字空间。例如，在 image 包中的 Decode 函数和在 unicode/utf16 包中的 Decode 函数是不同的。要在外部引用该函数，必须显式使用 image.Decode 或 utf16.Decode 形式访问。
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;包还可以让我们通过控制哪些名字是外部可见的来隐藏内部实现信息。在Go语言中，一个简单的规则是：<b>如果一个名字是大写字母开头的，那么该名字是导出的</b>（译注：因为汉字不区分大小写，因此汉字开头的名字是没有导出的）。
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了演示包基本的用法，先假设我们的温度转换软件已经很流行，我们希望到 Go 语言社区也能使用这个包。我们该如何做呢？
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;让我们创建一个名为gopl.io/ch2/tempconv的包，这是前面例子的一个改进版本。包代码存储在两个源文件中，用来演示如何在一个源文件声明然后在其他的源文件访问；虽然在现实中，这样小的包一般只需要一个文件。
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们把变量的声明、对应的常量，还有方法都放到 tempconv.go 源文件中：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Package tempconv performs Celsius and Fahrenheit conversions.</span></span><br><span class="line"><span class="keyword">package</span> tempconv</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Celsius <span class="keyword">float64</span></span><br><span class="line"><span class="keyword">type</span> Fahrenheit <span class="keyword">float64</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">  AbsoluteZeroC Celsius = <span class="number">-273.15</span></span><br><span class="line">  FreezingC     Celsius = <span class="number">0</span></span><br><span class="line">  BoilingC      Celsius = <span class="number">100</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c Celsius)</span> <span class="title">String</span><span class="params">()</span> <span class="title">string</span></span>    &#123; <span class="keyword">return</span> fmt.Sprintf(<span class="string">&quot;%g°C&quot;</span>, c) &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(f Fahrenheit)</span> <span class="title">String</span><span class="params">()</span> <span class="title">string</span></span> &#123; <span class="keyword">return</span> fmt.Sprintf(<span class="string">&quot;%g°F&quot;</span>, f) &#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;转换函数则放在另一个 conv.go 源文件中：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> tempconv</span><br><span class="line"></span><br><span class="line"><span class="comment">// CToF converts a Celsius temperature to Fahrenheit.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CToF</span><span class="params">(c Celsius)</span> <span class="title">Fahrenheit</span></span> &#123; <span class="keyword">return</span> Fahrenheit(c*<span class="number">9</span>/<span class="number">5</span> + <span class="number">32</span>) &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// FToC converts a Fahrenheit temperature to Celsius.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">FToC</span><span class="params">(f Fahrenheit)</span> <span class="title">Celsius</span></span> &#123; <span class="keyword">return</span> Celsius((f - <span class="number">32</span>) * <span class="number">5</span> / <span class="number">9</span>) &#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;每个源文件都是以包的声明语句开始，用来指明包的名字。当包被导入的时候，包内的成员将通过类似tempconv.CToF的形式访问。而包级别的名字，例如在一个文件声明的类型和常量，<b>在同一个包的其他源文件也是可以直接访问的，就好像所有代码都在一个文件一样</b>。要注意的是 tempconv.go 源文件导入了fmt包，但是 conv.go 源文件并没有，因为这个源文件中的代码并没有用到fmt包。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因为包级别的常量名都是以大写字母开头，它们可以像tempconv.AbsoluteZeroC这样被外部代码访问：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fmt.Printf(<span class="string">&quot;Brrrr! %v\n&quot;</span>, tempconv.AbsoluteZeroC) <span class="comment">// &quot;Brrrr! -273.15°C&quot;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;要将摄氏温度转换为华氏温度，需要先用 import 语句导入 gopl.io/ch2/tempconv 包，然后就可以使用下面的代码进行转换了：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fmt.Println(tempconv.CToF(tempconv.BoilingC)) <span class="comment">// &quot;212°F&quot;</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在每个源文件的包声明前紧跟着的注释是包注释。通常，包注释的第一句应该先是包的功能概要说明。<b>一个包通常只有一个源文件有包注释（译注：如果有多个包注释，目前的文档工具会根据源文件名的先后顺序将它们链接为一个包注释）</b>。如果包注释很大，通常会放到一个独立的doc.go文件中。
+  </p>
+
+  <h3><a name="6_package_1">6.1 导入包</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在Go语言程序中，每个包都有一个全局唯一的导入路径。导入语句中类似 "gopl.io/ch2/tempconv" 的字符串对应包的<b>导入路径</b>。Go 语言的规范并没有定义这些字符串的具体含义或包来自哪里，它们是由构建工具来解释的。当使用 Go 语言自带的 go 工具箱时，一个导入路径代表一个目录中的一个或多个Go源文件。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;除了包的导入路径，每个包还有一个包名，包名一般是短小的名字（并不要求包名是唯一的），包名在包的声明处指定。<b>按照惯例，一个包的名字和包的导入路径的最后一个字段相同，例如gopl.io/ch2/tempconv 包的名字一般是 tempconv</b>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;要使用gopl.io/ch2/tempconv包，需要先导入，例如：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">&quot;fmt&quot;</span></span><br><span class="line">  <span class="string">&quot;os&quot;</span></span><br><span class="line">  <span class="string">&quot;strconv&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="string">&quot;gopl.io/ch2/tempconv&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">for</span> _, arg := <span class="keyword">range</span> os.Args[<span class="number">1</span>:] &#123;</span><br><span class="line">    t, err := strconv.ParseFloat(arg, <span class="number">64</span>)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Fprintf(os.Stderr, <span class="string">&quot;cf: %v\n&quot;</span>, err)</span><br><span class="line">      os.Exit(<span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    f := tempconv.Fahrenheit(t)</span><br><span class="line">    c := tempconv.Celsius(t)</span><br><span class="line">    fmt.Printf(<span class="string">&quot;%s = %s, %s = %s\n&quot;</span>,</span><br><span class="line">      f, tempconv.FToC(f), c, tempconv.CToF(c))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;导入语句将导入的包绑定到一个短小的名字，然后通过该短小的名字就可以引用包中导出的全部内容。上面的导入声明将允许我们以 tempconv.CToF 的形式来访问 gopl.io/ch2/tempconv 包中的内容。在默认情况下，导入的包绑定到 tempconv 名字（译注：指包声明语句指定的名字），但是我们也可以绑定到另一个名称，以避免名字冲突。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面的程序将命令行输入的一个温度在 Celsius 和 Fahrenheit 温度单位之间转换：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ go build gopl.io/ch2/cf</span><br><span class="line">$ ./cf 32</span><br><span class="line">32°F = 0°C, 32°C = 89.6°F</span><br><span class="line">$ ./cf 212</span><br><span class="line">212°F = 100°C, 212°C = 413.6°F</span><br><span class="line">$ ./cf -40</span><br><span class="line">-40°F = -40°C, -40°C = -40°F</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>如果导入了一个包，但是又没有使用该包将被当作一个编译错误处理</b>。这种强制规则可以有效减少不必要的依赖，虽然在调试期间可能会让人讨厌，因为删除一个类似 log.Print("got here!") 的打印语句可能导致需要同时删除 log 包导入声明，否则，编译器将会发出一个错误。在这种情况下，我们需要将不必要的导入删除或注释掉。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;不过有更好的解决方案，我们可以使用 golang.org/x/tools/cmd/goimports 导入工具，它可以根据需要自动添加或删除导入的包；许多编辑器都可以集成 goimports 工具，然后在保存文件的时候自动运行。类似的还有 gofmt 工具，可以用来格式化 Go 源文件。
+  </p>
+
+  <h3><a name="6_package_2">6.2 包的初始化</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;包的初始化首先是<b>解决<font color="red">包级变量</font>的依赖顺序</b>，然后按照包级变量声明出现的顺序依次初始化：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = b + c <span class="comment">// a 第三个初始化, 为 3</span></span><br><span class="line"><span class="keyword">var</span> b = f()   <span class="comment">// b 第二个初始化, 为 2, 通过调用 f (依赖c)</span></span><br><span class="line"><span class="keyword">var</span> c = <span class="number">1</span>     <span class="comment">// c 第一个初始化, 为 1</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">f</span><span class="params">()</span> <span class="title">int</span></span> &#123; <span class="keyword">return</span> c + <span class="number">1</span> &#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果包中含有多个 .go 源文件，它们将按照发给编译器的顺序进行初始化，Go 语言的构建工具首先会将 .go 文件根据文件名排序，然后依次调用编译器编译。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于在包级别声明的变量，如果有初始化表达式则用表达式初始化，还有一些没有初始化表达式的，例如某些表格数据初始化并不是一个简单的赋值过程。在这种情况下，我们可以用一个特殊的 init 初始化函数来简化初始化工作。<b>每个文件都可以包含多个 init 初始化函数</b>：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123; <span class="comment">/* ... */</span> &#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这样的 init 初始化函数除了不能被调用或引用外，其他行为和普通函数类似。在每个文件中的 init 初始化函数，在程序开始执行时按照它们声明的顺序被<b><font color="red">自动调用</font></b>。
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;每个包在解决依赖的前提下，以导入声明的顺序初始化，每个包只会被初始化一次。因此，如果一个 p 包导入了 q 包，那么在 p 包初始化的时候可以认为 q 包必然已经初始化过了。初始化工作是自下而上进行的，<b>main 包最后被初始化</b>。以这种方式，可以确保在main函数执行之前，所有依赖的包都已经完成初始化工作了。
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;下面的代码定义了一个 PopCount 函数，用于返回一个数字中含二进制 1-bit 的个数。它使用 init 初始化函数来生成辅助表格 pc，pc 表格用于处理每个 8-bit 宽度的数字含二进制的 1-bit 的 bit 个数，这样的话在处理 64-bit 宽度的数字时就没有必要循环64次，只需要 8 次查表就可以了。（这并不是最快的统计 1-bit 数目的算法，但是它可以方便演示 init 函数的用法，并且演示了如何预生成辅助表格，这是编程中常用的技术）。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> popcount</span><br><span class="line"></span><br><span class="line"><span class="comment">// pc[i] is the population count of i.</span></span><br><span class="line"><span class="keyword">var</span> pc [<span class="number">256</span>]<span class="keyword">byte</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">for</span> i := <span class="keyword">range</span> pc &#123;</span><br><span class="line">    pc[i] = pc[i/<span class="number">2</span>] + <span class="keyword">byte</span>(i&amp;<span class="number">1</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// PopCount returns the population count (number of set bits) of x.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">PopCount</span><span class="params">(x <span class="keyword">uint64</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">int</span>(pc[<span class="keyword">byte</span>(x&gt;&gt;(<span class="number">0</span>*<span class="number">8</span>))] +</span><br><span class="line">    pc[<span class="keyword">byte</span>(x&gt;&gt;(<span class="number">1</span>*<span class="number">8</span>))] +</span><br><span class="line">    pc[<span class="keyword">byte</span>(x&gt;&gt;(<span class="number">2</span>*<span class="number">8</span>))] +</span><br><span class="line">    pc[<span class="keyword">byte</span>(x&gt;&gt;(<span class="number">3</span>*<span class="number">8</span>))] +</span><br><span class="line">    pc[<span class="keyword">byte</span>(x&gt;&gt;(<span class="number">4</span>*<span class="number">8</span>))] +</span><br><span class="line">    pc[<span class="keyword">byte</span>(x&gt;&gt;(<span class="number">5</span>*<span class="number">8</span>))] +</span><br><span class="line">    pc[<span class="keyword">byte</span>(x&gt;&gt;(<span class="number">6</span>*<span class="number">8</span>))] +</span><br><span class="line">    pc[<span class="keyword">byte</span>(x&gt;&gt;(<span class="number">7</span>*<span class="number">8</span>))])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;译注：对于 pc 这类需要复杂处理的初始化，可以通过将初始化逻辑包装为一个匿名函数处理，像下面这样：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// pc[i] is the population count of i.</span></span><br><span class="line"><span class="keyword">var</span> pc [<span class="number">256</span>]<span class="keyword">byte</span> = <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="params">(pc [256]<span class="keyword">byte</span>)</span></span> &#123;</span><br><span class="line">  <span class="keyword">for</span> i := <span class="keyword">range</span> pc &#123;</span><br><span class="line">    pc[i] = pc[i/<span class="number">2</span>] + <span class="keyword">byte</span>(i&amp;<span class="number">1</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span></span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;要注意的是在 init 函数中，range 循环只使用了索引，省略了没有用到的值部分。循环也可以这样写：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i, _ := <span class="keyword">range</span> pc &#123;</span><br></pre></td></tr></table></figure>
+  </p>
+</div>
+
+<h2><a name="7_scope">7. 作用域</a></h2>
+<div class="div_learning_post_boder">
+  <p> 
+  &nbsp;&nbsp;&nbsp;&nbsp;一个声明语句将程序中的实体和一个名字关联，比如一个函数或一个变量。<b>声明语句的作用域是指源代码中可以有效使用这个名字的范围</b>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>不要将作用域和生命周期混为一谈</b>。<b><font color="red">声明语句的作用域对应的是一个源代码的文本区域，它是一个编译时的属性。一个变量的生命周期是指程序运行时变量存在的有效时间段，在此时间区域内它可以被程序的其他部分引用；是一个运行时的概念</font></b>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>句法块</b>是由花括弧所包含的一系列语句，就像函数体或循环体花括弧包裹的内容一样。句法块内部声明的名字是无法被外部块访问的。这个块决定了内部声明的名字的作用域范围。我们可以把块（block）的概念推广到包括其他声明的群组，这些声明在代码中并未显式地使用花括号包裹起来，我们称之为<b>词法块</b>。对全局的源代码来说，存在一个整体的词法块，称为全局词法块；对于每个包，每个for、if和switch语句，也都有对应词法块，每个 switch 或 select 的分支也有独立的词法块，当然也包括显式书写的词法块（花括弧包含的语句）。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>声明语句对应的词法域决定了作用域范围的大小</b>。对于内置的类型、函数和常量，比如 int、len 和 true 等是在全局作用域的，因此可以在整个程序中直接使用。任何在函数外部（也就是包级语法域）声明的名字可以在同一个包的任何源文件中访问的。对于导入的包，例如tempconv导入的fmt包，则是对应源文件级的作用域，因此只能在当前的文件中访问导入的fmt包，当前包的其它源文件无法访问在当前源文件导入的包。还有许多声明语句，比如 tempconv.CToF 函数中的变量 c，则是局部作用域的，它只能在函数内部（甚至只能是局部的某些部分）访问。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;控制流标号，就是 break、continue 或 goto 语句后面跟着的那种标号，则是函数级的作用域。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>一个程序可能包含多个同名的声明，只要它们在不同的词法域就没有关系</b>。例如，你可以声明一个局部变量，和包级的变量同名。你可以将一个函数参数的名字声明为 new，虽然内置的 new 是全局作用域的。但是物极必反，如果滥用不同词法域可重名的特性的话，可能导致程序很难阅读。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当编译器遇到一个名字引用时，它会对其定义进行查找，查找过程从最内层的词法域向全局的作用域进行。如果查找失败，则报告“未声明的名字”这样的错误。如果该名字在内部和外部的块分别声明过，则内部块的声明首先被找到。在这种情况下，内部声明屏蔽了外部同名的声明，让外部的声明的名字无法被访问：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">f</span><span class="params">()</span></span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> g = <span class="string">&quot;g&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  f := <span class="string">&quot;f&quot;</span></span><br><span class="line">  fmt.Println(f) <span class="comment">// &quot;f&quot;; local var f shadows package-level func f</span></span><br><span class="line">  fmt.Println(g) <span class="comment">// &quot;g&quot;; package-level var</span></span><br><span class="line">  fmt.Println(h) <span class="comment">// compile error: undefined: h</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在函数中词法域可以深度嵌套，因此内部的一个声明可能屏蔽外部的声明。还有许多语法块是 if 或 for 等控制流语句构造的。下面的代码有三个不同的变量 x，因为它们是定义在不同的词法域（这个例子只是为了演示作用域规则，但不是好的编程风格）。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  x := <span class="string">&quot;hello!&quot;</span></span><br><span class="line">  <span class="comment">// for语句创建的词法域 1: 循环的初始化部分(i := 0)</span></span><br><span class="line">  <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(x); i++ &#123;</span><br><span class="line">    <span class="comment">// for语句创建的词法域 2: 花括弧包含的是显式的部分</span></span><br><span class="line">    x := x[i]</span><br><span class="line">    <span class="keyword">if</span> x != <span class="string">&#x27;!&#x27;</span> &#123;</span><br><span class="line">      x := x + <span class="string">&#x27;A&#x27;</span> - <span class="string">&#x27;a&#x27;</span></span><br><span class="line">      fmt.Printf(<span class="string">&quot;%c&quot;</span>, x) <span class="comment">// &quot;HELLO&quot; (one letter per iteration)</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 x[i] 和 x + 'A' - 'a' 声明语句的初始化的表达式中都引用了外部作用域声明的 x 变量，稍后我们会解释这个。（注意，后面的表达式与 unicode.ToUpper 并不等价。）
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;正如上面例子所示，并不是所有的词法域都显式地对应到由花括弧包含的语句；还有一些隐含的规则。上面的for语句创建了两个词法域：
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1 )花括弧包含的是显式的部分，是for的循环体部分词法域；
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) 另外一个隐式的部分则是循环的初始化部分，比如用于迭代变量i的初始化。<b>隐式的词法域部分的作用域</b>还包含条件测试部分和循环后的迭代部分（i++），当然也包含循环体词法域。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面的例子同样有三个不同的 x 变量，每个声明在不同的词法域，一个在函数体词法域，一个在 for 隐式的初始化词法域，一个在 for 循环体词法域；只有两个块是显式创建的：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  x := <span class="string">&quot;hello&quot;</span></span><br><span class="line">  <span class="keyword">for</span> _, x := <span class="keyword">range</span> x &#123;</span><br><span class="line">    x := x + <span class="string">&#x27;A&#x27;</span> - <span class="string">&#x27;a&#x27;</span></span><br><span class="line">    fmt.Printf(<span class="string">&quot;%c&quot;</span>, x) <span class="comment">// &quot;HELLO&quot; (one letter per iteration)</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;和 for 循环类似，if 和 switch 语句也会在条件部分创建隐式词法域，还有它们对应的执行体词法域。下面的 if-else 测试链演示了 x 和 y 的有效作用域范围：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> x := f(); x == <span class="number">0</span> &#123;</span><br><span class="line">  fmt.Println(x)</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> y := g(x); x == y &#123;</span><br><span class="line">  fmt.Println(x, y)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  fmt.Println(x, y)</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println(x, y) <span class="comment">// compile error: x and y are not visible here</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>第二个 if 语句嵌套在第一个内部，因此第一个 if 语句条件初始化词法域声明的变量在第二个 if 中也可以访问</b>。switch 语句的每个分支也有类似的词法域规则：条件部分为一个隐式词法域，然后是每个分支的词法域。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>在包级别，声明的顺序并不会影响作用域范围</b>，因此一个先声明的可以引用它自身或者是引用后面的一个声明，这可以让我们定义一些相互嵌套或递归的类型或函数。但是如果一个变量或常量递归引用了自身，则会产生编译错误。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在这个程序中：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> f, err := os.Open(fname); err != <span class="literal">nil</span> &#123; <span class="comment">// compile error: unused: f</span></span><br><span class="line">  <span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br><span class="line">f.ReadByte() <span class="comment">// compile error: undefined f</span></span><br><span class="line">f.Close()    <span class="comment">// compile error: undefined f</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;变量 f 的作用域只在 if 语句内，因此后面的语句将无法引入它，这将导致编译错误。你可能会收到一个局部变量 f 没有声明的错误提示，具体错误信息依赖编译器的实现。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;通常需要在if之前声明变量，这样可以确保后面的语句依然可以访问变量：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">f, err := os.Open(fname)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br><span class="line">f.ReadByte()</span><br><span class="line">f.Close()</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;你可能会考虑通过将ReadByte和Close移动到if的else块来解决这个问题：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> f, err := os.Open(fname); err != <span class="literal">nil</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> err</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// f and err are visible here too</span></span><br><span class="line">  f.ReadByte()</span><br><span class="line">  f.Close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="red">但这不是 Go 语言推荐的做法，Go 语言的习惯是在 if 中处理错误然后直接返回，这样可以确保正常执行的语句不需要代码缩进。</font>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;要特别注意短变量声明语句的作用域范围，考虑下面的程序，它的目的是获取当前的工作目录然后保存到一个包级的变量中。这本来可以通过直接调用 os.Getwd 完成，但是将这个从主逻辑中分离出来可能会更好，特别是在需要处理错误的时候。函数 log.Fatalf 用于打印日志信息，然后调用 os.Exit(1) 终止程序。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> cwd <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">  cwd, err := os.Getwd() <span class="comment">// compile error: unused: cwd</span></span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Fatalf(<span class="string">&quot;os.Getwd failed: %v&quot;</span>, err)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;虽然 cwd 在外部已经声明过，但是 := 语句还是将 cwd 和 err 重新声明为新的局部变量。因为内部声明的 cwd 将屏蔽外部的声明，因此上面的代码并不会正确更新包级声明的 cwd 变量。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于当前的编译器会检测到局部声明的 cwd 并没有使用，然后报告这可能是一个错误，但是这种检测并不可靠。因为一些小的代码变更，例如增加一个局部 cwd 的打印语句，就可能导致这种检测失效。
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> cwd <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">  cwd, err := os.Getwd() <span class="comment">// <span class="doctag">NOTE:</span> wrong!</span></span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Fatalf(<span class="string">&quot;os.Getwd failed: %v&quot;</span>, err)</span><br><span class="line">  &#125;</span><br><span class="line">  log.Printf(<span class="string">&quot;Working directory = %s&quot;</span>, cwd)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;全局的cwd变量依然是没有被正确初始化的，而且看似正常的日志输出更是让这个BUG更加隐晦。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有许多方式可以避免出现类似潜在的问题。最直接的方法是通过单独声明 err 变量，来避免使用 := 的简短声明方式：
+
+  <figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> cwd <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">var</span> err error</span><br><span class="line">  cwd, err = os.Getwd()</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Fatalf(<span class="string">&quot;os.Getwd failed: %v&quot;</span>, err)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</div>
+
+
+<!--ref-->
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+<ol>
+<li>github.com, <a target="_blank" rel="noopener" href="https://github.com/gopl-zh/gopl-zh.github.com/tree/master/ch2">Go语言圣经(中文版) Chapter 2</a></p>
+</div>
+
+</li>
+</ol>
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Program/">TECH_PROGRAM</a></li>
+          <li>GO_BASIC_1_BASIC_CONCEPT</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Inhaltsverzeichnis
+        </li>
+        <li class="sidebar-nav-overview">
+          Übersicht
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
