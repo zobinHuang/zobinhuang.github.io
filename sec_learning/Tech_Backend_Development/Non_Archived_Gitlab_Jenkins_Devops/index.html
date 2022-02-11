@@ -28,6 +28,7 @@
 <meta property="og:description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/ci_cd_model.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/tencent_cloud_ssl_application.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/ssl_download.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/nginx_ssl.png">
@@ -47,8 +48,8 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_ssh_exec_command.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/gitlab_webhook_config.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/xxx.png">
-<meta property="article:published_time" content="2022-02-10T17:57:37.074Z">
-<meta property="article:modified_time" content="2022-02-10T17:57:37.074Z">
+<meta property="article:published_time" content="2022-02-11T07:00:22.716Z">
+<meta property="article:modified_time" content="2022-02-11T07:00:22.716Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -303,17 +304,35 @@
 <div class="div_learning_post">
   <h3 class="title">部署目标</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;最近趁着过年在家里部署了私有云的基础设施。接下来基于搭建的基础设施，我计划继续部署基于 Gitlab 和 Jenkins 的 Devops 环境，以实现自动化构建和部署流程，简化后续项目的部署压力。
+  &nbsp;&nbsp;&nbsp;&nbsp;最近趁着过年在家里部署了私有云的基础设施。接下来基于搭建的基础设施，我计划继续部署基于 Gitlab 和 Jenkins 的 CI/CD 流水线环境，以实现自动化构建和部署流程，简化后续项目的部署压力。简单来说，部署目标如下图所示:
+
+  <div align="center">
+    <img src="./pic/ci_cd_model.png" width=80%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，我会用一个 Nginx 来作为整个 CI/CD 流水线的代理网关，藏在 Nginx 后面的有 Gitlab 仓库，Jenkins，静态网站资源，以及一些后端服务。当开发人员向 Gitlab 的仓库推送修改时，Gitlab 会基于 Webhook 的设置向 Jenkins 发起请求，Jenkins 收到请求之后就会启动构建步骤:
+
+  <ol>
+    <li>如果开发人员向仓库推送的是静态资源，那么 Jenkins 就会将静态资源从仓库中拉取到相应的部署位置，这样外部用户通过 Nginx 代理网关就能访问到这些静态资源;</li>
+    <li>如果开发人员向仓库推送的是源代码，那么 Jenkins 就会将源代码拉取到本地，启动构建，然后把构建完成的 Docker 镜像推送到本地的镜像仓库中去，然后再从本地拉取镜像，启动容器以完成部署;</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在本文中，我将演示如何搭建这样一套机制在私有服务器上，并且基于这样一套机制部署我的个人博客网站。
 
   <h3 class="title">部署背景</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在部署之前，我在家里的网关的地方做了基于 Openwrt 的软路由处理，并且为家中申请了公网 IP 出口。
+  &nbsp;&nbsp;&nbsp;&nbsp;在部署之前，我在家里的网关的地方做了基于 Openwrt 的软路由处理，并且为家中申请了公网 IP 出口。这样以来就可以在网关的位置很方面的做端口映射和防火墙等设置，这部分在本文中不会阐述，默认读者具备设置能力。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，我还从腾讯云购买了一个域名，并且在家中服务器上部署脚本，实现了动态的域名解析效果，也即 DDNS。具体可以看我的另一篇文章 <a href="/sec_learning/Tech_Backend_Development/Non_Archived_DDNS_with_Tencent_Cloud/index.html">如何通过 DNSPod API 来实现 DDNS</a>。本文同样默认读者已经完成了设置。
 </div>
 
 <h2 class="title">部署和配置 Nginx</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;由于我们后面需要起 Gitlab, Jenkins 的 Web 服务，以及我还打算基于 CI/CD 流程来实现博客的自动化部署，所以在本篇教程的最开始我们首先部署 Nginx，以实现反向代理的功能。
+  &nbsp;&nbsp;&nbsp;&nbsp;现在让我们开始部署所需要的所有基础设置。我们首先部署 Nginx，以实现反向代理的功能。
 
   <h3 class="title">拉取镜像</h3>
   <p>
@@ -442,15 +461,19 @@
 
   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gitlab_rails[<span class="string">&#x27;gravatar_plain_url&#x27;</span>] = <span class="string">&#x27;http://sdn.geekzu.org/avatar/%&#123;hash&#125;?s=%&#123;size&#125;&amp;d=identicon&#x27;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;gravatar_ssl_url&#x27;</span>] = <span class="string">&#x27;https://sdn.geekzu.org/avatar/%&#123;hash&#125;?s=%&#123;size&#125;&amp;d=identicon&#x27;</span></span><br></pre></td></tr></table></figure>
   <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，由于我们 Gitlab 最终暴露到公网的端口并不是 22，而是其它端口，因此这里我们也需要进行设置，以让 Gitlab 能够正确地生成各个仓库的 SSH 地址，方便我们 Push/Pull/Clone/...。具体设置方法如下:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把 [port] 替换为你的端口</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;gitlab_shell_ssh_port&#x27;</span>] = [port]</span><br></pre></td></tr></table></figure>
+  <p>
   &nbsp;&nbsp;&nbsp;&nbsp;配置好的 Gitlab 配置文件如下所示:
 
-  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">external_url</span> <span class="string">&quot;https://gitlab.zobinhuang.com:[port]&quot;</span></span><br><span class="line">nginx[<span class="string">&#x27;enable&#x27;</span>] = <span class="literal">false</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;trusted_proxies&#x27;</span>] = [<span class="string">&#x27;172.25.0.2&#x27;</span>]</span><br><span class="line">gitlab_workhorse[<span class="string">&#x27;listen_network&#x27;</span>] = <span class="string">&quot;tcp&quot;</span></span><br><span class="line">gitlab_workhorse[<span class="string">&#x27;listen_addr&#x27;</span>] = <span class="string">&quot;172.25.0.3:[port]&quot;</span></span><br><span class="line">puma[<span class="string">&#x27;worker_processes&#x27;</span>] = <span class="number">2</span></span><br><span class="line">sidekiq[<span class="string">&#x27;max_concurrency&#x27;</span>] = <span class="number">16</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;gravatar_plain_url&#x27;</span>] = <span class="string">&#x27;http://sdn.geekzu.org/avatar/%&#123;hash&#125;?s=%&#123;size&#125;&amp;d=identicon&#x27;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;gravatar_ssl_url&#x27;</span>] = <span class="string">&#x27;https://sdn.geekzu.org/avatar/%&#123;hash&#125;?s=%&#123;size&#125;&amp;d=identicon&#x27;</span></span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">external_url <span class="string">&quot;https://gitlab.zobinhuang.com:[port]&quot;</span></span><br><span class="line">nginx[<span class="string">&#x27;enable&#x27;</span>] = <span class="literal">false</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;trusted_proxies&#x27;</span>] = [<span class="string">&#x27;172.25.0.2&#x27;</span>]</span><br><span class="line">gitlab_workhorse[<span class="string">&#x27;listen_network&#x27;</span>] = <span class="string">&quot;tcp&quot;</span></span><br><span class="line">gitlab_workhorse[<span class="string">&#x27;listen_addr&#x27;</span>] = <span class="string">&quot;172.25.0.3:[port]&quot;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;gitlab_shell_ssh_port&#x27;</span>] = [port]</span><br><span class="line">puma[<span class="string">&#x27;worker_processes&#x27;</span>] = 2</span><br><span class="line">sidekiq[<span class="string">&#x27;max_concurrency&#x27;</span>] = 16</span><br><span class="line">gitlab_rails[<span class="string">&#x27;gravatar_plain_url&#x27;</span>] = <span class="string">&#x27;http://sdn.geekzu.org/avatar/%&#123;hash&#125;?s=%&#123;size&#125;&amp;d=identicon&#x27;</span></span><br><span class="line">gitlab_rails[<span class="string">&#x27;gravatar_ssl_url&#x27;</span>] = <span class="string">&#x27;https://sdn.geekzu.org/avatar/%&#123;hash&#125;?s=%&#123;size&#125;&amp;d=identicon&#x27;</span></span><br></pre></td></tr></table></figure>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;随后我们保存并重启 Gitlab 容器。
 
   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 Gitlab 容器</span></span><br><span class="line">zobin@ubuntu-server:~$ sudo docker <span class="built_in">exec</span> -it gitlab /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新配置 Gitlab 服务</span></span><br><span class="line">root@gitlab:/ gitlab-ctl reconfigure</span><br><span class="line">root@gitlab:/ gitlab-rake cache:clear RAILS_ENV=production</span><br></pre></td></tr></table></figure>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如果一切正常，此时就应该能从公网地址访问 Gitlab 了。
+  &nbsp;&nbsp;&nbsp;&nbsp;如果一切正常，此时就应该能从公网地址访问 Gitlab 了。读者可以自行测试是否能够正确的创建项目和各种 Git 操作。
 
   <h3 class="title">配置 root 用户</h3>
   <p>
@@ -468,7 +491,7 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们需要进入以下位置，配置允许 Webhook 访问本地主机:
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，在登录 root 用户的情况下，我们需要进入以下位置，配置允许 Webhook 访问本地主机:
 
   <div align="center">
     <img src="./pic/gitlab_allow_webhook.png" width=80%>
@@ -488,6 +511,10 @@
   &nbsp;&nbsp;&nbsp;&nbsp;然后我们运行 Jenkins 容器
 
   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">zobin@zobin-ubuntu:~$ sudo docker run \</span><br><span class="line">&gt; -u root \</span><br><span class="line">&gt; --rm \</span><br><span class="line">&gt; -d \</span><br><span class="line">&gt; -p 8080:8080 \</span><br><span class="line">&gt; -p 50000:50000 \</span><br><span class="line">&gt; -v /home/jenkins/jenkins-data:/var/jenkins_home \</span><br><span class="line">&gt; -v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">&gt; jenkinsci/blueocean</span><br><span class="line">[sudo] password <span class="keyword">for</span> zobin: </span><br><span class="line">56c789d07b34159f5a8693649f56f4e7e4e6175239ba6bf6dd365906653b536f</span><br></pre></td></tr></table></figure>
+  <h3 class="title">设置 Web 访问</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于上面已经演示过如何基于 Nginx 设置向其它容器的 Web 服务访问，所以此处我们不再详细说明。读者向上面那样进行设置即可。
+
   <h3 class="title">配置 Jenkins</h3>
   <h4 class="title">初始化</h4>
   <p>
@@ -537,14 +564,14 @@
 
   <h4 class="title">安装和配置 SSH 插件</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;TODO: 安装 ssh 插件
+  &nbsp;&nbsp;&nbsp;&nbsp;我们需要向 Jenkins 中安装 Public-over-SSH 插件。由于该插件在新版本的 Jenkins 中已经不提供下载安装，所以我这里给出插件 <a href="./file/publish-over-ssh.hpi">publish-over-ssh.hpi</a>，有需要的读者自取。详细的自定义插件安装步骤可以见 <cite>jenkins_plugin_install</cite>。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;<cite>jenkins_ssh_key_gen</cite> 然后我们接下来需要进入 Jenkins 容器，设置 Jenkins 容器内部 <code>jenkins</code> 用户和主机之间的免密 SSH 登录。
 
   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 Jenkins 容器</span></span><br><span class="line">zobin@ubuntu-server:~$ sudo docker <span class="built_in">exec</span> -it jenkins bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清除旧的 SSH 公钥私钥</span></span><br><span class="line">bash-5.1<span class="comment"># rm ~/.ssh/*</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成 SSH 公钥私钥</span></span><br><span class="line">bash-5.1<span class="comment"># ssh-keygen -m PEM -t rsa -b 4096</span></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/root/.ssh/id_rsa): </span><br><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase): </span><br><span class="line">Enter same passphrase again: </span><br><span class="line">Your identification has been saved <span class="keyword">in</span> /root/.ssh/id_rsa</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.pub</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:3I8qux000F2HXsUSne7VNTITHOWZg9TFDkDftlNVX3Y root@0a0487dbe061</span><br><span class="line">The keys randomart image is:</span><br><span class="line">[隐蔽处理]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将公钥传输到宿主机上</span></span><br><span class="line">bash-5.1<span class="comment"># ssh-copy-id -i ~/.ssh/id_rsa.pub zobin@192.168.50.2</span></span><br><span class="line">/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: <span class="string">&quot;/root/.ssh/id_rsa.pub&quot;</span></span><br><span class="line">The authenticity of host 192.168.50.2 (192.168.50.2) cant be established.</span><br><span class="line">ED25519 key fingerprint is SHA256:S66bkFO+SDyVC18pFcLF7OqJliCe+ONf0E0jqc47DAE.</span><br><span class="line">This key is not known by any other names</span><br><span class="line">Are you sure you want to <span class="built_in">continue</span> connecting (yes/no/[fingerprint])? yes</span><br><span class="line">/usr/bin/ssh-copy-id: INFO: attempting to <span class="built_in">log</span> <span class="keyword">in</span> with the new key(s), to filter out any that are already installed</span><br><span class="line">/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- <span class="keyword">if</span> you are prompted now it is to install the new keys</span><br><span class="line">zobin@192.168.50.2s password: </span><br><span class="line"></span><br><span class="line">Number of key(s) added: 1</span><br><span class="line"></span><br><span class="line">Now try logging into the machine, with:   <span class="string">&quot;ssh &#x27;zobin@192.168.50.2&#x27;&quot;</span></span><br><span class="line">and check to make sure that only the key(s) you wanted were added.</span><br></pre></td></tr></table></figure>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;然后我们在 Jenkins 的 Web 配置页面中 Public-over-SSH 配置处设置好相关信息:
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们在 Jenkins 的 Web 配置页面中 Public-over-SSH 配置处设置好相关信息。其中，"Path to key" 指的是我们刚刚生成的 SSH 私钥在 Jenkins 容器中的位置; "Passphrase" 指的是我们登录 Jenkins 所使用的密码。
 
   <div align="center">
     <img src="./pic/jenkins_ssh_key_1.png" width=80%>
@@ -557,6 +584,9 @@
 
 <h2 class="title">对接 Gitlab 和 Jenkins</h2>
 <div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成了 Gitlab 和 Jenkins 的搭建之后，现在让我们尝试对接 Gitlab 和 Jenkins。我们将基于静态资源的部署为例来进行演示。这里需要读者朋友在 Gitlab 上创建一个仓库，然后把自己的博客的静态资源推送上去。我们在这里不演示具体的步骤。下面我们要做的是部署 Gitlab webhook 以及创建一个 Jenkins 任务，使得每次我们往仓库里推送静态资源的时候，Jenkins 就能够自动的把这些静态资源拉取到相应的静态资源部署位置，这样基于 Nginx 的反向代理功能，客户端就能从外网访问到静态博客网站。
+
   <h3 class="title">创建 Jenkins 任务</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;首先我们创建一个 Jenkins free-style 的任务:
@@ -580,7 +610,7 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;然后我们添加如下命令:
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们添加如下命令。这个命令其实很简单，就是在登录到宿主机后，<code>cd</code> 到相应的静态资源的部署位置，然后从仓库里拉取刚刚更新的静态资源。
 
   <div align="center">
     <img src="./pic/jenkins_ssh_exec_command.png" width=80%>
@@ -593,6 +623,9 @@
   <div align="center">
     <img src="./pic/gitlab_webhook_config.png" width=80%>
   </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果一切正常的话，我们每一次推送，就能够正确的触发我们想要的效果了。
 </div>
 
 <div class="div_ref" id="ref_container"></div>
