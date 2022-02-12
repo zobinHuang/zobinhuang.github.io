@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/script/book_index.json</loc>
+    
+    <lastmod>2022-02-12</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/post_index.json</loc>
     
     <lastmod>2022-02-12</lastmod>
@@ -612,13 +619,6 @@
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Internal_Driver_1_Build_Simple/index.html</loc>
-    
-    <lastmod>2021-11-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/script/book_index.json</loc>
     
     <lastmod>2021-11-28</lastmod>
     
