@@ -96,7 +96,7 @@ function search(){
                                     search_entry_tag.innerHTML = `${book_content.post_class_tag}`
                                     search_entry_link_container.append(search_entry_tag)
                                     let search_entry_link = document.createElement("a");
-                                    search_entry_link.setAttribute("href", `/sec_learning/${book_meta.book_url}/${book_module.post_module_url_prefix}_${post.post_name_url}/index.html`)
+                                    search_entry_link.setAttribute("href", `/sec_learning/${book_meta.book_url}/${book_module.post_module_url_prefix}_${post.post_name_url}`)
                                     search_entry_link.innerHTML = `${post.post_title}`
                                     search_entry_link_container.append(search_entry_link)
                                     search_entry_container.append(search_entry_link_container)
