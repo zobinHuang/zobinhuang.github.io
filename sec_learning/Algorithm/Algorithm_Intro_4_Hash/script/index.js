@@ -2,7 +2,6 @@ async function load_page(){
     _load_catalogue().then( 
         (return_struct)=>{ 
             document.getElementById('load_catalogue_alert').style.display = 'none'
-
             let label_list = return_struct.label_list
             _load_reference(label_list)
         }

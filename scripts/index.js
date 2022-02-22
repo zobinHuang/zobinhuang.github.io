@@ -1,4 +1,75 @@
-function load_weekly(){
+function load_mainpage(){
+    _load_weekly()
+
+   _load_recent_post().then(()=>{
+        document.getElementById('recent_post_loading_alert').style.display = 'none'
+    })
+}
+
+async function _load_recent_post(){
+    fetch('./scripts/recent_post.json')
+    .then((res) => {return res.json();})
+    .then((recent_posts) => {
+        let recent_post_container = document.getElementById('recent_post')
+
+        // add new recent post
+        let loaded_post_number = 0
+        for(let i = 0; i < recent_posts.length; i++){
+            if(loaded_post_number > 10){
+                break
+            }
+            loaded_post_number += 1
+
+            // create block container
+            let block_container = document.createElement('div')
+            block_container.setAttribute('id', 'demo5')
+            block_container.setAttribute('class', 'block')
+            recent_post_container.append(block_container)
+
+            // create date container
+            let date_container = document.createElement('div')
+            date_container.setAttribute('class', 'block_date')
+            block_container.append(date_container)
+            let date_p = document.createElement('p')
+            let date_b = document.createElement('b')
+            let date_i = document.createElement('i')
+            date_b.append(date_i)
+            date_p.append(date_b)
+            date_container.append(date_p)
+            date_i.innerHTML = `\xa0${recent_posts[i].date}\xa0`
+
+            // create content container
+            let content_container = document.createElement('div')
+            content_container.setAttribute('style', 'padding: 20px;')
+            block_container.append(content_container)
+
+            // create title
+            let title = document.createElement('h5')
+            title.innerHTML = recent_posts[i].title
+            content_container.append(title)
+
+            // create brief
+            let brief = document.createElement('p')
+            brief.innerHTML = `\xa0\xa0\xa0\xa0${recent_posts[i].brief}`
+            content_container.append(brief)
+            
+            // create link
+            let link_container = document.createElement('div')
+            link_container.setAttribute('class', 'block_link')
+            content_container.append(link_container)
+            let link = document.createElement('a')
+            link.setAttribute('href', `${recent_posts[i].url}`)
+            link.innerHTML = '查看详情'
+            link_container.append(link)
+
+            // create br
+            let br = document.createElement('br')
+            recent_post_container.append(br)
+        }
+    })
+}
+
+function _load_weekly(){
     let max_list_length = 5;
 
     fetch('/sec_weekly/weekly_index.json')

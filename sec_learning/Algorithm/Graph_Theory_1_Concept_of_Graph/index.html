@@ -20,17 +20,17 @@
     var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="img{margin-left: 10px;}     img{margin-right: 20px;}">
+  <meta name="description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Zobin">
-<meta property="og:url" content="http://www.zobinhuang.com:10082/index.html">
+<meta property="og:title" content="图的基本概念">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/index.html">
 <meta property="og:site_name" content="Zobin">
-<meta property="og:description" content="img{margin-left: 10px;}     img{margin-right: 20px;}">
+<meta property="og:description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
 <meta property="og:locale">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_weekly/2021_08_w1/pic/cover.jpeg">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/pic/daxue.jpg">
-<meta property="article:published_time" content="2022-02-18T16:10:08.184Z">
-<meta property="article:modified_time" content="2022-02-18T16:10:08.184Z">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/xxx.png">
+<meta property="article:published_time" content="2022-02-21T15:44:50.221Z">
+<meta property="article:modified_time" content="2022-02-21T15:44:50.221Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -38,9 +38,9 @@
 <meta property="article:tag" content="网络工程">
 <meta property="article:tag" content="Networking Engineering">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://www.zobinhuang.com:10082/sec_weekly/2021_08_w1/pic/cover.jpeg">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 
-<link rel="canonical" href="http://www.zobinhuang.com:10082/">
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/">
 
 
 <script id="page-configurations">
@@ -53,7 +53,7 @@
   };
 </script>
 
-  <title> | Zobin
+  <title>图的基本概念 | Zobin
 </title>
   
 
@@ -203,11 +203,18 @@
     <div class="post-block" lang="cn">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">
+<h1 class="post-title" itemprop="name headline">图的基本概念
 </h1>
 
 <div class="post-meta">
   
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
+          <li>GRAPH_THEORY_1_CONCEPT_OF_GRAPH</li>
+        
+  </ul>
 
 </div>
 
@@ -218,144 +225,225 @@
       
       <div class="post-body">
           <head>
-<link rel="stylesheet" type="text/css" href="styles/cats.css">
-<link rel="stylesheet" type="text/css" href="styles/block.css">
-<meta name="baidu-site-verification" content="code-iCEyxPqXGX" />
-<script src="/scripts/index.js"></script>
-<style>
-    img{margin-left: 10px;}
-    img{margin-right: 20px;}
-</style>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
 
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
 </head>
 
-<body onload="load_mainpage()">
+<body onload="load_page()">
 
-<div align="center" style="height: 155px">
-    <div class="wrapper">
-        <div class="sofa">
-            <div class="sofa-cushion"></div>
-            <div class="sofa-bottom-l"></div>
-            <div class="sofa-bottom-r"></div>
-        </div>
-        <div class="cat">
-            <div class="cat-arm-shoulder"></div>
-            <div class="cat-head">
-            <div class="cat-ear-l"></div>
-            <div class="cat-ear-r"></div>
-            <div class="cat-eye-l"></div>
-            <div class="cat-eye-r"></div>
-            </div>
-            <div class="cat-arm-l"></div>
-            <div class="cat-arm-r"></div>
-            <div class="cat-tale"></div>
-        </div>
-        <div class="boy">
-            <div class="arm-l"></div>
-            <div class="foot-l"></div>
-            <div class="head">
-            <div class="face">
-                <div class="hair-1"></div>
-                <div class="hair-2"></div>
-                <div class="eye-l"></div>
-                <div class="eye-r"></div>
-            </div>
-            <div class="hair-3"></div>
-            </div>
-            <div class="foot-r"></div>
-            <div class="arm-r"></div>
-            <div class="laptop">
-            <div class="light"></div>
-            </div>
-        </div>
-    </div>
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Jan.30 2022</i></font></h4>
 </div>
-
-<div align="center" class="title">
-    <h1><b><font color=#FFFFFF>负责工作，健康生活!</font></b></h1>
-</div>
-
-<br>
-
-<!--周报-->
-<div class="weekly-report-container">
-    <div class="weekly-report-title-and-list-container">
-        <div class="weekly-report-title-container">
-            <h1><font color="red">WEEKLY</font> 大盘</h1>
-            <h5>网罗每周 <i>社会生活</i> 与 <i>经济科技</i> 的大小新鲜事</h5>
-        </div>
-        <!--STEP 1: 更新周报列表-->
-        <div class="weekly-report-list-container">
-            <ul id="weekly-report-list">
-                <!-- <li><a href="">2021 年 8 月第四周</a></li>
-                <li><a href="">2021 年 8 月第三周</a></li>
-                <li><a href="">2021 年 8 月第二周</a></li>
-                <li><a href="">2021 年 8 月第一周：诤友才是真友</a></li>
-                <li><a href="/sec_weekly/index.html">阅读更多「往周故事」</a></li> -->
-            </ul>
-        </div>
-    </div>
-    <div class="weekly-report-current-report-container">
-         <!--STEP 2: 更新本周周报链接-->
-        <a id="weekly-report-current-report-link">
-        <div class="weekly-report-current-report">
-            <div class="weekly-report-current-report-title" id="weekly-report-current-report-title">
-                <!--STEP 3: 更新本周周报标题-->
-                <!-- <h2>本周封面：诤友才是真友</h2> -->
-                <!--STEP 4: 更新本周周报时间-->
-                <!-- <h5>2021 年 8 月第一周</h5> -->
-            </div>
-            <!--STEP 5: 更新本周周报封面-->
-            <div class="weekly-report-current-report-image" id="weekly-report-current-report-image">
-                <!-- <img class="grayscale" src="/sec_weekly/2021_08_w1/pic/cover.jpeg" /> -->
-            </div>
-            <!--STEP 6: 更新本周周报封面介绍-->
-            <div class="weekly-report-current-report-intro" id="weekly-report-current-report-intro">
-                <!-- <p>东京时间7月29日上午，中国选手孙颖莎在东京奥运会乒乓球女子单打半决赛中 4:0 淘汰劲旅日本选手伊藤美诚，此前两人已经多次交手。
-                <font color="red">[点击阅读周报全文]</font> -->
-            </div>
-        </div>
-        </a>
-    </div>
-</div>
-
-<br>
-
-<div class="main_content_container">
-    <div id="recent_post" class="recent_post">
-        <h1 style="margin-down=0">最新博文</h1>
-        <hr style="margin-top: 0;" align=center width=90% />
-        <div class="recent_post_loading_alert" id="recent_post_loading_alert" align="center">
-            加载中, 请稍后...
-        </div>
-        <!-- <a href="/sec_learning/Program_Go/index.html">
-            <div id="demo5" class="block">
-                <div class="block_date">
-                    <p><b><i>&nbsp;June.5 2021&nbsp;</i></b></p>
-                </div>
-                <div style="padding: 20px;">
-                    <h1 align="center">📌 Golang 基础圣经正在搬运与更新</h1>
-                    <p>
-                    &nbsp;&nbsp;&nbsp;&nbsp;工作中碰到一些业务需求需要使用 Golang 作为后台开发语言，以前只有使用 C++ 的经验，故特地花了一些时间熟悉各种 Golang 的特性，并且将社区中的一些中文参考材料进行了搬运和整理，并且加上了一些我的使用经验，在此进行分享，欢迎评论！感谢为社区贡献攥写入门参考的前辈。
-                    <br>
-                </div>
-            </div>
-        </a> -->
-    </div>
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
 </div>
 <br>
+<div class="div_catalogue">
+  <div align="center">
+    <h1> 目录 </h1>
+    <p>
+    <font size="3px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_load_catalogue_alert" id="load_catalogue_alert">正在加载目录...</div>
+  <div class="div_catalogue_container" id="catalogue_container">
+  </div>
+</div><br>
 
-<div class="showcase-container">
-    <img src="./pic/daxue.jpg">
+<!-- Start your post here -->
+<h2 class="title">图和简单图</h2>
+<div class="div_learning_post">
+  <h3 class="title">一些定义</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;图论是离散数学涉及的学科之一 (p.s. 图论、群论 & 数论)。图用于描述事物间的二元关系。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;记一个有序二元数组 `G=(V,E)` 成为一个图，其中 `V` (Vertex) 为 `G` 的 <def>顶点集</def>，其不为空集，其元素称为 <def>顶点 (点)</def>; `E` (Edge) 为 `G` 的 <def>边集</def>，它的每一个元素称为 <def>边</def>，它联结 `V` 中的两个点，且如果两个点是无序的，则为 <def>无向边</def>，否则为 <def>有向边</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;使用 `n(G)` 来表示一个图的顶点数，`m(G)` 来表示一个图的边数，`d(v)` 表示一个点的 <def>度 (degree)</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;图和点的关系是不对等的: 一个图有点不一定有边，有边一定有点。
+
+  <h3 class="title">简单图</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;关于图，还有如下相关概念:
+
+  <ol>
+    <li><def>平凡图</def>: 只有一个顶点的图</li>
+    <li><def>空图</def>: 只有点没有边的图</li>
+    <li><def>有限图</def>: 顶点个数有限的图，反之则是无限图</li>
+    <li><def>重边</def>: 如果有多条两个顶点相同的边，则说这些边是重边 (p.s. 注意对于有方向的边，如果两端顶点相同，方向不同，则不是重边)</li>
+    <li><def>环</def>: 如果一条边上的两个点是一样的，则这条边是环;</li>
+    <li><def>相邻</def>: 两个点相邻则说明它们之间有边将它们连接起来; 两条边相邻则说明它们之间有公共连接的点;</li>
+    <li><def>相关联</def>: 用于描述点与边之间的关系</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;没有环和没有重边的图称为 <def>简单图</def>，简单图是图论研究的重点。
+
+  <h3 class="title">图的同构</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;图 `G_1=(V_1, E_1)` 和图 `G_2=(V_2, E_2)`，若存在双射 (i.e. 一一映射) `f: V1 \rightarrow V_2`，使得对任意 `a, b \in V_1`，`(a,b) \in E_1` `\leftrightarrow` `[f(a), f(b)] \in E_2`，并且 `(a,b)` 和 `[f(a), f(b)]` 有相同重数，则 `G_1` 和 `G_2` <def>同构</def>，记为 `G_1 \cong G_2`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面的数学概念总结起来就是两个条件: [1] 点的一一映射关系 和 [2] 相同的点邻接关系。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;判断两个图不同构的方法：首先必须保证顶点的一一映射关系 (i.e. [1] 数量要相同; [2] 各个度数的点能否进行对应)，然后边数要相同，然后看一些特殊的邻接关系能否进行对应 (e.g. `G` 有三个点两两相邻, `G'` 是否存在; `G` 中唯二的度数为 4 的点相邻，`G'` 中是否相邻)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于顶点数目和边的数目，构造所有可能的非同构的简单图的方法论：<note>从顶点度数最大的值从大往小找</note>。
+
+  <h3 class="title">更多概念</h3>
+  <h4 class="title">完全图</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>完全图</def>: 任意两个顶点都是相邻的简单图，记为 `K_n`，其中 `n` 是图中点的数目。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完全图的边数 `m(K_n) = C_{n}^{2} = \frac{n(n-1)}{2}`，每个顶点的度数都为 `d(v)=n-1`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;顶点数相同的两个完全图同构。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完全图增加/删除一个点后仍然是完全图。
+
+  <h4 class="title">偶图</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>偶图 (二部图)</def>: 可以把一个图的顶点集分为两个集合 `X` 和 `Y`，且保证 `X` 中的顶点是互不相邻的，`Y` 中的顶点也是互不相邻的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;判断一个图是否是偶图的办法: 对顶点进行 0/1 标号，判断是否有顶点之间的邻接关系存在冲突，若全图不冲突则为偶图。
+
+  <h4 class="title">完全偶图</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>完全偶图</def>: 有三层意思: [1] 偶图; [2] `X` 中的一个点和 `Y` 中的任意一个点邻接; [3] 简单图。记完全偶图为 `K_{m,n}`，其中 `m` 和 `n` 分别为集合 `X` 和 `Y` 的顶点的个数。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;若 `m,n \ge 2`，则完全偶图增加/删除一个点后仍然是完全偶图。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完全偶图 `K_{m,n}` 的顶点数为 `n(K_{m,n}) = m+n`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完全偶图 `K_{m,n}` 的边数为 `m(K_{m,n}) = m \cdot n`
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完全偶图中顶点的度数有两种情况: `d(v)=m, v \in X` 或 `d(v)=m, v \in Y`。
 </div>
+
+<!-- <h2 class="title">xxx</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+</div> -->
+
+
+<div class="div_ref" id="ref_container"></div>
 
 </body>
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
       </div>
       
       
       
     </div>
     
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
+          <li>GRAPH_THEORY_1_CONCEPT_OF_GRAPH</li>
+        
+  </ul>
 
     
     
@@ -364,6 +452,7 @@
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {

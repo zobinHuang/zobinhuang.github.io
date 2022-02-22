@@ -48,8 +48,8 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/jenkins_ssh_exec_command.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/gitlab_webhook_config.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_Gitlab_Jenkins_Devops/pic/xxx.png">
-<meta property="article:published_time" content="2022-02-11T07:00:22.716Z">
-<meta property="article:modified_time" content="2022-02-11T07:00:22.716Z">
+<meta property="article:published_time" content="2022-02-22T05:44:06.254Z">
+<meta property="article:modified_time" content="2022-02-22T05:44:06.254Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -441,7 +441,7 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;现在让我们启动这个容器，注意要指定好 Docker 网桥以及相应的 IP 地址。
 
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">zobin@zobin-ubuntu:~$ sudo docker run -itd -h gitlab \</span><br><span class="line">&gt;   --network=ci_ci_network</span><br><span class="line">&gt;   --ip=172.25.0.3 \</span><br><span class="line">&gt;   --name gitlab \</span><br><span class="line">&gt;   --restart always \</span><br><span class="line">&gt;   -v /home/zobin/gitlab/config:/etc/gitlab \</span><br><span class="line">&gt;   -v /home/zobin/gitlab/logs:/var/<span class="built_in">log</span>/gitlab \</span><br><span class="line">&gt;   -v /home/zobin/gitlab/data:/var/opt/gitlab \</span><br><span class="line">&gt;   --privileged=<span class="literal">true</span> \[]</span><br><span class="line">&gt;   gitlab/gitlab-ce</span><br><span class="line">97f8a6ceb423c7f910812cbf95264e9b2fb0ce321e956bb8982a4a506f4cc509</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">zobin@zobin-ubuntu:~$ sudo docker run -itd -h gitlab \</span><br><span class="line">&gt;   -p 10822:22</span><br><span class="line">&gt;   --network=ci_ci_network</span><br><span class="line">&gt;   --ip=172.25.0.3 \</span><br><span class="line">&gt;   --name gitlab \</span><br><span class="line">&gt;   --restart always \</span><br><span class="line">&gt;   -v /home/zobin/gitlab/config:/etc/gitlab \</span><br><span class="line">&gt;   -v /home/zobin/gitlab/logs:/var/<span class="built_in">log</span>/gitlab \</span><br><span class="line">&gt;   -v /home/zobin/gitlab/data:/var/opt/gitlab \</span><br><span class="line">&gt;   --privileged=<span class="literal">true</span> \[]</span><br><span class="line">&gt;   gitlab/gitlab-ce</span><br><span class="line">97f8a6ceb423c7f910812cbf95264e9b2fb0ce321e956bb8982a4a506f4cc509</span><br></pre></td></tr></table></figure>
 
   <h3 class="title">配置访问路径</h3>
   <p>
