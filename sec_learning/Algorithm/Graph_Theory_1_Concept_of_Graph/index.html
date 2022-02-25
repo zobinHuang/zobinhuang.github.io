@@ -31,9 +31,21 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/complete_graph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/bipartite_graph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/complement_graph.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/sub_graph.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/vertex_induced_subgraph.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/edge_induced_subgraph.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/cup.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/cap.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/sub.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/delta.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/joint.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/cartesian.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/composition.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/hypercube.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/car_k2.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/xxx.png">
-<meta property="article:published_time" content="2022-02-23T13:11:29.152Z">
-<meta property="article:modified_time" content="2022-02-23T13:11:29.152Z">
+<meta property="article:published_time" content="2022-02-25T13:19:43.674Z">
+<meta property="article:modified_time" content="2022-02-25T13:19:43.674Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -486,17 +498,215 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;设 `n` 阶图 `G` 的各点的度取 `s` 个不同的非负整数 `d_{1}`, `d_{2}`, …, `d_{s}`. 又设度为 `d_{i}` 的点有 `b_{i}` 个 (i = 1, 2, …, s), 则有 `\sum_{i=1}^{s}b_{i} = n`，故非整数组 `(b_1, b_2, …,  b_s)` 是 `n` 的一个划分, 称为 `G` 的 <def>频序列</def>。
 
-   <div align="center" class="div_learning_post_border">
-    一个 `n` 阶图 `G` 和它的补图有相同的频序列. 
+  <div align="center" class="div_learning_post_border">
+  一个 `n` 阶图 `G` 和它的补图有相同的频序列. 
   </div>
 </div>
 
-<!-- <h2 class="title">xxx</h2>
+<h2 class="title">子图、图运算、路与连通性</h2>
 <div class="div_learning_post">
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
-</div> -->
+  <h3 class="title">子图</h3>
 
+  <div align="center">
+    <img src="./pic/sub_graph.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 `V(H) \subseteq V(G)`, `E(H) \subseteq E(G)`, 且 `H` 中边的重数不超过 `G` 中对应边的条数，则称 `H` 为 `G` 的 <def>子图 (Subgraph)</def>，记为 `H \subseteq G`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 `H \subseteq G` 且 `H \ne G`，则称 `H` 为 `G` 的 <def>真子图 (Proper Subgraph)</def>，记为 `H \subset G`。
+
+  <h3 class="title">导出子图</h3>
+
+  <h4 class="title">点导出子图</h4>
+  <div align="center">
+    <img src="./pic/vertex_induced_subgraph.png" width=700px>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 `V' \subseteq V(G)`，则以 `V'` 为顶点集，以两个端点均在 `V'` 中的边集组成的子图，称为图 `G` 的 <def>点导出子图 (Induced Subgraph)</def>，记为 `G[V']`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;事实上，`G[V'] = G - \bar{V'}`。
+
+  <h4 class="title">边导出子图</h4>
+  <div align="center">
+    <img src="./pic/edge_induced_subgraph.png" width=700px>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 `E' \subseteq E(G)`，则以 `E'` 为边集，以 `E'` 中边的所有端点为顶点集组成的图, 称为图 `G` 的 <def>边导出子图 (edge-induced subgraph)</def>，记为 `G[E']`。
+
+  <h4 class="title">生成子图</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果图 `G` 的一个子图包含 `G` 的所有顶点, 称该子图为 `G` 的一个 <def>生成子图(Spanning Subgraph)</def>，有时候也称 <def>支撑子图</def>。
+
+  <div align="center" class="div_learning_post_border">
+  简单图 `G=(n,m)` 的所有生成子图个数为 `2^m`
+  </div>
+
+  <h3 class="title">图运算</h3>
+  <h4 class="title">删点运算</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>删点运算</def>: 设 `V' \subseteq V(G)`, 在 `G` 中删去 `V'` 中的顶点和 `G` 中与之关联的所有边的操作，记为 `G-V'`。
+
+  <h4 class="title">删边运算</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>删边运算</def>: 设 `E' \subseteq E(G)`, 在 `G` 中删去 `E'` 中的所有边的操作，记为 `G-E'`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;删点、删边后得到的图均是原图的子图。 
+
+  <h4 class="title">并运算</h4>
+  <div align="center">
+    <img src="./pic/cup.png" width=700px>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>并运算</def>: 设 `G_1`, `G_2` 是 `G` 的两个子图, `G_1` 与 `G_2` 并是指以 `V(G_1) \cup V(G_2)` 为顶点集, 以 `E(G_1) \cup E(G_2)` 为边集组成的子图，记为: `G_1 \cup G_2`。特别地, 如果 `G_1`, `G_2` 不相交(没有公共顶点), 称它们的并为 <def>不交并</def>, 可以记为 `G_1+G_2`。
+
+  <h4 class="title">交运算</h4>
+  <div align="center">
+    <img src="./pic/cap.png" width=700px>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>交运算</def>: 设 `G_1`, `G_2` 是 `G` 的两个子图, `G_1` 与 `G_2` 交是指以 `V(G_1) \cap V(G_2)` 为顶点集, 以 `E(G_1) \cap E(G_2)` 为边集组成的子图，记为: `G_1 \cap G_2`。
+
+  <h4 class="title">差运算</h4>
+  <div align="center">
+    <img src="./pic/sub.png" width=700px>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>差运算</def>: 设 `G_1`, `G_2` 是两个图, `G_1` 与 `G_2` 的差是指从 `G_1` 中删去 `G_2` 中的边得到的新图，记为 `G_1−G_2`。
+
+  <h4 class="title">对称差运算</h4>
+  <div align="center">
+    <img src="./pic/delta.png" width=700px>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>对称差运算</def>/<def>异或</def>: 设 `G_1`, `G_2` 是两个图, `G_1` 与 `G_2` 的对称差定义为 `G_1\DeltaG_2 = (G_1 \cup G_2) - (G_1 \cap G_2)`。简单来说，`G_1\DeltaG_2` 仅包含那些恰好在 `G_1` 或 `G_2` 出现一次的边,  而不包含在 `G_1` 和 `G_2` 中都出现的边。
+
+  <h4 class="title">联运算</h4>
+  <div align="center">
+    <img src="./pic/joint.png" width=500px>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>联运算</def>: 设 `G_1`, `G_2` 是两个不相交的图，作 `G_1+G_2` (i.e. 不交并)，并且将 `G_1` 中每个顶点和 `G_2` 中的每个顶点连接，这样得到的新图称为 `G_1` 与 `G_2` 的联图。记为 `G_1\veeG_2`。
+
+  <h4 class="title">Cartesian 积图</h4>
+  <div align="center">
+    <img src="./pic/cartesian.png" width=500px>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>Cartesian 积图</def>: 记图 `G_1`, `G_2` 的Cartesian 积 为 `G=G_1 □ G_2`。首先我们设顶点集 `V=V_1 \times V_2 = {(v_1, v_2)|v_1\inV_1, v_2\inV_2}`，它是一个二元有序组，且 `|V|=|V_1| \cdot |V_2|`。设点 `v=(v_1,v_2)`, `u=(u_1,u_2)` 是 `G=G_1 □ G_2` 的两个点，`u` 和 `v` 当且仅当满足以下条件<note>之一</note>时，它们在 `G` 中相邻:
+
+  <ul>
+    <li>`u_1 = v_1` 且 `u_2 \leftrightarrow v_2`</li>
+    <li>`u_2 = v_2` 且 `u_1 \leftrightarrow v_1`</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Cartesian 积图满足交换律: `G_1 □ G_2 \cong G_2 □ G_1`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Cartesian 积图是构造新图的重要方法，其对原图的性质进行了很好的保持: 若 `G_1`, `G_2` 正则/二部/点传递/欧拉/哈密尔顿/k-连通，则 `G_1 □ G_2` 亦然。
+
+  <h4 class="title">图的合成/字典积</h4>
+  <div align="center">
+    <img src="./pic/composition.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;图的 <def>合成 (composition)</def> 或者 <def>字典积</def>: 记为 `G_1[G_2]`。这种图相当于松弛了 Cartesian 积图的条件。设点 `v=(v_1,v_2)`, `u=(u_1,u_2)` 是 `G=G_1[G_2]` 的两个点，`u` 和 `v` 当且仅当满足以下条件<note>之一</note>时，它们在 `G` 中相邻:
+
+  <ul>
+    <li>`u_1 \leftrightarrow v_1`</li>
+    <li>`u_1 = v_1` 且 `u_2 \leftrightarrow v_2`</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;图的合成不满足交换律。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得区分导出子图 `G[V’]`, 边导出子图 `G[E’]`, 合成图 `G1[G2]` 记号的区别。
+
+  <h4 class="title">张量积</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>张量积 (tensor product)</def>: 设 `G_1=(V_1,E_1)`, `G_2=(V_2,E_2)` 是两个图. 对点集 `V=V_1\timesV_2` 的任意两个点 `u=(u_1,u_2)`, `v=(v_1,v_2)`，当 `u_1 \leftrightarrow v_1` 且 `u_2 \leftrightarrow v_2` 时，把 `u` 和 `v` 相连，如此得到的新图称为 `G_1` 与 `G_2` 的张量积图，记为 `G_1 \times G_2`。
+
+  <h4 class="title">超立方体</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;图的积运算是网络构造的常用方法. 并行计算机中的网络拓扑常采用所谓的 <def>超立方体 (Hypercube/n-cube)</def> 结构. 采用该结构可使网络具有较好的可靠性、较小的通信延迟和很好的可扩展性以及便于并行编程等优点。
+
+  <div align="center">
+    <img src="./pic/hypercube.png" width=700px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;超立方体可以使用以下积图来递归构造:
+
+  <ul>
+    <li>1 方体定义为 `Q_1 = K_2`</li>
+    <li>n 方体定义为 `Q_n = K_2 □ Q_{n-1}`</li>
+  </ul>
+
+  <div align="center">
+    <img src="./pic/car_k2.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上述的超立方体的递归构造方法中，我们计算的方法卡式乘积乘以 `k_2`，在作图上反映出来就是: 把原图复制一份，然后把对应的点连接起来。如上图所示。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们还可以有超立方体的另一种更直观的构造方法。由超立方体的定义可知: `V(Q_n)=2^n`，因此我们可以个超立方体 `Q_n` 的各个顶点表上长度为 `n` 的二进制码。由 `n−1` 方体 `Q_(n−1)` 构造 `Q_n` 的方法是: 将 `Q_(n−1)` 拷贝一个，将原 `Q_(n−1)` 每个顶点的码前再添加一个 0，将拷贝得来的 n−1 方体每个顶点的码前面再添加一个 1，然后在两个 n−1 方体之间连线: 当且仅当两个顶点码只有一位对应位数字不同时，该两点连线，如此得到的图即为 n 方体。
+</div>
+
+<h2 class="title">路与连通性</h2>
+<div class="div_learning_post">
+  <h3 class="title">途径 (Walk)</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;`G` 的一条 <def>途径 (Walk)</def> 是一个有限非空序列 `w=v_0e_1v_1e_2v_2…e_kv_k`，它的项交替地为顶点和边, 使得 `1 \le i \le k`, `e_i` 的端点是 `v_(i−1)` 和 `v_i`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;途径中边数称为途径的 <def>长度 (Length)</def>，`v_0`, `v_k` 分别称为途径的 <def>起点(initial vertex)</def> 与 <def>终点 (Terminal Vertex)</def>, 其余顶点称为途径的 <def>内部点 (Internal Vertex)</def>。
+
+  <h3 class="title">迹 (Trail)</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<note>边不重复</note> 的途径称为图 `G` 的一条 <def>迹 (trail)</def>。
+
+  <h3 class="title">路 (Path)</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<note>顶点不重复</note> 的途径称为图的一条 <def>路</def>，`n` 个点的路一般用 `P_n` 来表示。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;起点和终点重合的途径，迹和路分别称为图的 <def>闭途径 (回路)</def>，<def>闭迹</def> 和 <def>圈</def>。其中长度为 `k` 的圈称为 <def>`k` 圈</def>，`k` 为奇数的时候称为 <def>奇圈</def>，反之称为 <def>偶圈</def>，`n` 阶圈一般使用 `C_n` 表示。
+
+  <h3 class="title">距离 (Distance)</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;图中点 `u` 与 `v` 的最短路的长度称为 `u` 与 `v` 之间的距离，记为 `d(u,v)`。如果 `u` 和 `v` 之间不存在路，则定义 `d(u,v)=\infty`。
+
+  <h3 class="title">连通性 (Connection)</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果图中点 `u` 与 `v` 之间存在路，则说点 `u` 与 `v` 是 <def>连通的 (Connected)</def>，否则为 <def>不连通的 (Disconnected)</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;规定一个顶点和它自身是连通的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果图 `G` 中的任意两点是连通的，则说图 `G` 是一个 <def>连通图 (Connected Graph)</def>，否则为 <def>非连通图 (Disconnected Graph)</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;图 `G` 中的每一个极大连通子图称为图 `G` 的 <def>连通分支</def>。可以这么定义连通分支：不存在 `G\'\' \supset G'`，使得 `G''` 仍能连通。图 `G` 的连通分支的个数，可以称为 `G` 的 <def>分支数</def>，记为 `\omega(G)`。
+
+  <h3 class="title">直径 (Diameter)</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;定义连通图 `G` 的直径为: `d(G)=max{d(u,v)|u,v\inV(G)}`。如果 `G` 不连通，则定义 `d(G)=\infty`。
+
+  <div class="div_learning_post_border" align="center">
+  若 `\delta(G) \ge 2`，则图 `G` 中必然含有圈。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面的定理可以采用 <note>最长路方法</note> 来进行证明: 设 `P=v_1v_2…..v_{k-1}v_k` 是 `G` 中的一条最长路. 由于 `\delta \ge 2`, 所以 `v_k` 必然有相异于 `v_{k-1}` 的邻接顶点。又 `W` 是 `G` 中最长路，所以这样的邻接点必然是 `v_1`, `v_2`, …, `v_{k-2}` 中之一。设该点为 `v_m`, 则 `v_mv_{m+1}….v_kv_m` 为 `G`圈。                                                          
+</div>
 
 <div class="div_ref" id="ref_container"></div>
 
