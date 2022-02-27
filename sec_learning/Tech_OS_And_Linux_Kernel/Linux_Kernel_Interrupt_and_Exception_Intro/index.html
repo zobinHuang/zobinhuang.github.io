@@ -23,15 +23,15 @@
   <meta name="description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
 <meta property="og:type" content="website">
 <meta property="og:title" content="一文弄懂 Linux Kernel 的中断系统原理 (结合源码)">
-<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Interrupt_Interrupt_and_Exception_Intro/index.html">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Intro/index.html">
 <meta property="og:site_name" content="Zobin">
 <meta property="og:description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Interrupt_Interrupt_and_Exception_Intro/pic/pic.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Interrupt_Interrupt_and_Exception_Intro/pic/apic.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Interrupt_Interrupt_and_Exception_Intro/pic/irq_map.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Interrupt_Interrupt_and_Exception_Intro/pic/xxx.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Intro/pic/pic.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Intro/pic/apic.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Intro/pic/irq_map.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Intro/pic/xxx.png">
 <meta property="article:published_time" content="2022-02-13T06:08:28.629Z">
 <meta property="article:modified_time" content="2022-02-13T06:08:28.629Z">
 <meta property="article:author" content="Zhuobin Huang">
@@ -43,7 +43,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 
-<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Interrupt_Interrupt_and_Exception_Intro/">
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Intro/">
 
 
 <script id="page-configurations">
@@ -215,7 +215,7 @@
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
             <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
-          <li>LINUX_INTERRUPT_INTERRUPT_AND_EXCEPTION_INTRO</li>
+          <li>LINUX_KERNEL_INTERRUPT_AND_EXCEPTION_INTRO</li>
         
   </ul>
 
@@ -501,7 +501,7 @@
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
             <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
-          <li>LINUX_INTERRUPT_INTERRUPT_AND_EXCEPTION_INTRO</li>
+          <li>LINUX_KERNEL_INTERRUPT_AND_EXCEPTION_INTRO</li>
         
   </ul>
 

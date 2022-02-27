@@ -299,7 +299,7 @@ async function _load_catalogue(){
             if(h4_index == 1){
                 // 创建列表
                 let new_ordered_list = document.createElement("ul");
-                new_ordered_list.setAttribute('id', `ol_for_h2_${old_h2_index}_h3_${old_h3_index}_h4_list`)
+                new_ordered_list.setAttribute('id', `ol_for_h3_${old_h3_index}_h4_list`)
                 
                 // 创建表项
                 let new_ordered_list_entry = document.createElement("li");
@@ -320,7 +320,7 @@ async function _load_catalogue(){
                 h4_index += 1
             } else {
                 // 获取目标列表
-                let ordered_list = document.getElementById(`ol_for_h2_${old_h2_index}_h3_${old_h3_index}_h4_list`);
+                let ordered_list = document.getElementById(`ol_for_h3_${old_h3_index}_h4_list`);
 
                 // 创建表项
                 let new_ordered_list_entry = document.createElement("li");
@@ -354,7 +354,7 @@ async function _load_catalogue(){
             if(h5_index == 1){
                 // 创建列表
                 let new_ordered_list = document.createElement("ul");
-                new_ordered_list.setAttribute('id', `ol_for_h2_${old_h2_index}_h3_${old_h3_index}_h4_${old_h4_index}_h5_list`)
+                new_ordered_list.setAttribute('id', `ol_for_h4_${old_h4_index}_h5_list`)
                 
                 // 创建表项
                 let new_ordered_list_entry = document.createElement("li");
@@ -366,7 +366,7 @@ async function _load_catalogue(){
                 new_ordered_list.append(new_ordered_list_entry)
 
                 // 向上一级目录中放入新创建的列表
-                let upper_ordered_list = document.getElementById(`ol_for_h2_${old_h2_index}_h3_${old_h3_index}_h4_list`);
+                let upper_ordered_list = document.getElementById(`ol_for_h3_${old_h3_index}_h4_list`);
                 let upper_ordered_list_last_entry = upper_ordered_list.lastChild
                 upper_ordered_list_last_entry.append(new_ordered_list)
 
@@ -374,7 +374,7 @@ async function _load_catalogue(){
                 h5_index += 1
             } else {
                 // 获取目标列表
-                let ordered_list = document.getElementById(`ol_for_h2_${old_h2_index}_h3_${old_h3_index}_h4_${old_h4_index}_h5_list`);
+                let ordered_list = document.getElementById(`ol_for_h4_${old_h4_index}_h5_list`);
 
                 // 创建表项
                 let new_ordered_list_entry = document.createElement("li");

@@ -20,18 +20,19 @@
     var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Survey：基于 Sketch 的算法和系统">
-<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Sketch_System_Sketch_Survey/index.html">
+<meta property="og:title" content="Read-Copy Update (RCU) 同步机制">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_RCU/index.html">
 <meta property="og:site_name" content="Zobin">
-<meta property="og:description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Sketch_System_Sketch_Survey/pic/sketchvisor_motivation.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Sketch_System_Sketch_Survey/pic/xxx.png">
-<meta property="article:published_time" content="2022-02-25T08:14:05.434Z">
-<meta property="article:modified_time" content="2022-02-25T08:14:05.434Z">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_RCU/pic/xxx.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_RCU/pic/rcu_intro.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_RCU/pic/rcu.png">
+<meta property="article:published_time" content="2022-02-10T14:39:11.220Z">
+<meta property="article:modified_time" content="2021-11-28T14:36:17.719Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -41,7 +42,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 
-<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Sketch_System_Sketch_Survey/">
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_RCU/">
 
 
 <script id="page-configurations">
@@ -54,7 +55,7 @@
   };
 </script>
 
-  <title>Survey：基于 Sketch 的算法和系统 | Zobin
+  <title>Read-Copy Update (RCU) 同步机制 | Zobin
 </title>
   
 
@@ -204,7 +205,7 @@
     <div class="post-block" lang="cn">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">Survey：基于 Sketch 的算法和系统
+<h1 class="post-title" itemprop="name headline">Read-Copy Update (RCU) 同步机制
 </h1>
 
 <div class="post-meta">
@@ -212,8 +213,8 @@
   <ul class="breadcrumb">
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
-            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
-          <li>SKETCH_SYSTEM_SKETCH_SURVEY</li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>LINUX_KERNEL_RCU</li>
         
   </ul>
 
@@ -226,15 +227,41 @@
       
       <div class="post-body">
           <head>
-<!--导入样式表-->
-<link rel="stylesheet" type="text/css" href="style/index.css">
-
-<!--导入网页脚本-->
-<script src="script/index.js"></script>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_border{
+      margin-bottom: 20px;
+      padding: 10px 10px; 
+      font-size: 16px; 
+      word-spacing:0px;  
+      border:1px solid black;
+    }
+    .div_learning_post_background{
+      background-color:#E3E2E2;
+      padding: 10px 40px; 
+      font-size: 16px;
+      word-spacing:0px;  
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+    .div_learning_post_background p{
+      margin: 0px;
+    }
+</style>
 
 <!--支持网页公式显示-->    
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
-
 <!--支持矩阵显示-->
 <script type="text/javascript">
   run_maths = function() {
@@ -255,11 +282,12 @@
 </script>
 </head>
 
-<body onload="load_page()">
+<body>
 
 <div align="center" class="div_indicate_source">
-  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Feb.21 2022</i></font></h4>
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Nov.23 2021</i></font></h4>
 </div>
+
 <div class="div_licence">
   <br>
   <div align="center">
@@ -269,106 +297,6 @@
   &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
   </p>
 </div>
-<br>
-<div class="div_catalogue">
-  <div align="center">
-    <h1> 目录 </h1>
-    <p>
-    <font size="3px">有特定需要的内容直接跳转到相关章节查看即可。</font>
-  </div>
-  <div class="div_load_catalogue_alert" id="load_catalogue_alert">正在加载目录...</div>
-  <div class="div_catalogue_container" id="catalogue_container">
-  </div>
-</div><br>
-
-<!-- Start your post here -->
-<h2 class="title">Sketch 算法</h2>
-<div class="div_learning_post">
-</div>
-
-<h2 class="title">Sketch 测量系统</h2>
-<div class="div_learning_post">
-  <desp class="title">总结近几年来的基于 Sketch 的网络测量系统的论文</desp>
-  <h3 class="title"><note>[SIGCOMM'18]</note> Elastic Sketch<sup><cite>elasticsketch</cite></sup></h3>
-  <label class="title">elastic sketch</label>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
-
-  <h3 class="title"><note>[SIGCOMM'19]</note> Nitro Sketch<sup><cite>nitrosketch</cite></sup></h3>
-  <label class="title">nitro sketch</label>
-
-  <h4 class="title">Motivation</h4>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Sketch 被用于网络测量的初衷是因为它能够使用非线性大小的内存区域，在一定的误差范围内完成对网络流的测量。但是在软件交换机上:
-
-  <ol>
-    <li>内存并不是最紧缺的资源: 内存容量在软件交换机上一般都十分可观;</li>
-    <li>内存并不是带宽的瓶颈: 一般来说，Sketch 的容量足以被加载到 LLC 中去，因此访存速度可以得到保证</li>
-  </ol>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;这篇文章的实验表明，Sketch 算法中针对每个数据包的多次哈希计算才是导致 Sketch 方案在部署过程中单核测量性能无法达到 40Gbps 的原因。前人解决这个问题的方法是:
-
-  <ul>
-    <li><cite>elasticsketch</cite> 将大流和小流区分开来进行测量，这样对于大流来说就无需前往 CMS 进行多次哈希计算，只需要进行一次哈希计算就可以找到自己的哈希桶。其缺点是随着流的数量的增加，其 accuracy 和 throughput 都会下降;</li>
-    <li><cite>sketchvisor</cite> 设计了一条快路径来加快数据包的测量过程</li>
-    <li><cite>rhhh</cite></li>
-  </ul>
-
-  <h4 class="title">Design</h4>
-  <h4 class="title">Evaluation</h4>
-
-  <h3 class="title"><note>[SIGCOMM'17]</note> Sketchvisor<sup><cite>sketchvisor</cite></sup></h3>
-  <label class="title">sketch visor</label>
-  <h4 class="title">Motivation</h4>
-
-  <div align="center">
-    <img src="./pic/sketchvisor_motivation.png" width=700px>
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;这篇文章瞄准的问题是 Sketch 在实际部署过程中的 CPU 开销问题。如上图所示，文章的实验首先说明了四种 Sketch 系统 ( <cite>univmon</cite>, <cite>flowradar</cite>, <cite>deltoid</cite>, <cite>revsketch</cite> ) 需要为每个数据包付出的 CPU 运算周期代价；其次文章发现这四种 Sketch 的单核性能均不超过 5Gbps，其中 <cite>deltoid</cite> 的五核性能甚至也不超过 5Gbps。文章通过分解 CPU 运行周期发现这几种方案的大部分时间都花费在了哈希计算上，因此这是一个急需解决的瓶颈。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;一种比较简单直接的方法是不使用像 Sketch 这样的多哈希表结构，转而采用单哈希表结构来进行测量。单哈希表可行的理由是流的分布存在一定的偏移性，结合现代的 Cache 的管理机制可以实现快速高效的测量 (i.e. 更少的 CPU 周期和更高的 Cache 命中率)，但是其花费的总的内存区域大小仍然过大。因此需要找出一种方法来使得 Sketch 在实际系统上的部署变得可行。
-
-  <h4 class="title">Design</h4>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
-
-  <h4 class="title">Evaluation</h4>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
-
-  <!--
-  <h3 class="title"><note>[SIGCOMM'18]</note> Elastic Sketch<sup><cite>elasticsketch</cite></sup></h3>
-  <label class="title">elastic sketch</label>
-  -->
-</div>
-
-
-<div class="div_ref" id="ref_container"></div>
-
-</body>
-<!--引用其它章节-->
-<!-- 
-<ref></ref> 
--->
-
-<!--引用文献-->
-<!-- 
-<cite></cite> 
--->
-
-<!--关键词-->
-<!-- 
-<def></def> 
--->
-
-<!--醒目注意-->
-<!-- 
-<note></note> 
--->
 
 <!--表格-->
 <!--
@@ -391,13 +319,13 @@
 <!--
 <div class="cmath" align="center">
   `((1, 0),(1, 0))`
-</div><br>
+</div>
 -->
 
 <!--图片-->
 <!--
 <div align="center">
-  <img src="./pic/xxx.png" width=80%>
+  <img src="./pic/xxx.png" width=30%>
 </div>
 -->
 
@@ -407,6 +335,130 @@
 &nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
 </p>
 -->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_intro"><font color="blue"><b>RCU 基本介绍</b></font></a>：介绍了 RCU 同步机制的 Motivation;
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_mechanism"><font color="blue"><b>RCU 工作流程</b></font></a>：介绍了 RCU 中 Updater 和 Reader 的工作流程;
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_api"><font color="blue"><b>RCU 原语</b></font></a>: 列举了常见的 RCU 原语以及对它们的相应功能进行了阐述;
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 4. <a href="#4_example"><font color="blue"><b>RCU 原语使用实例</b></font></a>: 分析了内核源码中常见的 RCU 原语的使用实例;
+  </div>
+</div>
+
+<br>
+
+<div class="div_learning_post">
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注明：
+  <ul>
+    <li>本文的分析基于内核版本 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.14.18/source">v5.14.18</a> 展开;</li>
+  </ul>
+</div>
+
+<!--标题-->
+<h2><a name="1_intro">1. RCU 基本介绍</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" rel="noopener" href="https://lwn.net/Articles/262464/"><font color="blue">Read-copy update (RCU)</font></a> 是 Linux Kernel 的一种同步机制，与传统的读写锁和互斥锁不同，RCU 允许一个 Updater 和多个 Reader 的存在 (注意，多个 Updater 之间仍然是互斥的)。RCU 允许 Reader 在执行 <font color="blue">Read-side Critical Section</font> 的指令 (i.e. 临界区，访问了可能产生竞争的共享数据结构的代码段) 的时候不加锁就可以访问，这样一来就大大加速了 Reader 的代码执行流程，因为申请一个互斥/读写/自旋锁的 overhead 是很大的。由于对 <font color="red"><b>读多写少</b></font> 场景的优化，RCU 大量的应用在 Linux Network 源码中，如对路由表的访问等场景。
+</div>
+
+<h2><a name="2_mechanism">2. RCU 工作流程</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们现在简单分析一下 RCU 机制是如何保障在 Reader 不加锁的情况下对数据的安全并发访问的。首先，我们要先明确以下两点：
+
+  <ul>
+    <li>RCU 只保护 <font color="red"><b>被动态分配并通过指针引用的</b></font> 数据结构;</li>
+    <li>在对被 RCU 保护的 Critical Section 进行操作时，任何 Reader 都不能被休眠;</li>
+  </ul>
+
+  <div align="center">
+    <img src="./pic/rcu_intro.png" width=700px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们先分析 Reader 的工作流程：我们假设指针 `p` 指向的数据区域是受 RCU 保护的，也即是 Read-side Critical Section。当 Reader 在读取被 RCU 保护的共享数据结构时，也即上图 ①，它会首先调用 <code>rcu_read_lock()</code>，这个 RCU 原语实际上是在执行 <code>preempt_disable()</code>，即暂时关闭内核调度器抢占，然后 Reader 引用指针 `p` 所对应的内存单元，并且开始读取共享数据结构。正如我们上面所述，在 Reader 完成对共享数据结构的读取之前，它是不能睡眠的。完成读取后，Reader 又会调用 <code>rcu_read_unlock()</code>，这个 RCU 原语实际上是在执行 <code>preempt_enable()</code>，即重新使能内核任务调度器的抢占。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Updater 来说，当 Updater 要更新这个被 RCU 保护的共享数据结构时，它肯定不会直接基于指针 `p` 对原数据结构进行修改，因为如果有并行的同样是在操作原数据结构的 Reader 存在的话，Updater 的更新将导致 Reader 有不可预测的读取结果。因此，Updater 会首先生成一份原数据结构的副本，然后 Updater 开始更新这个副本，也即上图 ②。Updater 修改完毕后，会改变指针变量 `p` 的值，以使它指向由 Updater 更新过的数据结构副本，也即上图 ③ (p.s. 这个指针修改操作是一个原子操作，这保证了这个指针值不会出现数据错乱的情况发生，更改了指针值时一定能成功的)。
+
+  <div align="center">
+    <img src="./pic/rcu.png" width=700px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述理解，我们以上图为例子来更加详细地分析 RCU Updater 和 Reader 的工作过程。我们把 RCU 更新过程分为两个阶段: <font color="blue">Removal (移除阶段)</font> 和 <font color="blue">Reclamation (回收阶段)</font>。下面我们分别进行讨论。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上图中，`t_1 \to t_2` 时间段内是 Removal 阶段，Updater 首先对共享数据结构的副本进行修改操作。在修改完成后，通过调用原语 <code>rcu_assign_pointer()</code> 来修改指针以指向新的副本区域，现代 CPU 的指针操作都是原子的，<code>rcu_assign_pointer()</code> 原语在大多数系统上编译为一个简单的指针赋值操作。我们把这个时刻定义为 `t_1'`。在 `t_1'` 时刻后，由于指针已被更新，所以新的读取操作都将读取到更新后的共享数据结构。注意到在 `t_1 \to t_2` 时间段内，当 Updater 在修改数据的时候，并行的四个 Reader 并不受影响，尽管它们读取的是旧的共享数据结构。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 `t_2` 时刻，Updater 调用了原语 <code>synchronize_rcu()</code> 来进入 <font color="blue">Grace Period (宽限期)</font>，其本质是 Updater 在修改完指针之后必须释放掉旧的共享数据结构，而旧的共享数据结构由于还有 Reader 在进行读取操作 (i.e. 在 `t_1'` 之前发起读取访问的 Reader 使用的都是旧共享数据结构)，因此不能被立即释放 (i.e. 我们把这些读取操作称为 "pre-existed read")，所以 Updater 就会进入阻塞的 Grace Period 以等待所有的 "pre-existed read" 结束。在上图所示的 `t_3` 时刻，最后一个 "pre-existed reader" 调用了 <code>rcu_read_unlock()</code> 离开了它的 Read-side Critical Section，此时旧的共享数据结构已经没有任何 "pre-existed reader" 产生的引用，所以 Updater 下一步就可以安全地将其给释放掉，此时 Grace Period 就结束了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;`t_3` 时刻 Grace Period 结束后，我们就进入了 Reclamation 阶段，此时 Updater 会将已 "无人问津" 的旧的共享数据结构释放掉。
+</div>
+
+<h2><a name="3_api">3. RCU 原语</a></h2>
+<div class="div_learning_post">
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本小节对我们上面用到过的 RCU 原语进行总结。
+
+  <h3><a name="3_api_1">3.1 rcu_read_lock()</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>void rcu_read_lock(void)</code> 在 Reader 读取受 RCU 保护的共享数据结构之前被调用，以说明 Reader 进入了 Read-side Critical Section。在 Read-side Critical Section 访问的任何受 RCU 保护的共享数据结构都会保证在临界区期间保持未回收状态。另外，值得注意的是在 Read-side Critical Section 中阻塞是非法的。Linue Kernel 的 <code>void rcu_read_lock(void)</code> 的实现非常简单，事实上就是调用了 <code>preempt_disable()</code> 关闭了内核调度器的抢占机制。
+
+  <h3><a name="3_api_2">3.2 rcu_read_unlock()</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>void rcu_read_lock(void)</code> 在 Reader 离开 Read-side Critical Section 时被调用，已说明 Reader 对受 RCU 保护的共享数据结构的访问已经结束。同样地，与 <code>void rcu_read_lock(void)</code> 相反，<code>void rcu_read_lock(void)</code> 的实质是通过调用 <code>preempt_enable()</code> 重新使能了内核调度器的抢占机制。
+
+  <h3><a name="3_api_3">3.3 synchronize_rcu()</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>void synchronize_rcu(void)</code> 在 Updater 修改完指向受 RCU 保护的共享数据结构的指针之后被调用，它是一个阻塞型函数：在旧的数据结构区域仍有 "pre-existed reader" 在进行访问时 (i.e. 这些 "pre-existed reader" 尚未调用 <code>void rcu_read_lock(void)</code> 离开它们的 Read-side Critical Section) 发生阻塞，一直等到所有 "pre-existed reader" 结束对旧数据结构区域的访问。阻塞结束后，这个函数会释放旧结构体。synchronize_rcu 的调用点标志着 "更新者代码的结束" 和 "回收者代码的开始"。
+
+  <h3><a name="3_api_4">3.4 rcu_assign_pointer()</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>void rcu_assign_pointer(p, typeof(p) v)</code> 通过宏实现，其作用是给受 RCU 保护的共享数据结构对应的指针赋新值，由 Updater 来调用。
+
+  <h3><a name="3_api_5">3.5 rcu_dereference()</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>typeof(p) rcu_dereference(p)</code> 同样通过宏来进行实现，Reader 可以通过 <code>rcu_dereference()</code> 获取受保护的 RCU 指针。
+</div>
+
+<h2><a name="4_example">4. RCU 原语使用实例</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO，可以参考 [6] 来进行补充。
+</div>
+
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+<ol>
+<li>Quara, <a target="_blank" rel="noopener" href="https://www.quora.com/What-is-the-read-copy-update-mechanism-in-Linux-Kernel">What is the read-copy-update mechanism in Linux Kernel?</a></li>
+<li>LWN.net, <a target="_blank" rel="noopener" href="https://lwn.net/Articles/263130/">What is RCU? Part 2: Usage</a></li>
+<li>StackOverflow, <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/17128210/what-does-rcu-stands-for-in-linux">what does __rcu stands for in linux?</a></li>
+<li>知乎, <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/113999842">rcu 机制简介</a></li>
+<li>Paul E. McKenney, <a target="_blank" rel="noopener" href="http://www2.rdrop.com/users/paulmck/RCU/">Read-Copy Update (RCU) Papers</a></li>
+<li>梁康, <a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903507275808776">深入理解 Linux 的 RCU 机制</a></p>
+</div>
+
+</li>
+</ol>
+</body>
       </div>
       
       
@@ -416,8 +468,8 @@
   <ul class="breadcrumb">
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
-            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
-          <li>SKETCH_SYSTEM_SKETCH_SURVEY</li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>LINUX_KERNEL_RCU</li>
         
   </ul>
 
