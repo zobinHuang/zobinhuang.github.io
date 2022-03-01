@@ -31,8 +31,8 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Network_Measurement_System_Sketch_Survey/pic/sketchvisor_motivation.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Network_Measurement_System_Sketch_Survey/pic/sketchvisor_design.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Network_Measurement_System_Sketch_Survey/pic/xxx.png">
-<meta property="article:published_time" content="2022-02-27T16:58:28.232Z">
-<meta property="article:modified_time" content="2022-02-27T16:58:28.232Z">
+<meta property="article:published_time" content="2022-02-28T07:39:50.628Z">
+<meta property="article:modified_time" content="2022-02-28T07:39:50.628Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -290,7 +290,7 @@
   &nbsp;&nbsp;&nbsp;&nbsp;对基于 Sketch 的系统的 Evaluation 通常参考以下几个 Metrics:
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<def>Accuracy</def>: 使用 Sketch 结构估测一类或者多累流量特征的准确度。
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>Accuracy</def>: 使用 Sketch 结构估测一类或者多类流量特征的准确度。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;<def>CPU Usage</def>: 每包的处理所需要的计算资源的消耗。
@@ -305,6 +305,10 @@
 <h2 class="title">问题定义与经典算法</h2>
 <div class="div_learning_post">
   <desp class="title">对数据流算法所针对的问题进行了定义，并且分析了经典的算法</desp>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Sketch 本身实际上是 <def>Data Stream Algorithm</def> 的一种别称。在本节中我们将对 Data Stream Algorithm 所涉及的问题以及相关算法做相应分析。
+
   <h3 class="title">Heavy Hitter (频繁项问题)</h3>
   <h4 class="title">基本定义</h4>
   <p>
@@ -327,14 +331,30 @@
   &nbsp;&nbsp;&nbsp;&nbsp;解决 Heavy Hitter 的算法的输出是一个集合，其中包括了所有出现次数超过 `m/k` 的 Element 所属的种类 (i.e. 哪几条网络流)，即 `{j|f_j > \frac{m}{k}}`。
 
   <h4 class="title">相关算法</h4>
-  <h5 class="title">Misra Gries</h5>
+  <h5 class="title">Misra Gries Summary</h5>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;本小节参考自 <cite>misra_gries_explain_and_source_code</cite>, <cite>misra_gries_intro</cite>, <cite>misra_gries</cite>。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;考虑最简单的过半查找问题: 给定一个数组，找出出现次数超过一半的元素。
+  &nbsp;&nbsp;&nbsp;&nbsp;考虑最简单的过半查找问题: 给定一个数组，找出出现次数超过一半的元素类型。解决一个问题的一个较好的方法是: 不断地删除两个不同的元素，删到最后剩下的元素对应的类型即为过半元素类型。基于这种思考，该算法的基本思想也可以表达为如下形式: 我们可以设置一个全局的计数器，计数器被数组的第一个元素的元素类型初始化，并且设置计数器的值为 1。对于后续的元素，如果元素和计数器中记录的元素相匹配，则计数器自增 1，否则自减 1。如果计数器的计数值达到 0，则将计数器中的记录元素更换为新到达的元素。具体代码如下所示:
 
-  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">majority_element</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;nums)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> len=nums.size,count=<span class="number">0</span>,ans=<span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;len;i++)&#123;</span><br><span class="line">    <span class="keyword">if</span>(count==<span class="number">0</span>)&#123; <span class="comment">// Nothing be counted at the present</span></span><br><span class="line">      ans=nums[i];</span><br><span class="line">      count++;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123; <span class="comment">// there&#x27;s element being counting at the present</span></span><br><span class="line">      <span class="keyword">if</span>(ans==nums[i])&#123; <span class="comment">// Match</span></span><br><span class="line">        count++;</span><br><span class="line">      &#125;<span class="keyword">else</span>&#123; <span class="comment">// Dismatch</span></span><br><span class="line">        count--;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">algorithm misra-gries:</span><br><span class="line">  input: </span><br><span class="line">      A finite sequence s taking values in the range 1,2,...,m</span><br><span class="line">  output: An exact values f in the range 1,2,...,m which occurs more than m&#x2F;2 times</span><br><span class="line">  </span><br><span class="line">  f :&#x3D; new value of null</span><br><span class="line">  counter :&#x3D; new value of 0</span><br><span class="line"></span><br><span class="line">  while s is not empty:</span><br><span class="line">      take a value i from s</span><br><span class="line">      if counter equals 0:</span><br><span class="line">          f :&#x3D; i</span><br><span class="line">          counter :&#x3D; counter + 1</span><br><span class="line">      else:</span><br><span class="line">        if f equals i:</span><br><span class="line">          counter :&#x3D; counter + 1</span><br><span class="line">        else:</span><br><span class="line">          counter :&#x3D; counter - 1</span><br><span class="line">        </span><br><span class="line">  return f, counter</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;进一步复杂化这个问题: 找出出现次数超过 `m/k` 的所有元素类型。基于上面的思路，我们可以设置 `k-1` 个全局计数器 (i.e. 至多有 `k-1` 个出现次数超过 `m/k` 的元素类型)，组成一个 <code>map</code>。然后我们依次读取数组中的每个元素，然后:
+
+  <ul>
+    <li>如果 <code>map</code> 中有一个记录着当前元素对应的元素类型，则该计数器自增 1;</li>
+    <li>如果 <code>map</code> 中没有对应的计数器，且当前 <code>map</code> 的长度小于 `k-1`，则将当前元素对应的元素类型加入到 <code>map</code> 中，然后设置计数器的计数为 1;</li>
+    <li>如果 <code>map</code> 中没有对应的计数器，且当前 <code>map</code> 的长度不小于 `k-1`，则将 <code>map</code> 中的所有计数器自减 1。如果 <code>map</code> 中有计数器的值为 0，则从 <code>map</code> 中删去该元素;</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;使用代码表示如下:
+
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">algorithm misra-gries:</span><br><span class="line">  input: </span><br><span class="line">      A positive integer k</span><br><span class="line">      A finite sequence s taking values in the range 1,2,...,m</span><br><span class="line">  output: An associative array A with frequency estimates for each item in s</span><br><span class="line">  </span><br><span class="line">  A :&#x3D; new (empty) associative array</span><br><span class="line">  while s is not empty:</span><br><span class="line">      take a value i from s</span><br><span class="line">      if i is in keys(A):</span><br><span class="line">          A[i] :&#x3D; A[i] + 1</span><br><span class="line">      else if |keys(A)| &lt; k - 1:</span><br><span class="line">          A[i] :&#x3D; 1</span><br><span class="line">      else:</span><br><span class="line">          for each K in keys(A):</span><br><span class="line">              A[K] :&#x3D; A[K] - 1</span><br><span class="line">              if A[K] &#x3D; 0:</span><br><span class="line">                  remove K from keys(A)</span><br><span class="line">  return A</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果
+
   <h5 class="title">Lossy Counting</h5>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;

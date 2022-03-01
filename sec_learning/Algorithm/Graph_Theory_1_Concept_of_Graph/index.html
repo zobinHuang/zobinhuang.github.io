@@ -30,6 +30,7 @@
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/complete_graph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/bipartite_graph.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/dual_graph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/complement_graph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/sub_graph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/vertex_induced_subgraph.png">
@@ -43,9 +44,11 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/composition.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/hypercube.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/car_k2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/dijkstra.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/a_k_g.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/xxx.png">
-<meta property="article:published_time" content="2022-02-25T13:19:43.674Z">
-<meta property="article:modified_time" content="2022-02-25T13:19:43.674Z">
+<meta property="article:published_time" content="2022-03-01T18:07:38.465Z">
+<meta property="article:modified_time" content="2022-03-01T18:07:38.465Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -272,7 +275,7 @@
 <body onload="load_page()">
 
 <div align="center" class="div_indicate_source">
-  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Feb.21 2022</i></font></h4>
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：March.2 2022</i></font></h4>
 </div>
 <div class="div_licence">
   <br>
@@ -374,6 +377,43 @@
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;如果完全图 `K_{n}` 的 `n \ge 3`，则其一定不是二部图。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;快速判断是否是二部图的一个定理:
+
+  <div class="div_learning_post_border" align="center">
+  一个图是二部图当且当它不包含奇圈
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们就上述定理的必要性 (从左向右) 和充分性 (从右向左) 进行证明。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;必要性显然: 设 `G` 是具有二分类 `(X, Y)` 的二部图, 并且 `C = v_0v_1… v_kv_0` 是 `G` 的一个圈。不失一般性, 可假定 `v_o \in X`。一般地，`v_{2i}\inX`，`v_{2i+1}\inX`。又因为 `v_0\inX`，因此 `C` 是偶圈。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;充分性: 我们在 `G` 中任意选取点 `u`，然后定义 `V(G)` 的分类如下:
+
+  <ul>
+    <li>`X={x|d(u,x)` 是偶数, `x\inV(G)}`</li>
+    <li>`Y={y|d(u,y)` 是奇数, `y\inV(G)}`</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们尝试基于图 `G` 不包含奇圈的已知条件来证明 `X` 和 `Y` 是图 `G` 的二部划分。
+
+  <div align="center">
+    <img src="./pic/dual_graph.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们证明在 `X` 中的任意两点 `v` 和 `w` 都不相邻。设 `P` 是一条最短 `(u,v)` 路，`Q` 是一条最短 `(u,w)` 路，`u_1` 是 `P` 和 `Q` 的最后一个交点。由于 `P` 和 `Q` 是最短路，所以 `P` 和 `Q` 中 `u` 到 `u_1` 段的距离相同，因此奇偶性相同。又因为 `P` 和 `Q` 的长度是偶数，所以 `P` 和 `Q` 中 `u_1v` 段和 `u_1w` 段的奇偶性也相同。因此此时如果 `v` 和 `w` 邻接，则会形成奇圈，与已知条件矛盾。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们可以使用同样的道理证明在 `Y` 中的任意两点也不相邻，此处略去证明。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;综合上述关于二部图的性质，总结起来就是：<note>要证明一个图是二部图，则需要找到二部划分；要证明一个图不是二部图，仅需找到一个奇圈。</note>
 
   <h4 class="title">完全二部图</h4>
   <p>
@@ -705,7 +745,131 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;上面的定理可以采用 <note>最长路方法</note> 来进行证明: 设 `P=v_1v_2…..v_{k-1}v_k` 是 `G` 中的一条最长路. 由于 `\delta \ge 2`, 所以 `v_k` 必然有相异于 `v_{k-1}` 的邻接顶点。又 `W` 是 `G` 中最长路，所以这样的邻接点必然是 `v_1`, `v_2`, …, `v_{k-2}` 中之一。设该点为 `v_m`, 则 `v_mv_{m+1}….v_kv_m` 为 `G`圈。                                                          
+  &nbsp;&nbsp;&nbsp;&nbsp;上面的定理可以采用 <note>最长路方法</note> 来进行证明: 设 `P=v_1v_2…..v_{k-1}v_k` 是 `G` 中的一条最长路. 由于 `\delta \ge 2`, 所以 `v_k` 必然有相异于 `v_{k-1}` 的邻接顶点。又 `W` 是 `G` 中最长路，所以这样的邻接点必然是 `v_1`, `v_2`, …, `v_{k-2}` 中之一。设该点为 `v_m`, 则 `v_mv_{m+1}….v_kv_m` 为 `G` 圈。
+
+  <h3 class="title">连通图的性质</h3>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们给出连通图的两个性质。
+
+  <div class="div_learning_post_border" align="center">
+  若图 `G` 不连通，则其补图一定连通。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明过程很简单，分为两种情况: 对于 `\forall u,v \in V(\bar{G})`，
+
+  <ol>
+    <li>若 `u`, `v` 属于 `G` 的同一分支，设 `w` 是与 `u`, `v` 处于不同分支中的点，则在 `\bar{G}` 中，`u` 与 `w`，`v` 与 `w` 分别相邻。于是 `u` 与 `v` 在 `\bar{G}` 中是连通的;</li>
+    <li>若 `u`, `v` 属于 `G` 的不同分支，则`u` 与 `v` 在 `\bar{G}` 中必然是连通的</li>
+  </ol>
+
+  <div class="div_learning_post_border" align="center">
+  若 `G` 是简单图且 `\delta(G) \ge \frac{n-1}{2}`，则 `G` 是连通的。
+  </div>                  
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;选择 `G` 的任意两点 `u` 和 `v`，这个定理的证明过程分为两种情况:
+
+  <ol>
+    <li>若 `u` 和 `v` 相邻，则无需证明;</li>
+    <li>
+      若 `u` 和 `v` 不相邻，我们可以从这个图的特殊性入手，得到:<br>
+      `|N(u)| \ge \delta(G) \ge \frac{n-1}{2}`, `|N(v)| \ge \delta(G) \ge \frac{n-1}{2}`，故<br>
+      `|N(u)|+|N(v)| \ge 2 \cdot \delta(G) \ge n-1`，故<br>
+      `|N(u) \cap N(v)| = |N(u)| + |N(v)| - |N(u) \cup N(v)| \ge n-1 - (n-2) = 1`<br>
+      也即 `u` 和 `v` 至少有一个公共邻点
+    </li>
+  </ol>
+</div>
+
+<h2 class="title">最短路算法</h2>
+<div class="div_learning_post">
+  <h3 class="title">赋权图</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在图 `G` 的每条边上标上一个实数 `\omega(e)` 后，称 `G` 为 <def>边赋权图</def>。被标上的实数称为边的 <def>权值 (Weight)</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;若 `H` 是赋权图 `G` 的一个子图, 称 `W(H)=\sum_{e\inE(H)}\omega(e)` 为子图H的权值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设 `G` 为边赋权图。`u` 与 `v` 是 `G` 中两点，在连接 `u` 与 `v` 的所有路中，路中各边权值之和最小的路，称为 `u` 与 `v` 间的 <def>最短路 (Shortest Path)</def>。
+
+  <h3 class="title">动态规划</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;传统的 <def>贪心算法</def> 的思路是: 每个求解的步骤都是取局部的最优解。这样的算法在一些情况下无法达到全局最优，因为算法有可能因为在某一步选取了一个局部最优解而错过全局最优解。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;而 <def>动态规划</def> 的思路则是，为了求出问题 `f(n)`，我们可以对与求解 `f(n)` 相关的 `f(n)` 的子问题 `f(i)` `(i \< n)` 进行最优解求解，如此递归最终堆砌出 `f(n)` 的最优解。
+
+  <h3 class="title">Dijkstra 算法</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>Dijkstra 算法</def> 是一种在赋权图中求由点 `u_0` 到 `G` 中所有顶点的最短路的好算法。
+
+  <div align="center">
+    <img src="./pic/dijkstra.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Dijkstra 简单来说，就是把整个图分为两部分: 由未确定 `d(u_0, v')` 的顶点 `v'` 构成的子图 `\bar{S}`，以及由已经确定 `d(u_0, v)` 的顶点 `v` 构成的子图 `S`。算法的每次迭代，就是在子图 `S` 和 `\bar{S}` 之间的边界边上选取一条权重最小的边界边，然后把对应的位于 `\bar{S}` 的顶点加入到 `S` 中，形成新的 `S` 和 `\bar{S}`。算法初始化的时候，`S` 仅包含 `u_0` 一个顶点; 算法结束的时候，`\bar{S}` 将变为空集。
+</div>
+
+<h2 class="title">图的代数表示</h2>
+<div>
+  <h3 class="title">邻接矩阵</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以使用 <def>邻接矩阵 (adjacency matrix)</def> 来完成一个图在计算机中的表示。其表示方法为: 设 `G` 为 `n` 阶图, `V={v_1, v_2, …, v_n}`, 邻接矩阵 `A(G)=(a_{ij})`, 其中:
+
+  <ul>
+    <li>`a_{ij}=l`, 其中 `l` 为 `i` 和 `j` 之间的边数 (p.s. 自环的情况下 `l=2`)</li>
+    <li>`a_{ij}=0`，当 `i` 和 `j` 之间不邻接时</li>
+  </ul>  
+
+  <h3 class="title">邻接矩阵的性质</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>非负性</b>: 由邻接矩阵定义知 `a_{ij}` 是非负整数, 即邻接矩阵是非负整数矩阵;
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>对称性</b>: 在图中点 `v_i` 与 `v_j` 邻接, 有 `v_j` 与 `v_i` 邻接, 即 `a_{ij}=a_{ji}`。所以, 邻接矩阵是对称矩阵;
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同一图的不同形式的邻接矩阵是相似矩阵，这是因为同图的两种不同形式矩阵可以通过交换行和相应的列变成一致。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 `G` 为简单图, 则 `A(G)` 为布尔矩阵 (i.e. 元素只取 `0` 或 `1` 的矩阵)，且: 行和(列和)等于对应顶点的度数; 矩阵元素总和为图的总度数，也就是G的边数的2倍。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;`G` 连通的充分必要条件是: `A(G)` 不能与如下矩阵相似:
+
+  <div class="cmath" align="center">
+    `((A_{11}, 0),(0, A_{22}))`
+  </div><br>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们给出一个定理:
+
+  <div class="div_learning_post_border" align="center">
+  设 `A^k(G)=(a_{ij}^{(k)})`，则 `a_{ij}^{(k)}` 表示顶点 `v_i` 到 `v_j` 的长度为 `k` 的途径条数。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们使用数学归纳法来对这个定理进行证明:
+
+  <ol>
+    <li>当 `k=1` 时，`A^1(G)=A(G)`，由邻接矩阵的定义可得上述定理成立;</li>
+    <li>
+    假设当 `k−1` 时结论均成立。则当为 `k` 时:<br>
+    `A^k = A^{k-1} \cdot A = (a_{i1}^{(k-1)} \cdot a_{1j} + a_{i2}^{(k-1)} \cdot a_{2j} + ... + a_{i n}^{(k-1)} \cdot a_{nj})_{n \times n}`，也即<br>
+    `a^k = a_{i1}^{(k-1)} \cdot a_{1j} + a_{i2}^{(k-1)} \cdot a_{2j} + ... + a_{i n}^{(k-1)} \cdot a_{nj}`
+    </li>
+  </ol>
+
+  <div align="center">
+    <img src="./pic/a_k_g.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;分析上面的最后一个式子，实际上其含义可以使用上图来进行表达: `a_{in}^{(k-1)}` 算的是从顶点 `i` 到 `n` 之间的长为 `k-1` 的路径的条数，`a_{nj}` 算的是从顶点 `n` 到 `j` 之间的长为 `1` 的路径的条数。因此上述式子的相乘后相加的形式，实际上就算出了从顶点 `i` 到 `j` 之间的长为 `k` 的路径的条数。
 </div>
 
 <div class="div_ref" id="ref_container"></div>
