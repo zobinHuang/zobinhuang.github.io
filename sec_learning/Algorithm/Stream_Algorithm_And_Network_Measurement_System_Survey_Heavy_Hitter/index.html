@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Survey：解决 Heavy Hitter 频繁项问题的算法">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey_Heavy_Hitter/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey_Heavy_Hitter/pic/system_arch.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey_Heavy_Hitter/pic/quicksort.gif">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey_Heavy_Hitter/pic/xxx.png">
+<meta property="article:published_time" content="2022-03-05T16:46:41.585Z">
+<meta property="article:modified_time" content="2022-03-05T16:46:41.585Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey_Heavy_Hitter/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>Survey：解决 Heavy Hitter 频繁项问题的算法 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-科研-(research)">
+
+    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
+
+  </li>
+        <li class="menu-item menu-item-项目">
+
+    <a href="/sec_project/" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly/" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-实习与助教">
+
+    <a href="/sec_internship/" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-随笔">
+
+    <a href="/sec_essay/" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">Survey：解决 Heavy Hitter 频繁项问题的算法
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
+          <li>STREAM_ALGORITHM_AND_NETWORK_MEASUREMENT_SYSTEM_SURVEY_HEAVY_HITTER</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body onload="load_page()">
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Jan.30 2022</i></font></h4>
+</div>
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+<br>
+<div class="div_catalogue">
+  <div align="center">
+    <h1> 目录 </h1>
+    <p>
+    <font size="3px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_load_catalogue_alert" id="load_catalogue_alert">正在加载目录...</div>
+  <div class="div_catalogue_container" id="catalogue_container">
+  </div>
+</div><br>
+
+<!-- Start your post here -->
+
+<h2 class="title">问题理解</h2>
+<div class="div_learning_post">
+  <h3 class="title">基本定义</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们首先可以把 "寻找 <def>Heavy Hitter</def>" 这样一件事情描述为如下形式:
+
+  <div class="div_learning_post_border" align="center">
+  给定一个数据集/流，找到这个数据集/流中出现次数超过人为设定阈值的元素种类 <cite>plc</cite>。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;例如，在网络的语义下，我们的目标是找到数据包个数超过初设阈值的网络流 (i.e. 由五元组定义)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在让我们把这个问题使用数学形式来表述 <cite>misra_gries_review</cite>:
+
+  <div class="div_learning_post_border">
+  <def>Exact `\phi`-frequent Items Problem</def>: 给定一个由 `n` 个元素 `t_1`, `t_2`, `...`, `t_n` 组成的数据集/流 `S`。设数据集/流中各个元素 `t_j` 属于种类 `i`，定义种类 `i` 出现的频率为 `f_i=|{j|t_j=i}|`。该问题的目标是为了找到集合 `{i|f_i>\phin}`，这个集合中包含了在数据集/流 `S` 中出现次数超过 `\phin` 的元素种类集合。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;解决 Exact `\phi`-frequent Items Problem 的方法需要掌握数据集/流 `S` 中所有元素的种类的信息，这对于种类空间 `F={f_i}` 很大的情况下是很不实际的。因此允许误差的版本定义如下 <cite>misra_gries_review</cite>:
+
+  <div class="div_learning_post_border">
+  <def>`\epsilon`-approximate Frequent Items Problem</def>: 给定一个由 `n` 个元素 `t_1`, `t_2`, `...`, `t_n` 组成的数据集/流 `S`，设数据集/流中各个元素 `t_j` 属于种类 `i`，定义种类 `i` 出现的频率为 `f_i=|{j|t_j=i}|`。该问题的目标是为了找到集合 `F`，使得对于 `\forall i \in F`，有 `f_i > (\phi-\epsilon)n`，并且保证不被包含在 `F` 中的 `i` 中一定不满足 `f_i>\phin`。也就是说所有的在数据集/流 `S` 中出现次数超过 `\phin` 的元素种类都应该被算法所捕获。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在下面的阐述中，我们有时会会把 `\phin` 写作 `\frac{n}{k}`，也即 `\frac{1}{k}=\phi`。
+
+  <h3 class="title">系统设计</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注意到我们上面在给出定义的时候，我们对 `S` 的描述是数据集或者数据流，这两者是不一样的。数据集算法的输入是一次性给定的，也就是我们常说的 <def>Offline Algorithm (离线算法)</def>; 而数据流算法的输入是依次给出的，也就是我们常说的 <def>Online Algorithm (在线算法)</def>，也称作 <def>Data Stream Algoithm (数据流算法)</def>。我们本篇文章在这两个方面都会进行讨论。
+
+  <div align="center">
+  <img src="./pic/system_arch.png" width=800px>
+</div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，在具体的系统设计上，离线算法主要应用于掌握了一定规模的静态数据之后，能够对数据进行分析的能力; 而在线算法主要应用于即时的对当前源源不断的数据输入进行记录，并且给出对观测数据的估计。因此，针对离线算法，我们更加关注的是它所需要的时间复杂度和空间复杂度; 而针对在线算法，我们除了关注这两个复杂度性质之外，我们还会关注算法的准确度，收敛时间等性能。
+
+  <h3 class="title">解法基本分类</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;找出数据集/数据流中的 Heavy Hitters 的算法可以分为两类 <cite>space_saving</cite>:
+
+  <ul>
+    <li><b>Counter-based 方案</b>: 通过为每个在 Monitor Set 中的元素种类维护一个计数器，来实现元素种类出现频率的估计。Monitor Set 是原始数据流 `S` 的一个子集，在处理的过程中可能会发生动态改变;</li>
+    <li><b>Sketch-based 方案</b>: 在更新阶段使用一组哈希函数来将数据流 `S` 中的元素对应的种类映射到一组计数器上去，在查询阶段使用对应的元素种类在计数器组上查询得到估计值;</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;针对 Heavy Hitters 的离线算法一般采用的是 Counter-based 的方案; 而在线算法则两种方案都有相关设计，我们将在下面的讨论中看到。
+</div>
+
+<h2 class="title">非流算法</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们下面首先关注几种非流算法。
+
+  <h3 class="title">Max-Heap</h3>
+  <h4 class="title">基本流程</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;针对上述的找 `k` 个频繁元素类型的问题，最简单的无优化做法是基于 <def>Max-Heap</def> <cite>max_heap_intro</cite> 来做。对于输入的数据集 `S`，我们首先使用一个字典来存储 <note>(元素种类 `f_i`,频次 `c_i`)</note> 这样的映射关系，然后将这些数据输入一个最大堆进行排序，最终再从这个最大堆中输出前 `k-1` 条表项 (i.e. 至多有 `k-1` 个出现频率超过 `\phi` 的元素种类)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;伪代码如下所示:
+
+  <pre id="max-heap" style="display:hidden;">
+    \begin{algorithm}
+    \caption{Max-Heap for Top-k}
+    \begin{algorithmic}
+      \INPUT $A$ is an array with $length(A)$ elements
+      \INPUT $k$ is a positive integer which indicates the algorithm to find element type that exceed $\frac{length(A)}{k}$ times
+      \OUTPUT $map$ is a dictionary which contains estimated frequent element types
+      \STATE Dict $\leftarrow []$
+      \STATE MaxHeap $\leftarrow []$
+      \STATE map $\leftarrow []$
+      \STATE cursor $\leftarrow 0$
+      \FOR{$e$ in $A$}
+        \COMMENT{Inseat all elements into a dictionary}
+        \STATE Dict[type(e)] $\leftarrow$ Dict[type(e)]$+1$
+      \ENDFOR
+      \FOR{entry in Dict}
+        \COMMENT{Sort using max-heap}
+        \STATE MaxHeap.insert(entry)
+      \ENDFOR
+      \FOR{cursor $< k-1$}
+        \STATE map[cursor] $\leftarrow$ MaxHeap[cursor]
+      \ENDFOR
+      \RETURN map
+    \end{algorithmic}
+    \end{algorithm}
+  </pre>
+  <script>
+      pseudocode.renderElement(document.getElementById("max-heap"));
+  </script>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，由于数据集 `S` 中超过 `\frac{n}{k}` 的元素种类不一定有 `k-1` 个，所以我们这里输出的结果有可能存在冗余项。
+
+  <h4 class="title">复杂度分析</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于 Max-Heap 的一次插入操作的时间复杂度是 `O(\logn)`，而上述算法将数据集 `S` 中的 `n` 个元素都插入到了 Max-Heap 中，因此堆操作的时间复杂度是 `O(n\logn)`，字典操作的时间复杂度是 `O(n)`，因此总的时间复杂度是 `O(n\logn)`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们上面构建 Max-Heap 的空间复杂度是 `O(n)`，构建字典的空间复杂度也为 `O(n)`，因此总共的空间复杂度为 `O(n)`。Max-Heap 本身需要的空间复杂度是 `O(n)`。
+
+  <h3 class="title">Min-Heap</h3>
+  <h4 class="title">基本流程</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在让我们使用 <def>Min-Heap</def> 来对上面的算法进行优化。主要的想法是: 把数据集 `S` 中的 `n` 个元素全部插入到 Heap 中实际是没有必要的，我们只需要构建一个大小为 `k-1` 的 Min-Heap，然后向里面依次插入字典中的表项。如果 Min-Heap 的容量超过上限 `k-1`，那么我们就把最小的表项 (i.e. 根节点) 给丢弃掉。这样一来我们就缩减了所需要的维护堆的大小。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;伪代码如下所示:
+
+  <pre id="min-heap" style="display:hidden;">
+    \begin{algorithm}
+    \caption{Min-Heap for Top-k}
+    \begin{algorithmic}
+      \INPUT $A$ is an array with $length(A)$ elements
+      \INPUT $k$ is a positive integer which indicates the algorithm to find element type that exceed $\frac{length(A)}{k}$ times
+      \OUTPUT $map$ is a dictionary which contains estimated frequent element types
+      \STATE Dict $\leftarrow []$
+      \STATE MinHeap $\leftarrow []$
+      \STATE map $\leftarrow []$
+      \STATE cursor $\leftarrow 0$
+      \FOR{$e$ in $A$}
+        \COMMENT{Inseat all elements into a dictionary}
+        \STATE Dict[type($e$)] $\leftarrow$ Dict[type($e$)]$+1$
+      \ENDFOR
+      \FOR{entry in Dict}
+        \COMMENT{Sort using min-heap}
+        \STATE MinHeap.insert(entry)
+        \IF{MinHeap.length $> k-1$}
+          \STATE MinHeap.pop
+        \ENDIF
+      \ENDFOR
+      \FOR{cursor $< k-1$}
+        \STATE map[cursor] $\leftarrow$ MinHeap[cursor]
+      \ENDFOR
+      \RETURN map
+    \end{algorithmic}
+    \end{algorithm}
+  </pre>
+  <script>
+      pseudocode.renderElement(document.getElementById("min-heap"));
+  </script>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同样值得注意的是，由于数据集 `S` 中超过 `\frac{n}{k}` 的元素种类不一定有 `k-1` 个，所以我们这里输出的结果有可能存在冗余项。
+
+  <h4 class="title">复杂度分析</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们把每次插入操作的复杂度降到了 `O(\logk)`，因此上述算法所需要的时间复杂度是 `O(n\logk)`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们上面构建 Min-Heap 的空间复杂度是 `O(k)`，构建字典的空间复杂度为 `O(n)`，由于 `k < n`，因此总共的空间复杂度为 `O(n)`。Min-Heap 本身需要的空间复杂度是 `O(k)`。
+
+  <h3 class="title">Quick Select</h3>
+  <h4 class="title">基本流程</h4>
+
+  <div align="center">
+    <img src="./pic/quicksort.gif" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们现在进一步缩小算法所需要的时间复杂度，讨论 <def>Quick Select</def> 算法。上图展示的是 <def>Quick Sort</def> 算法，Quick Select 是它的简化版本，但是思路是一样的。同样考虑数据集 `S`，我们和上面一样首先使用一个字典，对 `S` 中的元素种类频率进行计数。然后我们在这个字典中的所有表项里，随机选取一个表项 `(e_i, f_i)` 作为 <def>pivot</def> (基准)，然后我们进行整理: 把出现频次比 `f_i` 小的表项放在 pivot 的右边，把出现频次比 `f_i` 大的表项放在 pivot 的左边。然后我们根据 pivot 在整理完的列表中的位置 (i.e. 假设为 `p`):
+
+  <ol>
+    <li>如果 `p < (k-1)-1`，那么说明我们需要再对 [p+1, n] 中的元素使用相同的整理方法找出 `k-1-p` 个最频繁项;</li>
+    <li>如果 `p > (k-1)-1`，那么说明我们需要再对 [0, p-1] 中的元素使用相同的整理方法找出 `k` 个最频繁项;</li>
+    <li>如果 `p = (k-1)-1`，我们的算法就结束了，[0,p] 就是我们所找的 `k-1` 最频繁项</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以发现，Quick Select 实际上就是只找出了 `k-1` 个最频繁项，并没有对这 `k-1` 个最频繁项进行后续的排序; 而 Quick Sort 对整个数据集的数据都进行了排序，因此复杂度相对较高。基于我们讨论的问题，我们下面仍然继续关注 Quick Select。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;使用伪代码可以表示为如下形式，我们分为了三个子过程进行描述。首先我们定义一个顶层的过程，它使用流数据初始化了一个字典 Dict，并且将字典的键的放入了一个数组 Unique 中:
+
+  <pre id="quick-select-1" style="display:hidden;">
+    \begin{algorithm}
+    \caption{Quick Select: Top wrapped procedure}
+    \begin{algorithmic}
+      \INPUT $A$ is an array with $length(A)$ elements
+      \INPUT $k$ is a positive integer which indicates the algorithm to find element type that exceed $\frac{length(A)}{k}$ times
+      \OUTPUT A dictionary which contains estimated frequent element types
+
+      \STATE \texttt{\\}
+      \COMMENT{Define data structure use by Quick-Select}
+      \STATE Dict $\leftarrow []$
+      \STATE Unique $\leftarrow []$
+
+      \STATE \texttt{\\}
+      \COMMENT{Top wrapped procedure, initialize data structures and calls Quick-Select}
+      \PROCEDURE{TopKFrequent}{$A$, $k$}
+        \STATE map $\leftarrow$ []
+        \FOR{$e$ in $A$}
+          \COMMENT{Inseat all elements into a dictionary}
+          \STATE Dict[type($e$)] $\leftarrow$ Dict[type($e$)]$+1$
+        \ENDFOR
+        \STATE $i \leftarrow 0$
+        \WHILE{$i<$Dict.length$-1$}
+          \STATE Unique[i] $\leftarrow$ Dict.KeySet[i]
+          \STATE $i \leftarrow i+1$
+        \ENDWHILE
+        \STATE \CALL{QuickSelect}{0, Dict.length$-1$, $k$}
+        \RETURN Unique[0,(k-1)-1]
+      \ENDPROCEDURE
+    \end{algorithmic}
+    \end{algorithm}
+  </pre>
+  <script>
+      pseudocode.renderElement(document.getElementById("quick-select-1"));
+  </script>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们定义了递归形式的 Quick-Select 过程，这个过程的目的本质上是为了判断 Quick-Select 算法的退出条件，也即我们上面阐述的三点。
+
+  <pre id="quick-select-2" style="display:hidden;">
+    \begin{algorithm}
+    \caption{Quick Select: recursive procedure}
+    \begin{algorithmic}
+      \COMMENT{Quick-Select in recursive form}
+      \PROCEDURE{QuickSelect}{left, right, $k$}
+        \IF{left`=`right}
+          \RETURN
+        \ENDIF
+        \STATE $p$ $\leftarrow$ \CALL{Partition}{left, right}
+        \IF{$p=(k-1)-1$}
+          \RETURN
+        \ELIF{$p<(k-1)-1$}
+          \STATE \CALL{QuickSelect}{$p+1$, right, $k-p-1$}
+        \ELSE
+          \STATE \CALL{QuickSelect}{left, $p-1$, $k$}
+        \ENDIF
+      \ENDPROCEDURE
+    \end{algorithmic}
+    \end{algorithm}
+  </pre>
+  <script>
+      pseudocode.renderElement(document.getElementById("quick-select-2"));
+  </script>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最终我们在下面的子过程中定义了 Quick-Select 的核心逻辑，也即选定 pivot 然后进行 Partition 的逻辑。
+
+  <pre id="quick-select-3" style="display:hidden;">
+    \begin{algorithm}
+    \caption{Quick Select: core logic}
+    \begin{algorithmic}
+      \COMMENT{Core logic of Quick-Select: partition of the array base on pivot selection}
+      \PROCEDURE{Partition}{left, right}
+        \STATE PivotSelection $\leftarrow$ Random(left, right)
+        \STATE PivotType $\leftarrow$ type(Unique[PivotSelection])
+        \STATE PivotFrequence $\leftarrow$ dict[PivotType]
+        \STATE Wall $\leftarrow$ 0
+        \FOR{$i$ in range [left, right]}
+          \STATE ElementType $\leftarrow$ type(Unique[$i$])
+          \IF{dict[ElementType] > PivotFrequence}
+            \STATE Swap(Unique[Wall], Unique[$i$])
+            \STATE Wall $\leftarrow$ Wall $+1$
+          \ENDIF
+        \ENDFOR
+        \STATE Swap(Unique[Wall], Unique[PivotSelection])
+        \RETURN Wall
+      \ENDPROCEDURE
+    \end{algorithmic}
+    \end{algorithm}
+  </pre>
+  <script>
+      pseudocode.renderElement(document.getElementById("quick-select-3"));
+  </script>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同样值得注意的是，由于数据集 `S` 中超过 `\frac{n}{k}` 的元素种类不一定有 `k-1` 个，所以我们上面展示的算法输出的结果有可能存在冗余项。
+
+  <h4 class="title">复杂度分析</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Quick Select 的平均时间复杂度是 `O(n)`。能实现 `O(n)` 的原因是因为我们每次选择 pivot 是随机的。如果我们每次都选择最大/最小的值为 pivot，那么时间复杂度为 `O(n^2)`。 <note>[没有推导过计算，暂时当作结论]</note>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于空间复杂度，Dict 是 `O(n)`，Unique 是 `O(n)`，因此空间复杂度是 `O(n)`。Unique 是 Quick Select 本身需要的数据结构，因此 Quick Select 本身需要的空间复杂度是 `O(n)`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是我们上面展示的算法是为了方便理解，所以采用了空间复杂度为 `O(n)` 的 Quick Select 版本。实际上 Quick Select 本身最好可以达到 `O(\logn)` 的空间复杂度。
+
+  <h3 class="title">Bucket Sort</h3>
+  <h4 class="title">基本流程</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们现在来看一个时间复杂度严格为 `O(n)` 的算法: <def>Bucket Sort</def>。Bucket Sort 实际上是一个排序算法 <cite>bucket_sort_intro</cite>，我们这里相当于使用 Bucket Sort 来帮助我们对 <note>数据集 `S` 中的元素种类的频次</note> 进行排序，从而得到 `k-1` 个可能的频繁项。具体的思路是: 我们同样会先使用一个字典 Dict 帮助我们记录数据集 `S` 中各个元素种类的频次信息，然后我们 <note>以可能的频次为键</note>，构造另一个字典 Buckets，然后把 Dict 中记录的元素种类插入到 Buckets 中去，从而完成排序。最终我们从 Buckets 中输出 `k-1` 个可能的频繁项即可。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;具体的伪代码如下所示:
+
+  <pre id="bucket-sort" style="display:hidden;">
+    \begin{algorithm}
+    \caption{Bucket Sort}
+    \begin{algorithmic}
+    \INPUT $A$ is an array with $length(A)$ elements
+    \INPUT $k$ is a positive integer which indicates the algorithm to find element type that exceed $\frac{length(A)}{k}$ times
+    \OUTPUT Result is A dictionary which contains estimated frequent element types
+    \STATE Dict $\leftarrow []$
+    \STATE Result $\leftarrow []$
+    \STATE Buckets $\leftarrow$ [\{0:[]\}, \{1:[]\}, ..., \{length(A):[]\}]
+
+    \STATE \texttt{\\}
+    \FOR{$e$ in $A$}
+      \COMMENT{Inseat all elements into a dictionary}
+      \STATE Dict[type($e$)] $\leftarrow$ Dict[type($e$)]$+1$
+    \ENDFOR
+    \FOR{entry in Dict.KeySet}
+      \COMMENT{Sort using Buckets}
+      \STATE Frequence $\leftarrow$ Dict[entry]
+      \STATE Bucket[Frequence].append(entry)
+    \ENDFOR
+
+    \STATE \texttt{\\}
+    \STATE $i \leftarrow$ Buckets.length $-1$
+    \WHILE{$i>0$}
+      \IF{Buckets[i] isn't empty}
+        \FOR{element in Buckets[i]}
+          \STATE Result.append(element)
+        \ENDFOR
+      \ENDIF
+      \STATE $i \leftarrow i-1$
+    \ENDWHILE
+
+    \RETURN Result[0,(k-1)-1]
+    \end{algorithmic}
+    \end{algorithm}
+  </pre>
+  <script>
+      pseudocode.renderElement(document.getElementById("bucket-sort"));
+  </script>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同样值得注意的是，由于数据集 `S` 中超过 `\frac{n}{k}` 的元素种类不一定有 `k-1` 个，所以我们上面展示的算法输出的结果有可能存在冗余项。
+
+  <h4 class="title">复杂度分析</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Bucket Sort 是一种以空间换时间的方案。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于时间复杂度，我们构建 Dict 需要 `O(n)`，根据 Dict 的表项构建 Bucket 需要 `O(n)`，因此总共的时间复杂度是 `O(n)`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;而对于空间复杂度，构建 Dict 需要 `O(n)`，构建 Bucket 需要 `O(n)`，因此总共的空间复杂度是 `O(n)`。看起来似乎空间复杂度并没有发生改变，实际上这里说的空间增长指的是排序算法本身所需要的空间变大了，回顾我们上面在 Quick Select 中阐述的，其最好的实现版本只需要 `O(\logn)` 的空间复杂度。
+
+  <h3 class="title">Conclusion</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们对上述几种方案的复杂度进行总结。
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th>算法</th>
+      <th>时间复杂度</th>
+      <th>排序算法本身空间复杂度</th>
+      <th>整体空间复杂度</th>
+    </tr>
+    <tr>
+      <td>Max-Heap</td>
+      <td>`O(n\logn)`</td>
+      <td>`O(n)`</td>
+      <td>`O(n)`</td>
+    </tr>
+    <tr>
+      <td>Min-Heap</td>
+      <td>`O(n\logk)`</td>
+      <td>`O(k)`</td>
+      <td>`O(n)`</td>
+    </tr>
+    <tr>
+      <td>Quick Select</td>
+      <td>`O(n)` (worst case: `O(n^2)`)</td>
+      <td>`O(logn)`</td>
+      <td>`O(n)`</td>
+    </tr>
+    <tr>
+      <td>Bucket Sort</td>
+      <td>`O(n)`</td>
+      <td>`O(n)`</td>
+      <td>`O(n)`</td>
+    </tr>
+  </table>
+</div>
+
+<h2 class="title">流式算法</h2>
+<div class="div_learning_post">
+  <h3 class="title">Counter-based 方案</h3>
+  <h4 class="title">Misra Gries Summary<sup><cite>misra_gries</cite></sup></h4>
+  <h5 class="title">基本流程</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先让我们考虑简单的过半查找问题: 给定一个数组，找出出现次数超过一半的元素类型。解决一个问题的一个较好的方法是: 不断地删除两个不同的元素，删到最后剩下的元素对应的类型即为过半元素类型。基于这种思考，该算法的基本思想也可以表达为如下形式: 我们可以设置一个全局的计数器，计数器被数组的第一个元素的元素类型初始化，并且设置计数器的值为 1。对于后续的元素，如果元素和计数器中记录的元素相匹配，则计数器自增 1，否则自减 1。如果计数器的计数值达到 0，则将计数器中的记录元素更换为新到达的元素。具体代码如下所示:
+
+  <pre id="majority" style="display:hidden;">
+    \begin{algorithm}
+    \caption{Majority}
+    \begin{algorithmic}
+    \INPUT $A$ is an array with $length(A)$ elements
+    \OUTPUT $target$ is the element type which appears over $\frac{length(A)}{2}$ times in $A$
+    \STATE $cursor \leftarrow 0$
+    \STATE $counter \leftarrow 0$
+    \WHILE{length($A$)>$cursor$}
+      \STATE $e \leftarrow A[cursor]$
+      \IF{$counter = 0$}
+        \COMMENT{Nothing be recorded at the present}
+        \STATE $target \leftarrow Type(e)$
+        \STATE $counter \leftarrow counter + 1$
+      \ELSE
+        \IF{$target$ = $Type(e)$}
+          \STATE $counter \leftarrow counter + 1$
+          \COMMENT{The type of $e$ matches the one that be recorded at the present}
+        \ELSE
+          \STATE $counter \leftarrow counter - 1$
+          \COMMENT{The type of $e$ mismatches the one that be recorded at the present}
+        \ENDIF
+      \ENDIF
+      \STATE $cursor \leftarrow cursor + 1$
+    \ENDWHILE
+    \RETURN $target$
+    \end{algorithmic}
+    \end{algorithm}
+  </pre>
+  <script>
+      pseudocode.renderElement(document.getElementById("majority"));
+  </script>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上述算法是 <def>Majority</def> 算法 <cite>majority</cite>。虽然在这份成果发表的时候并没有把问题当作是一个数据流问题来看待，但是实际上它已经有数据流算法的味道在里面: 它只对数据做了一次遍历就获得了想要的结果。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;进一步复杂化这个问题: 找出出现次数超过 `n/k` 的所有元素类型。基于上面的思路，我们可以设置 `k-1` 个全局计数器 (i.e. 至多有 `k-1` 个出现次数超过 `n/k` 的元素类型)，组成一个 <code>map</code>。然后我们依次读取数组中的每个元素，然后:
+
+  <ul>
+    <li>如果 <code>map</code> 中有一个记录着当前元素对应的元素类型，则该计数器自增 1;</li>
+    <li>如果 <code>map</code> 中没有对应的计数器，且当前 <code>map</code> 的长度小于 `k-1`，则将当前元素对应的元素类型加入到 <code>map</code> 中，然后设置计数器的计数为 1;</li>
+    <li>如果 <code>map</code> 中没有对应的计数器，且当前 <code>map</code> 的长度不小于 `k-1`，则将 <code>map</code> 中的所有计数器自减 1。如果 <code>map</code> 中有计数器的值为 0，则从 <code>map</code> 中删去该元素;</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;使用代码表示如下:
+
+  <pre id="misra-gries-2" style="display:hidden;">
+    \begin{algorithm}
+    \caption{Misra-gries}
+    \begin{algorithmic}
+    \INPUT $A$ is an array with $length(A)$ elements
+    \INPUT $k$ is a positive integer which indicates the algorithm to find element type that exceed $\frac{length(A)}{k}$ times
+    \OUTPUT $map$ is a dictionary which contains estimated frequent element types
+    \STATE $map = [ ]$
+    \STATE $cursor \leftarrow 0$
+    \WHILE{$length(A)>cursor$}
+      \STATE $e \leftarrow type(A[cursor])$
+      \IF{$e$ is in $keys[map]$}
+        \STATE $map[e] \leftarrow map[e] + 1$
+      \ELIF{$length(map) < k-1$}
+        \STATE $map[e] \leftarrow 1$
+      \ELSE
+        \FOR{each $K$ in $map$}
+          \STATE $map[K] \leftarrow map[K] - 1$
+          \IF{map[K] = 0}
+            \STATE remove $K$ from $map$
+          \ENDIF
+        \ENDFOR
+      \ENDIF
+      \STATE $cursor \leftarrow cursor + 1$
+    \ENDWHILE
+    \RETURN $map$
+    \end{algorithmic}
+    \end{algorithm}
+  </pre>
+  <script>
+      pseudocode.renderElement(document.getElementById("misra-gries-2"));
+  </script>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上述算法是 <def>Misra-gries</def> 算法 <cite>misra_gries</cite>，其保证了任意出现次数超过 `\frac{m}{k}` 次的元素种类一定会被记录在 <code>map</code> 中。对于有些数据流，其中出现次数超过 `\frac{m}{k}` 次的元素种类个数可能并不超过 `k-1` 个，所以在 <code>map</code> 中可能会有冗余的元素种类在其中。因此如果需要保证 <code>map</code> 中不存在冗余表项，我们就需要一次 second-pass，通过在源数据流中对 <code>map</code> 中记录的元素种类进行计数，以排除 <code>map</code> 中冗余的表项。
+
+  <h5 class="title">复杂度分析</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;原论文 <cite>misra_gries</cite> 使用了 AVL 树来实现了 <code>map</code>，因此它占用了 `O(k)` 的空间大小。而关于时间复杂度，观察到上述算法具有下列行为:
+
+  <ol>
+    <li>初始化一个空的 AVL 树 `map`，执行一次</li>
+    <li>在 AVL 树中搜索元素类型 `e`，一共重复 `l eng th(A)` 次</li>
+    <li>向 AVL 树中插入元素类型 `e`，最多重复 `l eng th(A)` 次</li>
+    <li>从 AVL 树中删除所有 `k-1` 个节点，最多重复 `\frac{l eng th(A)}{k}` 次 (i.e. 一次性删去 `k-1` 个节点后，至少需要再插入 `k` 个节点后才能触发一次性删去 `k-1` 个节点的操作)</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上面的行为中，1 是一个常数时间操作; 2 是一个 AVL 树搜索过程，因此一次搜索需要花费 `O(\logk)` 的时间，我们使用 `n` 来表示 `l eng th(A)`，因此 `l eng th(A)` 次搜索一共花费 `O(n\logk)` 的时间; 3 是一个 AVL 树的插入过程，因此需要花费 `O(\logk)` 的时间，`l eng th(A)` 次插入一共花费 `O(n\logk)` 的时间; 对于 4 的一次删除，最坏情况是把 AVL 树中的所有节点依次进行删除，因此其需要花费 `O(k\logk)` 的时间，而 4 最多重复 `\frac{n}{k}` 次，因此一共花费 `O(\frac{n}{k} \cdot k\logk) = O(n\logk)` 的时间。综上，基于 AVL 树实现的 Misra-gries 的时间复杂度为 `O(n\logk)`。
+
+  <h5 class="title">准确性分析</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Misra-gries 算法输出的 <code>map</code> 中记录的频次的准确性，其保证了如下的关系:
+
+  <div align="center" style="margin-bottom:10px;">
+    `f_i-\frac{n}{k} \le \hat{f_j} \le f_j`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;更多参考可见关于 Misra-gries 算法的 Survey <cite>misra_gries_review</cite>。
+
+  <h4 class="title">Space-Saving<sup><cite>space_saving</cite></sup></h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>Space-Saving</def> 算法实际上与 上面介绍的 Misra-gries 算法同构 <cite>mergeable_summaries</cite>。它们的不同点在于: 当发现 <code>map</code> 中的项数超过 `k-1` 项，且新到达的元素类型没有被监控时，Space-Saving 的策略是在 <code>map</code> 找出计数次数最小的表项，然后将它的 Key 值替换为新到达元素的类型，并且将计数自增 1，具体可以使用如下伪代码进行表示:
+
+  <pre id="spacesaving" style="display:hidden;">
+    \begin{algorithm}
+    \caption{Space-Saving}
+    \begin{algorithmic}
+    \INPUT $A$ is an array with $length(A)$ elements
+    \INPUT $k$ is a positive integer which indicates the algorithm to find element type that exceed $\frac{length(A)}{k}$ times
+    \OUTPUT $map$ is a dictionary which contains estimated frequent element types
+    \STATE $map = [ ]$
+    \STATE $cursor \leftarrow 0$
+    \WHILE{$length(A)>cursor$}
+      \STATE $e \leftarrow type(A[cursor])$
+      \IF{$e$ is in $keys[map]$}
+        \STATE $map[e] \leftarrow map[e] + 1$
+      \ELIF{$length(map) < k-1$}
+        \STATE $map[e] \leftarrow 1$
+      \ELSE
+        \STATE let $(e_m,min)$ be the entry with smallest value (i.e. $min\{value[map]\}$)
+        \STATE Replace $e_m$ with $e$
+        \STATE $min \leftarrow min+1$
+
+      \ENDIF
+      \STATE $cursor \leftarrow cursor + 1$
+    \ENDWHILE
+    \RETURN $map$
+    \end{algorithmic}
+    \end{algorithm}
+  </pre>
+  <script>
+      pseudocode.renderElement(document.getElementById("spacesaving"));
+  </script>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;很容易发现，Space-Saving 在 <code>map</code> 中记录着元素种类频率的上界，而 Misra-gries 则是在 <code>map</code> 中记录着元素种类频率的下界。在实际部署中，往往上界会更加接近实际的元素种类频次 <cite>misra_gries_review</cite>。
+
+  <h4 class="title">Lossy Counting & Stick Sampling<sup><cite>lossy_count</cite></sup></h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们上面在分析 Misra-gries 算法的时候曾经说过，它可能会在它最终输出的 <code>map</code> 中留下冗余的非频繁项，因此需要借助一次 second-pass 来最终确定频繁项。针对这个缺点，让我们来看 <def>Lossy Counting</def> 和 <def>Stick Sampling</def> 算法。
+</div>
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
+          <li>STREAM_ALGORITHM_AND_NETWORK_MEASUREMENT_SYSTEM_SURVEY_HEAVY_HITTER</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

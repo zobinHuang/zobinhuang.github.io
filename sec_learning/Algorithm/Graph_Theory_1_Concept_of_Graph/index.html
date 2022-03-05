@@ -46,9 +46,12 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/car_k2.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/dijkstra.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/a_k_g.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/incident_matrix.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/laplacian_matrix.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/4_partite_graph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-01T18:07:38.465Z">
-<meta property="article:modified_time" content="2022-03-01T18:07:38.465Z">
+<meta property="article:published_time" content="2022-03-04T08:50:30.629Z">
+<meta property="article:modified_time" content="2022-03-04T08:50:30.629Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -869,7 +872,132 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;分析上面的最后一个式子，实际上其含义可以使用上图来进行表达: `a_{in}^{(k-1)}` 算的是从顶点 `i` 到 `n` 之间的长为 `k-1` 的路径的条数，`a_{nj}` 算的是从顶点 `n` 到 `j` 之间的长为 `1` 的路径的条数。因此上述式子的相乘后相加的形式，实际上就算出了从顶点 `i` 到 `j` 之间的长为 `k` 的路径的条数。
+  &nbsp;&nbsp;&nbsp;&nbsp;分析上面的最后一个式子，实际上其含义可以使用上图来进行表达: `a_{i n}^{(k-1)}` 算的是从顶点 `i` 到 `n` 之间的长为 `k-1` 的路径的条数，`a_{nj}` 算的是从顶点 `n` 到 `j` 之间的长为 `1` 的路径的条数。因此上述式子的相乘后相加的形式，实际上就算出了从顶点 `i` 到 `j` 之间的长为 `k` 的路径的条数。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO: 两个推论。
+
+  <h3 class="title">关联矩阵</h3>
+
+  <div align="center">
+    <img src="./pic/incident_matrix.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;图的 <def>关联矩阵 (Incidence Matrix)</def> 记录的是图的顶点和边的关系，若图有 `n` 个点，`m` 条边，则图的关联矩阵定义为 `M(G)=(a_{ij})_{n \times m}`。一个例子如上图所示，其中每一行代表的是各个顶点，每一列代表的是一条边。根据关联矩阵的定义，我们可以得到关联矩阵的两个性质如下:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;关联矩阵的元素为 0，1 或 2(非简单图)。 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;关联矩阵的每一列的和一定为 2，每一行的和为对应顶点的度数。(i.e. 这个性质实际上就是握手定理的表达: 行总和 = 列总和)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;关联矩阵和邻接矩阵都可以用于在计算机中表示图，二者包含的信息有所不同。对于非稀疏图，我们一般不用关联矩阵来进行表示，因为它的边数过多，需要的存储空间较大。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;关联矩阵和邻接矩阵存在如下关系:
+
+  <ul>
+    <li>对于简单图，有: `MM^{T}=A+D`，其中 `M` 即关联矩阵，`A` 为邻接矩阵，`D` 为度矩阵;</li>
+    <li>`M^{T}M = 2I+A(L(G))`，其中 `I` 是单位矩阵，`A(L(G))` 代表 `G` 的线图 `L(G)` 的邻接矩阵;</li>
+  </ul>
+
+  <h3 class="title">Laplacian 矩阵</h3>
+  <div align="center">
+    <img src="./pic/laplacian_matrix.png" width=600px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;定义图的 <def>Laplacian 矩阵</def> 为: `L=D-A`，其中 `D` 是图的度矩阵，`A` 是图的邻接矩阵。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Laplacian 矩阵的一些性质如下所示:
+
+  <ul>
+    <li>`L` 的特征值中的 `0` 的重数与图的连通分支数相等;</li>
+    <li>`L` 的第二小特征值大于 `0` 当且仅当图连通.</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;综述文件可参考 <cite>laplacian_survey</cite>
+</div>
+
+<h2 class="title">邻接谱与图的邻接代数</h2>
+<div>
+  <h3 class="title">邻接谱</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;定义邻接矩阵 `A(G)` 的 <def>特征多项式 (Characteristic Polynomial)</def> 为:
+
+  <div align="center">
+  `f(G,\lamda)=|\lamdaE-A|=\lamda^{n}+a_1\lamda^{n-1}+a_2\lamda^{n-2}+...+a_{n-1}\lamda+a_n`
+  </div>
+
+  <p>
+  其中 `E` 是 `n\timesn` 的单位矩阵。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于简单图来说，我们有:
+
+  <div class="div_learning_post_border">
+  <ul>
+    <li>`a_1=0`</li>
+    <li>`-a_2=m(G)`</li>
+    <li>`-a_3` 是 `G` 中三角形数目的 `2` 倍</li>
+  </ul>
+  </div>   
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们下面对上面的定理分别进行证明。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO (复习一下行列式...)
+
+  <h3 class="title">图空间</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO  
+</div>
+
+<h2 class="title">极图理论</h2>
+<div>
+  <h3 class="title">`l` 部图</h3>
+
+  <div align="center">
+    <img src="./pic/4_partite_graph.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;若简单图 `G` 的点集 `V` 有一个划分:
+
+  <div align="center">
+    `V=\bigcup_{i=1}^{l}V_i`, `V_i\cap\V_j=\emptyset`
+  </div> 
+
+  <p>
+  且所有的 `V_i` 非空，<note>`V_i` 内的点均不邻接</note>，则称 `G` 是一个 <def>`l` 部图 (l-partite Graph)</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>完全 `l` 部图</def>:TODO
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>`n` 阶完全 `l` 几乎等部图 (Turán 图)</def>: TODO
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们给出关于 `l` 部图的一些定理:
+
+  <div class="div_learning_post_border" align="center">
+  连通二部图的 2 部划分是唯一的
+  </div> 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:TODO
+
+  <div class="div_learning_post_border" align="center">
+  `n` 阶完全二部图包含的边数最多为 `\lfloor \frac{n^2}{4} \rfloor`
+  </div> 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:TODO
 </div>
 
 <div class="div_ref" id="ref_container"></div>
@@ -893,6 +1021,13 @@
 <!--醒目注意-->
 <!-- 
 <note></note> 
+-->
+
+<!--居中边框-->
+<!--
+<div class="div_learning_post_border" align="center">
+  Content
+</div>   
 -->
 
 <!--表格-->

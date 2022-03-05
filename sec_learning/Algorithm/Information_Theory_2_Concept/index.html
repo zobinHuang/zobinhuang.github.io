@@ -28,9 +28,10 @@
 <meta property="og:description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_2_Concept/pic/intra_h.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_2_Concept/pic/xxx.png">
-<meta property="article:published_time" content="2022-02-24T13:55:25.611Z">
-<meta property="article:modified_time" content="2022-02-24T13:55:25.611Z">
+<meta property="article:published_time" content="2022-03-03T13:48:35.978Z">
+<meta property="article:modified_time" content="2022-03-03T13:48:35.978Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -287,8 +288,30 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;信源的 <def>平均自信息量</def>，也称为信源的 <def>熵</def>，信源熵在平均意义上来表征信源的总体特征。
 
+  <h4 class="title">信息熵函数的条件</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;数学上可以定义为信源中各个符号自信息量的数学期望: 
+  &nbsp;&nbsp;&nbsp;&nbsp;香农给出了信息熵函数满足的三个条件:
+
+  <ul>
+    <li>连续性: `H(p_1, p_2, ..., p_a)` 是 `(p_1, p_2, ..., p_a)` 的连续函数;</li>
+    <li>等概时单调递增: `H(\frac{1}{a}, \frac{1}{a}, ..., \frac{1}{a}) < H(\frac{1}{a+1}, \frac{1}{a+1}, ..., \frac{1}{a+1})`</li>
+    <li>
+      可加性 (信息可积累): 对于任意正整数 `b_i` (`i=1,2,...,k`)<br>
+      如果 `\sum_{i=1}^{k}b_i = a`，则有:<br>
+      `H(\frac{b_1}{a}, \frac{b_2}{a}, ..., \frac{b_k}{a})+\sum_{i=1}^{k}\frac{b_i}{a} \cdot H(\frac{1}{b_1}, \frac{1}{b_2}, ..., \frac{1}{b_k})`
+    </li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Khinchin 条件增加了一个极值条件 (对于离散信源):
+
+  <ul>
+    <li>`maxH(p_1, p_2, ..., p_a) = (\frac{1}{N}, \frac{1}{N}, ..., \frac{1}{N}) = \log_{2}a`</li>
+  </ul>
+
+  <h4 class="title">信息熵、条件熵和联合熵</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;数学上，信息熵当且仅当定义为信源中各个符号自信息量的数学期望时，满足上述的性质: 
 
   <div align="center" class="div_learning_post_border">
   `H(X) = E(I(X)) = \sum p(x_i)\cdotI(x_i) = \sump(x_i)\cdot\log\frac{1}{p(x_i)} = - \sump(x_i)\cdot\logp(x_i)`
@@ -304,21 +327,102 @@
   &nbsp;&nbsp;&nbsp;&nbsp;信息熵表示了信源输出前，信源的平均不确定度，同时也表示了信源输出后，每个符号所提供的平均信息量。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;香农给出了信息熵函数满足的三个条件:
+  &nbsp;&nbsp;&nbsp;&nbsp;信息熵函数是一个关于 `p` 的上凸函数，存在一个最大值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在给定事件 `y_j` 的条件下，`x_i` 的条件自信息量为 `I(x_i|y_i) = -\logp(x_i|y_i)`，其含义是 `y_i` 发生的条件下，`x_i` 所给出的信息量。基于这种定义，我们定义 `X` 集合的 <def>条件熵</def> 为: `H(X|y_j) = f(y_j) = \sum_{i}p(x_i|y_j)I(x_i|y_j)`。相应地，在给定随机变量 `Y` 的条件下，`X` 集合的条件熵为: `H(X|Y) = \sum_{i,j}p(x_i,y_j)I(x_i|y_j)`
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>联合熵 (共熵)</def> 是联合符号集合 `XY` 上的每个元素对 `x_i,y_j` 的联合自信息量的联合概率加权统计平均值。定义为: `H(XY)=\sum_{i,j}p(x_i,y_j)I(x_i,y_j)=-\sum_{i,j}p(x_i,y_j)\logp(x_i,y_j)`
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;熵，条件熵，联合熵满足以下关系:
 
   <ul>
-    <li>连续性: </li>
-    <li>等概时单调递增: `H(1/a, 1/a, ..., 1/a) < H(1/a+1, 1/a+1, ..., 1/a+1)`</li>
-    <li></li>
+    <li>`H(XY) = H(X) + H(Y|X) = H(Y) + H(X|Y)`</li>
+    <li>`H(XYZ) = H(XY) + H(Z|XY) = H(X) + H(Y|X) + H(Z|XY)`</li>
   </ul>
 
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;并且有如下推论:
+
+  <ul>
+    <li>条件熵不大于信源熵: `H(X|Y) \leq H(X)`，当 `X` 和 `Y` 相互独立时，式子取等号;</li>
+    <li>条件上的条件越多，条件熵的值约小: `H(Z|XY) \leq H(Z|X)`，当且仅当 `p(z|xy) = p(z|x)` 时，式子取等号;</li>
+    <li>联合熵和两个集合的信源熵存在关系: `H(XY) \leq H(X) + H(Y)`，当 `X` 和 `Y` 相互独立时，式子取等号</li>
+    <li>当信源含有的新增消息为小概率时，熵不变: `\lim_{\epsilon \rightarrow \infty}H(a_1, a_2, ..., a_n-\epsilon, \epsilon) = H(a_1, a_2, ..., a_n)`</li>
+  </ul>
+
+  <h4 class="title">相对熵和交叉熵</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;两个概率分布为 `P(X)` 和 `Q(X)` 的随机变量的 <def>相对熵</def> 为: `D(P||Q) = \sum_{x\inX}p(x)\log\frac{p(x)}{Q(x)} = H(p,q) - H(p)`，其中 `H(p,q)` 为 <def>交叉熵</def>，定义为 `H(p,q)=\sum_xp(x)\logfrac{1}{q(x)}`。相对熵度量为当真实分布为 `P` 而假定分布为 `Q`时的无效性 (e.g. 已知随机变量的真实分布为 `p`，可构造平均描述长度为 `H(p)` 的编码，如果使用针对分布 `q` 的编码，则在平均意义上就需要 `H(p)+D(p||q)` 比特来描述这个随机变量)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;交叉熵可以认为是对预测分布 `q(x)` 用真实分布 `p(x)` 来进行编码所需要的信息量大小。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;相对熵是非对称的: `D(P||Q) \ne D(Q||P)`
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;条件相对熵: `D(P(y|x)||Q(y|x)) = \sum_{x\inX}p(x)\sum_{y\inY}p(y|x)\cdot\log\frac{p(y|x)}{Q(y|x)}`
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO：补充条件相对熵的一个性质
+
   <h3 class="title">平均互信息量</h3>
+
+  <h4 class="title">定义</h4>
+  <div align="center">
+    <img src="./pic/intra_h.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;定义 <def>互信息量</def> 为 `I(x_i;y_j) = I(x_i) - I(x_i|y_j)`，其物理含义是已知输出为 `y_j` 时，输入 `x_i` 的不确定程度; 同理，`I(y_j;x_i) = I(y_j) - I(y_j|x_i)` 表示的是已知输入为 `x_i` 时，输出 `y_j` 的不确定程度。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;`I(X;Y) = H(X) - H(X|Y) \leq H(X)`，我们可以称 `H(X|Y)` 为 <def>损失熵</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;`I(Y;X) = H(Y) - H(Y|X) \leq H(Y)`，`H(Y|X)` 为 <def>噪声熵</def>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可见，有扰信道的加入只会引入对原始不确定性的衰弱，不可能引入新的信息。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;定义 <def>平均互信息量</def> 为 `I(X;Y)=\sum_{i}\sum_{j}p(x_i,y_j)\cdotI(x_i;y_j)=\sum_{i}\sum_{j}p(x_i,y_j)\cdot\frac{p(x_i/y_j)}{p(x_i)}`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;信息量只描述信源/信宿的不确定程度，平均互信息量描述的是整个系统的通信不确定程度。
+
+  <h4 class="title">性质</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;非负性: `I(X;Y) \ge 0`。 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对称性: `I(X;Y) = I(Y;X)`，它们描述的都是整个通信系统的特性。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;极值性: `I(X;Y) \le H(X)`, `I(X;Y) \le H(Y)`。 
+
+  <h4 class="title">多变量条件互信息量</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;`I(X;Y|Z)=H(X|Z)-H(X|Y;Z)=H(Y|Z)-H(Y|X;Z)`
+
+  <h4 class="title">多变量互信息量</h4>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;
 
   <h3 class="title">相对熵、熵和互信息的凸性</h3>
+  <h4 class="title">信息不等式</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;为了方便后续研究传输限和压缩限的问题，我们需要要如下的不等式工具:
+
+  <ul>
+    <li><b>基础不等式</b>: `\lnx \le x-1` `(x > 0)`</li>
+    <li><b>Jensen 不等式</b>: 如果 `f(x)` 为一个下凸函数 (i.e. `f(\lamdax_1+(1-\lamda)x_2) \leq \lamdaf(x_1)+(1-\lamda)f(x_2)`，当 `\lamda=0,1` 时等号成立)，`X` 是一个随机变量，则有 `E(f(x)) \ge f(E(X))`，其中 `E(X)=\sum_{x\inX}p(x)\cdotx` 。</li>
+    <li><b>信息散度不等式</b>: `D(P||Q) \ge 0`</li>
+    <li><b>Fano 不等式</b>: 通信的本质是估计： `\hat{X}=g(Y)`。`\hat{X}` 的错误概率和条件熵 `H(X|Y)` 有关系。我们定义随机变量 `P_e=P{\hat{X} \ne X}` 代表错误概率，我们有: `H(P_e)+P_e\log(|X|-1) \ge H(X|Y)`，其中 `H(P_e)` 为判决结果是否正确的不确定度，`P_e\log(|X|-1)` 为已知发送出错之后，在剩余的 `|X|-1` 种可能结果种的不确定性的最大值 (i.e. 也即符号等概率分布的情况)。</li>
+  </ul>
 
   <h3 class="title">连续随机变量的熵</h3>
   <p>
