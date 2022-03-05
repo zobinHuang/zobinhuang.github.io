@@ -31,8 +31,8 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey_Heavy_Hitter/pic/system_arch.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey_Heavy_Hitter/pic/quicksort.gif">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey_Heavy_Hitter/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-05T16:46:41.585Z">
-<meta property="article:modified_time" content="2022-03-05T16:46:41.585Z">
+<meta property="article:published_time" content="2022-03-05T16:55:20.741Z">
+<meta property="article:modified_time" content="2022-03-05T16:55:20.741Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -316,17 +316,17 @@
   &nbsp;&nbsp;&nbsp;&nbsp;例如，在网络的语义下，我们的目标是找到数据包个数超过初设阈值的网络流 (i.e. 由五元组定义)。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;现在让我们把这个问题使用数学形式来表述 <cite>misra_gries_review</cite>:
+  &nbsp;&nbsp;&nbsp;&nbsp;现在让我们把这个问题使用数学形式来表述 <cite>misra_gries_review</cite>。首先我们考虑数据集 (i.e. 一次性能给出所有的数据) 的情况:
 
   <div class="div_learning_post_border">
-  <def>Exact `\phi`-frequent Items Problem</def>: 给定一个由 `n` 个元素 `t_1`, `t_2`, `...`, `t_n` 组成的数据集/流 `S`。设数据集/流中各个元素 `t_j` 属于种类 `i`，定义种类 `i` 出现的频率为 `f_i=|{j|t_j=i}|`。该问题的目标是为了找到集合 `{i|f_i>\phin}`，这个集合中包含了在数据集/流 `S` 中出现次数超过 `\phin` 的元素种类集合。
+  Exact `\phi`-frequent Items Problem: 给定一个由 `n` 个元素 `t_1`, `t_2`, `...`, `t_n` 组成的数据集 `S`。设数据集中各个元素 `t_j` 属于种类 `i`，定义种类 `i` 出现的频率为 `f_i=|{j|t_j=i}|`。该问题的目标是为了找到集合 `{i|f_i>\phin}`，这个集合中包含了在数据集 `S` 中出现次数超过 `\phin` 的元素种类集合。
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;解决 Exact `\phi`-frequent Items Problem 的方法需要掌握数据集/流 `S` 中所有元素的种类的信息，这对于种类空间 `F={f_i}` 很大的情况下是很不实际的。因此允许误差的版本定义如下 <cite>misra_gries_review</cite>:
+  &nbsp;&nbsp;&nbsp;&nbsp;通常只有在掌握完整数据集的情况下才能解决 Exact `\phi`-frequent Items Problem。而对于无法一次性给出完整数据集的数据流场景，我们将问题定义如下:
 
   <div class="div_learning_post_border">
-  <def>`\epsilon`-approximate Frequent Items Problem</def>: 给定一个由 `n` 个元素 `t_1`, `t_2`, `...`, `t_n` 组成的数据集/流 `S`，设数据集/流中各个元素 `t_j` 属于种类 `i`，定义种类 `i` 出现的频率为 `f_i=|{j|t_j=i}|`。该问题的目标是为了找到集合 `F`，使得对于 `\forall i \in F`，有 `f_i > (\phi-\epsilon)n`，并且保证不被包含在 `F` 中的 `i` 中一定不满足 `f_i>\phin`。也就是说所有的在数据集/流 `S` 中出现次数超过 `\phin` 的元素种类都应该被算法所捕获。
+  `\epsilon`-approximate Frequent Items Problem: 给定一个由 `n` 个元素 `t_1`, `t_2`, `...`, `t_n` 组成的数据流 `S`，设数据流中各个元素 `t_j` 属于种类 `i`，定义种类 `i` 出现的频率为 `f_i=|{j|t_j=i}|`。该问题的目标是为了找到集合 `F`，使得对于 `\forall i \in F`，有 `f_i > (\phi-\epsilon)n`，并且保证不被包含在 `F` 中的 `i` 中一定不满足 `f_i>\phin`。也就是说所有的在数据流 `S` 中出现次数超过 `\phin` 的元素种类都应该被算法所捕获。
   </div>
 
   <p>
