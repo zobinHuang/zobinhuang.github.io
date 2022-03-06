@@ -31,8 +31,8 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey_Heavy_Hitter/pic/system_arch.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey_Heavy_Hitter/pic/quicksort.gif">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey_Heavy_Hitter/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-05T16:55:20.741Z">
-<meta property="article:modified_time" content="2022-03-05T16:55:20.741Z">
+<meta property="article:published_time" content="2022-03-06T09:14:57.231Z">
+<meta property="article:modified_time" content="2022-03-06T09:14:57.231Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -97,7 +97,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="تشغيل شريط التصفح">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -846,10 +846,60 @@
 
   <h4 class="title">Lossy Counting & Stick Sampling<sup><cite>lossy_count</cite></sup></h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们上面在分析 Misra-gries 算法的时候曾经说过，它可能会在它最终输出的 <code>map</code> 中留下冗余的非频繁项，因此需要借助一次 second-pass 来最终确定频繁项。针对这个缺点，让我们来看 <def>Lossy Counting</def> 和 <def>Stick Sampling</def> 算法。
+  &nbsp;&nbsp;&nbsp;&nbsp;在这篇文章中，作者对要实现的针对流式数据的 Heavy Hitter 的算法目标提出了如下要求:
+
+  <ol>
+    <li>保证所有的出现频次超过 `\phiN` 的元素类型都会被输出;</li>
+    <li>出现频次比 `\phi-\epsilonN` 小的元素类型都不会被输出;</li>
+  </ol>
+
+  <h5 class="title">Stick Sampling 基本流程</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这篇文章提出了两个算法，我们首先来看 <def>Stick Sampling</def> 算法 (SS)。首先 Network Operator 应该先设置三个参数: 频率阈值 `\phi`，误差 `\epsilon` 和错误概率 `\delta`。SS 维护了一个字典 `S`，其表项形式是 `(e,f)`，其中 `e` 是元素类型，`f` 是出现频次。定义时隙长度 `t=\frac{1}{\epsilon}\log\phi^{-1}\delta^{-1}`，采样率 `r=1`，算法工作流程是：
+
+  <ol>
+    <li>在第 1 个 `2t` 时间段内，系统以 `\frac{r}{1}=1` 的采样率抽样数据流元素以更新 `S`</li>
+    <li>在第 2 个 `2t` 时间段内，系统以 `\frac{r}{2}=\frac{1}{2}` 的采样率抽样数据流元素以更新 `S`</li>
+    <li>在第 4 个 `4t` 时间段内，系统以 `\frac{r}{4}=\frac{1}{4}` 的采样率抽样数据流元素以更新 `S`</li>
+    <li>以此类推...</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在每次采样率发生改变时，SS 都会对 `S` 进行一次统一处理: 针对每条表项 `(e_i,f_i)`，SS 会进行若干次硬币投掷，知道投掷为正时结束。如果投掷为负，则对应的表项的频次 `f_i` 就要自减 1。如果某条表项的 `f_i` 变为 0，那么这条表项将会被驱逐出 `S`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面的第一个时间段中，长度是 `2t` 的原因大概是因为 SS 认为只维持 `t` 的时间长度可能太短，这样在采样率切换的时候很可能在一个时间段内收集的流元素种类数据的大部分都会被清除出 `S`。
+
+  <h5 class="title">Stick Sampling 复杂度</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 SS 的空间复杂度，文章给出保证: SS 以至少 `1-\delta` 的准确率解决 `\epsilon`-approximate Frequent Items Problem，并且至多在字典 `S` 中占用 `\frac{2}{\epsilon}\log(\phi^{-1}\delta^{-1})` 条表项。
+
+  <h5 class="title">Lossy Counting 基本流程</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;而对于 <def>Lossy Counting</def> 算法 (LC)，首先 Network Operator 应该先设置三个参数: 频率阈值 `\phi` 和误差 `\epsilon`。LC 定义了一个字典 `D`，`D` 中的表项形式是 `(e,f,\Delta)`，其中 `e` 是元素类型，`f` 是出现频次，`\Delta` 是可能误差的最大值 (maximum possible error in `f`)。LC 的工作流程是: LC 会把数据流 `s` 分为 `w=\ceil{\frac{1}{\epsilon}}` 个 Buckets。注意，数据流的场景下数据元素是一个一个依次到达的，因此我们定义当前的 Bucket 编号为 `b_{current-id}=\ceil{\frac{N}{\epsilon}}`，其中 `N` 是当前到达的数据元素的个数。当数据元素 `i` 依次到达时:
+
+  <ol>
+    <li>如果数据元素的类型 `e_i` 在 `D` 中已经被记录过，则 `(e_i, f_i+1, \Delta) \leftarrow (e_i, f_i, \Delta)`</li>
+    <li>如果数据元素的类型 `e_i` 在 `D` 中没有被记录过，则在 `D` 中新增表项 `(e_i, 1, b_{current-id}-1)`</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;每当到达元素的个数到达 Bucket 的边界时，也即 `N = 0 \mod w` 时，LC 会对 `D` 进行修剪: 对于各个表项 `(e_j,f_j,\Delta_j)`，它会删除所有 `f_j+\Delta_j=b_{current-id}` 的元素。基于这样的删除策略，对于上面的第二种情况，第三个参数 `\Delta` 设置为 `b_{current-id}-1` 的做法可以理解为: 在之前的 `b_{current-id}-1` 个 Buckets 中，`e_i` 这种元素种类至多出现了 `b_{current-id}-1` 次，如果在这轮 Bucket 结束后，`e_i` 这种元素只在这轮 Bucket 里出现了一次，那么它就有 `f_i+\Delta_i=b_{current-id}`，随后它就会被删除。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;以上都是原文对 LC 算法过程的描述。其实有一种很简单的同构的理解方法，每当到达元素的个数到达 Bucket 的边界时，也即 `N = 0 \mod w` 时，LC 会尝试将所有元素的 `f_i` 减 1，并且删除所有的 `f_i` 减 1 之后为 0 的元素种类。
+
+  <h5 class="title">Lossy Counting 准确性</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;LC 保证如果 `(e,f,\Delta)\inD`，那么就有 `f\leqf_e\leqf+\epsilon\cdotN`，其中 `f_e` 是元素种类 `e` 真实的出现频次，`N` 是数据流大小。
+
+  <h5 class="title">Lossy Counting 复杂度</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;LC 保证至多在字典 `D` 中使用 `\frac{1}{\epsilon}\log(\epsilonN)` 条表项的空间解决 `\epsilon`-approximate Frequent Items Problem。
 </div>
 
 <div class="div_ref" id="ref_container"></div>
+
 
 </body>
 <!--引用其它章节-->
@@ -992,10 +1042,10 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          المحتويات
+          Inhaltsverzeichnis
         </li>
         <li class="sidebar-nav-overview">
-          عام
+          Übersicht
         </li>
       </ul>
 

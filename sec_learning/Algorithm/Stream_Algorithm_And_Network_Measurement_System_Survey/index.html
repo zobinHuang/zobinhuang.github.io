@@ -29,11 +29,13 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey/pic/paper_model.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey/pic/elastic_sketch_design.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey/pic/nitro_sketch_design.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey/pic/sketchvisor_motivation.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey/pic/sketchvisor_design.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-05T09:15:09.752Z">
-<meta property="article:modified_time" content="2022-03-05T09:15:09.752Z">
+<meta property="article:published_time" content="2022-03-06T13:17:49.424Z">
+<meta property="article:modified_time" content="2022-03-06T13:17:49.424Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -98,7 +100,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="تشغيل شريط التصفح">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -305,22 +307,40 @@
 <h2 class="title">Introduction</h2>
 <div class="div_learning_post">
   <h3 class="title">思路</h3>
+  <h4 class="title">System Paper 方法论</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;系统论文是从场景的角度出发的，比如测量平台性能限制、数据中心网络流的特征等，然后探讨 <note>在特定场景下的系统的整体设计</note>，论文的 Problem 或者说 Motivation 都是在一定的场景下提出来的，并且一定要有强大的 Motivation Experiment 进行支撑。在有了具体场景下的 Problem 后，我们应该提出评估这个场景下系统运行的 Metric，以方便我们行文进行比较和讨论 (i.e. 牺牲了什么，换取了什么)。有了场景和 Metric 后，通常会基于工程设计直觉，提出 System Design 的 Overview，也就是最上层的系统设计，提出整个系统应该包含什么模块。然后就进入每个模块的具体设计环节，在这其中可能会涉及到对相关算法的优化。比如系统需求是一个找 Top-k Heavy Hitter 的模块，并且有精度和复杂度的要求，那么就需要根据自己本身的系统设计将已有算法嵌入其中，如果算法有不合适于当前系统的地方，就需要进行优化。因此必须意识到算法在 System 的人看来，实际上是秉承拿来主义，实在需要优化了再进行优化，而不是一开始就基于算法入手来思考如何优化，进而整个系统的设计，一定要避免这个误区。对于技术的追求，也应该时刻注意这个误区。
+
+  <h4 class="title">网络测量论文套路</h4>
+
   <div align="center">
     <img src="./pic/paper_model.png" width=500px>
   </div>
 
-  <h3 class="title">Metrics</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对基于 Sketch 的系统的 Evaluation 通常参考以下几个 Metrics:
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上面的思路，我们可以把网络测量的论文基本的内容分为两部分：算法和系统。算法也分在线算法和离线算法，在大部分的测量论文中讨论的都是在线算法。这些算法各自都是面向流数据的一个或者多个特征 (i.e. Cardinality, Heavy Hitter, Frequency)，并且有着不同的时间、空间复杂度和精确度。如上所述，我们应该把这些算法合集当作工具箱来使用，所以我会在阅读论文的过程中逐渐提取这些 <note>本质算法</note>，并且补充在这个系列的其他博客中，但是一定要秉承 ToolBox 的出发点！
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<def>Accuracy</def>: 使用 Sketch 结构估测一类或者多类流量特征的准确度。
+  &nbsp;&nbsp;&nbsp;&nbsp;对于系统来说，我们一定是基于数据中心网络的某种场景，比如测量平台性能限制、数据中心网络流的特征等，这也是我们论文的出发点。而在论文在初始 Design Overview 后，模块设计会涉及到这些算法的使用。应该秉承一个 "先把这些经典算法套进去模块试试看" 的思路，然后再逐渐对算法的各方面效率进行优化。
+
+  <h3 class="title">Metrics</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;测量系统的 Evaluation 通常参考以下几个 Metrics:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>Generic</def>: 测量结构是否支持多种不同的测量任务。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>Latency</def>: 测量结构 Update 和 Query 的延迟。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>Accuracy</def>: 估测一类或者多类流量特征的准确度。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;<def>CPU Usage</def>: 每包的处理所需要的计算资源的消耗。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<def>Memory Usage</def>: Sketch 结构所需占用的内存大小。由于 Sketch 被预加载到 Cache 中是被期望的，所以即使在服务器内存资源充足的情况下也仍需要考虑 Sketch 所需要占用的内存空间大小。
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>Memory Usage</def>: 测量结构所需占用的内存大小。由于测量结构被预加载到 Cache 中是被期望的，所以即使在服务器内存资源充足的情况下也仍需要考虑测量所需要占用的内存空间大小。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;<def>Convergence Time</def>: 整个测量过程需要花费多久才能达到预期的测量精度。
@@ -331,26 +351,70 @@
   <desp class="title">对数据流算法所针对的问题进行了定义，并且分析了经典的算法</desp>
   <h3 class="title">Frequency Estimation</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;数学形式表达 <cite>misra_gries_review</cite>:
+  &nbsp;&nbsp;&nbsp;&nbsp;数学形式表达:
 
   <div class="div_learning_post_border">
   <def>Frequency Estimation Problem</def>: 给定一个由 `n` 个元素 `t_1`, `t_2`, `...`, `t_n` 组成的流 `S`。设流中各个元素 `t_j` 属于种类 `i`，定义种类 `i` 出现的频率为 `f_i=|{j|t_j=i}|`。该问题的目标是对各种元素种类 `i` 的出现频率 `f_i` 进行估计，得到 `\hat{f_i}`。`\hat{f_i}` 需要满足关系 `\hat{f_i} \leq f_i \leq \hat{f_i}+\epsilonn`，其中 `\epsilon` 是一个相对误差系数。
   </div>
 
-  <h5 class="title">xxx</h5>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;待整理。
+
+  <h3 class="title">Heavy Hitter Detection</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;详情可见 <a href="/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey_Heavy_Hitter/index.html">Survey：解决 Heavy Hitter 频繁项问题的算法</a>。
+
+  <h3 class="title">Heavy Changer Detection</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+
+  <h3 class="title">Superspreader Detection</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+
+  <h3 class="title">Cardinality Estimation</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+
+  <h3 class="title">Flow Size Distribution</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+
+  <h3 class="title">Entropy Estimation</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
 </div>
 
-<h2 class="title">测量系统</h2>
+<h2 class="title">测量系统: 针对流量特征的优化</h2>
 <div class="div_learning_post">
   <desp class="title">总结近几年来的关于网络测量系统的论文</desp>
 
   <h3 class="title"><note>[SIGCOMM'18]</note> Elastic Sketch<sup><cite>elasticsketch</cite></sup></h3>
   <label class="title">elastic sketch</label>
+  <h4 class="title">Motivation</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;这篇文章面向的场景是: 数据中心网络中动态的流量特征 (i.e. 动态带宽、动态到达率和动态流量分布) 下的网络测量问题，具体如下:
 
+  <ol>
+    <li>动态带宽: 当数据中心的网络变得拥塞的时候，多测量节点的 Sketch 传给 Controller 的这个过程不应该成为网络的负担，因此需要考虑测量结构的压缩;</li>
+    <li>动态到达率: 当数据包的到达率快速上升的时候，测量结构如何对数据到达率的动态适应，以重点记录大流的信息?</li>
+    <li>动态流量分布: 流量中有大流和小流，straightforward 的测量方法是把大流和小流分开测，但是大流和小流的数量可能会发生动态变化，也即分布是动态的，分开测的话，现有的测量方法没有办法动态地调整大流和小流测量结构的大小</li>
+  </ol>
+
+  <h4 class="title">Design</h4>
+  <div align="center">
+    <img src="./pic/elastic_sketch_design.png" width=700px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上所示是 Elastic Sketch 的基本设计。Overview 来说就是其将大流用一个 Heavy Part 的结构挡在了 CM-Sketch 之外。Heavy Part 是一个 Counter-based 的设计，并且有一个驱逐的过程。加入一条流的数据从 Heavy Part 中被驱逐出来了，那么它就会被送入 CM-Sketch 中去。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;针对动态带宽，文章提出了针对 Light-part 的压缩算法; 针对动态到达率，当到达率上升时，只有 Heavy Part 会被更新; 针对动态流量分布，文章提出了 Heavy Part 进行自我复制以扩展 Heavy Part 哈希桶数量的方法。
+</div>
+
+<h2 class="title">测量系统: 针对测量平台性能限制的优化</h2>
+<div class="div_learning_post">
   <h3 class="title"><note>[SIGCOMM'19]</note> Nitro Sketch<sup><cite>nitrosketch</cite></sup></h3>
   <label class="title">nitro sketch</label>
 
@@ -364,17 +428,16 @@
   </ol>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;这篇文章的实验表明，Sketch 算法中针对每个数据包的多次哈希计算才是导致 Sketch 方案在部署过程中单核测量性能无法达到 40Gbps 的原因。前人解决这个问题的方法是:
-
-  <ul>
-    <li><cite>elasticsketch</cite> 将大流和小流区分开来进行测量，这样对于大流来说就无需前往 CMS 进行多次哈希计算，只需要进行一次哈希计算就可以找到自己的哈希桶。其缺点是随着流的数量的增加，其 accuracy 和 throughput 都会下降;</li>
-    <li><cite>sketchvisor</cite> 设计了一条快路径来加快数据包的测量过程</li>
-    <li><cite>rhhh</cite></li>
-  </ul>
+  &nbsp;&nbsp;&nbsp;&nbsp;这篇文章的实验表明，Sketch 算法中针对每个数据包的多次哈希计算才是导致 Sketch 方案在部署过程中单核测量性能过低的原因。
 
   <h4 class="title">Design</h4>
+
+  <div align="center">
+    <img src="./pic/nitro_sketch_design.png" width=500px>
+  </div>
+
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;test
+  &nbsp;&nbsp;&nbsp;&nbsp;NS 的思路是: 每当一个包到达时，对要更新的 Hash 表进行抽样，并且只更新抽中的哈希表，以此来避免针对每包的多次哈希计算操作。并且为了避免对每个哈希表都进行一次 coin-flip (i.e. 这种计算很昂贵)，NS 计算的是下一个要更新的哈希表的距离，这个距离随机地符合几何分布，并且可以动态随着 packet 的到达率进行调整。
 
   <h3 class="title"><note>[SIGCOMM'17]</note> Sketchvisor<sup><cite>sketchvisor</cite></sup></h3>
   <label class="title">sketch visor</label>
@@ -390,7 +453,7 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;一种比较简单直接的方法是不使用像 Sketch 这样的多哈希表结构，转而采用单哈希表结构来进行测量。单哈希表可行的理由是流的分布存在一定的偏移性，结合现代的 Cache 的管理机制可以实现快速高效的测量 (i.e. 更少的 CPU 周期和更高的 Cache 命中率)，但是其花费的总的内存区域大小仍然过大。因此需要找出一种方法来使得 Sketch 在实际系统上的部署变得可行。
 
-  <h4 class="title">Design</h4>
+  <h4 class="title">Insight & Challenge</h4>
 
   <div align="center">
     <img src="./pic/sketchvisor_design.png" width=300px>
@@ -404,8 +467,9 @@
     <li>基于压缩感知 (Compressive-sensing) 的控制面恢复算法;</li>
   </ol>
 
+  <h4 class="title">Design</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于第一点 Fast Path 的测量模块，这篇文章实际上维护了一个哈希表来记录 Top-k 流。在 Fast Path 只记录 Top-k 流的原因是因为文章相信数据中心内部流量的大部分是由少数大流主导的，也即数据中心流量呈现长尾分布 (Heavy-tailed Pattern)，因此如果发生高的数据包到达率使得系统切换到 Fast Path，那么这些流量中的很大一部分事实上是少数的几个大流，所以文章认为在 Fast Path 中记录 Top-k 大流是足够的。在具体设计上，文章基于 <def>Misra Gries</def> 算法 <cite>misra_gries</cite> (i.e. Misra-Gries 算法用于解决在 `m` 条流的 Data Stream Model 下，其中是否有 Data Stream 的频次超过 `m/2` 的问题。介绍性视频可见 <cite>misra_gries_intro</cite> )，结合 <def>Probabilistic Lossy Counting (PLC)</def> 算法 <cite>plc</cite>。
+  &nbsp;&nbsp;&nbsp;&nbsp;对于上述的第一点 Fast Path 的测量模块，这篇文章实际上维护了一个哈希表来记录 Top-k 流。在 Fast Path 只记录 Top-k 流的原因是因为文章相信数据中心内部流量的大部分是由少数大流主导的，也即数据中心流量呈现长尾分布 (Heavy-tailed Pattern)，因此如果发生高的数据包到达率使得系统切换到 Fast Path，那么这些流量中的很大一部分事实上是少数的几个大流，所以文章认为在 Fast Path 中记录 Top-k 大流是足够的。在具体设计上，文章基于 Misra Gries 算法，结合 Probabilistic Lossy Counting (PLC) 算法 <cite>plc</cite>，设计了用于追踪 Top-k 大流频率的算法。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;对于第二点，文章从 Network-wide 的角度出发，在收集完整个网络的 Sketch 以及 Fast Path 的 Top-k Heap 后，进行数据的融和和计算。这部分文章将问题建模称矩阵的差值问题，并且使用基于压缩感知的方法来进行记录数据的恢复。
@@ -556,10 +620,10 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          المحتويات
+          Inhaltsverzeichnis
         </li>
         <li class="sidebar-nav-overview">
-          عام
+          Übersicht
         </li>
       </ul>
 
