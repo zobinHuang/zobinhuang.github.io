@@ -20,21 +20,18 @@
     var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:type" content="website">
-<meta property="og:title" content="图和简单图">
-<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/index.html">
+<meta property="og:title" content="图的路与连通性">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_3_Connection/index.html">
 <meta property="og:site_name" content="Zobin">
-<meta property="og:description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/complete_graph.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/bipartite_graph.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/dual_graph.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/complement_graph.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-08T13:02:07.708Z">
-<meta property="article:modified_time" content="2022-03-08T13:02:07.708Z">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_3_Connection/pic/dijkstra.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_3_Connection/pic/xxx.png">
+<meta property="article:published_time" content="2022-03-08T12:37:54.209Z">
+<meta property="article:modified_time" content="2022-03-08T12:37:54.209Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -44,7 +41,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 
-<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/">
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_3_Connection/">
 
 
 <script id="page-configurations">
@@ -57,7 +54,7 @@
   };
 </script>
 
-  <title>图和简单图 | Zobin
+  <title>图的路与连通性 | Zobin
 </title>
   
 
@@ -207,7 +204,7 @@
     <div class="post-block" lang="cn">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">图和简单图
+<h1 class="post-title" itemprop="name headline">图的路与连通性
 </h1>
 
 <div class="post-meta">
@@ -216,7 +213,7 @@
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
             <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
-          <li>GRAPH_THEORY_1_CONCEPT_OF_GRAPH</li>
+          <li>GRAPH_THEORY_3_CONNECTION</li>
         
   </ul>
 
@@ -234,6 +231,24 @@
 
 <!--导入网页脚本-->
 <script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
 
 <!--支持网页公式显示-->    
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
@@ -261,7 +276,7 @@
 <body onload="load_page()">
 
 <div align="center" class="div_indicate_source">
-  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：March.2 2022</i></font></h4>
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Mar.8 2022</i></font></h4>
 </div>
 <div class="div_licence">
   <br>
@@ -285,254 +300,121 @@
 </div><br>
 
 <!-- Start your post here -->
-<h2 class="title">关于图的一些定义</h2>
+<h2 class="title">路与连通性</h2>
 <div class="div_learning_post">
+  <h3 class="title">途径 (Walk)</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;图论是离散数学涉及的学科之一 (p.s. 图论、群论 & 数论)。图用于描述事物间的二元关系。
+  &nbsp;&nbsp;&nbsp;&nbsp;`G` 的一条 <def>途径 (Walk)</def> 是一个有限非空序列 `w=v_0e_1v_1e_2v_2…e_kv_k`，它的项交替地为顶点和边, 使得 `1 \le i \le k`, `e_i` 的端点是 `v_(i−1)` 和 `v_i`。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;记一个有序二元数组 `G=(V,E)` 成为一个图，其中 `V` (Vertex) 为 `G` 的 <def>顶点集</def>，其不为空集，其元素称为 <def>顶点 (点)</def>; `E` (Edge) 为 `G` 的 <def>边集</def>，它的每一个元素称为 <def>边</def>，它联结 `V` 中的两个点，且如果两个点是无序的，则为 <def>无向边</def>，否则为 <def>有向边</def>。
+  &nbsp;&nbsp;&nbsp;&nbsp;途径中边数称为途径的 <def>长度 (Length)</def>，`v_0`, `v_k` 分别称为途径的 <def>起点(initial vertex)</def> 与 <def>终点 (Terminal Vertex)</def>, 其余顶点称为途径的 <def>内部点 (Internal Vertex)</def>。
+
+  <h3 class="title">迹 (Trail)</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<note>边不重复</note> 的途径称为图 `G` 的一条 <def>迹 (trail)</def>。
+
+  <h3 class="title">路 (Path)</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<note>顶点不重复</note> 的途径称为图的一条 <def>路</def>，`n` 个点的路一般用 `P_n` 来表示。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;使用 `n(G)` 来表示一个图的顶点数，`m(G)` 来表示一个图的边数，`d(v)` 表示一个点的 <def>度 (degree)</def>。
+  &nbsp;&nbsp;&nbsp;&nbsp;起点和终点重合的途径，迹和路分别称为图的 <def>闭途径 (回路)</def>，<def>闭迹</def> 和 <def>圈</def>。其中长度为 `k` 的圈称为 <def>`k` 圈</def>，`k` 为奇数的时候称为 <def>奇圈</def>，反之称为 <def>偶圈</def>，`n` 阶圈一般使用 `C_n` 表示。
+
+  <h3 class="title">距离 (Distance)</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;图中点 `u` 与 `v` 的最短路的长度称为 `u` 与 `v` 之间的距离，记为 `d(u,v)`。如果 `u` 和 `v` 之间不存在路，则定义 `d(u,v)=\infty`。
+
+  <h3 class="title">连通性 (Connection)</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果图中点 `u` 与 `v` 之间存在路，则说点 `u` 与 `v` 是 <def>连通的 (Connected)</def>，否则为 <def>不连通的 (Disconnected)</def>。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;图和点的关系是不对等的: 一个图有点不一定有边，有边一定有点。
-</div>
+  &nbsp;&nbsp;&nbsp;&nbsp;规定一个顶点和它自身是连通的。
 
-<h2 class="title">简单图</h2>
-<div>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;关于图，还有如下相关概念:
+  &nbsp;&nbsp;&nbsp;&nbsp;如果图 `G` 中的任意两点是连通的，则说图 `G` 是一个 <def>连通图 (Connected Graph)</def>，否则为 <def>非连通图 (Disconnected Graph)</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;图 `G` 中的每一个极大连通子图称为图 `G` 的 <def>连通分支</def>。可以这么定义连通分支：不存在 `G\'\' \supset G'`，使得 `G''` 仍能连通。图 `G` 的连通分支的个数，可以称为 `G` 的 <def>分支数</def>，记为 `\omega(G)`。
+
+  <h3 class="title">直径 (Diameter)</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;定义连通图 `G` 的直径为: `d(G)=max{d(u,v)|u,v\inV(G)}`。如果 `G` 不连通，则定义 `d(G)=\infty`。
+
+  <div class="div_learning_post_border" align="center">
+  若 `\delta(G) \ge 2`，则图 `G` 中必然含有圈。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面的定理可以采用 <note>最长路方法</note> 来进行证明: 设 `P=v_1v_2…..v_{k-1}v_k` 是 `G` 中的一条最长路. 由于 `\delta \ge 2`, 所以 `v_k` 必然有相异于 `v_{k-1}` 的邻接顶点。又 `W` 是 `G` 中最长路，所以这样的邻接点必然是 `v_1`, `v_2`, …, `v_{k-2}` 中之一。设该点为 `v_m`, 则 `v_mv_{m+1}….v_kv_m` 为 `G` 圈。
+
+  <h3 class="title">连通图的性质</h3>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们给出连通图的两个性质。
+
+  <div class="div_learning_post_border" align="center">
+  若图 `G` 不连通，则其补图一定连通。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明过程很简单，分为两种情况: 对于 `\forall u,v \in V(\bar{G})`，
 
   <ol>
-    <li><def>平凡图</def>: 只有一个顶点的图</li>
-    <li><def>空图</def>: 只有点没有边的图</li>
-    <li><def>有限图</def>: 顶点个数有限的图，反之则是无限图</li>
-    <li><def>重边</def>: 如果有多条两个顶点相同的边，则说这些边是重边 (p.s. 注意对于有方向的边，如果两端顶点相同，方向不同，则不是重边)</li>
-    <li><def>环</def>: 如果一条边上的两个点是一样的，则这条边是环;</li>
-    <li><def>相邻</def>: 两个点相邻则说明它们之间有边将它们连接起来; 两条边相邻则说明它们之间有公共连接的点;</li>
-    <li><def>相关联</def>: 用于描述点与边之间的关系</li>
+    <li>若 `u`, `v` 属于 `G` 的同一分支，设 `w` 是与 `u`, `v` 处于不同分支中的点，则在 `\bar{G}` 中，`u` 与 `w`，`v` 与 `w` 分别相邻。于是 `u` 与 `v` 在 `\bar{G}` 中是连通的;</li>
+    <li>若 `u`, `v` 属于 `G` 的不同分支，则`u` 与 `v` 在 `\bar{G}` 中必然是连通的</li>
   </ol>
 
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;没有环和没有重边的图称为 <def>简单图</def>，简单图是图论研究的重点。
-</div>
-
-<h2 class="title">图的同构</h2>
-<div class="div_learning_post">
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;图 `G_1=(V_1, E_1)` 和图 `G_2=(V_2, E_2)`，若存在双射 (i.e. 一一映射) `f: V1 \rightarrow V_2`，使得对任意 `a, b \in V_1`，`(a,b) \in E_1` `\leftrightarrow` `[f(a), f(b)] \in E_2`，并且 `(a,b)` 和 `[f(a), f(b)]` 有相同重数，则 `G_1` 和 `G_2` <def>同构</def>，记为 `G_1 \cong G_2`。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;上面的数学概念总结起来就是两个条件: [1] 点的一一映射关系 和 [2] 相同的点邻接关系。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;判断两个图不同构的方法：首先必须保证顶点的一一映射关系 (i.e. [1] 数量要相同; [2] 各个度数的点能否进行对应)，然后边数要相同，然后看一些特殊的邻接关系能否进行对应 (e.g. `G` 有三个点两两相邻, `G'` 是否存在; `G` 中唯二的度数为 4 的点相邻，`G'` 中是否相邻)。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;基于顶点数目和边的数目，构造所有可能的非同构的简单图的方法论：<note>从顶点度数最大的值从大往小找</note>。
-</div>
-
-<h2 class="title">更多概念</h2>
-<div class="div_learning_post">
-  <h3 class="title">完全图</h3>
-
-  <div align="center">
-    <img src="./pic/complete_graph.png" width=800px>
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<def>完全图</def>: 任意两个顶点都是相邻的简单图，记为 `K_n`，其中 `n` 是图中点的数目。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;完全图的边数 `m(K_n) = C_{n}^{2} = \frac{n(n-1)}{2}`，每个顶点的度数都为 `d(v)=n-1`。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;顶点数相同的两个完全图同构。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;完全图增加/删除一个点后仍然是完全图。
-
-  <h3 class="title">二部图</h3>
-
-  <div align="center">
-    <img src="./pic/bipartite_graph.png" width=800px>
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<def>偶图/二部图 (Bipartite Graph)</def>: 可以把一个图的顶点集分为两个集合 `X` 和 `Y`，且保证 `X` 中的顶点是互不相邻的，`Y` 中的顶点也是互不相邻的。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;判断一个图是否是二部图的办法: 对顶点进行 0/1 标号，判断是否有顶点之间的邻接关系存在冲突，若全图不冲突则为偶图。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如果完全图 `K_{n}` 的 `n \ge 3`，则其一定不是二部图。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;快速判断是否是二部图的一个定理:
-
   <div class="div_learning_post_border" align="center">
-  一个图是二部图当且当它不包含奇圈
-  </div>
+  若 `G` 是简单图且 `\delta(G) \ge \frac{n-1}{2}`，则 `G` 是连通的。
+  </div>                  
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面我们就上述定理的必要性 (从左向右) 和充分性 (从右向左) 进行证明。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;必要性显然: 设 `G` 是具有二分类 `(X, Y)` 的二部图, 并且 `C = v_0v_1… v_kv_0` 是 `G` 的一个圈。不失一般性, 可假定 `v_o \in X`。一般地，`v_{2i}\inX`，`v_{2i+1}\inX`。又因为 `v_0\inX`，因此 `C` 是偶圈。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;充分性: 我们在 `G` 中任意选取点 `u`，然后定义 `V(G)` 的分类如下:
-
-  <ul>
-    <li>`X={x|d(u,x)` 是偶数, `x\inV(G)}`</li>
-    <li>`Y={y|d(u,y)` 是奇数, `y\inV(G)}`</li>
-  </ul>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;现在我们尝试基于图 `G` 不包含奇圈的已知条件来证明 `X` 和 `Y` 是图 `G` 的二部划分。
-
-  <div align="center">
-    <img src="./pic/dual_graph.png" width=500px>
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;首先我们证明在 `X` 中的任意两点 `v` 和 `w` 都不相邻。设 `P` 是一条最短 `(u,v)` 路，`Q` 是一条最短 `(u,w)` 路，`u_1` 是 `P` 和 `Q` 的最后一个交点。由于 `P` 和 `Q` 是最短路，所以 `P` 和 `Q` 中 `u` 到 `u_1` 段的距离相同，因此奇偶性相同。又因为 `P` 和 `Q` 的长度是偶数，所以 `P` 和 `Q` 中 `u_1v` 段和 `u_1w` 段的奇偶性也相同。因此此时如果 `v` 和 `w` 邻接，则会形成奇圈，与已知条件矛盾。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;然后我们可以使用同样的道理证明在 `Y` 中的任意两点也不相邻，此处略去证明。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;综合上述关于二部图的性质，总结起来就是：<note>要证明一个图是二部图，则需要找到二部划分；要证明一个图不是二部图，仅需找到一个奇圈。</note>
-
-  <h3 class="title">完全二部图</h3>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<def>完全二部图</def>: 有三层意思: [1] 偶图; [2] `X` 中的一个点和 `Y` 中的任意一个点邻接; [3] 简单图。记完全偶图为 `K_{m,n}`，其中 `m` 和 `n` 分别为集合 `X` 和 `Y` 的顶点的个数。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;若 `m,n \ge 2`，则完全二部图增加/删除一个点后仍然是完全二部图。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;完全二部图 `K_{m,n}` 的顶点数为 `n(K_{m,n}) = m+n`。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;完全二部图 `K_{m,n}` 的边数为 `m(K_{m,n}) = m \cdot n`
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;完全二部图中顶点的度数有两种情况: `d(v)=m, v \in X` 或 `d(v)=m, v \in Y`。
-
-  <h3 class="title">补图</h3>
-
-  <div align="center">
-    <img src="./pic/complement_graph.png" width=300px>
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于一个简单图 `G=(V,E)`，令 `E_{1} = {uv|u \ne v, u,v \in V}`，则称图 `H=(V,E_{1})` 为图 `G` 的 <def>补图 (Complement Graph)</def>，记为 `H=\bar{G}`。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;完全图 `G` 的补图是一个以 `V(G)` 为顶点集的空图，也叫做 <def>独立集 (Independent Set)</def>。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如果一个图 `G` 的补图和其自身同构，则其为 <def>自补图 (Self-complementary Graph)</def>。
-
-  <div align="center" class="div_learning_post_border">
-    自补图拥有性质:  `n(G) \mod 4 = 0,1`
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明: 由于 `G \cong \bar{G}`，故 `m(G) + m(\bar{G}) = m(K_n) = \frac{1}{2}n(n-1)`，所以 `m(G)=\frac{1}{4}n(n-1)`。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;注意上面的条件是必要条件，自补图一定拥有上述性质，但是拥有上述性质的图不一定是自补图。
-
-  <h3 class="title">度</h3>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp; `G` 的顶点 `v` 的 <def>度 (degree)</def> `d(v)` 是指 `G` 中与 `v` 关联的边的数目，每个环计算两次。使用 `\delta(G)` 和 `\Delta(G)` 来表示图 `G` 的最大度和最小度。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;奇数度的点称为 <def>奇度点</def>, 偶数度的顶点称 <def>偶度点</def>。 
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如果图 `G` 中所有顶点的度都为 `k`，则称该图为 <def>k-正则图 (k-regular)</def>，其中3-正则图为 <def>3 次图 (cubic)</def>。
-
-  <div class="div_learning_post_border" align="center">
-    <def>图论第一定理 (握手定理)</def>: 图 `G=(V,E)` 中所有顶点的度的和等于边数 `m` 的 2 倍，也即 `\sum_{v \in V(G)}d(v) = 2m`
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;基于上述定理我们可以进而衍生出两个推论:
-
-  <div class="div_learning_post_border" align="center">
-  在任何图中, 奇度点的个数为偶数
-  </div>
-
-  <div class="div_learning_post_border" align="center">
-  正则图的阶数和点数不同时为奇数
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;上述两个定理都可以基于握手定理进行证明，这里略去。
-
-  <h3 class="title">度序列</h3>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;一个图 `G` 的各个点的度 `d_1`, `d_2`, …, `d_n` 构成的非负整数组 (`d_1`, `d_2`, …, `d_n`)称为 `G`的 <def>度序列 (Degree Sequence)</def>。 
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;给出一个非负数组，如果它是某简单图的度序列, 我们称它为 <def>可图序列 (Graphic Sequence)</def>, 简称 <def>图序列</def>。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面我们给出两个用于判断一个序列是否是可图序列的定理:
-
-  <div align="center" class="div_learning_post_border">
-    非负整数组 (`d_1`, `d_2`, …., `d_n`) 是图的度序列的充分必要条件是: `\sum_{i=1}^{n}d(v_i)` 为偶数。
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明如下:
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;充分性: 如果 `\sum_{i=1}^{n}d(v_i)` 为偶数，那么值为奇数的 `d_{i}` 的个数即为偶数。那么我们可以这么作图: [1] 对于 `d_{j}` 为偶数的顶点，作 `\frac{d_{j}}{2}` 个环; [2] 对于 `d_{j}` 为奇数的 `t` 个顶点 (i.e. `t` 为偶数)，首先将这些顶点划分为 `\frac{t}{2}` 组，然后每个组中的两个顶点进行连线，并且各个顶点再作 `\frac{d_{j}-1}{2}` 个环。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;必要性: 如果非负整数组 (`d_1`, `d_2`, …., `d_n`) 是图的度序列，那么根据握手定理可以得出 `\sum_{i=1}^{n}d(v_i) = 2 \cdot m(G)` 为偶数。
-
-  <div align="center" class="div_learning_post_border">
-    非负整数组 `\pi=(d_{1}, d_{2}, ..., d_{n}), d_{1} \ge d_{2} \ge ... \ge d_{n}`, `\sum_{i=1}^{n}d_{i}=2m` 是可图序列的充分必要条件是:<br>
-    `\pi_{1}=(\underbrace{d_{2}-1, d_{3}-1, ..., d_{d_{1}+1}-1}_{这部分是 -1}, \underbrace{d_{d_{1}+2}, ..., d_{n}}_{这部分是保持不变})` 是可图序列
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;上述定理是 <def>Havel-Hakimi</def> 定理，其证明过程此处略。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;另外我们还应该关注一个度序列的性质:
-
-  <div align="center" class="div_learning_post_border">
-    一个简单图 `G` 的 `n` 个点的度不能互不相同
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;其证明过程类似于鸽笼问题，如下:
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;由于图 `G` 为简单图，故 `\Delta(G) \le n-1`。那么:
+  &nbsp;&nbsp;&nbsp;&nbsp;选择 `G` 的任意两点 `u` 和 `v`，这个定理的证明过程分为两种情况:
 
   <ol>
-    <li>如果图 `G` 没有孤立点，则 `1 \le d(v) \le n-1`, `\forall v \in V(G)`，由鸽笼原理可得至少有两个点度数相同;</li>
-    <li>如果图 `G` 有一个孤立点，设 `G_{1}` 表示 `G` 去掉孤立点后的部分，则 `1 \le d(v) \le n-2`, `\forall v \in V(G_{1})`，同理由鸽笼原理，`G_{1}` 中至少有两个点度数相同;</li>
-    <li>如果图 `G` 中有两个以上的孤立点，则这两个孤立点本身度数就相同</li>
-  </ol> 
-
-  <h3 class="title">频序列</h3>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;设 `n` 阶图 `G` 的各点的度取 `s` 个不同的非负整数 `d_{1}`, `d_{2}`, …, `d_{s}`. 又设度为 `d_{i}` 的点有 `b_{i}` 个 (i = 1, 2, …, s), 则有 `\sum_{i=1}^{s}b_{i} = n`，故非整数组 `(b_1, b_2, …,  b_s)` 是 `n` 的一个划分, 称为 `G` 的 <def>频序列</def>。
-
-  <div align="center" class="div_learning_post_border">
-  一个 `n` 阶图 `G` 和它的补图有相同的频序列. 
-  </div>
+    <li>若 `u` 和 `v` 相邻，则无需证明;</li>
+    <li>
+      若 `u` 和 `v` 不相邻，我们可以从这个图的特殊性入手，得到:<br>
+      `|N(u)| \ge \delta(G) \ge \frac{n-1}{2}`, `|N(v)| \ge \delta(G) \ge \frac{n-1}{2}`，故<br>
+      `|N(u)|+|N(v)| \ge 2 \cdot \delta(G) \ge n-1`，故<br>
+      `|N(u) \cap N(v)| = |N(u)| + |N(v)| - |N(u) \cup N(v)| \ge n-1 - (n-2) = 1`<br>
+      也即 `u` 和 `v` 至少有一个公共邻点
+    </li>
+  </ol>
 </div>
+
+<h2 class="title">最短路算法</h2>
+<div class="div_learning_post">
+  <h3 class="title">赋权图</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在图 `G` 的每条边上标上一个实数 `\omega(e)` 后，称 `G` 为 <def>边赋权图</def>。被标上的实数称为边的 <def>权值 (Weight)</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;若 `H` 是赋权图 `G` 的一个子图, 称 `W(H)=\sum_{e\inE(H)}\omega(e)` 为子图H的权值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设 `G` 为边赋权图。`u` 与 `v` 是 `G` 中两点，在连接 `u` 与 `v` 的所有路中，路中各边权值之和最小的路，称为 `u` 与 `v` 间的 <def>最短路 (Shortest Path)</def>。
+
+  <h3 class="title">动态规划</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;传统的 <def>贪心算法</def> 的思路是: 每个求解的步骤都是取局部的最优解。这样的算法在一些情况下无法达到全局最优，因为算法有可能因为在某一步选取了一个局部最优解而错过全局最优解。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;而 <def>动态规划</def> 的思路则是，为了求出问题 `f(n)`，我们可以对与求解 `f(n)` 相关的 `f(n)` 的子问题 `f(i)` `(i \< n)` 进行最优解求解，如此递归最终堆砌出 `f(n)` 的最优解。
+
+  <h3 class="title">Dijkstra 算法</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>Dijkstra 算法</def> 是一种在赋权图中求由点 `u_0` 到 `G` 中所有顶点的最短路的好算法。
+
+  <div align="center">
+    <img src="./pic/dijkstra.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Dijkstra 简单来说，就是把整个图分为两部分: 由未确定 `d(u_0, v')` 的顶点 `v'` 构成的子图 `\bar{S}`，以及由已经确定 `d(u_0, v)` 的顶点 `v` 构成的子图 `S`。算法的每次迭代，就是在子图 `S` 和 `\bar{S}` 之间的边界边上选取一条权重最小的边界边，然后把对应的位于 `\bar{S}` 的顶点加入到 `S` 中，形成新的 `S` 和 `\bar{S}`。算法初始化的时候，`S` 仅包含 `u_0` 一个顶点; 算法结束的时候，`\bar{S}` 将变为空集。
+</div>
+
 
 <div class="div_ref" id="ref_container"></div>
 
@@ -555,13 +437,6 @@
 <!--醒目注意-->
 <!-- 
 <note></note> 
--->
-
-<!--居中边框-->
-<!--
-<div class="div_learning_post_border" align="center">
-  Content
-</div>   
 -->
 
 <!--表格-->
@@ -588,6 +463,30 @@
 </div><br>
 -->
 
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
 <!--图片-->
 <!--
 <div align="center">
@@ -611,7 +510,7 @@
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
             <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
-          <li>GRAPH_THEORY_1_CONCEPT_OF_GRAPH</li>
+          <li>GRAPH_THEORY_3_CONNECTION</li>
         
   </ul>
 

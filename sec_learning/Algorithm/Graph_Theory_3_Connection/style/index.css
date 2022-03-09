@@ -1,0 +1,95 @@
+img{margin-left: 20px; margin-right: 20px;}
+p{margin-left: 15px; margin-right: 15px;}
+
+.div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+@media(max-width: 768px) {
+    .div_concurrent_img{flex-direction: column;}
+}
+
+.div_catalogue{
+    padding: 10px 10px; 
+    font-size: 16px; 
+    word-spacing:0px;  
+    border-radius: 10px;
+    box-shadow: 10px 10px 5px #888888;
+    background-color: #E0E0E0;
+}
+
+.div_catalogue_container{
+    margin-bottom: 20px;
+    padding: 10px 30px; 
+    font-size: 16px; 
+    word-spacing:0px;  
+    border:1px solid black;
+    border-radius: 10px;
+}
+
+.a_catalogue_title{
+    font-weight: bold;
+    color: darkslateblue;
+}
+
+.div_load_catalogue_alert{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: darkred;
+    font-weight: bold;
+}
+
+.div_licence{
+    font-size: 16px;
+    word-spacing:0px; 
+    border:1px solid black;
+}
+
+.div_code_segment{
+    width:100%;
+    border:1px solid rgb(128, 128, 128);
+    border-radius: 15px;
+    padding: 10px 10px;
+    margin: 20px 10px;
+}
+
+.div_code_segment button{
+    padding: 2px 8px;
+    width: 100%;
+}
+
+
+.div_learning_post{
+    font-size: 16px;
+    word-spacing:0px;
+}
+
+.div_indicate_source{
+    font-size: 18px;
+    word-spacing:0px;
+    background-color: #E0E0E0;
+}
+
+.div_learning_post_border{
+    margin-bottom: 20px;
+    padding: 10px 10px; 
+    font-size: 16px; 
+    word-spacing:0px;  
+    border:1px solid black;
+}
+
+.div_learning_post_background{
+    background-color:#E3E2E2;
+    padding: 10px 40px; 
+    font-size: 16px;
+    word-spacing:0px;  
+    border-radius: 15px;
+    margin-bottom: 15px;
+}
+
+.div_learning_post_background p{
+    margin: 0px;
+}
+
+.div_ref{
+    font-size: 16px;
+    word-spacing:0px;
+}
