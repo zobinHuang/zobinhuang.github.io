@@ -22,16 +22,16 @@
 
   <meta name="description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
 <meta property="og:type" content="website">
-<meta property="og:title" content="熵、率失真函数和信道容量">
-<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_2_Concept/index.html">
+<meta property="og:title" content="信息量和熵">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_2_Information_Amount_And_Entropy/index.html">
 <meta property="og:site_name" content="Zobin">
 <meta property="og:description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_2_Concept/pic/intra_h.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_2_Concept/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-06T08:43:34.989Z">
-<meta property="article:modified_time" content="2022-03-06T08:43:34.989Z">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_2_Information_Amount_And_Entropy/pic/intra_h.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_2_Information_Amount_And_Entropy/pic/xxx.png">
+<meta property="article:published_time" content="2022-03-10T12:50:03.173Z">
+<meta property="article:modified_time" content="2022-03-10T12:50:03.173Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -41,7 +41,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 
-<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_2_Concept/">
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_2_Information_Amount_And_Entropy/">
 
 
 <script id="page-configurations">
@@ -54,7 +54,7 @@
   };
 </script>
 
-  <title>熵、率失真函数和信道容量 | Zobin
+  <title>信息量和熵 | Zobin
 </title>
   
 
@@ -96,7 +96,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -134,16 +134,6 @@
     <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
 
   </li>
-        <li class="menu-item menu-item-科研-(research)">
-
-    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
-
-  </li>
-        <li class="menu-item menu-item-项目">
-
-    <a href="/sec_project/" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
-
-  </li>
         <li class="menu-item menu-item-知识库">
 
     <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
@@ -154,19 +144,9 @@
     <a href="/sec_weekly/" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
 
   </li>
-        <li class="menu-item menu-item-实习与助教">
-
-    <a href="/sec_internship/" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
-
-  </li>
         <li class="menu-item menu-item-进度">
 
     <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
-
-  </li>
-        <li class="menu-item menu-item-随笔">
-
-    <a href="/sec_essay/" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
 
   </li>
         <li class="menu-item menu-item-独立音乐人">
@@ -204,7 +184,7 @@
     <div class="post-block" lang="cn">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">熵、率失真函数和信道容量
+<h1 class="post-title" itemprop="name headline">信息量和熵
 </h1>
 
 <div class="post-meta">
@@ -213,7 +193,7 @@
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
             <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
-          <li>INFORMATION_THEORY_2_CONCEPT</li>
+          <li>INFORMATION_THEORY_2_INFORMATION_AMOUNT_AND_ENTROPY</li>
         
   </ul>
 
@@ -258,7 +238,7 @@
 <body onload="load_page()">
 
 <div align="center" class="div_indicate_source">
-  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Feb.24 2022</i></font></h4>
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Mar.9 2022</i></font></h4>
 </div>
 <div class="div_licence">
   <br>
@@ -282,36 +262,51 @@
 </div><br>
 
 <!-- Start your post here -->
-<h2 class="title">信息量和熵</h2>
+
+<h2 class="title">熵 (平均自信息量)</h2>
 <div class="div_learning_post">
-  <h3 class="title">平均自信息量 (熵)</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;信源的 <def>平均自信息量</def>，也称为信源的 <def>熵</def>，信源熵在平均意义上来表征信源的总体特征。
 
-  <h4 class="title">信息熵函数的条件</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;香农给出了信息熵函数满足的三个条件:
+  &nbsp;&nbsp;&nbsp;&nbsp;为了分析信源信息的量化特征，我们需要一个函数用来输出信源的熵，我们称之为 <def>信源熵函数</def>。我们把信源熵函数记为 `H(p_1, p_2, ..., p_a)`，其中 `p_i` 是各个信源符号出现的概率。信息熵函数有时也称为 <def>信息熵函数</def>。
 
+  <h3 class="title">信息熵函数的条件</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在给出信源熵的具体定义之前，我们先来看香农给出的信息熵函数应该满足的三个条件:
+
+  <div class="div_learning_post_border">
   <ul>
     <li>连续性: `H(p_1, p_2, ..., p_a)` 是 `(p_1, p_2, ..., p_a)` 的连续函数;</li>
     <li>等概时单调递增: `H(\frac{1}{a}, \frac{1}{a}, ..., \frac{1}{a}) < H(\frac{1}{a+1}, \frac{1}{a+1}, ..., \frac{1}{a+1})`</li>
     <li>
       可加性 (信息可积累): 对于任意正整数 `b_i` (`i=1,2,...,k`)<br>
-      如果 `\sum_{i=1}^{k}b_i = a`，则有:<br>
+      如果 `\sum_{i=1}^{k}b_i = a`，则有:
       `H(\frac{b_1}{a}, \frac{b_2}{a}, ..., \frac{b_k}{a})+\sum_{i=1}^{k}\frac{b_i}{a} \cdot H(\frac{1}{b_1}, \frac{1}{b_2}, ..., \frac{1}{b_k})`
     </li>
   </ul>
+  </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Khinchin 条件增加了一个极值条件 (对于离散信源):
+  &nbsp;&nbsp;&nbsp;&nbsp;对于第二点 —— 等概递增性是比较显然的: 在等概的条件下，信源符号的个数越多，信源的熵越大。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后一点 —— 可加性，可以这么理解: 要寻找我校二年级的一位学生，设 `a` 是该系二年级学生总数，`k` 是该系二年级的班级数，而 `b_i` 是该系全体二年级第 `i` 班的学生人数。则:
+
+  <div align="center" style="margin-bottom:15px;">
+  二年级全体学生的不确定定性 = 班级的不确定性 + 每个班学生的平均不确定性。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，Khinchin 条件增加了一个极值条件 (对于离散信源):
 
   <ul>
     <li>`maxH(p_1, p_2, ..., p_a) = (\frac{1}{N}, \frac{1}{N}, ..., \frac{1}{N}) = \log_{2}a`</li>
   </ul>
 
-  <h4 class="title">信息熵、条件熵和联合熵</h4>
+  <h3 class="title">信息熵</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;数学上，信息熵当且仅当定义为信源中各个符号自信息量的数学期望时，满足上述的性质: 
+  &nbsp;&nbsp;&nbsp;&nbsp;现在让我们给出信息熵的定义。在数学上，信息熵 <note>当且仅当</note> 定义为信源中各个符号自信息量的数学期望时，满足上述的性质: 
 
   <div align="center" class="div_learning_post_border">
   `H(X) = E(I(X)) = \sum p(x_i)\cdotI(x_i) = \sump(x_i)\cdot\log\frac{1}{p(x_i)} = - \sump(x_i)\cdot\logp(x_i)`
@@ -329,12 +324,18 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;信息熵函数是一个关于 `p` 的上凸函数，存在一个最大值。
 
+  <h3 class="title">条件熵</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在给定事件 `y_j` 的条件下，`x_i` 的条件自信息量为 `I(x_i|y_i) = -\logp(x_i|y_i)`，其含义是 `y_i` 发生的条件下，`x_i` 所给出的信息量。基于这种定义，我们定义 `X` 集合的 <def>条件熵</def> 为: `H(X|y_j) = f(y_j) = \sum_{i}p(x_i|y_j)I(x_i|y_j)`。相应地，在给定随机变量 `Y` 的条件下，`X` 集合的条件熵为: `H(X|Y) = \sum_{i,j}p(x_i,y_j)I(x_i|y_j)`
+  &nbsp;&nbsp;&nbsp;&nbsp;在给定事件 `y_j` 的条件下，`x_i` 的条件自信息量为 `I(x_i|y_i) = -\logp(x_i|y_i)`，其含义是 `y_i` 发生的条件下，`x_i` 所给出的信息量。基于这种定义，我们定义 `X` 集合的 <def>条件熵</def> 为: `H(X|y_j) = f(y_j) = \sum_{i}p(x_i|y_j)I(x_i|y_j)`，`H(X|y_j)` 是 `y_j` 的一个函数。
 
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;相应地，在给定随机变量 `Y` 的条件下，`X` 集合的条件熵为: `H(X|Y) = \sum_{i,j}p(x_i,y_j)I(x_i|y_j)`。值得注意的是，条件熵是在联合符号集合 `XY` 上的条件自信息量的联合概率加权统计平均值，也即 `H(X|Y) = E_{X,Y}()` 
+
+  <h3 class="title">联合熵</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;<def>联合熵 (共熵)</def> 是联合符号集合 `XY` 上的每个元素对 `x_i,y_j` 的联合自信息量的联合概率加权统计平均值。定义为: `H(XY)=\sum_{i,j}p(x_i,y_j)I(x_i,y_j)=-\sum_{i,j}p(x_i,y_j)\logp(x_i,y_j)`
 
+  <h3 class="title">熵，条件熵，联合熵的关系</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;熵，条件熵，联合熵满足以下关系:
 
@@ -344,7 +345,10 @@
   </ul>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;并且有如下推论:
+  &nbsp;&nbsp;&nbsp;&nbsp;熵 `H(X)` 表示 `X` 单独的不确定性；条件熵 `H(X|Y)` 表示观察到 Y 的条件下 X 的不确定性，`H(X|y_j)` 是关于 `y_j` 的一个函数；联合熵 `H(XY)` 表示 X 和 Y 共同的不确定性。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;熵的一些性质总结如下:
 
   <ul>
     <li>条件熵不大于信源熵: `H(X|Y) \leq H(X)`，当 `X` 和 `Y` 相互独立时，式子取等号;</li>
@@ -353,9 +357,12 @@
     <li>当信源含有的新增消息为小概率时，熵不变: `\lim_{\epsilon \rightarrow \infty}H(a_1, a_2, ..., a_n-\epsilon, \epsilon) = H(a_1, a_2, ..., a_n)`</li>
   </ul>
 
-  <h4 class="title">相对熵和交叉熵</h4>
+  <h3 class="title">相对熵和交叉熵</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;两个概率分布为 `P(X)` 和 `Q(X)` 的随机变量的 <def>相对熵</def> 为: `D(P||Q) = \sum_{x\inX}p(x)\log\frac{p(x)}{Q(x)} = H(p,q) - H(p)`，其中 `H(p,q)` 为 <def>交叉熵</def>，定义为 `H(p,q)=\sum_xp(x)\logfrac{1}{q(x)}`。相对熵度量为当真实分布为 `P` 而假定分布为 `Q`时的无效性 (e.g. 已知随机变量的真实分布为 `p`，可构造平均描述长度为 `H(p)` 的编码，如果使用针对分布 `q` 的编码，则在平均意义上就需要 `H(p)+D(p||q)` 比特来描述这个随机变量)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;相对熵描述的是两种概率分布之间的 "距离" (i.e. 非对称距离，指的是两种分布的差异性)。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;交叉熵可以认为是对预测分布 `q(x)` 用真实分布 `p(x)` 来进行编码所需要的信息量大小。
@@ -368,12 +375,13 @@
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;TODO：补充条件相对熵的一个性质
+</div>
 
-  <h3 class="title">平均互信息量</h3>
-
-  <h4 class="title">定义</h4>
+<h2 class="title">平均互信息量</h2>
+<div class="div_learning_post">
+  <h3 class="title">定义</h3>
   <div align="center">
-    <img src="./pic/intra_h.png" width=500px>
+    <img src="./pic/intra_h.png" width=700px>
   </div>
 
   <p>
@@ -386,6 +394,9 @@
   &nbsp;&nbsp;&nbsp;&nbsp;`I(Y;X) = H(Y) - H(Y|X) \leq H(Y)`，`H(Y|X)` 为 <def>噪声熵</def>
 
   <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以理解为：在看到输出 `Y` 后，信息的不确定性是 `H(X|Y)`，而信源的不确定性是 `H(X)`，因此通信系统的传输帮助减少的不确定性是 `H(X)-H(X|Y)`，这个数值就描述了通信系统的性能。反过来也可以理解，`H(Y)-H(Y|X)` 描述的是在看到知道信源输出以后，系统看到信宿的输出对不确定性的减少量。
+
+  <p>
   &nbsp;&nbsp;&nbsp;&nbsp;可见，有扰信道的加入只会引入对原始不确定性的衰弱，不可能引入新的信息。
 
   <p>
@@ -394,7 +405,7 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;信息量只描述信源/信宿的不确定程度，平均互信息量描述的是整个系统的通信不确定程度。
 
-  <h4 class="title">性质</h4>
+  <h3 class="title">性质</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;非负性: `I(X;Y) \ge 0`。 
 
@@ -404,15 +415,17 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;极值性: `I(X;Y) \le H(X)`, `I(X;Y) \le H(Y)`。 
 
-  <h4 class="title">多变量条件互信息量</h4>
+  <h3 class="title">多变量条件互信息量</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;`I(X;Y|Z)=H(X|Z)-H(X|Y;Z)=H(Y|Z)-H(Y|X;Z)`
 
-  <h4 class="title">多变量互信息量</h4>
+  <h3 class="title">多变量互信息量</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;
+</div>
 
-  <h3 class="title">相对熵、熵和互信息的凸性</h3>
+<h2 class="title">相对熵、熵和互信息的凸性</h2>
+<div class="div_learning_post">
   <h4 class="title">信息不等式</h4>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;为了方便后续研究传输限和压缩限的问题，我们需要要如下的不等式工具:
@@ -424,16 +437,22 @@
     <li><b>Fano 不等式</b>: 通信的本质是估计： `\hat{X}=g(Y)`。`\hat{X}` 的错误概率和条件熵 `H(X|Y)` 有关系。我们定义随机变量 `P_e=P{\hat{X} \ne X}` 代表错误概率，我们有: `H(P_e)+P_e\log(|X|-1) \ge H(X|Y)`，其中 `H(P_e)` 为判决结果是否正确的不确定度，`P_e\log(|X|-1)` 为已知发送出错之后，在剩余的 `|X|-1` 种可能结果种的不确定性的最大值 (i.e. 也即符号等概率分布的情况)。</li>
   </ul>
 
-  <h3 class="title">连续随机变量的熵</h3>
+  <h4 class="title">相对熵和熵的凸性</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO: 熵、相对熵、平均互信息的凸性
 
-  <h3 class="title">随机过程熵率</h3>
+  <h4 class="title">数据处理定理</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+</div>
+
+<h2 class="title">连续随机变量的熵</h2>
+<div class="div_learning_post">
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 
-<h2 class="title">xxx</h2>
+<h2 class="title">随机过程熵率</h2>
 <div class="div_learning_post">
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;
@@ -510,7 +529,7 @@
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
             <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
-          <li>INFORMATION_THEORY_2_CONCEPT</li>
+          <li>INFORMATION_THEORY_2_INFORMATION_AMOUNT_AND_ENTROPY</li>
         
   </ul>
 
@@ -559,10 +578,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Inhaltsverzeichnis
+          المحتويات
         </li>
         <li class="sidebar-nav-overview">
-          Übersicht
+          عام
         </li>
       </ul>
 

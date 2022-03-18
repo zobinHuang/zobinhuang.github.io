@@ -29,8 +29,8 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Development_Methods/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-01T11:07:43.060Z">
-<meta property="article:modified_time" content="2022-03-01T11:07:43.060Z">
+<meta property="article:published_time" content="2022-03-15T06:54:44.724Z">
+<meta property="article:modified_time" content="2022-03-15T06:54:44.724Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -95,7 +95,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -133,16 +133,6 @@
     <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
 
   </li>
-        <li class="menu-item menu-item-科研-(research)">
-
-    <a href="/sec_research/" rel="section"><i class="fa fa-atom fa-fw"></i>科研 (Research)</a>
-
-  </li>
-        <li class="menu-item menu-item-项目">
-
-    <a href="/sec_project/" rel="section"><i class="fa fa-user-cog fa-fw"></i>项目</a>
-
-  </li>
         <li class="menu-item menu-item-知识库">
 
     <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
@@ -153,19 +143,9 @@
     <a href="/sec_weekly/" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
 
   </li>
-        <li class="menu-item menu-item-实习与助教">
-
-    <a href="/sec_internship/" rel="section"><i class="fa fa-people-arrows fa-fw"></i>实习与助教</a>
-
-  </li>
         <li class="menu-item menu-item-进度">
 
     <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
-
-  </li>
-        <li class="menu-item menu-item-随笔">
-
-    <a href="/sec_essay/" rel="section"><i class="fa fa-mug-hot fa-fw"></i>随笔</a>
 
   </li>
         <li class="menu-item menu-item-独立音乐人">
@@ -281,23 +261,53 @@
 </div><br>
 
 <!-- Start your post here -->
-<h2 class="title">Section</h2>
+<h2 class="title">Kernel Module 的编写</h2>
 <div class="div_learning_post">
-  <desp class="title">Desp</desp>
-
-  <h3 class="title">Subsection</h3>
-  <desp class="title">Desp</desp>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Cite from <cite>sample</cite>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
 </div>
 
-<h2 class="title">Module</h2>
+<h2 class="title">内核的编译</h2>
 <div class="div_learning_post">
-  <h3 class="title">Makefile</h3>
+  <h3 class="title">获取内核源码</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以从 <a target="_blank" rel="noopener" href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/refs/tags">Linux kernel source tree</a> 上获取我们想要的内核的源码。
 
-  <figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">  </span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在机器上编译内核的时候最好选择和当前机器的内核版本一样的内核进行编译，这样会降低编译过程中的配置开销。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们首先获取内核源码，并且进行解压。我们下载的是内核的 5.13 版本。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Download Kernel Source Code</span></span><br><span class="line">(base) zobin@zobin-ubuntu-devbox:~/projects/kernel_compile$ wget https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/snapshot/linux-5.13.tar.gz</span><br><span class="line">--2022-03-15 13:40:30--  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/snapshot/linux-5.13.tar.gz</span><br><span class="line">Resolving git.kernel.org (git.kernel.org)... 139.178.84.217, 2604:1380:4641:c500::1</span><br><span class="line">Connecting to git.kernel.org (git.kernel.org)|139.178.84.217|:443... connected.</span><br><span class="line">HTTP request sent, awaiting response... 200 OK</span><br><span class="line">Length: unspecified [application/x-gzip]</span><br><span class="line">Saving to: ‘linux-5.13.tar.gz’</span><br><span class="line"></span><br><span class="line">linux-5.13.tar.gz                      [                                         &lt;=&gt;                   ] 183.73M  4.89MB/s    <span class="keyword">in</span> 44s     </span><br><span class="line"></span><br><span class="line">2022-03-15 13:41:45 (4.13 MB/s) - ‘linux-5.13.tar.gz’ saved [192652525]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Unpacked</span></span><br><span class="line">tar -xzvf linux-5.13.tar.gz </span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> ./linux-5.13</span><br></pre></td></tr></table></figure>
+  <h3 class="title">安装依赖项</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在正式启动内核编译以及相关配置工作之前，我们需要安装以下依赖项：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install flex bison kernel-package libssl-dev libelf-dev</span><br></pre></td></tr></table></figure>
+  <h3 class="title">配置</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果我们下载的内核版本和当前操作系统的内核版本保持一致，那么我们就可以重用当前系统的配置文件。我们可以将它拷贝到我们上面解压的内核源码目录中去。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Copy config file from current system</span></span><br><span class="line">cp /boot/config-5.13.0-30-generic .config</span><br></pre></td></tr></table></figure>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们可以使用如下命令进行配置操作：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make oldconfig</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们也可以使用如下命令进入菜单对构建过程进行配置：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make menuconfig</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们需要对生成的 .config 文件进行一些配置
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">scripts/config --<span class="built_in">disable</span> SYSTEM_TRUSTED_KEYS</span><br><span class="line"></span><br><span class="line"><span class="comment"># follow mistake will orcur without above command</span></span><br><span class="line"><span class="comment"># make[2]: *** No rule to make target &#x27;debian/canonical-certs.pem&#x27;, needed by &#x27;certs/x509_certificate_list&#x27;.  Stop.</span></span><br></pre></td></tr></table></figure>
+  <h3 class="title">编译</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们开始进行编译
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make-kpkg clean</span><br><span class="line">make-kpkg --initrd kernel-headers kernel_image</span><br></pre></td></tr></table></figure>
 </div>
 
 
@@ -420,10 +430,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Inhaltsverzeichnis
+          المحتويات
         </li>
         <li class="sidebar-nav-overview">
-          Übersicht
+          عام
         </li>
       </ul>
 

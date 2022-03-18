@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:type" content="website">
+<meta property="og:title" content="内核调试工具：Ftrace 的介绍和使用">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Tracing_Ftrace/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Tracing_Ftrace/pic/frame_graph_exp.svg">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Tracing_Ftrace/pic/ftrace_arch.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Tracing_Ftrace/pic/xxx.png">
+<meta property="article:published_time" content="2022-03-16T13:26:49.571Z">
+<meta property="article:modified_time" content="2022-03-16T13:26:49.571Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Tracing_Ftrace/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>内核调试工具：Ftrace 的介绍和使用 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly/" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">内核调试工具：Ftrace 的介绍和使用
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>LINUX_KERNEL_TRACING_FTRACE</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body onload="load_page()">
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Jan.30 2022</i></font></h4>
+</div>
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+<br>
+<div class="div_catalogue">
+  <div align="center">
+    <h1> 目录 </h1>
+    <p>
+    <font size="3px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_load_catalogue_alert" id="load_catalogue_alert">正在加载目录...</div>
+  <div class="div_catalogue_container" id="catalogue_container">
+  </div>
+</div><br>
+
+<!-- Start your post here -->
+<h2 class="title">何为 Trace 和 Profile?</h2>
+<div class="div_learning_post"> 
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<cite>so_profiling_and_tracing</cite>, <cite>book_system_performance</cite> 就系统性能的分析而言，可以分为两个不同的动作：<def>Profiling (分析)</def> 和 <def>Tracing (追踪)</def>。
+
+  <h3 class="title">Profiling</h3>
+  <div align="center">
+    <img src="./pic/frame_graph_exp.svg" width=600px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Profiling 可以理解为从系统中收集 (采样) 运行过程中的信息 (e.g. 比如运行时间等)，然后从中发现系统运行瓶颈等信息。如上图所示的是 <def>Frame Graph (火焰图)</def> —— 一种对 CPU Profile 结果的展示方式。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本文介绍的 Ftrace，就带有 Profiling 的功能。
+
+  <h3 class="title">Tracing</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;而 Tracing 可以理解为追踪任务运行的流程，例如我们可以使用 <code>strace</code> 来跟踪 System Call 的调用，使用 <code>tcpdump</code> 来追踪网络数据包的发送和到达等。我们可以把 Tracing 分为以下的两类:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>Static Instrumentation</def> (静态仪表): 指的是在源代码中加入的一些追踪代码，在 Linux 内核中有大量的静态仪表，用以测量磁盘 I/O, 调度事件，系统调用等，Linux 内核把这类代码称为 <def>tracepoint</def>。不仅内核，用户态程序也可以进行静态追踪，即 <def>User Statically Defined Tracing (USDT)</def>。USDT 被像 <code>libc</code> 等库用于追踪用户程序对库函数的调用。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>Dynamic Instrumentation</def> (动态仪表): 指的是在程序完成编译并开始运行以后，通过修改内存中的指令来插入 Trace 代码，以达到追踪的功能。可见，动态仪表的方式十分灵活。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本文介绍的 Ftrace，属于静态仪表类型的 Trace 工具。
+</div>
+
+<h2 class="title">Ftrace</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Ftrace 是一种内核原生的追踪工具。由 Steven Rostedt 开发 <cite>book_system_performance</cite>，并且在内核版本 2.6.27 (2008) 年的时候加入内核主线。
+
+  <div align="center">
+    <img src="./pic/ftrace_arch.png" width=600px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上所示是 Ftrace 的基本结构。当内核中有相应的事件发生时，这个信息会被 Ftrace Tracers 和 Ftrace Profilers 同时接收到。前者将相应的信息写在 Output Buffer 中，Output Buffer 中的 Trace 日志可以通过 <code>tracefs</code> 文件系统进行访问；后者将 Profiling 的信息写到 <code>trace_stat</code> 中去。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于 Ftrace 工具的能力，我们可以对内核进行如下几种探测:
+
+  <ol>
+    <li>特定内核函数被调用的频次</li>
+    <li>内核函数 <note>被调用</note> 的流程，也即 <def>调用栈</def> (function + stack)</li>
+    <li>内核函数 <note>调用</note> 的子函数的流程，也即 <def>子调用栈</def> (function graph)</li>
+    <li>由于抢占导致的高延迟路径</li>
+    <li>中断、抢占被 disabled 的时间长度</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+
+  <h3 class="title">组件</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+
+<h2 class="title">Ftrace 组件</h2>
+<div class="div_learning_post">
+  <h3 class="title">支持的 Tracer 类型</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们先进入目录 <code>/sys/kernel/debug/tracing</code> 下：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># enter directory</span></span><br><span class="line"><span class="built_in">cd</span> /sys/kernel/debug/tracing</span><br><span class="line"></span><br><span class="line"><span class="comment"># check files and directories</span></span><br><span class="line">ls -a</span><br><span class="line">.                           dyn_ftrace_total_info     max_graph_depth        set_event_pid           stack_trace_filter  tracing_cpumask</span><br><span class="line">..                          enabled_functions         options                set_ftrace_filter       synthetic_events    tracing_max_latency</span><br><span class="line">available_events            error_log                 per_cpu                set_ftrace_notrace      timestamp_mode      tracing_on</span><br><span class="line">available_filter_functions  events                    printk_formats         set_ftrace_notrace_pid  trace               tracing_thresh</span><br><span class="line">available_tracers           free_buffer               README                 set_ftrace_pid          trace_clock         uprobe_events</span><br><span class="line">buffer_percent              function_profile_enabled  saved_cmdlines         set_graph_function      trace_marker        uprobe_profile</span><br><span class="line">buffer_size_kb              hwlat_detector            saved_cmdlines_size    set_graph_notrace       trace_marker_raw</span><br><span class="line">buffer_total_size_kb        instances                 saved_tgids            snapshot                trace_options</span><br><span class="line">current_tracer              kprobe_events             set_event              stack_max_size          trace_pipe</span><br><span class="line">dynamic_events              kprobe_profile            set_event_notrace_pid  stack_trace             trace_stat</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们可以通过如下命令查看 ftrace 支持的 tracers:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># check available tracers</span></span><br><span class="line">cat available_tracers</span><br><span class="line">hwlat blk mmiotrace function_graph wakeup_dl wakeup_rt wakeup <span class="keyword">function</span> nop</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这几个 tracer 的具体功能如下:
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th>Tracer</th>
+      <th>功能</th>
+    </tr>
+    <tr>
+      <td>function</td>
+      <td>function 跟踪器，只在函数入口探测，打印函数调用</td>
+    </tr>
+    <tr>
+      <td>function_graph</td>
+      <td>function 跟踪器，在函数入口和出口探测，打印函数调用图</td>
+    </tr>
+    <tr>
+      <td>stack</td>
+      <td>stack 跟踪器，跟踪内核栈的内存占用情况</td>
+    </tr>
+    <tr>
+      <td>irqsoff，preemptoff，preemptirqsoff</td>
+      <td>调试中断和抢断造成的延时</td>
+    </tr>
+    <tr>
+      <td>wakeup，wakeup_rt，waktup_dl</td>
+      <td>调试系被唤醒到被调度的延时</td>
+    </tr>
+    <tr>
+      <td>mmiotrace</td>
+      <td>跟踪内核中的 memory mapped I/O（外设映射为内存）的访问，比如 GPU，磁盘等</td>
+    </tr>
+    <tr>
+      <td>blk，blocktrace</td>
+      <td>block 层的一些延时</td>
+    </tr>
+    <tr>
+      <td>nop</td>
+      <td>关闭所有 trace，但是 event 仍有显示</td>
+    </tr>
+  </table>
+
+  <h3 class="title">支持的跟踪的内核函数</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以在文件 <code>available_filter_functions</code> 和 <code>available_events</code> 中分别看到我们可以进行追踪的内核函数列表和事件列表，可以通过如下命令查看它们的数量:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># check number of avaliable functions</span></span><br><span class="line">cat available_filter_functions | wc -l</span><br><span class="line">51018</span><br><span class="line"></span><br><span class="line"><span class="comment"># check number of avaliable events</span></span><br><span class="line">cat available_events | wc -l</span><br><span class="line">1493</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Ftrace 支持 5W 个左右的内核函数跟踪 支持 2K 左右的内核事件跟踪。
+</div>
+
+<h2 class="title">内核跟踪实例</h2>
+<div class="div_learning_post">
+  <h3 class="title">function tracer 的基本使用</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们关闭当前可能正在运行的 tracing:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># stop current tracing</span></span><br><span class="line"><span class="built_in">echo</span> 0 &gt; tracing_on</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们下面设置我们的 tracer 为 <code>function</code>:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># set current tracer as function</span></span><br><span class="line"><span class="built_in">echo</span> <span class="keyword">function</span> &gt; current_tracer</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们短暂地打开 ftrace 的 tracing 开关:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> 1 &gt; tracing_on</span><br><span class="line"><span class="built_in">echo</span> 0 &gt; tracing_on</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们通过 <code>head -n 50 trace</code> 可以看到 ftrace 的前 50 行输出 (p.s. 查看所有 ftrace 输出可以使用 <code>cat trace</code>):
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># tracer: function</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># entries-in-buffer/entries-written: 598343/1138323   #P:24</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#                                _-----=&gt; irqs-off</span></span><br><span class="line"><span class="comment">#                               / _----=&gt; need-resched</span></span><br><span class="line"><span class="comment">#                              | / _---=&gt; hardirq/softirq</span></span><br><span class="line"><span class="comment">#                              || / _--=&gt; preempt-depth</span></span><br><span class="line"><span class="comment">#                              ||| /     delay</span></span><br><span class="line"><span class="comment">#           TASK-PID     CPU#  ||||   TIMESTAMP  FUNCTION</span></span><br><span class="line"><span class="comment">#              | |         |   ||||      |         |</span></span><br><span class="line">            bash-6715    [000] .... 24293.957359: mutex_unlock &lt;-rb_simple_write</span><br><span class="line">            bash-6715    [000] .... 24293.957360: __fsnotify_parent &lt;-vfs_write</span><br><span class="line">            bash-6715    [000] d... 24293.957361: exit_to_user_mode_prepare &lt;-syscall_exit_to_user_mode</span><br><span class="line">            bash-6715    [000] d... 24293.957361: fpregs_assert_state_consistent &lt;-exit_to_user_mode_prepare</span><br><span class="line">            bash-6715    [000] d... 24293.957362: switch_fpu_return &lt;-exit_to_user_mode_prepare</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上的输出所示，我们使用的 tracer 是 <code>function</code>，因此我们在文件 <code>trace</code> 中就看到了内核中的函数调用的关系。
+
+  <h3 class="title">使用 set_ftrace_filter 跟踪特定函数</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面我们看到了如何使用 <code>function</code> 这个 tracer 来查看内核函数调用日志的过程。这个小节我们将演示我们该如何使用 <code>function</code> 加上 <code>set_ftrace_filter</code> 过滤器的办法，来对我们要观察的函数进行过滤。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;具体配置过程如下所示，我们使用了 <code>set_ftrace_filter</code> 来设置我们观察的函数调用仅限于 <code>vfs_write</code> 函数。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># stop and clear tracing</span></span><br><span class="line"><span class="built_in">echo</span> 0 &gt; tracing_on</span><br><span class="line"><span class="built_in">echo</span> &gt; trace</span><br><span class="line"></span><br><span class="line"><span class="comment"># set tracer</span></span><br><span class="line"><span class="built_in">echo</span> <span class="keyword">function</span> &gt; current_tracer</span><br><span class="line"></span><br><span class="line"><span class="comment"># set tracing filter</span></span><br><span class="line"><span class="built_in">echo</span> vfs_write &gt; set_ftrace_filter</span><br><span class="line"></span><br><span class="line"><span class="comment"># tracing</span></span><br><span class="line"><span class="built_in">echo</span> 1 &gt; tracing_on</span><br><span class="line"><span class="built_in">echo</span> 0 &gt; tracing_on</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以观察到如下输出，可以看到，只有 <code>vfs_write</code> 被观察到了。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># tracer: function</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># entries-in-buffer/entries-written: 2450/2450   #P:24</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#                                _-----=&gt; irqs-off</span></span><br><span class="line"><span class="comment">#                               / _----=&gt; need-resched</span></span><br><span class="line"><span class="comment">#                              | / _---=&gt; hardirq/softirq</span></span><br><span class="line"><span class="comment">#                              || / _--=&gt; preempt-depth</span></span><br><span class="line"><span class="comment">#                              ||| /     delay</span></span><br><span class="line"><span class="comment">#           TASK-PID     CPU#  ||||   TIMESTAMP  FUNCTION</span></span><br><span class="line"><span class="comment">#              | |         |   ||||      |         |</span></span><br><span class="line">            bash-6715    [005] .... 25066.772817: vfs_write &lt;-ksys_write</span><br><span class="line">            node-2085    [001] .... 25066.773145: vfs_write &lt;-ksys_write</span><br><span class="line">            node-2082    [012] .... 25066.774591: vfs_write &lt;-ksys_write</span><br><span class="line">            node-2083    [012] .... 25066.774683: vfs_write &lt;-ksys_write</span><br><span class="line">            node-1881    [021] .... 25066.774726: vfs_write &lt;-ksys_write</span><br><span class="line">            sshd-45352   [016] .... 25066.774869: vfs_write &lt;-ksys_write</span><br><span class="line">            sshd-45352   [016] .... 25066.788744: vfs_write &lt;-ksys_write</span><br><span class="line">            node-45415   [003] .... 25066.788997: vfs_write &lt;-ksys_write</span><br><span class="line">            node-45416   [011] .... 25066.789175: vfs_write &lt;-ksys_write</span><br><span class="line">            node-45414   [003] .... 25066.789277: vfs_write &lt;-ksys_write</span><br><span class="line">            node-45406   [004] .... 25066.789410: vfs_write &lt;-ksys_write</span><br><span class="line">            node-45413   [002] .... 25066.790640: vfs_write &lt;-ksys_write</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同样的道理，我们可以通过在 <code>set_ftrace_notrace</code> 中设置不要追踪的内核函数列表，相当于和 <code>set_ftrace_filter</code> 反过来的功能，相当于提供了一个黑名单列表。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，在 <code>set_ftrace_filter</code> 中还支持函数名通配符的功能，比如如下所示的设置，将会匹配所有函数名中带有 <code>sched</code> 的内核函数调用。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># set filter</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;*sched*&#x27;</span> &gt; set_ftrace_filter</span><br></pre></td></tr></table></figure>
+  <h3 class="title">使用 set_ftrace_pid 跟踪特定进程</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以向 set_ftrace_pid 中写入特定的进程号，来实现对某个进程陷入内核中调用的函数进行追踪。
+
+  <h3 class="title">使用 set_ftrace_filter 的 Function Trigger</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+
+  <h3 class="title">使用 function_graph Tracer 跟踪耗时和调用关系</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本节我们尝试使用 <code>function_graph</code> 这个 Tracer 来跟踪函数内部的具体调用关系以及函数耗时。我们具体如下操作:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># turn off tracing</span></span><br><span class="line"><span class="built_in">echo</span> 0 &gt; tracing_on</span><br><span class="line"></span><br><span class="line"><span class="comment"># set tracer as function_graph</span></span><br><span class="line"><span class="built_in">echo</span> function_graph &gt; current_tracer</span><br><span class="line"></span><br><span class="line"><span class="comment"># clear ftrace filter</span></span><br><span class="line"><span class="built_in">echo</span> &gt; set_ftrace_filter</span><br><span class="line"></span><br><span class="line"><span class="comment"># set target function in set_graph_function</span></span><br><span class="line"><span class="built_in">echo</span> vfs_write &gt; set_graph_function</span><br><span class="line"></span><br><span class="line"><span class="comment"># start tracing</span></span><br><span class="line"><span class="built_in">echo</span> 1 &gt; tracing_on</span><br><span class="line"><span class="built_in">echo</span> 0 &gt; tracing_on</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以观察到如下输出:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># tracer: function_graph</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># CPU  DURATION                  FUNCTION CALLS</span></span><br><span class="line"><span class="comment"># |     |   |                     |   |   |   |</span></span><br><span class="line">1)    2.800 us    |  wake_q_add_safe();</span><br><span class="line">  1)   2.288 us    |  mutex_unlock();</span><br><span class="line">  2)               |  <span class="function"><span class="title">cpuacct_charge</span></span>() &#123;</span><br><span class="line">  3)   1.364 us    |    rcu_read_unlock_strict();</span><br><span class="line">  4)   4.684 us    |  &#125;</span><br><span class="line">  5)               |  <span class="function"><span class="title">__x64_sys_write</span></span>() &#123;</span><br><span class="line">  6)               |    <span class="function"><span class="title">ksys_write</span></span>() &#123;</span><br><span class="line">  7)               |      <span class="function"><span class="title">__fdget_pos</span></span>() &#123;</span><br><span class="line">  8)               |        <span class="function"><span class="title">__fget_light</span></span>() &#123;</span><br><span class="line">  9)               |          <span class="function"><span class="title">__fget_files</span></span>() &#123;</span><br><span class="line">  10)  0.448 us    |            rcu_read_unlock_strict();</span><br><span class="line">  11)  1.644 us    |          &#125;</span><br><span class="line">  12)  2.520 us    |        &#125;</span><br><span class="line">  13)  3.324 us    |      &#125;</span><br><span class="line">  14)              |      <span class="function"><span class="title">vfs_write</span></span>() &#123;</span><br><span class="line">  15)              |        <span class="function"><span class="title">rw_verify_area</span></span>() &#123;</span><br><span class="line">  16)              |          <span class="function"><span class="title">security_file_permission</span></span>() &#123;</span><br><span class="line">  17)              |            <span class="function"><span class="title">apparmor_file_permission</span></span>() &#123;</span><br><span class="line">  18)              |              <span class="function"><span class="title">common_file_perm</span></span>() &#123;</span><br><span class="line">  19)              |                <span class="function"><span class="title">aa_file_perm</span></span>() &#123;</span><br><span class="line">  20)  0.448 us    |                  rcu_read_unlock_strict();</span><br><span class="line">  21)  1.172 us    |                &#125;</span><br><span class="line">  22)  2.036 us    |              &#125;</span><br><span class="line">  23)  2.700 us    |            &#125;</span><br><span class="line">  24)  3.440 us    |          &#125;</span><br><span class="line">  25)  4.132 us    |        &#125;</span><br><span class="line">  26)              |        <span class="function"><span class="title">new_sync_write</span></span>() &#123;</span><br><span class="line">  27)              |          <span class="function"><span class="title">sock_write_iter</span></span>() &#123;</span><br><span class="line">  28)              |            <span class="function"><span class="title">sock_sendmsg</span></span>() &#123;</span><br><span class="line">  29)              |              <span class="function"><span class="title">security_socket_sendmsg</span></span>() &#123;</span><br><span class="line">  30)              |                <span class="function"><span class="title">apparmor_socket_sendmsg</span></span>() &#123;</span><br><span class="line">  31)  0.340 us    |                  aa_unix_msg_perm();</span><br><span class="line">  32)  1.008 us    |                &#125;</span><br><span class="line">  33)  1.744 us    |              &#125;</span><br><span class="line">  34)              |              <span class="function"><span class="title">unix_stream_sendmsg</span></span>() &#123;</span><br><span class="line">  35)              |                <span class="function"><span class="title">wait_for_unix_gc</span></span>() &#123;</span><br><span class="line">  36)              |                  <span class="function"><span class="title">__cond_resched</span></span>() &#123;</span><br><span class="line">  37)  0.472 us    |                    rcu_all_qs();</span><br><span class="line">  38)  1.120 us    |                  &#125;</span><br><span class="line">  39)  1.848 us    |                &#125;</span><br><span class="line">  40)  0.348 us    |                security_socket_getpeersec_dgram();</span><br><span class="line">  41)              |                <span class="function"><span class="title">sock_alloc_send_pskb</span></span>() &#123;</span><br><span class="line">  42)              |                  <span class="function"><span class="title">alloc_skb_with_frags</span></span>() &#123;</span><br><span class="line">  43)              |                    <span class="function"><span class="title">__alloc_skb</span></span>() &#123;</span><br><span class="line">  44)              |                      <span class="function"><span class="title">kmem_cache_alloc_node</span></span>() &#123;</span><br><span class="line">  45)              |                        <span class="function"><span class="title">__cond_resched</span></span>() &#123;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>function_graph</code> Tracer 会跟踪函数内的调用关系和函数执行时间，可以协助我们确定代码执行流程。比如一个函数内部执行了很多函数指针，不能确定到底执行的是什么函数，可以用 <code>function_graph</code> Tracer 跟踪。
+</div>
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>LINUX_KERNEL_TRACING_FTRACE</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

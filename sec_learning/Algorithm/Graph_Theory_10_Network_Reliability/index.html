@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:type" content="website">
+<meta property="og:title" content="网络的可靠性参数">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/whitney.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/whitney_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/whitney_3.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/whitney_4.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/harary_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/harary_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/harary_3.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/xxx.png">
+<meta property="article:published_time" content="2022-03-18T08:49:07.840Z">
+<meta property="article:modified_time" content="2022-03-18T08:49:07.840Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>网络的可靠性参数 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-每周大盘">
+
+    <a href="/sec_weekly/" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">网络的可靠性参数
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
+          <li>GRAPH_THEORY_10_NETWORK_RELIABILITY</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body onload="load_page()">
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Mar.16 2022</i></font></h4>
+</div>
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+<br>
+<div class="div_catalogue">
+  <div align="center">
+    <h1> 目录 </h1>
+    <p>
+    <font size="3px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_load_catalogue_alert" id="load_catalogue_alert">正在加载目录...</div>
+  <div class="div_catalogue_container" id="catalogue_container">
+  </div>
+</div><br>
+
+<!-- Start your post here -->
+<h2 class="title">连通度</h2>
+<div class="div_learning_post">
+  <h3 class="title">点割和边割</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;给定连通图 `G`, 设 `V' \subseteq V(G)` , 若 `G−V’` 不连通, 称 `V’` 为 `G`的一个 <def>(顶)点割 (Vertex Cut)</def>，包含 `k` 个顶点的点割称为 <def>k 点割(k-cut)</def>。`G` 中点数最少的点割称为 <def>最小点割 (Minimum Vertex Cut)</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;割点是点割的一种特殊情形。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完全图一定不存在点割。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同理，给定连通图 `G`, 设 `E' \subseteq E(G)` , 若 `G−E’` 不连通, 则称 `E’` 为 `G` 的 一个 <def>边割 (Edge Cut)</def>，包含 `k` 条边的边割称为 <def>k 边割 (k-edge Cut)</def>。`G` 中包含边数最少的边割称为 <def>最小边割 (Minimum Edge Cut)</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;与点割不同，非平凡连通图一定存在边割。
+
+  <h3 class="title">点连通度和边连通度</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 `G` 中, 若存在点割, 则称 `G` 的最小点割的顶点数为 `G` 的 <def>(点)连通度 (Connectivity)</def>, 记为 `\kappa(G)`, 简记为 `\kappa`。若不存在点割 (i.e. 完全图)，则称 `n(G)−1` 为其 <def>(点)连通度</def> (无点割，使得剩余图为孤立点时需删去的顶点数)。若 `G` 不连通, 则 `\kappa(G)=0`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 `G` 中, 最小边割所含边数称为 `G` 的 <def>边连通度 (Edge Connectivity)</def>，边连通度记为 `\lamda(G)`。若 `G` 不连通或 `G` 是平凡图,则定义 `\lamda(G)=0`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 `G` 中, 若 `\kappa(G) \ge k`, 称 `G` 是 <def>`k` 连通的 (k-connected)</def>；若 `\lamda(G) \ge k`, 称 `G` 是 <def>`k` 边连通的 (k-edge-connected)</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;确定一个图 `G`是否 `k` (边)连通的思路：找是否存在一个 <note>点(边)割</note> 小于 `k` 个点(条边)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;给出定理:
+
+  <div align="center" class="div_learning_post_border">
+  对图G的任意一个顶点v和一条边e, 有关系式: `\kappa(G)−1 \le \kappa(G−v)`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们给出证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;[1] 若 `G-v` 不存在点割，则 `\kappa(G-v) = n(G-v)-1 = n-1-1 = n-2`。由于有 `\kappa(G) \le n-1`，故有 `\kappa(G-v)+1 = n-1 \ge \kappa(G)`，也即 `\kappa(G)−1 \le \kappa(G−v)`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;[2] 若 `G-v` 存在点割，则在 `G-v` 中可以找到一个最小点割，记为 `V_{min}`，故 `G-v-V_{min}` 不连通，也即 `G-V_{min} \cup {v}` 不连通，则 `V_{min} \cup {v}` 是 `G` 的一个点割。由于 `V_{min} \cup {v}` 的大小不会小于最小点割，故 `\kappa(G) \le |V_{min} \cup {v}| = |V_{min}| +|{v}| = kappa(G-v) + 1`。
+
+  <h3 class="title">Whitney 定理</h3>
+
+  <div align="center" class="div_learning_post_border">
+  `\kappa(G) \le \lamda(G) le \delta(G)`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们给出证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;先证: `\lamda(G) \leq \delta(G)`: 找到图中的 `d(v)=\delta`，删去这个点关联的所有边，则这些边就组成了一个边割。
+
+  <div align="center">
+    <img src="./pic/whitney.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;再证 `\kappa(G) \le \lamda(G)`: 设图的最小边割为 `[S,\bar{S}]`。容易证明 `G-[S,\bar{S}]` 一定包含两个分支，否则 `[S,\bar{S}]` 不是最小边割。我们记 `\lamda(G) = [S,\bar{S}]`。然后我们分两种情形:
+
+  <div align="center">
+    <img src="./pic/whitney_2.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，考虑 `S` 中的点和 `\bar{S}` 中的点均连接的情况，则有 `\lamda(G) = |[S,\bar{S}]| = |S|\cdot|\bar{S}|`。由于 `|S|+|\bar{S}|=n`，故 `\lamda(G) = |[S,\bar{S}]| = |S|\cdot|\bar{S}| \ge (n-1)\cdot1 = n-1 \ge \kappa(G)`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后考虑 `S` 中的点和 `\bar{S}` 中的点不全相邻的情况。取 `x\inS,y\in\bar{S}` 且 `x` 与 `y` 不相邻的情况。
+
+  <div align="center">
+    <img src="./pic/whitney_3.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;令 `T = {v|x \leftrightarrow v, 且 v\in\bar{S}} \cup {u|u \ne x, u \in S 且 u 在 \bar{S} 中有邻点}`，如上图所示。所以，在图 `G` 中任意一条 `x`, `y` 路必然经过 `T` 中一些点，所以 `T` 为 `G` 的一个点割。在 `G` 中取如下边集:
+
+  <div align="center">
+  `E_1 = {xv|v\in\bar{S}} \cup {从 T \cap S 每个顶点取一条到 \bar{S} 的边}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面的边集如下图所示:
+
+  <div align="center">
+    <img src="./pic/whitney_4.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;则我们可以得到: `|E_1|=|T|`，因此 `\lamda(G) = |[S,\bar{S}]| \ge |E_1| = |T| \ge \kappa(G)`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;实际上，Chartrand 和 Harary 在 1968 年证明了：
+
+  <div align="center" class="div_learning_post_border">
+  对任意正整数 `0 < a \le b \le c`，都存在图 `G`，使得 `\kappa(G)=a`, `\lamda(G)=b`, `\delta(G)=c`。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;作图方法待补充。
+
+  <h3 class="title">用于计算边连通度的定理</h3>
+  <div align="center" class="div_learning_post_border">
+  <b>求边连通度</b>: 令 `S` 是图 `G` 的一个非空顶点集, 则: `|[S,\bar{S}]| = \sum_{v\inS}d(v) - 2E(G[S])`
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明过程实际上非常简单: `G[S]` 中的一条边对 `\sum_{v\inS}d(v)` 贡献为 2，而 `[S,\bar{S}]` 中的边仅贡献 1，因此由握手定理可以得到:
+
+  <div align="center" style="margin-bottom:15px;">
+    `\sum_{v\inS}d(v) = |[S,\bar{S}]| + 2E(G[S])`
+  </div>
+
+  <div align="center" class="div_learning_post_border">
+  <b>求点连通度</b>: 设 `G` 是 `(n,m)` 连通图，则: `\kappa(G) \le \floor{\frac{2m}{n}}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们给出证明: 由握手定理可得，`2m = \sum_{v \in V(G)}d(v) \ge n \cdot \delta(G) \ge n \cdot \kappa(G)`，因此 `\kappa(G) \le \floor{\frac{2m}{n}}`。
+
+  <h3 class="title">哈拉里图</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;哈拉里证明了上述定理中取等号的情况，也即一定存在一个 `(n,m)` 图 `G`，使得 `\kappa(G) = \floor{\frac{2m}{n}}` 成立。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由 Whitney 定理 `\kappa(G) \le \lamda(G)` 可知，连通度为 `k` 的图至少包含 `\ceil{\frac{n(G) \cdot \lamda(G)}{2}} \ge \ceil{\frac{n(G) \cdot \kappa(G)}{2}}` 条边。如果上述定理取等号，则就正好找到了一个连通度为 `k` 且边数正好等于 `\ceil{\frac{n(G) \cdot \kappa(G)}{2}}` 的图。我们把这种图称为 <def>哈拉里图 (Harary Graph)</def>，记为 `H_{k,n}`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;哈拉里图的物理意义是：当通讯网络线路昂贵时, 用最少的边使得网络达到可能的最大连通度(可靠性)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们分情况介绍哈拉里图的作图方法。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;若连通度 `k` 和图的阶数 `n` 都是偶数，我们表示为 `H_{2r,n}`，则我们给每个顶点进行标号，得到 `V(H)={0,1,2,...,n-1}`，然后我们作边的策略是：`E(H)={ij||i-j| \leq r}`，亦即每个顶点都与其最近的 `r` 个顶点连边，举例如下 (i.e. `H_{4,8}`):
+
+  <div align="center">
+    <img src="./pic/harary_1.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;若连通度 `k` 是奇数，图的阶数 `n` 是偶数，我们表示为 `H_{2r+1,n}`，则我们给每个顶点进行标号，得到 `V(H)={0,1,2,...,n-1}`，然后我们作边的策略是：先作 `H_{2r,n}`，然后对 `i` 与 `i + \frac{n}{2}` (`0 \le i < \frac{n}{2}`) 进行连线，也即首先每个顶点都与其最近的 r 个顶点连边, 然后再加上 对角顶点间的连边。举例如下 (i.e. `H_{5,8}`):
+
+  <div align="center">
+    <img src="./pic/harary_2.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;若连通度 `k` 和图的阶数 `n` 都是奇数，我们表示为 `H_{2r+1,n}`。先作 `H_{2r,n}`，然后对 `i` 与 `i+\frac{n-1}{2}` (`0 \le i \le \frac{n−1}{2}`) 进行连线。举例如下 (i.e. `H_{5,9}`):
+
+  <div align="center">
+    <img src="./pic/harary_3.png" width=300px>
+  </div>
+
+  <h3 class="title">连通度和图的度的关系</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+
+  <div align="center" class="div_learning_post_border">
+  设 `G` 是 `(n,m)` 简单图，若 `\delta(G) > \floor{\frac{n}{2}}`，则 `G` 连通，且有 `\lamda(G) = \delta(G)`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO: 第一部分的证明
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;使用反证法证明第二部分: TODO
+
+  <div align="center" class="div_learning_post_border">
+  设 `G` 是 `(n,m)` 简单图，若对于任意正整数 `k`，有 `\delta(G) \ge \frac{n+k-2}{2}`，则 `G` 是 `k` 连通的
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+</div>
+
+
+<h2 class="title">描述连通度的其它参数</h2>
+<div class="div_learning_post">
+  <h3 class="title">坚韧度</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;用 `C(G)` 定义为图 `G` 的全体点割构成的集合 (i.e. 其实是一个集族，每一个成员是一个集合)，非平凡非完全图的坚韧度记作 `\tau(G)`，定义如下:
+
+  <div align="center" style="margin-bottom: 15px;">
+  `\tau(G) = min{\frac{|S|}{\omega(G-S)}}`，其中 `S\inC(G)`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;简单理解：`|S|` 是删除的点割，`\omega(G-S)` 是删除点割后出现的分支数，二者的比值越大，则说明删除了点割后对图的破坏性更小，图的坚韧度越高，反之亦然。
+</div>
+
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
+          <li>GRAPH_THEORY_10_NETWORK_RELIABILITY</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
