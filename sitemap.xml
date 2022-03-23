@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.zobinhuang.com:10082/sec_about/index.html</loc>
+    
+    <lastmod>2022-03-23</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_2_Information_Amount_And_Entropy/index.html</loc>
     
     <lastmod>2022-03-21</lastmod>
@@ -320,13 +327,6 @@
     <loc>http://www.zobinhuang.com:10082/sec_learning/template_post/index.html</loc>
     
     <lastmod>2022-03-05</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_about/index.html</loc>
-    
-    <lastmod>2022-03-03</lastmod>
     
   </url>
   
