@@ -30,8 +30,8 @@
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_2_Information_Amount_And_Entropy/pic/intra_h.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_2_Information_Amount_And_Entropy/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-10T12:50:03.173Z">
-<meta property="article:modified_time" content="2022-03-10T12:50:03.173Z">
+<meta property="article:published_time" content="2022-03-21T12:36:09.220Z">
+<meta property="article:modified_time" content="2022-03-21T12:36:09.220Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -359,7 +359,7 @@
 
   <h3 class="title">相对熵和交叉熵</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;两个概率分布为 `P(X)` 和 `Q(X)` 的随机变量的 <def>相对熵</def> 为: `D(P||Q) = \sum_{x\inX}p(x)\log\frac{p(x)}{Q(x)} = H(p,q) - H(p)`，其中 `H(p,q)` 为 <def>交叉熵</def>，定义为 `H(p,q)=\sum_xp(x)\logfrac{1}{q(x)}`。相对熵度量为当真实分布为 `P` 而假定分布为 `Q`时的无效性 (e.g. 已知随机变量的真实分布为 `p`，可构造平均描述长度为 `H(p)` 的编码，如果使用针对分布 `q` 的编码，则在平均意义上就需要 `H(p)+D(p||q)` 比特来描述这个随机变量)。
+  &nbsp;&nbsp;&nbsp;&nbsp;两个概率分布为 `P(X)` 和 `Q(X)` 的随机变量的 <def>相对熵</def> 为: `D`(`P`||`Q`) = `\sum_{x\inX}p(x)\log\frac{p(x)}{Q(x)} = H(p,q) - H(p)`，其中 `H(p,q)` 为 <def>交叉熵</def>，定义为 `H(p,q)=\sum_xp(x)\logfrac{1}{q(x)}`。相对熵度量为当真实分布为 `P` 而假定分布为 `Q`时的无效性 (e.g. 已知随机变量的真实分布为 `p`，可构造平均描述长度为 `H(p)` 的编码，如果使用针对分布 `q` 的编码，则在平均意义上就需要 `H(p)+D(p||q)` 比特来描述这个随机变量)。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;相对熵描述的是两种概率分布之间的 "距离" (i.e. 非对称距离，指的是两种分布的差异性)。

@@ -22,22 +22,15 @@
 
   <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:type" content="website">
-<meta property="og:title" content="NeuGraph —— 一种针对大型图数据的并行的深度神经网络框架">
-<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/Graph_Neural_Network_System_ATC_19_NeuGraph/index.html">
+<meta property="og:title" content="GNNAdvisor —— 一个针对 GNN 在 GPU 上加速训练的自适应的和高效的运行时系统">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/Graph_Neural_Network_System_OSDI_21_GNNAdvisor/index.html">
 <meta property="og:site_name" content="Zobin">
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/Graph_Neural_Network_System_ATC_19_NeuGraph/pic/saga_nn.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/Graph_Neural_Network_System_ATC_19_NeuGraph/pic/trunk.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/Graph_Neural_Network_System_ATC_19_NeuGraph/pic/dataflow_graph.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/Graph_Neural_Network_System_ATC_19_NeuGraph/pic/pipeline.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/Graph_Neural_Network_System_ATC_19_NeuGraph/pic/re_ordered.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/Graph_Neural_Network_System_ATC_19_NeuGraph/pic/multi_gpu.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/Graph_Neural_Network_System_ATC_19_NeuGraph/pic/chain.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/Graph_Neural_Network_System_ATC_19_NeuGraph/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-19T05:22:08.861Z">
-<meta property="article:modified_time" content="2022-03-19T05:22:08.861Z">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/Graph_Neural_Network_System_OSDI_21_GNNAdvisor/pic/xxx.png">
+<meta property="article:published_time" content="2022-03-19T14:08:24.958Z">
+<meta property="article:modified_time" content="2022-03-19T14:08:24.958Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -47,7 +40,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 
-<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/Graph_Neural_Network_System_ATC_19_NeuGraph/">
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_Cloud_Network/Graph_Neural_Network_System_OSDI_21_GNNAdvisor/">
 
 
 <script id="page-configurations">
@@ -60,7 +53,7 @@
   };
 </script>
 
-  <title>NeuGraph —— 一种针对大型图数据的并行的深度神经网络框架 | Zobin
+  <title>GNNAdvisor —— 一个针对 GNN 在 GPU 上加速训练的自适应的和高效的运行时系统 | Zobin
 </title>
   
 
@@ -190,7 +183,7 @@
     <div class="post-block" lang="cn">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">NeuGraph —— 一种针对大型图数据的并行的深度神经网络框架
+<h1 class="post-title" itemprop="name headline">GNNAdvisor —— 一个针对 GNN 在 GPU 上加速训练的自适应的和高效的运行时系统
 </h1>
 
 <div class="post-meta">
@@ -199,7 +192,7 @@
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
             <li><a href="/sec_learning/Tech_Cloud_Network/">TECH_CLOUD_NETWORK</a></li>
-          <li>GRAPH_NEURAL_NETWORK_SYSTEM_ATC_19_NEUGRAPH</li>
+          <li>GRAPH_NEURAL_NETWORK_SYSTEM_OSDI_21_GNNADVISOR</li>
         
   </ul>
 
@@ -262,7 +255,7 @@
 <body onload="load_page()">
 
 <div align="center" class="div_indicate_source">
-  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Mar.18 2022</i></font></h4>
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Mar.19 2022</i></font></h4>
 </div>
 <div class="div_licence">
   <br>
@@ -287,190 +280,70 @@
 
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;本篇文章是对发表在 ATC'19 的论文「NeuGraph: Parallel Deep Neural Network Computation on Large Graphs」 <cite>neugraph</cite> 的阅读和总结。
+  &nbsp;&nbsp;&nbsp;&nbsp;本篇文章是对发表在 OSDI'21 的论文「GNNAdvisor: An Adaptive and Efficient Runtime System for GNN Acceleration on GPUs」<cite>gnnadvisor</cite> 的阅读和总结。
 </div>
 
 <!-- Start your post here -->
 <h2 class="title">Motivation</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;GNN 的训练可以分为两个过程: <def>Graph Operations</def> 和 <def>Tensor Workload</def>，前者是 Memory-intensive 的，因此更适合在 CPU 上进行; 而后者是 Compute-intensive 的，因此更适合在 GPU 上被运行。
+  &nbsp;&nbsp;&nbsp;&nbsp;常见地，GNN 系统相关的论文都喜欢从 Graph Processing System 和基于常见 DL 框架的系统两个角度进行 Motivation 的分析。这篇文章也是，具体如下。
+
+  <h3 class="title">Graph Processing System</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于现有的 Graph Processing System 出发:
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;现有的 DL 框架 ( e.g. TensorFlow <cite>tensorflow</cite>, PyTorch <cite>pytorch</cite>, MXNet <cite>mxnet</cite>, CNTK <cite>cntk</cite> ) 是针对传统数据集的 DNN 的训练设计的，也即 Tensor Workload，对 GNN 训练算法中 Memory-Intensive 的 Graph Operation 并没有很好的支持，本质是数据集类型的不同，以及训练数据规模的不同；而现有的 Graph Processing System ( e.g. PowerLyra <cite>powerlyra</cite>, PowerGraph <cite>powergraph</cite>, <cite>distributed_graphlab</cite>, <cite>pregel</cite>, <cite>tux_2</cite> ) 可以非常原生直观的运行 Graph Operations，但是它们并不能表示神经网络相关的运算。
+  &nbsp;&nbsp;&nbsp;&nbsp;首先它们的重点在于对传统的图算法的 Optimization，例如针对 BFS 拥有的动态的 Frontier 集合 (i.e. Active Neignbor)，因此就有像 Push-pull Traversal 和 Frontier Filtering 等优化，而 GNN 所依赖的底层图结构与图算法所考虑的底层结构不同，它考虑的是一个节点的所有 Neighbor，因此传统系统的算法优化在 GNN 上是无效的，甚至是有负优化作用的。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;这篇文章基于 Dataflow-based 的 DL 训练系统设计了一个 GNN 的训练框架。
+  &nbsp;&nbsp;&nbsp;&nbsp;其次，传统的 Graph Processing System 中每个 Vertex 只会有一个标量的属性，而在 GNN 中每个 Vertex 有一个 Embedding 的向量属性。基于 Embedding 的向量属性可能会很大，因此底层系统需要就此进行优化。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后，传统的 Graph Processing System 中并没有对 NN 提供支持，这使得在 Update 阶段的前向传播和复杂的反向梯度传播过程在传统系统上是需要重新实现的。因此本文的工作并没有基于 Graph Processing System 来重新设计系统，而是基于 Deep Learning Framework (i.e. Pytorch) 出发进行系统设计。
+
+  <h3 class="title">Deep Learning Framework</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现有的 DL 框架对欧拉数据集提供了很好的训练和推理支持，它支持多种线性的和卷积的 Operatores，但是基于这些 DL 框架，实现将 NN 计算在图数据集 (i.e. 非欧拉数据集) 上的扩展会有如下挑战:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;之前的基于 DL 框架扩展的 GNN 处理系统 (NN-extended GNN computing platform) 的出发点都是面向可编程性和通用性，提供了一个很好的前端编程支持，但是在后端的性能优化上存在欠缺。比如 Pytorch-Geometric (PyG) <cite>pyg</cite> 使用了基于 CUDA 实现的 torch-scatter 库来支持 Graph Aggregation Operations，这个库的可扩展性是不够的，因为它使用了过多的高开销的原子操作来支持 Vertex Embedding 的 Propagation。DGL <cite>dgl</cite> 也有同样的扩展性问题。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;并且，上述系统的 Computation Kernels 都是写死的，GNN Model 编程人员在外部调用这些 Computation Kernels，而不允许他们基于已知的 GNN 模型结构、GPU 硬件和图的参数对这些 Kernel 进行定制。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，在 GNN 的训练过程中，与性能相关的关键信息是在运行起来 (i.e. Runtime) 之后才能获取的，之前的工作没有进行 Runtime Adative 的设计。
+</div>
+
+<h2 class="title">对 GNN Input Information 的分析</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于文章 argue 的一个重点就是要基于 GNN 的输入数据来进行 System Optimization，因此文章对 GNN 的输入进行了分析，分为两个方面: GNN Model 和 Graph 本身。下面分别进行阐述
+
+  <h3 class="title">GNN Model</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;文章认为，对于不同的 GNN Model 来说，它们在 Update 阶段的模型大同小异，而在 Aggregation 阶段则显现出区别，所以文章重点对不同模型的 Aggregation 阶段进行了分析。主要可以分为两类。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;只使用邻居 Vertex 的 Embeddings 进行汇聚: 基于这一类的 Aggregation 模型，常见优化方法是: 在每一轮的 Update 阶段减少 Vertex Embedding 的维度，以减少在下一轮 Aggregation 阶段需要传输的数据。在这种优化条件下，强调 Memory Locality 是有意义的，因为 Embadding 变小了，可以被缓存在 GPU Cache 中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;使用邻居 Vertex 的 Embeddings，以及 Edge Vector、Edge Weight 等进行汇聚: 基于这一类的 Aggregation 模型，由于计算 Edge Vector 需要使用全维度的 Vertex Embeddings，所以没有办法向上面那样实现逐层的 Vertex Embedding 压缩。这样一来，由于 Embedding 的大小太大，所以强调 Memory Locality 的意义不大。在这种情况下则更应该关注计算的并行性。
+
+  <h3 class="title">Graph Information</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
 </div>
 
 <h2 class="title">Design</h2>
 <div class="div_learning_post">
-  <h3 class="title">编程框架</h3>
-
-  <div align="center">
-    <img src="./pic/saga_nn.png" width=600px>
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;文章首先提出了一种编程框架: <def>Scatter-ApplyEdge-Gather-ApplyVertex with Neural Network (SAGA-NN)</def>，流程如上图所示。SAGA-NN 把前向传播计算分为了四个步骤:
-
-  <ol>
-    <li><b>Scatter</b>: 在各条 edge 上，收集首尾邻接的 vertex 的 data <code>vertex</code>，结合 edge 自身的数据，组合形成 edge 的 data <code>edge</code>。这个阶段收集的数据主要是为了下一个阶段在各个 <code>edge</code> 上进行神经网络计算。</li>
-    <li><b>ApplyEdge</b>: 基于上一步收集的 <code>edge</code> 数据，进行并行的神经网络计算，以在各条 edge 上生成 Tensor 数据作为输出。注意这个阶段是一个 <def>User Defined Function (UDF)</def>。</li>
-    <li><b>Gather</b>: 这个阶段将上一阶段在各条 edge 上产生的 Tensor 数据汇聚到 Destination Vertex 上，并且在 Vertex 上进行像 max, sum 等汇聚操作，形成 Vertex Data。</li>
-    <li><b>ApplyVertex</b>: 基于在 Vertex 上的汇聚结果 —— Vertex Data，对其进行并行的神经网络计算，最终产生代表各个 Vertex 的 Tensor 数据作为输出。这个阶段同样是一个 UDF。</li>
-  </ol>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于每一个 Destination Vertex，上述的前向传播过程都会进行一次，文章称之为一个 <def>Destination Vertex Interval</def>，我下面简写为 DVI。
-
-  <h3 class="title">系统</h3>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在系统设计上，这篇文章基于 DataFlow-based 的 DL 框架 (TensorFlow)，在其上做了如下三层设计。
-
-  <ol>
-    <li>Graph-aware Dataflow Translation</li>
-    <li>Streaming Processing out of GPU Core</li>
-    <li>Parallel Multi-GPU Processing</li>
-    <li>Graph Propagation Engine</li>
-  </ol>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面我们分点进行讨论。
-
-  <h4 class="title">Graph-aware Dataflow Translation</h4>
-
-  <div align="center">
-    <img src="./pic/trunk.png" width=600px>
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;由于图本身的结构数据以及训练过程中的 Feature 数据都有可能很庞大，为了在大图的情况下仍然能够在内存量有限的 GPU 上进行训练，系统将图数据进行了 Partition。简单理解如上图所示，首先将所有的 Vertex 切成了 `P` 份 `{V_0, V_1, ...}`，每一份我们称为一个 <def>Vertex Chunk</def>，每一个 Vertex Chunk 中包括了若干个 Vertex 的数据。这样一来邻接矩阵就被切为了 `P \times P` 份 `{E_{0,0}, E_{0,1}, ...}`，邻接矩阵的每一份我们称为一个 <def>Edge Chunk</def>，每一个 Edge Chunk `E_{i,j}` 中包含了以 `V_i` 为起点，以 `V_j` 为终点的所有 Edge 的信息。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;基于这样的区分方案，在每一次前向传播中，我们输入的仅仅是 Trunks 而不是完整的图数据。我们以训练 `V_0^l` 的下一状态 `V_0^{l+1}` 为例展开说明。为了说明的简单，我们假设 `V_0` 代表的就是一个顶点。在实际中，`V_0` 代表的是若干顶点，若干顶点无非就是在各个顶点上分别执行如下步骤。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们首先拿到 `V_0` 和 `E_{0,0}` 这两个 Trunk (上图的 ① 号黄格子)，进行 Scatter, ApplyEdge, Gather 的操作:
-
-  <pre id="trunk-forward-1" style="display:hidden;">
-    \begin{algorithm}
-    \caption{Trunk Forward Computation Based on Edge Trunk $E_{0,0}$}
-    \begin{algorithmic}
-    \COMMENT{初始化参数}
-    \STATE accum = Initailized Value
-    \STATE set Gather.accumulator = sum
-    \STATE \texttt{\\}
-
-    \COMMENT{基于 $E_{0,0}$ 的信息收集}
-    \PROCEDURE{FirstForward}{$V_0^l$}
-      \STATE params $p = [W_{H}^{l},W_{C}^{l},W^{l}]$
-      \STATE edge$^l$ = Scatter($V_0^l$, $E_{0,0}$)
-      \STATE acc = ApplyEdge(edge$^l$)
-      \STATE accum = Gather(acc, accum)
-    \ENDPROCEDURE
-    \end{algorithmic}
-    \end{algorithm}
-  </pre>
-  <script>
-      pseudocode.renderElement(document.getElementById("trunk-forward-1"));
-  </script>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;可以理解为，针对 `V_0^l`，我们先处理了 `E_{0,0}` 中的边，并且把 Vertex Data 的中间计算结果 Vertex Data Trunk 保存在了 <code>accum</code> 中。随后，我们加入其它的边，向模型中输入了 `V_0`, `V_1` 和 `E_{1,0}` 这三个 Trunk (上图的 ② 号黄格子)，进行 Scatter, ApplyEdge, Gather 的操作:
-
-  <pre id="trunk-forward-2" style="display:hidden;">
-    \begin{algorithm}
-    \caption{Trunk Forward Computation Based on Edge Trunk $E_{1,0}$}
-    \begin{algorithmic}
-    \COMMENT{基于 $E_{1,0}$ 的信息收集}
-    \PROCEDURE{SecondForward}{$V_0^l$, $V_1^l$}
-      \STATE params $p = [W_{H}^{l},W_{C}^{l},W^{l}]$
-      \STATE edge$^l$ = Scatter($V_0^l$, $E_{1,0}$)
-      \STATE acc = ApplyEdge(edge$^l$)
-      \STATE accum = Gather(acc, accum)
-    \ENDPROCEDURE
-    \end{algorithmic}
-    \end{algorithm}
-  </pre>
-  <script>
-      pseudocode.renderElement(document.getElementById("trunk-forward-2"));
-  </script>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;以此类推，直到加入所有的边。最后当我们输入完 `E_{0,0}`, `E_{1,0}`, `...`, `E_{n,0}` 后 (i.e. 上图中的第一列)，我们在 <code>accum</code> 上就能够拿到 `V_0^l` 的 Gather 结果 (p.s. Gather 是一个可累计的计算)，代表了 `V_0^l` 的 Vertex Data。我们把这个结果送入 ApplyVertex 步骤，就能得到 `V_0^{l+1}` 前向传播的最终结果。上面的流程可以使用下图进行表示。
-
-  <div align="center">
-    <img src="./pic/dataflow_graph.png" width=600px>
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在上面的前向传播过程中，我们使用了 column-based 的 Edge Trunk 的输入方式，理由已经很清楚：我们可以暂存每一次的 Vertex Data 的中间计算结果，并且每次都可以在 Gather 阶段进行累计，这样可以节省大量的 GPU 内存资源。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;而对于反向传播，很明显梯度数据是需要从 Destination Vertex 反向传给 Source Vertex 的，因此 row-based 的输入方案则更加合适，理由是 Vertex Gradient Data Trunk 可以在 GPU 内存中被重用。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;另外，分割的粒度大小 `P` 的选择也是有讲究的。对于一个 Vertex Data Trunk 的前向传播，一共需要访问 `P` 次 Source Vertex Data，因此更小的 `P` 代表了更少的 Host-GPU 内存拷贝。`P` 的选择应该使得 Vertex Data Trunks 能够 fit in GPU 的内存空间。
-
-  <h4 class="title">Streaming Processing out of GPU Core</h4>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;上面的 Trunk 设计解决了 GPU 内存空间限制的问题。而系统还存在着另一个瓶颈 —— CPU 和 GPU 之间的数据拷贝。针对这个问题，文章提出了两个思路: Selective Scheduling 和 Pipeline Scheduling，我们下面分别阐述。
-
-  <div class="div_learning_post_border">
-  <div align="center"><h3>Selective Scheduling</h3></div>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;利用现实的图数据存在内在的稀疏性 (sparsity)，在计算 Edge Trunk Data 的时候，可以只选择部分的 Vertex 进行计算，而非一整个 Vertex Trunk，因为其中包括了一部分的稀疏性 (i.e. 两点之间没有连接)。因此 NeuGraph 在 CPU 设置了一个过滤器来实现 Vertex Trunk 拷贝的过滤，以减少主存和 GPU Memory 之间的数据传输数量。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;另外，注意到 Random 的 Graph Partition 会使得 Selective Scheduling 的效率下降，因此文章又提出来说可以基于 Kernighan–Lin 算法 <cite>kl</cite> 来使得图数据的 Partition 能够尽量保证邻接的点尽量被分配到同一个 Vertex Trunk 里面去，这样最终呈现出来在邻接矩阵中就是一个类似于对角矩阵的形式，Selective Scheduling 的工作量就不需要太多。
-  </div>
-
-  <div class="div_learning_post_border">
-  <div align="center"><h3>Pipeline Scheduling</h3></div>
-
-  <div align="center">
-    <img src="./pic/pipeline.png" width=300px>
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;流水线化的设计思路在 NeuGraph 上也可以被应用: CPU-GPU Memory Copy 和 GPU Computing 是可以 overlap 的，并且如果 Trunk 的规模越小，则 overlap 的比例就可能更高。这与我们上面讨论过的 Partition 个数 `P` 越小越能减小拷贝 I/O 的说法似乎相违背。文章解决这个 dilemma 的思路是：对于 `P` 的选择，还是基于能小就小的原则进行设计。在此基础上，Vertex 和 Edge Trunk 会被 row-based 地横向再进行 Partition，形成 Sub-trunk。Sub-trunk 和 Sub-trunk 之间的拷贝和运算流水化的运行。具体如上图所示。
-
-  <div align="center">
-    <img src="./pic/re_ordered.png" width=500px>
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;注意到由于各个 Sub-Trunk 的稀疏性不同，因此它们分别的拷贝时间和计算时间也有所不同。因此合理地动态地调整它们的拷贝和计算顺序可以缩短运行时间。NeuGraph 利用了 GNN 内在的循环性质，通过在前几轮的运算中 profiled 各个 Sub-trunk 的拷贝和运行时间，从而在后续的运算迭代中调整出更加合理的流水顺序，从而加快运算。
-  </div>
-
-  <h4 class="title">Parallel Multi-GPU Processing</h4>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;上面所阐述的基于 Partition 的训练方案，可以很直接地拓展到多 GPU 的并行计算模式下: 各个 GPU 分别训练一列 Trunk，以更新 `V_{i}` 以及相关的各条 Edge 的参数。
-
-  <div align="center">
-    <img src="./pic/multi_gpu.png" width=500px>
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在多 GPU 的并行场景下，文章认为主机的 PCIe Switch 的带宽将会成为瓶颈，因为多 GPU 都需要从内存中拉取资源，如上图所示。并且，如今 GPU 之间的 Inter-connection 带宽已经做的很高，因此文章对数据在 CPU-GPU 和 GPU 之间的流通进行了优化。
-
-  <div align="center">
-    <img src="./pic/chain.png" width=500px>
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;基本的流程如上所示，一目了然。基本的逻辑就是，在同一个 PCIe Switch 下的若干 GPU 会被视为是一个大的 Virtual GPU，Virtual GPU 对于同一个 Vertex Trunk 只会从内存中拉取一次，然后在 Virtual GPU 下的多个真实 GPU 中进行流水线重用。
-
-  <h4 class="title">Graph Propagation Engine</h4>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在计算上，文章还做了一些优化。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;观察到在 ApplyEdge 阶段，需要进行的 Vertex Data 和 Learnable 参数 `W_C` 和 `W_H` 的矩阵乘法，由于这些 Learnable 的参数对于全图所有的 Edges 都是通用的，因此在其它的 Edge Trunk 的计算中，如果它们带有同样的 Source Vertex，这些矩阵乘法结果是可以复用的。基于上面阐述的流程，势必会产生若干重复的乘法操作。因此文章的优化方法是，把 Vertex Data 和 `W_C`/`W_H` 的乘法计算放到上一轮迭代中的最后一步 —— ApplyVertex 中去，以减少重复乘法运算的次数。
-
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;
+
+  <h3 class="title">粗粒度的 Neighbor Partitioning</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO  
 </div>
 
 <div class="div_ref" id="ref_container"></div>
@@ -567,7 +440,7 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
             <li><a href="/sec_learning/Tech_Cloud_Network/">TECH_CLOUD_NETWORK</a></li>
-          <li>GRAPH_NEURAL_NETWORK_SYSTEM_ATC_19_NEUGRAPH</li>
+          <li>GRAPH_NEURAL_NETWORK_SYSTEM_OSDI_21_GNNADVISOR</li>
         
   </ul>
 
