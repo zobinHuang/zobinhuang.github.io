@@ -29,8 +29,8 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_9_Cut_Edge_Node_And_Block/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-14T09:19:47.648Z">
-<meta property="article:modified_time" content="2022-03-14T09:19:47.648Z">
+<meta property="article:published_time" content="2022-04-01T13:49:53.703Z">
+<meta property="article:modified_time" content="2022-04-01T13:49:53.703Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -128,19 +128,14 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
 
   </li>
-        <li class="menu-item menu-item-关于">
+        <li class="menu-item menu-item-关于我">
 
-    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于我</a>
 
   </li>
         <li class="menu-item menu-item-知识库">
 
     <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
-
-  </li>
-        <li class="menu-item menu-item-每周大盘">
-
-    <a href="/sec_weekly/" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
 
   </li>
         <li class="menu-item menu-item-进度">
@@ -279,18 +274,66 @@
 </div><br>
 
 <!-- Start your post here -->
-<h2 class="title">Section</h2>
+<h2 class="title">割边及其性质</h2>
 <div class="div_learning_post">
-  <desp class="title">Desp</desp>
-
-</div>
-
-<h2 class="title">xxx</h2>
-<div class="div_learning_post">
+  <h3 class="title">割边的定义</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;首先给出定义: 边 `e` 为图 `G` 的一条 <def>割边 (Cut Edge)</def> 或 <def>桥 (Bridge)<def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;删去一条割边后，图的连通分支数恰好增大 1。
+
+  <h3 class="title">割边的性质</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面给出定理：
+
+  <div align="center" class="div_learning_post_border">
+  边 `e` 是图 `G` 的割边当且仅当 `e` 不在 `G` 的任何圈中。 
+  </div>
+
+  <div class="div_learning_post_background">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在假设 `G` 连通的条件下，首先证明必要性: 若不然，设 `e` 在图 `G` 的某圈 `C` 中，且令 `e = uv`。考虑 `P=C−e`，则 `P` 是一条 `uv` 路，下面证明 `G−e` 连通:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对任意 `x,y \in V(G−e)`，由于 `G` 连通，所以存在 `x \leftrightarrow y` 路 `Q`。若 `Q` 不含 `e`，则 `x`与 `y` 在 `G−e` 里连通; 若 `Q` 包含有 `e`，则可选择路: `x \leftrightarrow u \leftrightarrow P \leftrightarrow v \leftrightarrow y`，说明 `x` 与 `y` 在 `G−e` 里也连通。所以，若边 `e` 在 `G` 的某圈中，则 `G−e` 连通。这与 `e` 是 `G` 的割边矛盾。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后证明充分性: 若不然，假设 `e` 不是 `G` 的割边，则 `G−e` 连通，于是在 `G−e` 中存在一条 `u \leftrightarrow v` 路，显然: 该路并上边 `e` 得到 `G` 中一个包含边 `e` 的圈，这与假设矛盾。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述定理，有如下推论：
+
+  <div align="center" class="div_learning_post_border">
+  `e` 为连通图 `G` 的一条边，如果 `e` 含于 `G` 的某圈中，则 `G−e` 连通。 
+  </div>
+
+  <div class="div_learning_post_background">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;若不然，`G−e` 不连通，于是 `e` 是割边。由上面一个定理可知，`e` 不在 `G` 的任意圈中，与假设矛盾。
+  </div>
 </div>
 
+<h2 class="title">割点及其性质</h2>
+<div class="div_learning_post">
+  <h3 class="title">割点的定义</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先给出定义: 在 `G` 中，如果 `E(G)` 可以划分为两个非空子集 `E_1` 与 `E_2`，使 `G[E_1]` 和 `G[E_2]` 以点 `v` 为公共顶点，称 `v` 为 `G` 的一个 <def>分离点 (Separating Vertex)</def>。  
+</div>
+
+<h2 class="title">块及其性质</h2>
+<div class="div_learning_post">
+  <h3 class="title">割边的定义</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先给出定义: 
+</div>
 
 <div class="div_ref" id="ref_container"></div>
 

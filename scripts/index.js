@@ -1,9 +1,11 @@
 function load_mainpage(){
-    _load_weekly()
+    // _load_weekly()
 
+    /*
    _load_recent_post().then(()=>{
         document.getElementById('recent_post_loading_alert').style.display = 'none'
     })
+    */
 }
 
 async function _load_recent_post(){

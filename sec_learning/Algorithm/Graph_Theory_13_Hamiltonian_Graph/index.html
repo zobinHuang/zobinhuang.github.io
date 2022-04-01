@@ -28,9 +28,11 @@
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/close.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/closure.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-23T08:05:07.057Z">
-<meta property="article:modified_time" content="2022-03-23T08:05:07.057Z">
+<meta property="article:published_time" content="2022-03-25T09:09:33.800Z">
+<meta property="article:modified_time" content="2022-03-25T09:09:33.800Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -128,19 +130,14 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
 
   </li>
-        <li class="menu-item menu-item-关于">
+        <li class="menu-item menu-item-关于我">
 
-    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于</a>
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于我</a>
 
   </li>
         <li class="menu-item menu-item-知识库">
 
     <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
-
-  </li>
-        <li class="menu-item menu-item-每周大盘">
-
-    <a href="/sec_weekly/" rel="section"><i class="fa fa-newspaper fa-fw"></i>每周大盘</a>
 
   </li>
         <li class="menu-item menu-item-进度">
@@ -326,8 +323,9 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;图的 `H` 性判定是 `NP`-完全问题. 到目前为止, 有关的定理有 300+, 但没有一个是理想的(充分必要的)。
 
+  <h4 class="title">Dirac 定理</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面对和充分性有关的 <def>Dirac 条件</def> 进行介绍。
+  &nbsp;&nbsp;&nbsp;&nbsp;下面对和充分性有关的 <def>Dirac 定理</def> 进行介绍。
 
   <div align="center" class="div_learning_post_border">
   对于 `n \ge 3` 的简单图 `G`，如果 `G` 中有 `\delta(G) \ge \frac{n}{2}`，那么 `G` 是 `H` 图。
@@ -337,13 +335,100 @@
   设 `G` 是 `2`-连通的 `n \ge 3` 阶图，若 `G` 的每个顶点的度都不小于 `k`，则 `G` 中包含一条长度至少为 `2k` 的圈或 `H` 圈。
   </div>
 
+  <h4 class="title">Ore 定理</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Ore 对上述条件进行了优化：
+  &nbsp;&nbsp;&nbsp;&nbsp;Ore 对 Dirac 定理 进行了优化：
 
   <div align="center" class="div_learning_post_border">
   对于 `n \ge 3` 的简单图 `G`，若图 `G` 中的任意两个不相邻顶点 `u`，`v` 有: `d(u)+d(v) \ge n`，那么 `G` 是 `H` 图。
   </div>
 
+  <h4 class="title">Bondy-Chvátal 定理</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Bondy 和 Chvátal 又对 Ore 定理进行了优化，我们下面先给出一些引理和定义，然后给出 Chvátal 定理。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先给出引理：
+
+  <div align="center" class="div_learning_post_border">
+  对于简单图 `G`，若图 `G` 中，如果 `G` 中有两个不相邻顶点 `u`，`v` 有: `d(u)+d(v) \ge n` <br> 那么 `G` 是 `H` 图当且仅当 `G+uv` 是 `H` 图。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面给出一些定义。
+
+  <div align="center">
+    <img src="./pic/close.png" width=600px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 `n` 阶简单图中，若对 `d(u) + d(v) \ge n` 的任意一对顶点 `u` 与 `v`，均有 `u \leftrightarrow v`，则称 `G` 是 <def>闭图 (closed)</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;反复连接 `G` 中度和不小于 `n` 的不相邻顶点对，直到没有这样的顶点对存在为止，得到的图称作 `G` 的 <def>闭包 (closure)</def>，记作 <def>c(G)</def>。
+
+  <div align="center">
+    <img src="./pic/closure.png" width=600px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 `G` 本身是闭图，则其闭包是它本身；如果 `G` 不是闭图，则可以通过在度和大于等于 `n` 的不相邻顶点对间加边来构造 `G` 的闭包。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;不是任意图的闭包都是完全图，如 `C_5`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面有一个结论：
+
+  <div align="center" class="div_learning_post_border">
+  图 `G` 的闭包 `C(G)` 是唯一的。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面是 <def>Bondy-Chvátal 定理</def>，也称为 <def>闭包定理</def>:
+
+  <div align="center" class="div_learning_post_border">
+  图 `G` 是 `H` 图当且仅当它的闭包是 `H` 图
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上述定理的必要性显然，证明略去。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;充分性证明: TODO。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;闭包定理可以推导出 Dirac 和 Ore 定理: TODO。
+
+  <h4 class="title">度序列判定法</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在闭包定理的基础上，Chvátal 进一步得到图的 `H` 性的度序列判定法:
+
+  <div align="center" class="div_learning_post_border">
+  设简单图 `G` 的度序列是 `(d_1,d_2, …,d_n)`，其中，`d_1 \le d_2 \le … \le d_n`，并且 `n \ge 3`：若对任意的`1 \le i \le \frac{n}{2}`，有 `d_i>i` 或 `d_{n−i} \ge n−i`，则 `G` 是 `H` 图。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;等价表述是：
+
+  <div align="center" class="div_learning_post_border">
+  设简单图 `G` 的度序列是 `(d_1,d_2, …,d_n)`，其中，`d_1 \le d_2 \le … \le d_n`，并且 `n \ge 3`：若不存在 `1 \le i \le \frac{n}{2}`，使得 `d_i \le i` 或 `d_{n−i} < n−i`，则 `G` 是 `H` 图。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明思路是证明满足上述条件的 `G` 的闭包 `C(G)` 是完全图，这样 `C(G)` 就是 `H` 图，故原图即 `H` 图。我们可以使用反证法证明 `C(G)` 是一个完全图。我们假设满足上述条件的 `C(G)` 不是一个完全图，然后证明: 存在 `1 \le i \le \frac{n}{2}`，使得 `d_i \le i` 和 `d_{n-i} \le n-i` 同时成立，即与条件矛盾。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;若 `C(G)` 不是完全图:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先证明第一个成立条件。则在 `C(G)` 中存在不相邻的两点 `u` 和 `v`，使得 `d(v)+d(u) < n`。不妨设 `d(v)+d(u)` 是满足上述条件的和最大的值。再定 `d(u) \le d(v)`。那么 `1 \le d(u) < \frac{n}{2}`。设 `d(u)=i`，则 `d(v) < n-i`，也即 `d(v) \le n-1-i`，说明与 `v` 相邻的节点不超过 `n-1-i` 个邻点，故与 `i` 不相邻的节点至少有 `i` 个，而与 `i` 相邻的点中 `u` 的度最大 (i.e. `d(u)=i`)，即有 `i` 个点度不超过 `i`，故有 `d_i \le i`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后证明第二个条件成立。由于 `d(u)=i`。这说明与 `u` 邻接的点有 `i` 个，则与 `u` 不相邻的点有 `n-1-i` 个，而这些点中 `v` 的度最大，有 `d(v) < n-i`。因此我们已经找到了 `n-1-i` 个点，它们的度小于 `n-i`。再加上 `u` 自己，我们就找到了 `n-i` 个点的度小于 `n-i`，也即 `d_{n-i} < n-i`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可见，若 `C(G)` 不是完全图，`C(G)` 将违背假设条件，因此 `C(G)` 是完全图，故 `C(G)` 是 `H` 图，故 `G` 是 `H` 图。
 </div>
 
 <div class="div_ref" id="ref_container"></div>

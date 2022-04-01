@@ -44,7 +44,7 @@ function search(){
         for(let i = 0; i < books.length; i++){
             let book_meta = books[i]
 
-            console.log(`LOG: analyse book url: /sec_learning/${book_meta.book_url} for book ${book_meta.book_name}`);
+            // console.log(`LOG: analyse book url: /sec_learning/${book_meta.book_url} for book ${book_meta.book_name}`);
 
             /* 读取各个书目列表下的清单文件 */
             fetch(`/sec_learning/${book_meta.book_url}/post_index.json`)
@@ -55,13 +55,13 @@ function search(){
                 for(let j = 0; j < book.length; j++){
                     let book_content = book[j]
 
-                    console.log(`LOG:     analyse ${book_content.post_class} part`)
+                    // console.log(`LOG:     analyse ${book_content.post_class} part`)
                     
                     /* 获取归类中的各个模块 */
                     for(let k = 0 ; k < book_content.modules.length; k++){
                         let book_module = book_content.modules[k]
 
-                        console.log(`LOG:         analyse ${book_module.post_module_name} part, url: ${book_module.post_module_url_prefix}, found ${book_module.posts.length} post(s)`)
+                        // console.log(`LOG:         analyse ${book_module.post_module_name} part, url: ${book_module.post_module_url_prefix}, found ${book_module.posts.length} post(s)`)
 
                         /* match 各个 post 和想要搜索的关键词 */
                         for(let t = 0 ; t < book_module.posts.length; t++){
@@ -75,7 +75,10 @@ function search(){
                             for (let p=0 ; p < post.keyword.length; p++){
                                 let post_keyword = post.keyword[p];
                                 // IMPORTANT：搜索匹配规则，后面优化
-                                if ((keyword.toLowerCase().search(post_keyword.toLowerCase()) != -1 || post_keyword.toLowerCase().search(keyword.toLowerCase()) != -1)&& (post_keyword.length != 0)){
+                                // if ((keyword.toLowerCase().search(post_keyword.toLowerCase()) != -1 || post_keyword.toLowerCase().search(keyword.toLowerCase()) != -1) && (post_keyword.length > 0)){
+                                if ((post_keyword.toLowerCase().search(keyword.toLowerCase()) != -1) && (post_keyword.length > 0)){
+                                    console.log(`${post_keyword.toLowerCase()} and ${keyword.toLowerCase()}`)
+
                                     /* 创建搜索结果 Container */
                                     let search_entry_container = document.createElement("div");
                                     search_entry_container.setAttribute("class", "search_entry_container");
