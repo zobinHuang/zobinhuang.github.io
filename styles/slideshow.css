@@ -26,6 +26,12 @@
   font-size: 20px;
 }
 
+.videoplayer{
+  width: 85%;
+  /* margin: 0;
+  padding: 0; */
+}
+
 .slide_item date{
   background-color: rgb(124, 124, 124);
   padding: 1px 8px;

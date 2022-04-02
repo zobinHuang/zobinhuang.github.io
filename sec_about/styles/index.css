@@ -156,11 +156,21 @@ img{margin-right: 20px;}
     font-size: 16px; 
     word-spacing:0px;
     margin-bottom: 40px;
-    border: #000000 1px solid;
-    border-radius: 5px;
-    padding: 30px 30px;
-    padding-bottom: 0px;
+    /* border: #000000 1px solid;
+    border-radius: 5px; */
+    /* padding: 30px 30px; */
+    /* padding-bottom: 0px; */
     /* box-shadow: 5px 5px 5px #9b9b9b; */
+}
+
+.post_fs14_ws0 h1{
+    font-family:'Times New Roman', Times, serif;
+    font-size: 25px;
+    background-color: #acacac;
+    color: #FFFFFF;
+    margin: 10px 0px;
+    padding: 0px 20px;
+    box-shadow: 5px 5px 5px #9b9b9b;
 }
 
 .post_fs14_ws0 a{

@@ -8,6 +8,8 @@ async function load_page(){
         }
     )
     
+    _load_theorm()
+
     _load_code_segment()
 
     _load_note()
@@ -15,6 +17,43 @@ async function load_page(){
     _load_keyword()
 
     _load_citation()
+}
+
+// 处理文章中所有的定理
+async function _load_theorm(){
+    let theorm_index_list = new Array()
+    let theorm_containers = document.getElementsByClassName("theorm")
+
+    // 记录所有 theorm 的编号，并且在 theorm div 中标识 theorm 的序号
+    for(let i = 0; i < theorm_containers.length; i++){
+        // 记录编号
+        theorm_index_list[theorm_containers[i].id] = i+1
+
+        // 创建标号
+        let theorm_index = document.createElement('theorm_index')
+        theorm_index.setAttribute('name', theorm_containers[i].id)
+        theorm_index.innerHTML = `Theorm ${i+1}`
+
+        // 显示标号
+        let fc = theorm_containers[i].firstChild
+        theorm_containers[i].insertBefore(theorm_index,fc)
+    }
+
+    // 替换所有的定理
+    let theorm_refs = document.getElementsByTagName("theorm")
+    for(let i = 0; i < theorm_refs.length; i++){
+        // 创建链接
+        let theorm_link = document.createElement('a')
+        theorm_link.setAttribute('href', `#${theorm_refs[i].innerHTML}`)
+
+        // 获取 Theorm 标识号
+        let selected_theorm_index = theorm_index_list[theorm_refs[i].innerHTML]
+        theorm_link.innerHTML = `Theorm ${selected_theorm_index}`
+
+        // 塞入原先位置
+        theorm_refs[i].innerHTML = ''
+        theorm_refs[i].append(theorm_link)
+    }
 }
 
 // 点击 显示/隐藏代码段 按钮的回调函数

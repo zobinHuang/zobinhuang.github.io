@@ -9,13 +9,14 @@ img{margin-right: 20px;}
     border-radius: 10px; 
     padding: 20px 20px;
     transition: all 0.1s ease-in-out;
+    -webkit-box-shadow: 0 0 20px 10px #9c9c9c;
+    -moz-box-shadow: 0 0 20px 10px #9c9c9c;
+    box-shadow: 0 0 5px 2px #9c9c9c;
 }
 
 .div_learning:hover {
-    border-radius: 20px;
-    -webkit-box-shadow: 0 0 20px 10px #0074D9;
-    -moz-box-shadow: 0 0 20px 10px #0074D9;
-    box-shadow: 0 0 5px 2px #0074D9;
+    /* border-radius: 20px; */
+    box-shadow: 8px 8px 8px #9c9c9c;
 }
 
 .div_switch_bar_container{

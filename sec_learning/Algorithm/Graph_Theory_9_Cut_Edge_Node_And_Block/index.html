@@ -28,9 +28,16 @@
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_9_Cut_Edge_Node_And_Block/pic/seperate_vertex.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_9_Cut_Edge_Node_And_Block/pic/prove_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_9_Cut_Edge_Node_And_Block/pic/prove_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_9_Cut_Edge_Node_And_Block/pic/block.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_9_Cut_Edge_Node_And_Block/pic/prove_3.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_9_Cut_Edge_Node_And_Block/pic/prove_4.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_9_Cut_Edge_Node_And_Block/pic/bg.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_9_Cut_Edge_Node_And_Block/pic/xxx.png">
-<meta property="article:published_time" content="2022-04-01T13:49:53.703Z">
-<meta property="article:modified_time" content="2022-04-01T13:49:53.703Z">
+<meta property="article:published_time" content="2022-04-02T14:22:25.538Z">
+<meta property="article:modified_time" content="2022-04-02T14:22:25.538Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -285,13 +292,13 @@
 
   <h3 class="title">割边的性质</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面给出定理：
+  &nbsp;&nbsp;&nbsp;&nbsp;割边有如下定理：
 
-  <div align="center" class="div_learning_post_border">
+  <div class="theorm" id="cut_e_1">
   边 `e` 是图 `G` 的割边当且仅当 `e` 不在 `G` 的任何圈中。 
   </div>
 
-  <div class="div_learning_post_background">
+  <div class="theorm_prove">
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;证明:
 
@@ -308,11 +315,11 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;基于上述定理，有如下推论：
 
-  <div align="center" class="div_learning_post_border">
+  <div class="theorm" id="cut_e_2">
   `e` 为连通图 `G` 的一条边，如果 `e` 含于 `G` 的某圈中，则 `G−e` 连通。 
   </div>
 
-  <div class="div_learning_post_background">
+  <div class="theorm_prove">
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;证明:
 
@@ -324,15 +331,207 @@
 <h2 class="title">割点及其性质</h2>
 <div class="div_learning_post">
   <h3 class="title">割点的定义</h3>
+  <div align="center">
+    <img src="./pic/seperate_vertex.png" width=600px>
+  </div>
+
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;首先给出定义: 在 `G` 中，如果 `E(G)` 可以划分为两个非空子集 `E_1` 与 `E_2`，使 `G[E_1]` 和 `G[E_2]` 以点 `v` 为公共顶点，称 `v` 为 `G` 的一个 <def>分离点 (Separating Vertex)</def>。  
+  &nbsp;&nbsp;&nbsp;&nbsp;首先给出定义: 在 `G` 中，如果 `E(G)` 可以划分为两个非空子集 `E_1` 与 `E_2`，使 `G[E_1]` 和 `G[E_2]` 以点 `v` 为公共顶点，称 `v` 为 `G` 的一个 <def>分离点 (Separating Vertex)</def>。在上图 `G_1` 中，`v_1`, `v_3` 和 `v_4` 是分离点; 在上图 `G_2` 中，`v_5` 是分离点。 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;称 `v` 是图 `G` 的 <def>割点 (Cut Vertex)</def> 如果满足 `\omega(G-v)>\omega(G)`。在上图 `G_2` 中，`v_5` 就是割点。
+
+  <h3 class="title">割点的性质</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于分离点/割点，有如下的性质。
+
+  <div class="theorm" id="cut_v_1">
+  `G` 无环且非平凡, 则 `v` 是 `G` 的分离点, 当且仅当 `\omega(G-v) > \omega(G)`
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;充分性显然，故证明必要性: 设 `v` 是 `G` 的分离点，则 `E(G)` 可划分为两个非空边子集 `E_1` 与 `E_2`，使 `G[E_1]` 和 `G[E_2]` 恰好以 `v` 为公共点，由于 `G` 没有自环，所以，`G[E_1]` 和 `G[E_2]` 分别至少包含异于 `v` 的 `G` 的点，这样，`G−v` 的分支数比 `G` 的分支数至少多 `1`，所以: `\omega(G-v) > \omega(G)`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其实说白了就是由于 `G` 没有自环，所以不存在如下使得「删去分离点之后还能保持分支数不变」的情况:
+
+  <div align="center">
+    <img src="./pic/prove_1.png" width=400px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可见，在简单图的意义下，分离点就是割点。
+  </div>
+
+  <div class="theorm" id="cut_v_2">
+  `v` 是树 `T` 的顶点，则 `v` 是割点，当且仅当 `v` 是树的分支点。 
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明：
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先证明必要性: 若不然, 有 `d(v)=1`，即 `v` 是树叶，显然不能是割点。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后证明充分性: 设 `v` 是分支点，则 `d(v)>1`。于是设 `x` 与 `y` 是 `v` 的邻点，由树的性质，只有唯一路连接 `x` 与 `y`，所以 `G−v` 分离 `x` 与 `y`，即 `v` 为割点。
+  </div>
+
+  <div class="theorm" id="cut_v_3">
+  设 `v` 是简单连通图 `G` 的一个顶点，则 `v` 是 `G` 的割点，当且仅当 `V(G−v)` 可以划分为两个非空子集 `V_1` 与 `V_2`，使得对任意 `x\inV_1`，`y\inV_2`，点 `v` 在每一条 `x`,`y` 路上。
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先证明必要性: `v` 是简单连通图 `G` 的割点，由 <theorm>cut_v_1</theorm>，`G−v` 至少有两个连通分支. 设其中一个分支的顶点集为 `V_1`,  另一个分支的顶点集为 `V_2`。对于任意的 `x\inV_1`，`y\inV2`，如果点 `v` 不在某一条 `x`,`y` 路上，那么，该路也是连接 `G−v` 中的 `x` 与 `y` 的路，这与 `v` 是 `G` 的割点矛盾。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后证明充分性: 若 `v` 不是图 `G` 的割点，那么 `G−v` 连通，因此在 `G−v` 中存在 `x`,`y` 路，当然也是 `G` 中一条没有经过点 `v` 的 `x`,`y` 路，这与假设矛盾。              
+  </div>
+
+  <div class="theorm" id="cut_v_4">
+  非平凡简单连通图至少有两个非割点
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于 `G` 是无环非平凡连通图，所以存在非平凡生成树，而非平凡生成树至少两片树叶，它不能为割点，所以它也不能为 `G` 的割点 <note>(生成树中不是割点，在原图中一定也不是割点)</note>。 
+  </div>
+
+  <div class="theorm" id="cut_v_4">
+  恰有两个非割点的连通简单图是一条路。
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设 `T` 是 `G` 的一棵生成树。由于 `G` 有 `n−2` 个割点。所以，`T` 有 `n−2` 个割点，即 `T` 只有两片树叶，所以 `T` 是一条路。这说明，`G` 的任意生成树为路。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一个简单图的任意生成树为路，则该图为圈或路。若为圈, 则 `G` 没有割点，这与假设矛盾，所以 `G` 为路。
+  </div>
+
+  <div class="theorm" id="cut_v_4">
+  若 `v` 是简单图 `G` 的割点，则它不是 `G` 的补图的割点。
+  </div> 
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;`v` 是简单图 `G` 的割点，则 `G−v` 有至少两个连通分支。任取 `x,y\inV(G-v)`:
+
+  <div align="center">
+    <img src="./pic/prove_2.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 `x` 和 `y` 在 `G−v` 的同一分支中，令 `u` 是与 `x` 和 `y` 处于不同分支的点，那么通过 `u`，可说明，`x` 与 `y` 在 `G−v` 的补图中连通。  
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;若 `x` 和 `y` 在 `G−v` 的不同分支中，自然地，它们将在 `G−v` 的补图中邻接。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此若 `v` 是简单图 `G` 的割点，则它不是 `G` 的补图的割点。
+  </div>
 </div>
 
 <h2 class="title">块及其性质</h2>
 <div class="div_learning_post">
-  <h3 class="title">割边的定义</h3>
+  <h3 class="title">块的定义</h3>
+  <div align="center">
+    <img src="./pic/block.png" width=400px>
+  </div>
+
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;首先给出定义: 
+  &nbsp;&nbsp;&nbsp;&nbsp;没有分离点的连通图称为是一个 <def>块 (Block)</def>。`G` 的一个子图 `B` 称为是 `G` 的一个块，如果: 
+
+  <ol>
+    <li>它本身是块，即是无分离点的连通图</li>
+    <li>若没有真包含 `B` 的块存在 (极大子图)</li>
+  </ol>
+
+  <h3 class="title">块的性质</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于块，有如下性质。
+
+  <div class="theorm" id="block_1">
+  设 `G` 是简单图,  若 `|V(G)|\ge3`，则 `G` 是块当且仅当 `G` 的任意两个顶点位于同一圈上。
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先使用数学归纳法证明必要性。设 `G` 是块，显然 `G` 没有割点 (简单图无自环) 且 `|V(G)|\ge3`，对任意 `u,v\inV(G)`，下面证明 `u` 和 `v` 位于某一圈上。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当 `d(u,v)=1` 时，由于 `G` 是至少 `3` 个点的块，所以边 `uv` 不能为割边，否则，`u` 或 `v` 为割点，这与假设矛盾。因此由 <theorm>cut_e_1</theorm>，`uv` 必然在某圈中。 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设当 `d(u,v) < k` 时结论成立。
+
+  <div align="center">
+    <img src="./pic/prove_3.png" width=200px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当 `d(u,v)=k` 时，设 `P` 是一条最短 `u,v` 路，`w` 是 `v` 前面一点，则 `d(u,w)=k−1`。由归纳假设，`u` 与 `w` 在同一圈 `C=P_1\cupP_2` 上，如上图所示。 
+
+  <div align="center">
+    <img src="./pic/prove_4.png" width=200px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;考虑 `G-w`，由于 `G` 是块，因此 `G-w` 是连通图，因此存在 `P_3` 连通 `u` 和 `v`。因此在 `G` 中，`P_1\cupP_3` 或者 `P_2\cupP_3` 形成了圈。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后使用反证法证明充分性。若 `G` 不是块，则 `G` 中有割点 `v`，所以 `G−v` 至少两个分支。设 `x` 和 `y` 是 `G−v` 的两个不同分支中的点，则 `x` 和 `y` 在 `G` 中不能位于同一圈上，这与假设矛盾。
+  </div>
+
+  <div class="theorm" id="block_2">
+  点 `v` 是简单图 `G` 的割点当且仅当 `v` 属于 `G` 的至少两个不同的块。 
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先证明必要性。设 `v` 是 `G` 的割点。由割点定义: `E(G)` 可以划分为两个边子集 `E_1` 与 `E_2`。显然 `G[E_1]` 与 `G[E_2]` 有唯一公共顶点 `v`。设 `B_1` 与 `B_2` 分别是 `G[E_1]` 和 `G[E_2]` 中包含 `v` 的块，显然它们也是 `G` 的块。即证明 `v` 至少属于 `G` 的两个不同块。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面证明充分性。如果 `v` 属于 `G` 的两个不同块，设包含 `v` 的两个块是 `B_1` 与 `B_2`，那么两个块分别至少有两个顶点。假如 `v` 不是割点，在 `B_1` 与 `B_2` 中分别找异于 `v` 的一个点 `x` 与 `y`，`x\inV(B_1)`，`y\inV(B_2)`，则在 `G−v` 中有连接 `x` 与 `y` 的路 `P`，则 `B_1\cupB_2` 无割点，这与 `B_1` 和 `B_2` 是块矛盾。            
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;该定理揭示了简单图中的块与图中割点的内在联系: <note>不同块的公共点一定是图的割点</note>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;图的块可以按割点进行寻找(按点索块)。所以，该定理的意义在于: 可以得到寻找图中全部块的算法 (可通过深度优先算法 DFS 得到)。
+
+  <h3 class="title">块割点树</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了直观反映图的块和割点 (非简单图为分离点) 之间的联系，我们引入所谓的块割点树的概念。
+
+  <div align="center">
+    <img src="./pic/bg.png" width=600px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设 `G` 是非平凡连通图。`B_1`, `B_2`, `...`, `B_k` 是 `G` 的全部块，而 `v_1`, `v_2`, `...`, `v_t` 是 `G` 的全部割点 (非简单图为分离点)。构造 `G` 的 <def>块割点树 (Block Cut-Vertex Tree)</def> `B(G)`: 它的顶点是 `G` 的块和割点，连线只在块和割点之间进行: <note>一个块和一个割点连线, 当且仅当该割点是该块的一个顶点</note>。
 </div>
 
 <div class="div_ref" id="ref_container"></div>
