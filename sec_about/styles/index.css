@@ -158,8 +158,9 @@ img{margin-right: 20px;}
     margin-bottom: 40px;
     border: #000000 1px solid;
     border-radius: 5px;
-    padding: 10px 30px;
-    box-shadow: 5px 5px 5px #9b9b9b;
+    padding: 30px 30px;
+    padding-bottom: 0px;
+    /* box-shadow: 5px 5px 5px #9b9b9b; */
 }
 
 .post_fs14_ws0 a{
@@ -168,6 +169,7 @@ img{margin-right: 20px;}
     padding: 0px 5px;
     margin-left: 1px;
     margin-right: 2px;
+    margin-bottom: 0px;
     border: #000000 solid 2px;
 }
 
