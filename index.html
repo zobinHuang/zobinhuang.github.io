@@ -27,9 +27,10 @@
 <meta property="og:site_name" content="Zobin">
 <meta property="og:description" content="img{margin-left: 10px;}     img{margin-right: 20px;}">
 <meta property="og:locale">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/pic/slideshow/slideshow_220326_huawei_visit.JPG">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/pic/daxue.jpg">
-<meta property="article:published_time" content="2022-04-01T14:15:29.084Z">
-<meta property="article:modified_time" content="2022-04-01T14:15:29.084Z">
+<meta property="article:published_time" content="2022-04-02T05:13:14.506Z">
+<meta property="article:modified_time" content="2022-04-02T05:13:14.506Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -37,7 +38,7 @@
 <meta property="article:tag" content="网络工程">
 <meta property="article:tag" content="Networking Engineering">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://www.zobinhuang.com:10082/pic/daxue.jpg">
+<meta name="twitter:image" content="http://www.zobinhuang.com:10082/pic/slideshow/slideshow_220326_huawei_visit.JPG">
 
 <link rel="canonical" href="http://www.zobinhuang.com:10082/">
 
@@ -94,7 +95,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="تشغيل شريط التصفح">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -194,7 +195,10 @@
           <head>
 <link rel="stylesheet" type="text/css" href="styles/cats.css">
 <link rel="stylesheet" type="text/css" href="styles/block.css">
+<link rel="stylesheet" type="text/css" href="styles/slideshow.css">
+<link rel="stylesheet" href="styles/splide.min.css">
 <meta name="baidu-site-verification" content="code-iCEyxPqXGX" />
+<script src="/scripts/splide.min.js"></script>
 <script src="/scripts/index.js"></script>
 <style>
     img{margin-left: 10px;}
@@ -245,6 +249,7 @@
     </div>
 </div>
 
+<!-- Slogan -->
 <div align="center" class="title">
     <h1><b><font color=#FFFFFF>负责工作，健康生活!</font></b></h1>
 </div>
@@ -253,12 +258,39 @@
 
 <!-- Page Introduction -->
 <div class="introduction_container">
-    <h1>👋 欢迎访问 Zhuobin Huang 的主页！</h1>
+    <h1>欢迎访问 Zhuobin Huang 的主页！</h1>
     <p>
     &nbsp;&nbsp;&nbsp;&nbsp;这个网站记录了我自从 2017 年以来的 <a href="/sec_about/index.html">工作成果</a>，并且构建了本人的 <a href="/sec_learning/index.html">知识库</a>。
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;如果您有任何想与我讨论的问题，欢迎随时与我联系：<a href = "mailto: zobin1999@gmail.com">E-mail</a>。
 </div>
 
+<br>
 
+<!-- Photo Slider -->
+<div class="slideshow_container">
+    <div align="center"><h1 style="margin-down:0;padding:0;">Recent Events</h1></div>
+    <div align="center">
+    <div style="width:80%; margin:0; padding:0;"><hr style="margin:0;padding:0;" /></div>
+    </div>
+    <div class="splide">
+    <div class="splide__track">
+        <ul class="splide__list">
+            <!-- entry start -->
+            <li class="splide__slide">
+                <div class="slide_item">
+                    <img src="./pic/slideshow/slideshow_220326_huawei_visit.JPG" />
+                    <h2><date>2022年3月26日</date> 在华为成都研究所访问</h2>
+                </div>
+            </li>
+            <!-- entry end -->
+        </ul>
+    </div>
+    </div>
+    <script>
+    new Splide( '.splide' ).mount();
+    </script>
+</div>
 
 <!--周报-->
 <!-- 周报部分的 h5 代码被 backup 在 scripts/weekly_backup.html 下 -->
@@ -343,10 +375,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          المحتويات
+          Inhaltsverzeichnis
         </li>
         <li class="sidebar-nav-overview">
-          عام
+          Übersicht
         </li>
       </ul>
 
