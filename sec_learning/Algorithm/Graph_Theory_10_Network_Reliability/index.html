@@ -28,16 +28,26 @@
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/whitney.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/cut_exp_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/cut_exp_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/cut_exp_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/cut_exp_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/cut_exp_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/cut_exp_2.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/whitney_2.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/whitney_3.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/whitney.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/whitney_4.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/prove_1.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/harary_1.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/harary_2.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/harary_3.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/prove_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/toughness_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/toughness_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/toughness_3.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-18T08:49:07.840Z">
-<meta property="article:modified_time" content="2022-03-18T08:49:07.840Z">
+<meta property="article:published_time" content="2022-04-02T17:11:38.317Z">
+<meta property="article:modified_time" content="2022-04-02T17:11:38.317Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -102,7 +112,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -283,23 +293,40 @@
 <!-- Start your post here -->
 <h2 class="title">连通度</h2>
 <div class="div_learning_post">
-  <h3 class="title">点割和边割</h3>
+  <h3 class="title">点割的定义</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;给定连通图 `G`, 设 `V' \subseteq V(G)` , 若 `G−V’` 不连通, 称 `V’` 为 `G`的一个 <def>(顶)点割 (Vertex Cut)</def>，包含 `k` 个顶点的点割称为 <def>k 点割(k-cut)</def>。`G` 中点数最少的点割称为 <def>最小点割 (Minimum Vertex Cut)</def>。
 
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;割点是点割的一种特殊情形。
+  <div class="div_concurrent_img">
+    <img src="./pic/cut_exp_1.png" width=300px />
+    <img src="./pic/cut_exp_2.png" width=300px />
+  </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;完全图一定不存在点割。
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，在 `G_1` 中，`{v_3}`, `{v_3,v_5}` 等都是点割; 而在 `G_2` 中，我们找不到点割 (i.e. 不论怎么删点，`G` 都是一个连通图)。
 
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，上一篇文章中介绍的 <a href="/Algorithm/Graph_Theory_9_Cut_Edge_Node_And_Block/index.html#2.1%20割点的定义">割点</a> 是点割的一种特殊情形。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，<note>完全图一定不存在点割</note>。
+
+  <h3 class="title">边割的定义</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;同理，给定连通图 `G`, 设 `E' \subseteq E(G)` , 若 `G−E’` 不连通, 则称 `E’` 为 `G` 的 一个 <def>边割 (Edge Cut)</def>，包含 `k` 条边的边割称为 <def>k 边割 (k-edge Cut)</def>。`G` 中包含边数最少的边割称为 <def>最小边割 (Minimum Edge Cut)</def>。
 
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;与点割不同，非平凡连通图一定存在边割。
+  <div class="div_concurrent_img">
+    <img src="./pic/cut_exp_1.png" width=300px />
+    <img src="./pic/cut_exp_2.png" width=300px />
+  </div>
 
-  <h3 class="title">点连通度和边连通度</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;还是同样的例子，在 `G_1` 中，`{v_1v_2}`, `{v_1v_3}` 等都是边割; 在 `G_2` 中，与 `v_1` 关联的所有边 `{v_1v_2, v_1v_3, v_1v_4}` 构成了图 `G_2` 的最小边割。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;与点割不同，<note>非平凡连通图一定存在边割</note>。
+
+  <h3 class="title">点连通度 和 边连通度 的定义</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;在 `G` 中, 若存在点割, 则称 `G` 的最小点割的顶点数为 `G` 的 <def>(点)连通度 (Connectivity)</def>, 记为 `\kappa(G)`, 简记为 `\kappa`。若不存在点割 (i.e. 完全图)，则称 `n(G)−1` 为其 <def>(点)连通度</def> (无点割，使得剩余图为孤立点时需删去的顶点数)。若 `G` 不连通, 则 `\kappa(G)=0`。
 
@@ -310,39 +337,47 @@
   &nbsp;&nbsp;&nbsp;&nbsp;在 `G` 中, 若 `\kappa(G) \ge k`, 称 `G` 是 <def>`k` 连通的 (k-connected)</def>；若 `\lamda(G) \ge k`, 称 `G` 是 <def>`k` 边连通的 (k-edge-connected)</def>。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;确定一个图 `G`是否 `k` (边)连通的思路：找是否存在一个 <note>点(边)割</note> 小于 `k` 个点(条边)。
+  &nbsp;&nbsp;&nbsp;&nbsp;确定一个图 `G`是否 `k` (边)连通的思路是：找是否存在一个 <note>点(边)割</note> 小于 `k` 个点(条边)。计算图的连通度有多项式时间算法，具体可参考 <cite>compute_connectivity</cite>。计算图的边连通度也有多项式时间的算法，具体可参考 <cite>compute_edge_connectivity</cite>。
 
+  <div class="div_concurrent_img">
+    <img src="./pic/cut_exp_1.png" width=300px />
+    <img src="./pic/cut_exp_2.png" width=300px />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;使用一样的例子，对于 `G_1` 来说，`\kappa(G_1)=1`，`\lamda(G_1)=1`; 对于 `G_2` 来说，`\kappa(G_2)=3`，`\lamda(G_2)=3`。
+
+  <h3 class="title">连通度的性质</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;给出定理:
 
-  <div align="center" class="div_learning_post_border">
-  对图G的任意一个顶点v和一条边e, 有关系式: `\kappa(G)−1 \le \kappa(G−v)`
+  <div class="theorm" id="connectivity_1">
+  对图 `G` 的任意一个顶点 `v` 和一条边 `e`，有关系式: `\kappa(G)−1 \le \kappa(G−v)`
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <ol>
+    <li>若 `G-v` 不存在点割，则 `\kappa(G-v) = n(G-v)-1 = (n-1)-1 = n-2`。由于有 `\kappa(G) \le n-1`，故有 `\kappa(G-v)+1 = n-1 \ge \kappa(G)`，也即 `\kappa(G)−1 \le \kappa(G−v)`。</li>
+    <li>若 `G-v` 存在点割，则在 `G-v` 中可以找到一个最小点割，记为 `V_{min}`，故 `G-v-V_{min}` 不连通，也即 `G-V_{min} \cup {v}` 不连通，则 `V_{min} \cup {v}` 是 `G` 的一个点割。由于 `V_{min} \cup {v}` 的大小不会小于最小点割，故 `\kappa(G) \le |V_{min} \cup {v}| = |V_{min}| +|{v}| = kappa(G-v) + 1`。</li>
+  </ol>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面我们给出证明:
+  &nbsp;&nbsp;&nbsp;&nbsp;下面给出 <def>Whitney 定理</def>：
 
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;[1] 若 `G-v` 不存在点割，则 `\kappa(G-v) = n(G-v)-1 = n-1-1 = n-2`。由于有 `\kappa(G) \le n-1`，故有 `\kappa(G-v)+1 = n-1 \ge \kappa(G)`，也即 `\kappa(G)−1 \le \kappa(G−v)`。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;[2] 若 `G-v` 存在点割，则在 `G-v` 中可以找到一个最小点割，记为 `V_{min}`，故 `G-v-V_{min}` 不连通，也即 `G-V_{min} \cup {v}` 不连通，则 `V_{min} \cup {v}` 是 `G` 的一个点割。由于 `V_{min} \cup {v}` 的大小不会小于最小点割，故 `\kappa(G) \le |V_{min} \cup {v}| = |V_{min}| +|{v}| = kappa(G-v) + 1`。
-
-  <h3 class="title">Whitney 定理</h3>
-
-  <div align="center" class="div_learning_post_border">
-  `\kappa(G) \le \lamda(G) le \delta(G)`
+  <div class="theorm" id="connectivity_2">
+  `\kappa(G) \le \lamda(G) \le \delta(G)`
   </div>
 
+  <div class="theorm_prove">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面我们给出证明:
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;先证: `\lamda(G) \leq \delta(G)`: 找到图中的 `d(v)=\delta`，删去这个点关联的所有边，则这些边就组成了一个边割。
-
-  <div align="center">
-    <img src="./pic/whitney.png" width=300px>
-  </div>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;再证 `\kappa(G) \le \lamda(G)`: 设图的最小边割为 `[S,\bar{S}]`。容易证明 `G-[S,\bar{S}]` 一定包含两个分支，否则 `[S,\bar{S}]` 不是最小边割。我们记 `\lamda(G) = [S,\bar{S}]`。然后我们分两种情形:
@@ -352,13 +387,13 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，考虑 `S` 中的点和 `\bar{S}` 中的点均连接的情况，则有 `\lamda(G) = |[S,\bar{S}]| = |S|\cdot|\bar{S}|`。由于 `|S|+|\bar{S}|=n`，故 `\lamda(G) = |[S,\bar{S}]| = |S|\cdot|\bar{S}| \ge (n-1)\cdot1 = n-1 \ge \kappa(G)`。
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，考虑 `S` 中的点和 `\bar{S}` 中的点均连接的情况，则有 `\lamda(G) = |``[S,\bar{S}]``| = |S|\cdot|\bar{S}|`。由于 `|S|+|\bar{S}|=n`，故 `\lamda(G) = |``[S,\bar{S}]``| = |S|\cdot|\bar{S}| \ge (n-1)\cdot1 = n-1 \ge \kappa(G)`。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;然后考虑 `S` 中的点和 `\bar{S}` 中的点不全相邻的情况。取 `x\inS,y\in\bar{S}` 且 `x` 与 `y` 不相邻的情况。
 
   <div align="center">
-    <img src="./pic/whitney_3.png" width=300px>
+    <img src="./pic/whitney.png" width=300px>
   </div>
 
   <p>
@@ -376,42 +411,58 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;则我们可以得到: `|E_1|=|T|`，因此 `\lamda(G) = |[S,\bar{S}]| \ge |E_1| = |T| \ge \kappa(G)`。
+  &nbsp;&nbsp;&nbsp;&nbsp;则我们可以得到: `|E_1|=|T|`，因此 `\lamda(G) = |``[S,\bar{S}]``| \ge |E_1| = |T| \ge \kappa(G)`。
+  </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;实际上，Chartrand 和 Harary 在 1968 年证明了：
+  &nbsp;&nbsp;&nbsp;&nbsp;对于上述不等式，严格不等式 ( i.e. `\kappa(G) < \lamda(G) < \delta(G)` ) 是可以成立的，等式 ( i.e. `\kappa(G) = \lamda(G) = \delta(G)` ) 也是可以成立的。实际上，Chartrand 和 Harary 在 1968 年证明了：
 
-  <div align="center" class="div_learning_post_border">
+  <div class="theorm" id="connectivity_3">
   对任意正整数 `0 < a \le b \le c`，都存在图 `G`，使得 `\kappa(G)=a`, `\lamda(G)=b`, `\delta(G)=c`。
   </div>
 
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;作图方法待补充。
-
   <h3 class="title">用于计算边连通度的定理</h3>
-  <div align="center" class="div_learning_post_border">
-  <b>求边连通度</b>: 令 `S` 是图 `G` 的一个非空顶点集, 则: `|[S,\bar{S}]| = \sum_{v\inS}d(v) - 2E(G[S])`
-  </div>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明过程实际上非常简单: `G[S]` 中的一条边对 `\sum_{v\inS}d(v)` 贡献为 2，而 `[S,\bar{S}]` 中的边仅贡献 1，因此由握手定理可以得到:
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们给出两个与连通度有关的数值关系。
+
+  <div class="theorm" id="connectivity_4">
+  <b>求边连通度</b>: 令 `S` 是图 `G` 的一个非空顶点集, 则: `|``[S,\bar{S}]``|`` = \sum_{v\inS}d(v) - 2E(G[S])`
+  </div>
+
+  <div class="theorm_prove">
+  <div align="center">
+    <img src="./pic/prove_1.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;`G[S]` 中的一条边对 `\sum_{v\inS}d(v)` 贡献为 2，而 `[S,\bar{S}]` 中的边仅贡献 1，因此由握手定理可以得到:
 
   <div align="center" style="margin-bottom:15px;">
-    `\sum_{v\inS}d(v) = |[S,\bar{S}]| + 2E(G[S])`
+    `\sum_{v\inS}d(v) = ``|``[S,\bar{S}]``|`` + 2E(G[S])`
+  </div>
   </div>
 
-  <div align="center" class="div_learning_post_border">
+  <div class="theorm" id="connectivity_5">
   <b>求点连通度</b>: 设 `G` 是 `(n,m)` 连通图，则: `\kappa(G) \le \floor{\frac{2m}{n}}`
   </div>
 
+  <div class="theorm_prove">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们给出证明: 由握手定理可得，`2m = \sum_{v \in V(G)}d(v) \ge n \cdot \delta(G) \ge n \cdot \kappa(G)`，因此 `\kappa(G) \le \floor{\frac{2m}{n}}`。
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由握手定理可得，`2m = \sum_{v \in V(G)}d(v) \ge n \cdot \delta(G) \ge n \cdot \kappa(G)`，因此 `\kappa(G) \le \floor{\frac{2m}{n}}`。
+  </div>
 
   <h3 class="title">哈拉里图</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;哈拉里证明了上述定理中取等号的情况，也即一定存在一个 `(n,m)` 图 `G`，使得 `\kappa(G) = \floor{\frac{2m}{n}}` 成立。
+  &nbsp;&nbsp;&nbsp;&nbsp;哈拉里证明了 <theorm>connectivity_5</theorm> 中取等号的情况，也即一定存在一个 `(n,m)` 图 `G`，使得 `\kappa(G) = \floor{\frac{2m}{n}}` 成立。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;由 Whitney 定理 `\kappa(G) \le \lamda(G)` 可知，连通度为 `k` 的图至少包含 `\ceil{\frac{n(G) \cdot \lamda(G)}{2}} \ge \ceil{\frac{n(G) \cdot \kappa(G)}{2}}` 条边。如果上述定理取等号，则就正好找到了一个连通度为 `k` 且边数正好等于 `\ceil{\frac{n(G) \cdot \kappa(G)}{2}}` 的图。我们把这种图称为 <def>哈拉里图 (Harary Graph)</def>，记为 `H_{k,n}`。
+  &nbsp;&nbsp;&nbsp;&nbsp;反过来想，由 Whitney 定理 `\kappa(G) \le \delta(G)` 可知，连通度为 `k` 的图至少包含 `\ceil{\frac{n(G) \cdot \delta(G)}{2}} \ge \ceil{\frac{n(G) \cdot \kappa(G)}{2}}` 条边。如果取等号，则就正好找到了一个连通度为 `k` 且边数正好等于 `\ceil{\frac{n(G) \cdot \kappa(G)}{2}}` 的图。我们把这种图称为 <def>哈拉里图 (Harary Graph)</def>，记为 `H_{k,n}`。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;哈拉里图的物理意义是：当通讯网络线路昂贵时, 用最少的边使得网络达到可能的最大连通度(可靠性)。
@@ -442,39 +493,117 @@
 
   <h3 class="title">连通度和图的度的关系</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们给出几个关于图的连通度和图的度之间的数值关系。
 
-  <div align="center" class="div_learning_post_border">
+  <div class="theorm" id="connectivity_6">
   设 `G` 是 `(n,m)` 简单图，若 `\delta(G) > \floor{\frac{n}{2}}`，则 `G` 连通，且有 `\lamda(G) = \delta(G)`
   </div>
 
+  <div class="theorm_prove">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;TODO: 第一部分的证明
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>证明连通性</b>:
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;使用反证法证明第二部分: TODO
+  &nbsp;&nbsp;&nbsp;&nbsp;若 `G` 不连通，则 `G` 至少有两个连通分支。于是至少有一个分支 `H`，使得 `\delta(H) \le \floor{\frac{n}{2}}-1 < \floor{\frac{n}{2}}`，矛盾。
 
-  <div align="center" class="div_learning_post_border">
-  设 `G` 是 `(n,m)` 简单图，若对于任意正整数 `k`，有 `\delta(G) \ge \frac{n+k-2}{2}`，则 `G` 是 `k` 连通的
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>证明 `\lamda(G) = \delta(G)`</b>:
+
+  <div align="center">
+    <img src="./pic/prove_2.png" width=300px>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+  &nbsp;&nbsp;&nbsp;&nbsp;若 `\lamda(G) < \delta(G)`，设 `M` 是 `G` 的最小边割, 则 `|M|=\lamda(G)`，且 `G−M` 恰有两个连通分支 `G_1` 和 `G_2`，对 `G_1` 用 <theorm>connectivity_4</theorm> 的结论，可得:
+
+  <div align="center" style="margin:20px;">
+  `\delta(G) > \lamda(G) = |M| = \sum_{v \in G_1}d(v) - 2|E(G_1)|`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;观察等式右边的两项，我们可以构造以下的不等关系:
+
+  <div align="center" style="margin:20px;">
+  `\sum_{v \in G_1}d(v) > \sum_{v \in G_1}\delta(G)`<br>`2|E(G_1)| \le |V(G_1)| \cdot |V(G_1)-1|`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;故原式可以转化为: `\delta(G) > |V(G_1)|\delta(G) - |V(G_1)| \cdot |V(G_1)-1|`
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由题设关系 `\delta(G) > \floor{\frac{n}{2}}` 可得 `|V(G_1)| > 1`。基于这个关系，我们对上式进行因式分解，可得:
+
+  <div align="center" style="margin:20px;">
+  `|V(G_1)|\delta(G) - \delta(G) < |V(G_1)| \cdot |V(G_1)-1|`<br>
+  `\delta(G) < |V(G_1)|`<br>
+  `|V(G_1)| \ge \delta(G) + 1`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同理可得:
+
+  <div align="center" style="margin:20px;">
+  `|V(G_2)| \ge \delta(G) + 1`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注意到 `n = |V(G_1)|+|V(G_2)| \ge 2\delta(G) + 2`，即 `\delta(G) \le \frac{n}{2}-1`，这与题设矛盾。
+
+  </div>
+
+  <div class="theorm" id="connectivity_7">
+  设 `G` 是 `(n,m)` 简单图，若对于任意正整数 `k`，有 `\delta(G) \ge \frac{n+k-2}{2}`，则 `G` 是 `k` 连通的
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;任意删去 `k−1` 个顶点, 记所得之图为 `H`，则
+
+  <div align="center">
+  `\delta(H) \ge \delta(G)-(k-1) \ge \frac{n+k-2}{2}-(k-1) = \frac{n-k}{2}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于 `\delta(H)` 是整数，故:
+
+  <div align="center">
+  `\delta(H) \ge \ceil{\frac{n-k}{2}} = \floor{\frac{n-k+1}{2}}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由 <theorm>connectivity_6</theorm> 可得，包含 `n-k+1` 个顶点的 `H` 是连通的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;所以 `G` 是 `k` 连通的 (i.e. 删去 `k-1` 个顶点之后仍然连通，那么最小点割 `\kappa(G) \ge k`)。
+  </div>
 </div>
 
 
 <h2 class="title">描述连通度的其它参数</h2>
 <div class="div_learning_post">
+
+  <div class="div_concurrent_img">
+    <img src="./pic/toughness_1.png" width=200px>
+    <img src="./pic/toughness_2.png" width=200px>
+    <img src="./pic/toughness_3.png" width=200px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对上面三个图进行观察，可以发现 `\kappa(G_1)=\kappa(G_2)=\kappa(G_3)=1`，`\lamda(G_1)=\lamda(G_2)=\lamda(G_3)=1`，但是明显地，这三个图的 "连通性" 是不同的，这说明连通度对图的 "连通性" 的刻画是片面的。因此我们在下面给出另一种描述 "连通性" 的数字量 —— 坚韧度。
+
   <h3 class="title">坚韧度</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;用 `C(G)` 定义为图 `G` 的全体点割构成的集合 (i.e. 其实是一个集族，每一个成员是一个集合)，非平凡非完全图的坚韧度记作 `\tau(G)`，定义如下:
+  &nbsp;&nbsp;&nbsp;&nbsp;用 `C(G)` 定义为图 `G` 的全体点割构成的集合 (i.e. 其实是一个集族，每一个成员是一个集合)，非平凡非完全图的 <def>坚韧度 (Toughness)</def> 记作 `\tau(G)`，定义如下:
 
   <div align="center" style="margin-bottom: 15px;">
   `\tau(G) = min{\frac{|S|}{\omega(G-S)}}`，其中 `S\inC(G)`
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;简单理解：`|S|` 是删除的点割，`\omega(G-S)` 是删除点割后出现的分支数，二者的比值越大，则说明删除了点割后对图的破坏性更小，图的坚韧度越高，反之亦然。
+  &nbsp;&nbsp;&nbsp;&nbsp;简单理解：`|S|` 是某个点割中包含的节点的个数，`\omega(G-S)` 是删除点割后出现的分支数，二者的比值越大，则说明删除了点割后对图的破坏性更小，图的坚韧度越高，反之亦然。
 </div>
 
 
@@ -621,10 +750,10 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Inhaltsverzeichnis
+          المحتويات
         </li>
         <li class="sidebar-nav-overview">
-          Übersicht
+          عام
         </li>
       </ul>
 

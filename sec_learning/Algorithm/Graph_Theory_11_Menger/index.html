@@ -28,9 +28,16 @@
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_11_Menger/pic/exp_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_11_Menger/pic/exp_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_11_Menger/pic/exp_3.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_11_Menger/pic/menger_extend.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_11_Menger/pic/prove_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_11_Menger/pic/prove_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_11_Menger/pic/prove_3.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_11_Menger/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-18T11:42:44.669Z">
-<meta property="article:modified_time" content="2022-03-18T11:42:44.669Z">
+<meta property="article:published_time" content="2022-04-03T07:33:15.834Z">
+<meta property="article:modified_time" content="2022-04-03T07:33:15.834Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -95,7 +102,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -276,9 +283,19 @@
 <!-- Start your post here -->
 <h2 class="title">Menger 定理</h2>
 <div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Menger 定理是图的连通性问题的核心结论之一，它描述了「图的连通度」与「连通图中不同点对间的不相交路的数目」之间的关系。下面我们先给出一些定义，然后给出 Menger 定理。
+
   <h3 class="title">一些定义</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;设 `u` 与 `v` 是图 `G` 的两个不相邻顶点, `S` 是 `G` 的一 个顶点子集，如果 `u` 与 `v` 不在 `G−S` 的同一分支上, 则称 `S` <def>分离 (Separate)</def> `u` 和 `v` ，`S` 为 `u` 和 `v` 的 <def>分离集</def>。 
+  &nbsp;&nbsp;&nbsp;&nbsp;设 `u` 与 `v` 是图 `G` 的两个不相邻顶点, `S` 是 `G` 的一 个顶点子集，如果 `u` 与 `v` 不在 `G−S` 的同一分支上, 则称 `S` <def>分离 (Separate)</def> `u` 和 `v` ，`S` 为 `u` 和 `v` 的 <def>分离集</def>。
+
+  <div align="center">
+    <img src="./pic/exp_1.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，`{u_1,u_4}` 和 `{u_1u_2,u_1u_4,u_4u_6}` 分离了点 `u_2` 和 `u_6`。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;图 `G` 的一族路，如果它们的内部顶点都不相同，则称它们是 <def>内部不交 (Internally Disjoint)</def>的。
@@ -290,70 +307,181 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;顶点版本的 <def>Menger 定理</def> 如下所示:
 
-  <div align="center" class="div_learning_post_border">
-  设 `x` 与 `y` 是图 `G` 中的 <note>不相邻点</note>，则 `G` 中分离点 `x` 和 `y` 的最少点数等于 `G` 中内部不交的 `x`,`y` 路的最大数目
+  <div class="theorm" id="menger_1">
+  设 `x` 与 `y` 是图 `G` 中的 <note>不相邻点</note>，则 `G` 中分离 `x` 和 `y` 的最少点数等于 `G` 中内部不交的 `x`,`y` 路的最大数目
   </div>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;简单可以理解为：要使得 `x` 和 `y` 分离，则需要从内部不交的 `x``y` 路上各自至少删去一个点，也即 <note>|分离集| `\ge` |内部不交的路的条数|</note>。Menger 定理证明了等号是成立的。
 
+  <div align="center">
+    <img src="./pic/exp_2.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上所示，独立的 `x`,`y` 路最大条数是 `2` (红色和蓝色路)，分离点 `x` 与 `y` 的最小分离集是 `{u_1,u_4}`，包含两个顶点。
+
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;边版本的 <def>Menger 定理</def> 如下所示:
 
-  <div align="center" class="div_learning_post_border">
+  <div class="theorm" id="menger_2">
   设 `x` 与 `y` 是图 `G` 中的 <note>不同点</note>，则 `G` 中分离点 `x` 和 `y` 的最少边数等于 `G` 中边不重的 `x`,`y` 路的最大数目
   </div>
+
+  <div align="center">
+    <img src="./pic/exp_3.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，边不重的 `x`,`y` 路最大条数是 `2` (红色和蓝色路，虽然和上面例子中的两条路相同，但是定义不同。这个例子中的「边不重的 `x`,`y` 路」和「不相交的 `x`,`y` 路」恰巧相同)。分离点 `x` 与 `y` 的最小边分离集是 `{xu_1,xu_4}`，包含两条边。
 
   <h3 class="title">Whitney Menger 定理</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;Whitney 针对 `k` 连通图的改进的 Menger 定理如下所示:
 
-  <div align="center" class="div_learning_post_border">
+  <div class="theorm" id="menger_3">
   非平凡简单图 `G` 是 `k` (`k \ge 2`) 连通的，当且仅当 `G` 的任意两个顶点 `u` 和 `v` 之间至少存在 `k` 条内部不交路
   </div>
 
+  <div class="theorm_prove">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明过程如下:
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;<b>必要性</b>: 由于 `G` 是 `k` (`k \ge 2`) 连通的，设 `u` 和 `v` 是 `G` 的两个顶点，分两种情况讨论:
 
-  <ul>
-    <li>若 `u` 和 `v` 不相邻，则存在点割可以分离 `u` 和 `v`，设这个分离集为 `U`，因此有 `|U| \ge \kappa(H) \ge k`。由上面的原生的 Menger 定理可得，`u` 和 `v` 之间存在至少 `k` 条内部不交路。</li>
-    <li>若 `u` 和 `v` 相邻，考虑删除连接 `u` 和 `v` 的邻边，则此时 `u` 和 `v` 不相邻，设此时的图为 `G'`。由 `\kappa(G)-1 \le \kappa(G-e) \le \kappa(G)` <note>(p.s. 在下面进行证明)</note> 可得，`G'` 是 `k-1` 连通的。则由原生 Menger 定理可得，在 `G'` 中，`u` 和 `v` 之间至少存在 `k-1` 条内部不交路。则再加上删去的那一条边，`u` 和 `v` 之间就至少有 `k` 条内部不交路。</li>
-  </ul>
+  <ol>
+    <li>若 `u` 和 `v` 不相邻，则存在点割可以分离 `u` 和 `v`，设这个分离集为 `U`，因此有 `|U| \ge \kappa(H) \ge k`。由 <theorm>menger_1</theorm> 可得，`u` 和 `v` 之间存在至少 `k` 条内部不交路。</li>
+    <li>若 `u` 和 `v` 相邻，考虑删除连接 `u` 和 `v` 的邻边，则此时 `u` 和 `v` 不相邻，设此时的图为 `G'`。由 `\kappa(G)-1 \le \kappa(G-e) \le \kappa(G)` (p.s. 在下面 <theorm>extra</theorm> 进行证明) 可得，`G'` 是 `k-1` 连通的。则由 <theorm>menger_1</theorm> 可得，在 `G'` 中，`u` 和 `v` 之间至少存在 `k-1` 条内部不交路。则再加上删去的那一条边，`u` 和 `v` 之间就至少有 `k` 条内部不交路。</li>
+  </ol>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;<b>充分性</b>: 证明思路是证明不存在 `k-1` 点割。
 
-  <ul>
-    <li>若 `G` 不存在点割，则 `G` 是完全图，故任意顶点之间存在 `n-1` 条内部不交路 (i.e. 经过其它 `n-2` 个 ) </li>
-    <li>若 `G` 存在点割，且 `u` 和 `v` 不相邻，且... 故有图 `G` 的所有点割的大小都要 `\ge k`，故得证。</li>
-    <li>若 `G` 存在点割，且 `u` 和 `v` 相邻</li>
-  </ul>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面对上面用到的下述定理进行证明。
-
-  <div align="center" class="div_learning_post_border">
-  `\kappa(G)-1 \le \kappa(G-e) \le \kappa(G)` 
+  <ol>
+    <li>若 `G` 不存在点割，则 `G` 是完全图，故任意顶点之间存在 `n-1` 条内部不交路 (i.e. 经过其它 `n-2` 个 点的路，以及经过 `u` 和 `v` 的邻边) </li>
+    <li>若 `G` 存在点割，且 `u` 和 `v` 不相邻，设 `U` 是分离 `u` 与 `v` 的最小点割，则 `G−U` 不连通。已知 `u` 与 `v` 之间至少存在 `k` 条内部不交路，若 `|U| = \kappa(G) \le k−1`，则 `G−U` 中至少至少存在一条 `u`,`v` 路，即 `G−U` 连通，这与假设矛盾，说明不存在 `k-1` 点割，所以有 `\kappa(G) \ge k`，即 `G` 是 `k` 连通的。</li>
+    <li>若 `G` 存在点割，且 `u` 和 `v` 相邻，考虑删除 `uv` 边的图 `G'`，则图 `G'` 属于情况 2，可得图 `G'` 是 `k-1` 连通的，加回 `uv` 边，可得图 `G` 是 `k` 连通的</li>
+  </ol>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;先证右边的不等号: 首先，`G` 的点割一定是 `G-uv` 的点割，故有`G` 的最小点割一定是 `G-uv` 的一个点割 (不一定是最小点割)，
+  &nbsp;&nbsp;&nbsp;&nbsp;<theorm>menger_3</theorm> 是定义完全图 (或以完全图为生成子图) 的连通度为 `n−1` 的依据 (因完全图中任意两点间都有 `n−1` 条内部不交路)。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;现在证明左边的不等号: 下设 `\kappa(G-uv) < \kappa(G)`，令 `V_{min}` 是 `G-uv` 的一个最小点割，但 `V_{min}` 不是 `G` 的一个点割，也即 `G-V_{min}` 是连通的。下面分情况讨论:
+  &nbsp;&nbsp;&nbsp;&nbsp;下面对上面用到的 <theorm>extra</theorm> 进行证明，该定理可以与我们上一篇文章中介绍过的 <a href="/sec_learning/Algorithm/Graph_Theory_10_Network_Reliability/index.html#connectivity_1">`\kappa(G)-1 \le \kappa(G-v)`</a> 相比较。
+
+  <div class="theorm" id="extra">
+  `\kappa(G)-1 \le \kappa(G-e) \le \kappa(G)` 
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明: <note>TODO!!!</note>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;先证右边的不等号: 首先，`G` 的点割一定是 `G-uv` 的点割，故有`G` 的最小点割一定是 `G-uv` 的一个点割 (不一定是最小点割)，因此有 `\kappa(G-e) \le \kappa(G)` 成立。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在证明左边的不等号: 下设 `\kappa(G-uv) < \kappa(G)`，令 `V_{min}` 是 `G-uv` 的一个最小点割，但 `V_{min}` 不是 `G` 的一个点割，也即 `G-V_{min}` 是连通的。假设 `G-uv-V_{min}` 有两个连通分支 `X` 和 `Y`，下面分情况讨论:
 
   <ul>
     <li>若 </li>
     <li></li>
     <li>若 `|X|=|Y|=1`，则说明 `V_{min}` 是一个 `n-2` 的集合，故</li>
   </ul>
+  </div>
 
   <h3 class="title">Menger 定理扩张引理</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们给出 Menger 定理的扩张引理。
+
+  <div class="theorm" id="menger_4">
+  设 `G` 是 `k` 连通图，`S` 是由 `G` 中任意 `k` 个顶点构成的集合。若图 `H` 是由 `G` 通过添加一个新点 `w` 以及连接 `w` 到 `S` 中所有顶点得到的新图，则 `H` 是 `k` 连通的。
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <div align="center">
+    <img src="./pic/menger_extend.png" width=200px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先, 分离 `G` 中两个不相邻顶点至少要 `k` 个点。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其次，分离 `w` 与 `G` 中不在 `S` 中顶点需要 `k` 个顶点。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此 `H` 是 `k` 连通的。
+  </div>
+
+  <div class="theorm" id="menger_5">
+  设 `G` 是 `k` 连通图，`u`,`v_1`,`v_2`,`...`,`v_k` 为 `G` 中 `k+1` 个不同顶点，则 `G` 中有 `k` 条内部不交路 `(u,v_i)` `(1\lei\lek)`。(p.s. <theorm>menger_3</theorm> 说的是 `k` 连通图中的任意两个点之间存在至少 `k` 条内部不交路，而且是个充要条件; 本定理说的是，对于 `k` 连通图来说，从某点 `u` 出发到其它 `k` 个点 `v_i` 的路都是内部不交的，而且只是一个必要条件)
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <div align="center">
+    <img src="./pic/prove_1.png" height=200px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 `G` 外添加一点 `w`，让 `w` 与 `v_i` 邻接 `(1 \le i \le k)` 得 `H`，如下图所示:
+
+  <div align="center">
+    <img src="./pic/prove_2.png" height=200px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由 <theorm>menger_4</theorm> 可得，`H` 是 `k` 连通。于是由 <theorm>menger_3</theorm>，`u` 与 `w` 间存在 `k` 条内部不交的 `u`,`w` 路，所以 `G` 中有 `k` 条内部不交路 `(u,v_i)` `(1 \le i \le v_i)`。
+  </div>
+
+  <h3 class="title">边连通性的 Menger 定理</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于边连通性，也存在着类似的结论：
+
+  <div class="theorm" id="menger_6">
+  一个非平凡的图 `G` 是 `k` `(k \ge 2)` 边连通的，当且仅当 `G` 的任意两个顶点间至少存在 `k` 条边不重的 `(u,v)` 路。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述定理，我们可以有如下推论：
+
+  <div class="theorm" id="menger_6">
+  对于一个阶至少为 `3` 的无环图 `G`，下面四个命题等价:
+  <ol>
+    <li>`G` 连通且无割点;</li>
+    <li>`G` 是 `2` 连通的;</li>
+    <li>`G` 中任意两点位于同一个圈上;</li>
+    <li>`G` 无孤立点，且任意两条边在同一个圈上;</li>
+  </ol>
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b> `1 \leftrightarrow 2`</b>: `G` 连通且无割点，则至少需要删去 `2` 个点才可能将 `G` 分离，故 `G` 是 `2` 连通的，反之成立。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b> `2 \leftrightarrow 3`</b>: `G` 是 `2` 连通的即 `G` 本身是块，由之前文章证明过的 <a href="/sec_learning/Algorithm/Graph_Theory_9_Cut_Edge_Node_And_Block/index.html#block_1">定理</a> 可得该结论成立。
+
+  <div align="center">
+    <img src="./pic/prove_3.png" height=200px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b> `3 \rightarrow 4`</b>: `G` 显然无孤立点，设 `e_1=uv` 与 `e_2=xy` 是 `G` 的任意两条边。由 `2 \leftrightarrow 3` 可得 `G` 是 `2` 连通的。在 `e_1` 和 `e_2` 的端点上分别添加一个邻点 `w` 和 `z` 得到图 `H`，如上图所示。由 <theorm>menger_4</theorm> 可知图 `H` 是 `2` 连通的，则再由 `2 \leftrightarrow 3` 可得，`w` 和 `z` 在同一个圈上。由上图容易观察得出，`e_1` 和 `e_2` 也在同一个圈上。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b> `4 \rightarrow 3`</b>: 设 `u` 与 `v` 是无环图 `G` 的任意两个顶点，由于 `G` 无孤立点，所以可设 `e_1`, `e_2` 分别与 `u`, `v` 相关联。由条件知，`e_1`, `e_2` 在同一个圈上，所以 `u` 与 `v` 在同一个圈上。
+  </div>
 </div>
 
 <div class="div_ref" id="ref_container"></div>
@@ -499,10 +627,10 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Inhaltsverzeichnis
+          المحتويات
         </li>
         <li class="sidebar-nav-overview">
-          Übersicht
+          عام
         </li>
       </ul>
 
