@@ -33,8 +33,8 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/gradient.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/gradient_2.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/xxx.png">
-<meta property="article:published_time" content="2022-04-05T07:25:39.368Z">
-<meta property="article:modified_time" content="2022-04-05T07:25:39.368Z">
+<meta property="article:published_time" content="2022-04-05T11:35:24.512Z">
+<meta property="article:modified_time" content="2022-04-05T11:35:24.512Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -403,7 +403,7 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们最终实际上会得到一个向量 `(1,f'(x))`，这个向量指定了当自变量取值为 `x_i` 时，函数的增长方向向量 `(1,f'(x_i))`，如上图所示。这个增长方向向量也可以使用我们平时常说的 "斜率" 来表示，也即 `\tan\beta=\frac{f'(x_i)}{1}=f'(x_i)`，我们称这个 "斜率" 为 `f(x)` 的 <def>梯度 (Gradient)</def>，记为 `\nablaf(x)=f'(x)`。梯度 `\nablaf(x)` 反映了自变量 `x` 发生的微小变化给 `f(x)` 带来的影响。
+  &nbsp;&nbsp;&nbsp;&nbsp;我们最终实际上会得到一个向量 `(1,f'(x))`，这个向量指定了当自变量取值为 `x^{(i)}` 时，函数的增长方向向量 `(1,f'(x^{(i)}))`，如上图所示。这个增长方向向量也可以使用我们平时常说的 "斜率" 来表示，也即 `\tan\beta=\frac{f'(x^{(i)})}{1}=f'(x^{(i)})`，我们称这个 "斜率" 为 `f(x)` 的 <def>梯度 (Gradient)</def>，记为 `\nablaf(x)=f'(x)`。梯度 `\nablaf(x)` 反映了自变量 `x` 发生的微小变化给 `f(x)` 带来的影响。
 
   <div align="center">
     <img src="./pic/gradient_2.png" height=400px>
@@ -553,7 +553,117 @@
 <h2 class="title">Normal Equation</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 LR 问题，除了采用其它 Learning Algorithm 都会使用的梯度下降算法以外，我们还可以使用矩阵方法来实现一步完成对 <equation>8</equation> 的求解。
+
+  <h3 class="title">Notation</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们说一个 <def>矩阵函数</def> 把一个矩阵 `A` 映射称为一个实数。比如如下函数：
+
+  <div class="equation">
+  <div class="cmath" align="center">
+    `f{((A_{11},A_{12}),(A_{21},A_{22}))} = A_{11} + A_{12}^2`
+  </div>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对一个上述矩阵函数求导，我们规定形式为:
+
+  <div class="equation">
+  <div class="cmath" align="center">
+    `\nabla_{A}f(A)=((\frac{\partial f}{\partial A_{11}},\frac{\partial f}{\partial A_{12}}),(\frac{\partial f}{\partial A_{21}},\frac{\partial f}{\partial A_{22}}))`
+    `=((1,2A_{12}),(0,0))`
+  </div>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，对于 `n \times n` 的 Square Matrix (方块矩阵) `A`，<def>Trace</def> (迹) 的定义如下:
+
+  <div class="equation">
+  `trA=\sum_{i=1}^{n}A_{ii}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Trace 具有如下的属性:
+
+  <div class="equation">
+  对于 `n \times n` 的矩阵 `A`, `B`, `C`，我们有:
+  <ol>
+    <li>`trA = trA^T`</li>
+    <li>`tr(A+B) = trA + trB`</li>
+    <li>`tr(a \cdot A) = a \cdot trA`</li>
+    <li>`trAB = trBA`</li>
+    <li>`trABC = trCAB = trBCA`</li>
+    <li>`......`</li>
+  </ol>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;和梯度结合起来，不加证明地，我们给出 Trace 如下的属性:
+
+  <div class="equation">
+  对于 `n \times n` 的矩阵 `A`, `B` 我们有:
+  <ol>
+    <li>`\nabla_AtrAB = B^T`</li>
+    <li>`\nabla_{A^T}f(A) = (\nabla_{A}f(A))^T`</li>
+    <li>`\nabla_AtrABA^TC = CAB + C^TAB^T`</li>
+    <li>`\nabla_A|A| = |A|(A^{-1})^T` [p.s. `|A|` 指的是 `A` 的 Determinant (行列式) ]</li>
+  </ol>
+  </div>
+
+  <h3 class="title">Normal Equation</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在让我们来关心我们如何基于对矩阵求解梯度的方式来一步解得最优参数。回顾 <equation>5</equation>，我们可以把各个式子表示为：
+
+  <div class="equation">
+  <div class="cmath" align="center">
+  `X=((—(X^{(0)})^T—),(—(X^{(1)})^T—),(...),(—(X^{(m)})^T—))`，`\Theta=((\theta_0),(\theta_1),(...),(\theta_m))`，`Y=((Y^{(0)}),(Y^{(1)}),(...),(Y^{(m)}))`
+  </div>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此有:
+
+  <div class="equation">
+  <div class="cmath" align="center">
+  `X\Theta - Y``=``(((X^{(0)})^T\Theta),((X^{(1)})^T\Theta),(...),((X^{(m)})^T\Theta))-((Y^{(0)}),(Y^{(1)}),(...),(Y^{(m)}))``=``((h(X^{(0)};\Theta)-Y^{(0)}),(h(X^{(1)};\Theta)-Y^{(1)}),(...),(h(X^{(m)};\Theta)-Y^{(m)}))`
+  </div>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回顾 <equation>7</equation>，我们可以把式子表示为：
+
+  <div class="equation">
+  `J(\Theta)=\frac{1}{2}(X\Theta-Y)^T(X\Theta-Y)`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们把 Lost Function `J(\Theta)` 表达为了矩阵的形式，结合上面我们讨论过的矩阵的一些性质，我们可以得到:
+
+  <div class="equation">
+  `\nabla_\ThetaJ(\Theta)`<br>
+  `= \nabla_\Theta{\frac{1}{2}(X\Theta-Y)^T(X\Theta-Y)}`<br>
+  `= \frac{1}{2}\nabla_\Theta{(\Theta^TX^T-Y^T)(X\Theta-Y)}`<br>
+  `= \frac{1}{2} \nabla_\Theta (\Theta^TX^TX\Theta - \Theta^TX^TY - Y^TX\Theta+Y^TY)`<br>
+  `= \frac{1}{2} [X^TX\Theta+X^TX\Theta-X^TY-X^TY]`<br>
+  `= X^TX\Theta-X^TY`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了得到全局最优解，我们让上面得到的最终结果等于零向量，即:
+
+  <div class="equation">
+  `X^TX\Theta = X^TY`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<equation>28</equation> 即 <def>Normal Equation</def>，进一步我们得到:
+
+  <div class="equation">
+  `\Theta=(X^TX)^{-1}X^TY`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于这个式子，我们就可以直接得出最优的参数 `\Theta`，而不用使用迭代的方法来逐渐逼近最优解。
 </div>
 
 <div class="div_ref" id="ref_container"></div>
