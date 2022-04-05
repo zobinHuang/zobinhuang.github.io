@@ -8,8 +8,6 @@ async function load_page(){
         }
     )
     
-    _load_equation()
-
     _load_theorm()
 
     _load_code_segment()
@@ -21,46 +19,6 @@ async function load_page(){
     _load_citation()
 }
 
-// 处理文章中所有的等式
-async function _load_equation(){
-    let equation_index_list = new Array()
-    let equation_containers = document.getElementsByClassName("equation")
-
-    // 记录所有 equation 的编号，并且在 equation div 中标识 equation 的序号
-    for(let i = 0; i < equation_containers.length; i++){
-        // 设置 id
-        equation_containers[i].setAttribute("id",`equation_${i+1}`)
-
-        // 记录编号
-        equation_index_list[equation_containers[i].id] = i+1
-
-        // 创建标号
-        let equation_index = document.createElement('equation_index')
-        equation_index.setAttribute('name', equation_containers[i].id)
-        equation_index.innerHTML = `Equation ${i+1}`
-
-        // 显示标号
-        let fc = equation_containers[i].firstChild
-        equation_containers[i].insertBefore(equation_index,fc)
-    }
-
-    // 替换所有的等式
-    let equation_refs = document.getElementsByTagName("equation")
-    for(let i = 0; i < equation_refs.length; i++){
-        // 创建链接
-        let equation_link = document.createElement('a')
-        equation_link.setAttribute('href', `#${equation_refs[i].innerHTML}`)
-
-        // 获取 Equation 标识号
-        let selected_equation_index = equation_index_list[`equation_${equation_refs[i].innerHTML}`]
-        equation_link.innerHTML = `Equation ${selected_equation_index}`
-
-        // 塞入原先位置
-        equation_refs[i].innerHTML = ''
-        equation_refs[i].append(equation_link)
-    }
-}
-
 // 处理文章中所有的定理
 async function _load_theorm(){
     let theorm_index_list = new Array()
@@ -68,9 +26,6 @@ async function _load_theorm(){
 
     // 记录所有 theorm 的编号，并且在 theorm div 中标识 theorm 的序号
     for(let i = 0; i < theorm_containers.length; i++){
-        // 设置 id
-        theorm_containers[i].setAttribute("id",`theorm_${i+1}`)
-
         // 记录编号
         theorm_index_list[theorm_containers[i].id] = i+1
 
@@ -92,7 +47,7 @@ async function _load_theorm(){
         theorm_link.setAttribute('href', `#${theorm_refs[i].innerHTML}`)
 
         // 获取 Theorm 标识号
-        let selected_theorm_index = theorm_index_list[`theorm_${theorm_refs[i].innerHTML}`]
+        let selected_theorm_index = theorm_index_list[theorm_refs[i].innerHTML]
         theorm_link.innerHTML = `Theorm ${selected_theorm_index}`
 
         // 塞入原先位置

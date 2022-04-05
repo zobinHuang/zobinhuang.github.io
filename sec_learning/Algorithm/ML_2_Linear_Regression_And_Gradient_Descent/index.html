@@ -22,15 +22,19 @@
 
   <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:type" content="website">
-<meta property="og:title" content="标题">
-<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/template_post/index.html">
+<meta property="og:title" content="线性回归和梯度下降">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/index.html">
 <meta property="og:site_name" content="Zobin">
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/template_post/pic/xxx.png">
-<meta property="article:published_time" content="2022-04-05T06:16:04.348Z">
-<meta property="article:modified_time" content="2022-04-05T06:16:04.348Z">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/sl.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/gd.gif">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/gradient.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/gradient_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/xxx.png">
+<meta property="article:published_time" content="2022-04-05T07:25:39.368Z">
+<meta property="article:modified_time" content="2022-04-05T07:25:39.368Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -40,7 +44,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 
-<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/template_post/">
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/">
 
 
 <script id="page-configurations">
@@ -53,7 +57,7 @@
   };
 </script>
 
-  <title>标题 | Zobin
+  <title>线性回归和梯度下降 | Zobin
 </title>
   
 
@@ -178,7 +182,7 @@
     <div class="post-block" lang="cn">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">标题
+<h1 class="post-title" itemprop="name headline">线性回归和梯度下降
 </h1>
 
 <div class="post-meta">
@@ -186,7 +190,8 @@
   <ul class="breadcrumb">
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
-          <li>TEMPLATE_POST</li>
+            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
+          <li>ML_2_LINEAR_REGRESSION_AND_GRADIENT_DESCENT</li>
         
   </ul>
 
@@ -249,7 +254,7 @@
 <body onload="load_page()">
 
 <div align="center" class="div_indicate_source">
-  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Jan.30 2022</i></font></h4>
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Apr.4 2022</i></font></h4>
 </div>
 <div class="div_licence">
   <br>
@@ -273,42 +278,295 @@
 </div><br>
 
 <!-- Start your post here -->
-<h2 class="title">Section</h2>
+<h2 class="title">Linear Regression</h2>
 <div class="div_learning_post">
-  <desp class="title">Desp</desp>
-
-  <h3 class="title">Subsection</h3>
-  <desp class="title">Desp</desp>
+  <h3 class="title">Supervised Learning</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Cite from <cite>sample</cite>
+  &nbsp;&nbsp;&nbsp;&nbsp;Linear Regression (LR) 是 Supervised Learning 的一种简单情况。首先我们回顾一下 Supervised Learning 的基本流程:
+
+  <div align="center">
+    <img src="./pic/sl.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们给出一个 <def>Training Set</def>，里面包含了 `m` 条 <def>Samples</def> `(X,Y)=[(X^{(0)},Y^{(0)}),...,(X^{(m-1)},Y^{(m-1)})]`，每一条 Sample `(X^{(i)},Y^{(i)})`  中都有对应的 <def>Features</def> `X^{(i)}` 以及其对应的 <def>Label</def> `Y^{(i)`。注意到 `X^{(i)}` 是 `n` 维的，即 
+
+  <div class="equation">
+  `X^{(i)}=[x_{0}^{(i)},x_{1}^{(i)},...,x_{n-1}^{(i)}]`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;`y^{(i)}` 是 `l` 维的，即
+
+  <div class="equation">
+  `Y^{(i)}=[y_{0}^{(i)},y_{1}^{(i)},...,y_{l-1}^{(i)}]`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，对于 LR 问题来说，`l=1`，也即每一个 Sample 的 Label 都是一个连续的数值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这些 Samples 将作为 <def>Learning Algorithm</def> 的输入，后者需要输出一个 <def>Hypothesis</def> `h(X;\Theta)`，注意到 `h` 带有 <def>Parameters</def> `\Theta`，其任务是对新的输入向量 `X^{(n ew)}` 输出一个预测值 `Y^{(n ew)}`。
+
+  <h3 class="title">Linear Regression</h3>
+  <h4 class="title">`h` 的形式</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述流程，我们首先关心的问题是 `h` 的形式。在 LR 问题下，我们可以把 `h` 表示如下:
+
+  <div class="equation">
+    `\hat{Y}^{(i)} = h(X^{(i)};\Theta) = \theta_{b} + \sum_{j=0}^{n-1}\theta_jx_j^{(i)}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其中 `n` 表示了输入向量 `X` 的维度，对应的也是参数 `\Theta` 的维度; `\theta_{b}` 是一个偏置值，我们可以给 `\Theta` 和 `X` 多加一个维度来合并这个偏置值，这样一来 `x_n` 就恒等为 `1`。化简如下：
+
+  <div class="equation">
+    `\hat{Y}^{(i)} = h(X^{(i)};\Theta) = \sum_{j=0}^{n}\theta_jx_j^{(i)}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;再次强调，`X`, `Y` 和 `\Theta` 都是向量，可以表示如下:
+
+  <div class="equation">
+  <div class="cmath" align="center">
+    <p>`\Theta = ((\theta_0),(\theta_1),(...),(\theta_{n}))`，`X = ((x_0),(x_1),(...),(x_{n}))`，`Y = ((y_0),(y_1),(...),(y_{l-1}))`  
+  </div>
+  </div>
+
+  <h4 class="title">如何选取参数 `\theta`</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在有了 `h(X;\Theta)` 的形式之后，我们接下来关心的问题就是如何选取 `\Theta`，这也是 Leanring Algorithm 本质上在干的事情。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;直觉告诉我们，`h(X;\Theta)` 所应用的参数 `\Theta`，应该使得 `\forall X^{(i)}\in X`，`h(X^{(i)};\Theta) \approx Y^{(i)}`，也即 `h(X;\Theta)` 输出的结果应该尽可能得和 Training Set 中各个 Sample 的 Label 接近。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于这个直觉，我们定义一个简单的 <def>Lost Function</def>:
+
+  <div class="equation">
+  `J(\Theta) = \sum_{i=0}^{m-1}(h(X^{(i)};\Theta)-Y^{(i)})^2`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，在上面这个式子中，`\Theta` 是自变量，而 Training Set 中的各个 Sample `(X^{(i)},Y^{(i)})` 则是参数，`J(\Theta)` 是因变量。这与我们上面讨论的 <equation>4</equation> 中 `X`, `Y` 和 `\Theta` 的关系有所不同。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了后面计算方便，我们在前面加上系数:
+
+  <div class="equation">
+  `J(\Theta) = \frac{1}{2}\sum_{i=0}^{m-1}(h(X^{(i)};\Theta)-Y^{(i)})^2`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此，Learning Algorithm 的工作是：找到使得 `J(\Theta)` 最小的 `\Theta` 值，也即:
+
+  <div class="equation">
+  `\Theta=` argmin`[J(\Theta)]`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在明确 Learning Algorithm 的任务后，我们在 <ref>gd</ref> 一节中将看到我们是如何实现上面这个目标的。
 </div>
 
-<h2 class="title">xxx</h2>
+<h2 class="title">Batch/Stochastic Gradient Descent</h2>
+<div class="div_learning_post">
+  <label class="title">gd</label>
+  <h3 class="title">Batch Gradient Descent</h3>
+
+  <h4 class="title">初步思路</h4>
+  <div align="center">
+    <img src="./pic/gd.gif" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一个初步的思路是，我们首先随机选定一组参数 `\Theta`，比如 `\Theta={\theta_0=0,\theta_1=0,...,\theta_{n-1}=0}`，然后我们不断改变 `\Theta` 来降低 `J(\theta)` 的值。这个思路在输入向量是二维的时候，可以采用如上所示的图来表示。
+
+  <div class="theorm_prove">
+  <div align="center"><h4>为什么不联立方程求出 `J(\theta)` 的最小值点?</h4></div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;既然我们采用了逐步下降的办法，我们就需要使用到数学工具 —— 梯度。下面我们对相关数学知识进行回顾。
+
+  <h4 class="title">求导的本质</h4>
+  <div align="center">
+    <img src="./pic/gradient.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于单变量连续函数 `f(x)` 来说，如果我们对其自变量 `x` 进行求导:
+
+  <div class="equation">
+  `f'(x) = \frac{df(x)}{dx}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们最终实际上会得到一个向量 `(1,f'(x))`，这个向量指定了当自变量取值为 `x_i` 时，函数的增长方向向量 `(1,f'(x_i))`，如上图所示。这个增长方向向量也可以使用我们平时常说的 "斜率" 来表示，也即 `\tan\beta=\frac{f'(x_i)}{1}=f'(x_i)`，我们称这个 "斜率" 为 `f(x)` 的 <def>梯度 (Gradient)</def>，记为 `\nablaf(x)=f'(x)`。梯度 `\nablaf(x)` 反映了自变量 `x` 发生的微小变化给 `f(x)` 带来的影响。
+
+  <div align="center">
+    <img src="./pic/gradient_2.png" height=400px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同样地，对于多维连续函数 `f(X)` 来说，如果我们对其自变量 `X=[x_1,x_2,...,x_n]` 求偏导数，我们会得到在各个方向上的 `f(X)` 的增长方向向量 `(1,f'(x_1))`, `(1,f'(x_2))`, ..., `(1,f'(x_n))`。如上图所示，以二维的情况为例，若自变量在各个增长方向上的速率相同，则我们可以对各个增长方向向量进行合成，并求出总的梯度为
+
+  <div class="equation">
+  `\frac{\nablaf(x_1)+\nablaf(x_2)}{\sqrt{2}}=\frac{\frac{\partial f(x)}{\partial x_0}+\frac{\partial f(x)}{\partial x_1}}{\sqrt{2}}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果自变量在各个增长方向上的速率不同，则就没有以上形式的结论。我们可以把总的梯度表示为由各个方向上的梯度组成的向量，也即:
+
+  <div class="equation">
+  `f'(X)` `=` `\nablaf(X)` `=` `[\nablaf(x_1),\nablaf(x_2)]^{T}` `=` `[\frac{\partialf(x)}{\partial x_1},\frac{\partialf(x)}{\partial x_2}]^{T}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这样一来，我们如果知道了 `X` 在各个分量 `x_p` 上的变化率 `\alpha_p`，我们就能求出来 `f'(X)` 的真实梯度:
+
+  <div class="equation">
+  `[\alpha_1, \alpha_2] \cdot \nablaf(X)` `=` `[\alpha_1, \alpha_2] \cdot [\nablaf(x_1),\nablaf(x_2)]^{T}` `=` `\alpha_1\nablaf(x_1) + \alpha_2\nablaf(x_2)`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可见，单变量的连续函数的梯度向量实际上是一种特殊情况，其向量只有一个分量，因此是一个标量。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;拓展到更多维的情况下，我们得到:
+
+  <div class="equation">
+  `\nablaf(X)``=``[\nablaf(x_1),\nablaf(x_2),...,\nablaf(x_n)]^{T}``=``[\frac{\partialf(x)}{\partialx_1},\frac{\partialf(x)}{\partialx_2},...,\frac{\partialf(x)}{\partialx_n}]^{T}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;梯度中的每一个分量 `\nablaf(x_i)` 代表着: 自变量 `X` 的分量 `x_i` 发生的微小变化给 `f(x)` 带来的影响。
+
+  <h4 class="title">Batch Gradient Descent</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到我们的问题: 采用逐渐下降的办法来逼近 `J(\Theta)` 的最小值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面我们看到了，求解出 `f'(X^{(i)})`，我们就可以得到在 `X^{(i)}=(x_0^{(i)}, x_1^{(i)}, ..., x_{n-1}^{(i)})` 这个点的增长方向向量，体现在各个分量 `x_p` 的梯度值 `\nablaf(x_p^{(i)}) = \frac{\partialf(X)}{\partialx_p}|_{x_p=x_p^{(i)}}`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同样的道理，求解出 `J'(\Theta^{(i)})`，我们就可以得到在 `\Theta^{(i)}=(\theta_0^{(i)}, \theta_1^{(i)}, ..., \theta_{n-1}^{(i)})` 这个点的增长方向向量，体现在各个分量 `\theta_j` 的梯度值 `\nablaJ(\theta_j^{(i)}) = \frac{\partialJ(\Theta)}{\partial\theta_j}|_{\theta_j=\theta_j^{(i)}}`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;但是由于我们想要的是让 `J(\Theta)` 减小的效果，所以真正有用的是与「增长方向向量」方向相反的向量，因此我们实际上要的是:
+
+  <div class="equation">
+  `-\nablaJ(\theta_j) = -\frac{\partialJ(\Theta)}{\partial\theta_j}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此，对于每一个参数，我们应用:
+
+  <div class="equation">
+  `\theta_j := \theta_j - \alpha \frac{\partial J(\Theta)}{\partial \theta_j}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其中 `\alpha` 称为 <def>Learning Rate</def>，可以理解为每次向着梯度的反方向步进的长度。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于梯度项 `\frac{\partial J(\Theta)}{\partial \theta_j}`，让我们结合 <equation>4</equation> 和 <equation>7</equation>，代入上述等式求解。
+
+  <div class="equation">
+  `\frac{\partial J(\Theta)}{\partial \theta_j}`<br>
+  `= \frac{\partial}{\partial \theta_j}{\frac{1}{2}\sum_{i=0}^{m-1}(h(X^{(i)};\Theta)-Y^{(i)})^2}`<br>
+  `=[h(X^{(0)};\Theta)-Y^{(0)}] \cdot \frac{\partial}{\partial \theta_j}[h(X^{(0)};\Theta)-Y^{(0)}] + ...`<br>
+  <note>(注意到 LR 问题中，`Y^{(i)}` 实际上是一个标量，即 `Y^{(i)}=y^{(i)}`，因此)</note><br>
+  `=[\theta_0x_0^{(0)}+...\theta_nx_n^{(0)}-y^{(0)}] \cdot \frac{\partial}{\partial \theta_j}[\theta_0x_0^{(0)}+...\theta_nx_n^{(0)}-y^{(0)}]+...`<br>
+  `=[\theta_0x_0^{(0)}+...\theta_nx_n^{(0)}-y^{(0)}] \cdot x_j^{(0)} + ...`<br>
+  `=\sum_{i=0}^{m-1}[\theta_0x_0^{(i)}+...\theta_nx_n^{(i)}-y^{(i)}] \cdot x_j^{(i)}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于 <equation>15</equation> 和 <equation>16</equation>，我们可以得到更新每一个 `\theta_j` 的公式:
+
+  <div class="equation">
+  `\theta_j := \theta_j - \alpha \cdot {\sum_{i=0}^{m-1}[\theta_0x_0^{(i)}+...\theta_nx_n^{(i)}-y^{(i)}] \cdot x_j^{(i)}}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于 <equation>17</equation>，我们可以得到使用梯度下降迭代得到最终 `\Theta` 的算法:
+
+  <pre id="gd" style="display:hidden;">
+    \begin{algorithm}
+    \caption{Batch Gradient Descent}
+    \begin{algorithmic}
+    \INPUT Training Set $(X,Y)$
+    \STATE $\Theta = \overrightarrow{0}$
+    \WHILE{ Not Coverage }
+      \FOR{$\theta_j$ in $\Theta$}
+      \STATE EQUATION\_17($\theta_j$)
+      \ENDFOR
+    \ENDWHILE
+    \end{algorithmic}
+    \end{algorithm}
+  </pre>
+  <script>
+      pseudocode.renderElement(document.getElementById("gd"));
+  </script>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们已经完成了第一个学习算法，观察 <equation>17</equation>，可以发现我们在每个参数 `\theta_j` 的每步更新时，我们需要结合所有 `m` 条 Samples 来帮助我们计算梯度，因此我们把上述算法称为 <def>Batch Gradient Descent</def> (BGD, 批梯度下降)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;思考一下，假设现在一共有一亿条 Samples，`\Theta` 的维度是五万个参数，可以想像，使用 BGD 迭代来更新参数的方法将会十分缓慢。因此，我们下面介绍一种改进的方法。
+
+  <h3 class="title">Stochastic Gradient Descent</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面我们发现导致 BGD 缓慢的原因是因为，每轮迭代中算每个参数 `\theta_j` 的梯度需要使用到整个数据集，因此我们对 BGD 进行修改: 每轮迭代中算每个参数 `\theta_j` 的梯度时，只随机选取一条 Sample 来进行计算 ，也即:
+
+  <div class="equation">
+  `\theta_j := \theta_j - \alpha \cdot [\theta_0x_0^{(i)}+...\theta_nx_n^{(i)}-y^{(i)}] \cdot x_j^{(i)}`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这样一来，虽然我们不能保证每轮迭代中，对 `\theta_j` 的更新都是朝着最优的方向前进，但是从平均的角度来看 (i.e. 我们最终还是把整个数据集喂进了学习算法)，我们最终会朝着最优的方向前进。修改过的算法如下:
+
+  <pre id="gd" style="display:hidden;">
+    \begin{algorithm}
+    \caption{Stochastic Gradient Descent}
+    \begin{algorithmic}
+    \INPUT Training Set $(X,Y)$
+    \STATE $\Theta = \overrightarrow{0}$
+    \WHILE{ Not Coverage }
+      \FOR{$\theta_j$ in $\Theta$}
+      \STATE EQUATION\_18($\theta_j$)
+      \ENDFOR
+    \ENDWHILE
+    \end{algorithmic}
+    \end{algorithm}
+  </pre>
+  <script>
+      pseudocode.renderElement(document.getElementById("gd"));
+  </script>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们把修改过的算法称为 <def>Stochastic Gradient Descent</def> (SGD, 随机梯度下降)。
+</div>
+
+<h2 class="title">Normal Equation</h2>
 <div class="div_learning_post">
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;
 </div>
-
 
 <div class="div_ref" id="ref_container"></div>
 
 </body>
 
 
-<!--等式、引用-->
-<!-- 
-<div class="equation">
-</div>
-
-<equation>1</equation>
--->
-
 <!--定理、引用、证明-->
 <!-- 
-<div class="theorm">
+<div class="theorm" id="theorm_id">
 </div>
 
-<theorm>1</theorm>
+<theorm>theorm_id</theorm>
 
 <div class="theorm_prove">
 </div>
@@ -404,7 +662,8 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
   <ul class="breadcrumb">
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
-          <li>TEMPLATE_POST</li>
+            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
+          <li>ML_2_LINEAR_REGRESSION_AND_GRADIENT_DESCENT</li>
         
   </ul>
 
