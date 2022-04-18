@@ -2,37 +2,121 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_3_Locally_Weighted_And_Logistic_Regression/ref.json</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_schedule/scoreboard.json</loc>
     
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-18</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_about/index.html</loc>
+    
+    <lastmod>2022-04-18</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_3_Locally_Weighted_And_Logistic_Regression/index.html</loc>
     
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-14</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_3_Locally_Weighted_And_Logistic_Regression/extend.html</loc>
     
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-11</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_3_Locally_Weighted_And_Logistic_Regression/ref.json</loc>
     
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-10</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/template_post/index.html</loc>
     
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/index.html</loc>
+    
+    <lastmod>2022-04-09</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_5_Verilog_Language/index.html</loc>
+    
+    <lastmod>2022-04-09</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_5_Verilog_Language/ref.json</loc>
+    
+    <lastmod>2022-04-08</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/post_index.json</loc>
+    
+    <lastmod>2022-04-08</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_19_Plane_Graph/index.html</loc>
+    
+    <lastmod>2022-04-08</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_6_Rate_Distortion_Function/index.html</loc>
+    
+    <lastmod>2022-04-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
+    
+    <lastmod>2022-04-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_6_Rate_Distortion_Function/ref.json</loc>
+    
+    <lastmod>2022-04-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_5_Channel_Encode/index.html</loc>
+    
+    <lastmod>2022-04-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Information_Theory_5_Channel_Encode/ref.json</loc>
+    
+    <lastmod>2022-04-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_19_Plane_Graph/ref.json</loc>
+    
+    <lastmod>2022-04-06</lastmod>
     
   </url>
   
@@ -101,13 +185,6 @@
   
   <url>
     <loc>http://www.zobinhuang.com:10082/index.html</loc>
-    
-    <lastmod>2022-04-02</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_about/index.html</loc>
     
     <lastmod>2022-04-02</lastmod>
     
@@ -478,13 +555,6 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_schedule/scoreboard.json</loc>
-    
-    <lastmod>2022-03-02</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Algorithm_Intro_2_Asymptotic_notation_and_recurrences/index.html</loc>
     
     <lastmod>2022-02-28</lastmod>
@@ -493,20 +563,6 @@
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/template_post/ref.json</loc>
-    
-    <lastmod>2022-02-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_5_HDL_Bits_Notes/index.html</loc>
-    
-    <lastmod>2022-02-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_5_HDL_Bits_Notes/ref.json</loc>
     
     <lastmod>2022-02-27</lastmod>
     
@@ -633,13 +689,6 @@
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/index.html</loc>
-    
-    <lastmod>2022-02-11</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/post_index.json</loc>
     
     <lastmod>2022-02-11</lastmod>
     
@@ -2006,7 +2055,7 @@
 
   <url>
     <loc>http://www.zobinhuang.com:10082/</loc>
-    <lastmod>2022-04-05</lastmod>
+    <lastmod>2022-04-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

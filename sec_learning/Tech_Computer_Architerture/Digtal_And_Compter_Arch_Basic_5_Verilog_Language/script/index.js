@@ -8,8 +8,6 @@ async function load_page(){
         }
     )
     
-    _load_pic()
-
     _load_equation()
 
     _load_theorm()
@@ -21,48 +19,6 @@ async function load_page(){
     _load_keyword()
 
     _load_citation()
-}
-
-// 处理文章中所有的图片
-async function _load_pic(){
-    let img_index_list = new Array()
-    let img_containers = document.getElementsByClassName("img")
-
-    // 记录所有 img 的编号，并且在 img div 中标识 img 的序号
-    for(let i = 0; i < img_containers.length; i++){
-        // 设置 id 和 name
-        img_containers[i].setAttribute("id",`image_${i+1}`)
-        img_containers[i].setAttribute('name', `image_${img_containers[i].id}`)
-
-        // 记录编号
-        img_index_list[img_containers[i].id] = i+1
-
-        // 创建标号
-        let img_index = document.createElement('img_index')
-        if(!img_containers[i].title)
-            img_index.innerHTML = `Figure ${i+1}`
-        else
-        img_index.innerHTML = `Figure ${i+1}: ${img_containers[i].title}`
-
-        // 显示标号
-        img_containers[i].append(img_index)
-    }
-
-    // 替换所有的图片引用
-    let img_refs = document.getElementsByTagName("imaging")
-    for(let i = 0; i < img_refs.length; i++){
-        // 创建链接
-        let img_link = document.createElement('a')
-        img_link.setAttribute('href', `#image_${img_refs[i].innerHTML}`)
-
-        // 获取 Equation 标识号
-        let selected_img_index = img_index_list[`image_${img_refs[i].innerHTML}`]
-        img_link.innerHTML = `Figure ${selected_img_index}`
-
-        // 塞入原先位置
-        img_refs[i].innerHTML = ''
-        img_refs[i].append(img_link)
-    }
 }
 
 // 处理文章中所有的等式

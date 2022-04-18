@@ -33,8 +33,8 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/gradient.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/gradient_2.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/xxx.png">
-<meta property="article:published_time" content="2022-04-05T11:35:24.512Z">
-<meta property="article:modified_time" content="2022-04-05T11:35:24.512Z">
+<meta property="article:published_time" content="2022-04-09T16:45:38.976Z">
+<meta property="article:modified_time" content="2022-04-09T16:45:38.976Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -344,17 +344,17 @@
   &nbsp;&nbsp;&nbsp;&nbsp;基于这个直觉，我们定义一个简单的 <def>Lost Function</def>:
 
   <div class="equation">
-  `J(\Theta) = \sum_{i=0}^{m-1}(h(X^{(i)};\Theta)-Y^{(i)})^2`
+  `\mathcal{J}(\Theta) = \sum_{i=0}^{m-1}(h(X^{(i)};\Theta)-Y^{(i)})^2`
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，在上面这个式子中，`\Theta` 是自变量，而 Training Set 中的各个 Sample `(X^{(i)},Y^{(i)})` 则是参数，`J(\Theta)` 是因变量。这与我们上面讨论的 <equation>4</equation> 中 `X`, `Y` 和 `\Theta` 的关系有所不同。
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，在上面这个式子中，`\Theta` 是自变量，而 Training Set 中的各个 Sample `(X^{(i)},Y^{(i)})` 则是参数，`\mathcal{J}(\Theta)` 是因变量。这与我们上面讨论的 <equation>4</equation> 中 `X`, `Y` 和 `\Theta` 的关系有所不同。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;为了后面计算方便，我们在前面加上系数:
 
   <div class="equation">
-  `J(\Theta) = \frac{1}{2}\sum_{i=0}^{m-1}(h(X^{(i)};\Theta)-Y^{(i)})^2`
+  `\mathcal{J}(\Theta) = \frac{1}{2}\sum_{i=0}^{m-1}(h(X^{(i)};\Theta)-Y^{(i)})^2`
   </div>
 
   <p>
@@ -379,7 +379,7 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;一个初步的思路是，我们首先随机选定一组参数 `\Theta`，比如 `\Theta={\theta_0=0,\theta_1=0,...,\theta_{n-1}=0}`，然后我们不断改变 `\Theta` 来降低 `J(\theta)` 的值。这个思路在输入向量是二维的时候，可以采用如上所示的图来表示。
+  &nbsp;&nbsp;&nbsp;&nbsp;一个初步的思路是，我们首先随机选定一组参数 `\Theta`，比如 `\Theta={\theta_0=0,\theta_1=0,...,\theta_{n-1}=0}`，然后我们不断改变 `\Theta` 来降低 `\mathcal{J}(\theta)` 的值。这个思路在输入向量是二维的时候，可以采用如上所示的图来表示。
 
   <div class="theorm_prove">
   <div align="center"><h4>为什么不联立方程求出 `J(\theta)` 的最小值点?</h4></div>
@@ -445,36 +445,36 @@
 
   <h4 class="title">Batch Gradient Descent</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;回到我们的问题: 采用逐渐下降的办法来逼近 `J(\Theta)` 的最小值。
+  &nbsp;&nbsp;&nbsp;&nbsp;回到我们的问题: 采用逐渐下降的办法来逼近 `\mathcal{J}(\Theta)` 的最小值。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;上面我们看到了，求解出 `f'(X^{(i)})`，我们就可以得到在 `X^{(i)}=(x_0^{(i)}, x_1^{(i)}, ..., x_{n-1}^{(i)})` 这个点的增长方向向量，体现在各个分量 `x_p` 的梯度值 `\nablaf(x_p^{(i)}) = \frac{\partialf(X)}{\partialx_p}|_{x_p=x_p^{(i)}}`。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;同样的道理，求解出 `J'(\Theta^{(i)})`，我们就可以得到在 `\Theta^{(i)}=(\theta_0^{(i)}, \theta_1^{(i)}, ..., \theta_{n-1}^{(i)})` 这个点的增长方向向量，体现在各个分量 `\theta_j` 的梯度值 `\nablaJ(\theta_j^{(i)}) = \frac{\partialJ(\Theta)}{\partial\theta_j}|_{\theta_j=\theta_j^{(i)}}`。
+  &nbsp;&nbsp;&nbsp;&nbsp;同样的道理，求解出 `\mathcal{J}'(\Theta^{(i)})`，我们就可以得到在 `\Theta^{(i)}=(\theta_0^{(i)}, \theta_1^{(i)}, ..., \theta_{n-1}^{(i)})` 这个点的增长方向向量，体现在各个分量 `\theta_j` 的梯度值 `\nabla\mathcal{J}(\theta_j^{(i)}) = \frac{\partial\mathcal{J}(\Theta)}{\partial\theta_j}|_{\theta_j=\theta_j^{(i)}}`。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;但是由于我们想要的是让 `J(\Theta)` 减小的效果，所以真正有用的是与「增长方向向量」方向相反的向量，因此我们实际上要的是:
+  &nbsp;&nbsp;&nbsp;&nbsp;但是由于我们想要的是让 `\mathcal{J}(\Theta)` 减小的效果，所以真正有用的是与「增长方向向量」方向相反的向量，因此我们实际上要的是:
 
   <div class="equation">
-  `-\nablaJ(\theta_j) = -\frac{\partialJ(\Theta)}{\partial\theta_j}`
+  `-\nabla\mathcal{J}(\theta_j) = -\frac{\partial\mathcal{J}(\Theta)}{\partial\theta_j}`
   </div>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;因此，对于每一个参数，我们应用:
 
   <div class="equation">
-  `\theta_j := \theta_j - \alpha \frac{\partial J(\Theta)}{\partial \theta_j}`
+  `\theta_j := \theta_j - \alpha \frac{\partial \mathcal{J}(\Theta)}{\partial \theta_j}`
   </div>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;其中 `\alpha` 称为 <def>Learning Rate</def>，可以理解为每次向着梯度的反方向步进的长度。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于梯度项 `\frac{\partial J(\Theta)}{\partial \theta_j}`，让我们结合 <equation>4</equation> 和 <equation>7</equation>，代入上述等式求解。
+  &nbsp;&nbsp;&nbsp;&nbsp;对于梯度项 `\frac{\partial \mathcal{J}(\Theta)}{\partial \theta_j}`，让我们结合 <equation>4</equation> 和 <equation>7</equation>，代入上述等式求解。
 
   <div class="equation">
-  `\frac{\partial J(\Theta)}{\partial \theta_j}`<br>
+  `\frac{\partial \mathcal{J}(\Theta)}{\partial \theta_j}`<br>
   `= \frac{\partial}{\partial \theta_j}{\frac{1}{2}\sum_{i=0}^{m-1}(h(X^{(i)};\Theta)-Y^{(i)})^2}`<br>
   `=[h(X^{(0)};\Theta)-Y^{(0)}] \cdot \frac{\partial}{\partial \theta_j}[h(X^{(0)};\Theta)-Y^{(0)}] + ...`<br>
   <note>(注意到 LR 问题中，`Y^{(i)}` 实际上是一个标量，即 `Y^{(i)}=y^{(i)}`，因此)</note><br>
@@ -633,14 +633,14 @@
   &nbsp;&nbsp;&nbsp;&nbsp;回顾 <equation>7</equation>，我们可以把式子表示为：
 
   <div class="equation">
-  `J(\Theta)=\frac{1}{2}(X\Theta-Y)^T(X\Theta-Y)`
+  `\mathcal{J}(\Theta)=\frac{1}{2}(X\Theta-Y)^T(X\Theta-Y)`
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;现在我们把 Lost Function `J(\Theta)` 表达为了矩阵的形式，结合上面我们讨论过的矩阵的一些性质，我们可以得到:
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们把 Lost Function `\mathcal{J}(\Theta)` 表达为了矩阵的形式，结合上面我们讨论过的矩阵的一些性质，我们可以得到:
 
   <div class="equation">
-  `\nabla_\ThetaJ(\Theta)`<br>
+  `\nabla_\Theta\mathcal{J}(\Theta)`<br>
   `= \nabla_\Theta{\frac{1}{2}(X\Theta-Y)^T(X\Theta-Y)}`<br>
   `= \frac{1}{2}\nabla_\Theta{(\Theta^TX^T-Y^T)(X\Theta-Y)}`<br>
   `= \frac{1}{2} \nabla_\Theta (\Theta^TX^TX\Theta - \Theta^TX^TY - Y^TX\Theta+Y^TY)`<br>
