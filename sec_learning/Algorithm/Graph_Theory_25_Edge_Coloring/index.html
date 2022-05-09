@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:type" content="website">
+<meta property="og:title" content="边着色">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_25_Edge_Coloring/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_25_Edge_Coloring/pic/class_problem.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_25_Edge_Coloring/pic/k_m_n_prove.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_25_Edge_Coloring/pic/prove_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_25_Edge_Coloring/pic/prove_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_25_Edge_Coloring/pic/no_prove.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_25_Edge_Coloring/pic/even.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_25_Edge_Coloring/pic/odd.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_25_Edge_Coloring/pic/app.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_25_Edge_Coloring/pic/xxx.png">
+<meta property="article:published_time" content="2022-05-02T16:13:59.138Z">
+<meta property="article:modified_time" content="2022-05-02T16:13:59.138Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_25_Edge_Coloring/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>边着色 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">边着色
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
+          <li>GRAPH_THEORY_25_EDGE_COLORING</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>`
+
+<body onload="load_page()">
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：May.1 2022</i></font></h4>
+</div>
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+<br>
+<div class="div_catalogue">
+  <div align="center">
+    <h1> 目录 </h1>
+    <p>
+    <font size="3px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_load_catalogue_alert" id="load_catalogue_alert">正在加载目录...</div>
+  <div class="div_catalogue_container" id="catalogue_container">
+  </div>
+</div><br>
+
+<!-- Start your post here -->
+<h2 class="title">边着色的概念</h2>
+<div class="div_learning_post">
+  <h3 class="title">问题引入</h3>
+  <div class="img" title="排课问题建模">
+    <img src="./pic/class_problem.png" height="300px">
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们使用排课表的例子引出图的边着色问题: 假设有 `m` 位教师，`n` 个班级，其中教师 `x_i` 要给班级 `y_j` 上 `p_{ij}` 节课，求出如何在最少节次排完所有的课。由于一个老师和一个班级在同一个时段只能上一个课，因此问题的建模如 <imaging>1</imaging> 所示，可以转化为一个二部图：我们令 `X={x_1, x_2, ..., x_m}`，`Y={y_1, y_2, ..., y_n}`，其中 `x_i` 和 `y_j` 之间连接 `p_{ij}` 条边，得到一个二部图 `G=(X,Y)`，这样一来，我们的问题就转化为：如何在 `G` 中将边集 `E` 划分为互不相交的 `p` 个 匹配，且使得 `p` 最小。如果用图边着色的方法来思考这个问题，则问题则为：
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果每个匹配中的边用同一种颜色染色，不同匹配中的边用不同颜色染色，则问题转化为在 `G` 中给每条边染色，相邻边染不同色，至少需要的颜色数.
+  </div>
+
+  <h3 class="title">相关概念定义</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们给出图边着色的一些相关概念。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设 `G` 是图，对 `G` 的边进行染色。若相邻边染不同颜色，则称对 `G` 进行 <def>正常边着色 (Proper Edge-coloring)</def>。在对 `G` 正常边着色时，着相同颜色的边集称为该正常着色的一个 <def>色组(色类)</def>。值得注意的是，正常边着色图不能有自环。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，如果能用 `k` 种颜色对图 `G` 进行正常边着色，称 `G` 是 <def>`k` 边可着色的 (`k`-colorable)</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后，设 `G` 是图，对 `G` 进行正常边着色需要的最少颜色数，称为 `G` 的 <def>边色数 (Chromatic Index)</def>，记为: `\chi'(G)`。
+
+  <h3 class="title">图边着色的本质</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对图的正常边着色，实际上是对 `G` 的边集合的一种划分，使得每个划分块是 `G` 的一个边独立集，图的边色数对应的是图的边独立集最小划分数。因此，图的边着色，本质上是对应实际问题中的 “划分” 问题或 “分类” 问题。
+</div>
+
+<h2 class="title">几类特殊图的边色数</h2>
+<div class="div_learning_post">
+  <h3 class="title">完全二部图的边色数</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于完全二部图 `K_{m,n}`，对其边色数，我们有如下定理：
+
+  <div class="theorm">
+  `\chi'(K_{m,n}) = \Delta`
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <div class="img" title="完全二部图">
+    <img src="./pic/k_m_n_prove.png" height="200px">
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先设 `X={x_1, x_2, ..., x_{m-1}}`, `Y={y_0, y_1, ..., y_{n-1}}`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;再设 `\Delta=n`，也即 `m \le n`。我们设 `\pi` 是 `K_{m,n}` 的一种 `n` 着色方案，颜色集合为 `{0,1,2,...,n-1}`。`\forall x_i y_j \in E(K_{m,n})`，`\pi` 的着色方案为:
+
+  <div align="center">
+  `\pi(x_iy_j)=(i+j) \mod n`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们证明 `\pi` 是一种正常边着色。对于 `K_{m,n}` 中的任意两条邻接边 `x_iy_j` 和 `x_iy_k`，若
+
+  <div align="center">
+    `\pi(x_iy_j) = \pi(x_iy_k)`
+  </div> 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;则有 `(i+j) \mod n = (i+k) \mod n`，得到 `j=k`，矛盾，因此上面的着色是正常边着色，所以有 `\chi'(K_{m,n}) \le n`，又显然由于对于 `x_i` 来说，其邻接的 `n` 条边都需要着不同的颜色，因此 `\chi'(K_{m,n}) \ge \Delta = n`。综上可以得到 `\chi'(K_{m,n}) = \Delta`。
+  </div>
+
+  <h3 class="title">二部图的边色数</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们定义，设 `\pi` 是 `G` 的一种正常边着色。若点 `u` 关联边的着色没有用到颜色 `i`，则称 <def>`u` 缺 `i` 色 (Color `i` Missing on `u`)</def>。`u` 缺 `i` 色说明点 `u` 可以使用 `i` 色来给它的新增边进行着色，并且保证着色之后仍然是正常边着色。 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在让我们来看关于二部图边色数的定理：
+
+
+  <div class="theorm">
+  若 `G` 是二部图，则 `\chi'(G)=\Delta`。
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们对 `G` 的边数 `m` 进行归纳：
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当 `m=1` 时，`\Delta=1`，`G` 可以看做是一个完全二部图 `K_{1,1}`，因此我们有 `\chi'(G) = \Delta = 1`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设对于小于 `m` 条边的二部图来说命题都成立。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设 `G` 是一个具有 `m` 条边的二部图，取 `uv \in E(G)`，考虑 `G_1=G-uv`，由归纳假设有:
+
+  <div align="center">
+  `\chi'(G_1) = \Delta(G_1) \le \Delta(G)`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这说明，`G_1` 存在一种 `\Delta(G)` 边着色方案 `\pi`。对于该着色方案，因为 `uv` 不存在，因此 `uv` 未着色，所以点 `u` 与 `v` 均至少缺少一种色。下面我们分情况讨论。
+
+  <ol> 
+    <li>如果 `u` 与 `v` 均缺同一种色 `i`，则在 `G_1+uv` 中给 `uv` 着色 `i`，而 `G_1` 其它边，按 `\pi` 方案着色.这样得到 `G` 的 `\Delta` 着色方案，所以: `\chi'(G)=\Delta`</li>
+    <li>
+      <p>如果 `u` 缺色 `i`，而 `v` 缺色 `j`，但不缺色 `i`。设 `H(i,j)` 是图 `G_1` 中由 `i` 色边和 `j` 色边导出的子图。显然，该图的每个分支是 `i` 色边和 `j` 色边交替出现的路或者圈 (类似两个匹配对称差)。
+      <p>对 `H(i,j)` 中包含点 `v` 的分支来说，因 `v` 缺色 `j`，但不缺色 `i`。所以, 在 `H(i,j) `中，点 `v` 的度为 `1`。这说明 `H(i,j)` 中含 `v` 的分支是一条路 `P` 而不是一个圈。
+      <div class="img" title="两点不可能在同一条路上">
+        <img src="./pic/prove_1.png" height="200px" />
+      </div>
+      <p>进一步地，我们可以说明，上面的路 `P` 不含点 `u`：如 <imaging>3</imaging> 所示，如果 `P` 含有点 `u`，那么 `P` 必然是一条长度为偶数的路。这样，`P+uv` 是 `G` 中的奇圈，这与 `G` 是二部图矛盾。
+      <div class="img" title="转化为情况 1 进行处理">
+        <img src="./pic/prove_2.png" height="200px" />
+      </div>
+      <p>既然 `P` 不含点 `u`，所以我们可以交换 `P` 中 `i` 和 `j` 的着色，而不破坏 `G_1` 的 正常边着色。使得交换着色后，`u` 与 `v` 均缺色 `i`，于是由情形 `1`，可以得到 `G` 的 `\Delta` 正常边着色，即证明 `\chi'(G) = \Delta`。
+    </li>
+  </ol>
+  </div>
+
+  <h3 class="title">一般简单图的边色数</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们不加证明地给出一个引理：
+
+  <div class="img" title="一般图的 k 边可着色引理示意图">
+    <img src="./pic/no_prove.png" height="200px" />
+  </div>
+
+  <div class="theorm">
+  如 <imaging>5</imaging> 所示，设 `G` 是简单图，`x` 与 `y` 是 `G` 中两个不相邻的点，`π` 是 `G` 的一个正常 `k` 边着色。若对该着色 `\pi`，`x`,`y` 以及与 `x` 相邻点均至少缺少一种颜色，则 `G+xy` 是 `k` 边可着色的。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们给出一般图的边色数定理，也即 <def>Vizing 定理</def>：
+
+  <div class="theorm">
+  若图 `G` 是简单图，则 `\chi'(G) = \Delta` 或者 `\chi'(G) = \Delta + 1`
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明: 我们的证明过程稍微放松一点，对 `\chi'(G) \le \Delta + 1` 这个结论进行证明。我们对 `G` 的边数 `m` 进行归纳。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当 `m=1` 时，`\Delta=1`，由 <theorm>1</theorm> 可知 `\chi'(G) = 1 < \Delta + 1`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设当边数少于 `m` 的时候，结论成立。下面考虑边数为 `m \ge 2` 的简单图 `G`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设 `xy \in E(G)`，令 `G_1 = G-xy`。由归纳假设有:
+
+  <div align="center">
+  `\chi'(G_1) \le \Delta(G_1)+1 \le \Delta(G)+1`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;于是 `G_1` 存在 `\Delta(G)+1` 正常边着色 `\pi`，显然 `G_1` 的每个顶点都至少缺少一种颜色 (i.e. 缺少新加进来的那种颜色)，根据 <theorm>3</theorm> 可知 `G_1+xy` 是 `\Delta(G)+1` 可着色的。因此我们证明了 `\chi'(G) \le \Delta(G)+1`。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，我们上面只证明了 `\chi'(G) \le \Delta(G)+1` 这样一个较为松弛的结论，实际上 Viking 定理给出的是两个更紧的结论: `\chi'(G) = \Delta` 或者 `\chi'(G) = \Delta + 1`，我们在这里不对这两个紧的结论进行证明，但是我们在下面其它定理中会运用到这两个紧的结论。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们把 `\chi'(G) = \Delta(G)` 的简单图称为 <def>第一类图 (Class One)</def>，把 `\chi'(G) = \Delta(G)+1` 的简单图称为 <def>第二类图 (Class Two)</def>。然而，确定一般图是否是第一类的问题是 NP-Complete 的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Vizing 定理还可以拓展到边可重的图:
+
+  <div class="theorm">
+  设无环图 `G` 中边的最大重数为 `\mu`，则 `\chi'(G) \le \Delta + \mu`
+  </div>
+
+  <h3 class="title">几类特殊图的边色数</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们给出几类特殊图的边色数关系，这些定理将这些特殊图归类为第一类图或者第二类图。
+
+  <h4 class="title">第一类图的特殊图</h4>
+  <div class="theorm">
+  设 `G` 是简单图且 `\Delta(G)>0`。若 `G` 中 (1) 只有一个最大度点 或者 (2) 恰有两个相邻的最大度点，则 `\chi'(G) = \Delta (G)` (i.e. 第一类图)。
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这个定理中，结论成立的情况一共有两种。在证明过程中，结合 <theorm>4</theorm>，我们实际上证明的核心就是通过删去最大度点相邻的边，得到新图。然后通过新图和原图之间最大度的关系，证明新图是一个可 `\Delta(G)` 正常边着色的图，并且满足引理 <theorm>3</theorm> 的要求，最后得出原图同样是可 `\Delta(G)` 正常边着色的图。详细证明过程如下：
+
+  <ol>
+    <li>
+      <p>若简单图 `G` 恰有一个最大度点 `u`，取 `u` 的一个邻点 `v`，作 `G_1=G-uv`，那么 `\Delta(G_1) \le \Delta(G)-1`。由 <theorm>4</theorm> 可得:
+      <div align="center">
+        `\chi'(G_1) \le \Delta(G_1)+1 = (\Delta(G)-1)+1 = \Delta(G)`
+      </div>
+      <p>于是 `G_1` 是可 `\Delta (G)` 正常边着色的，因为 `G_1` 的每个顶点都至少缺少一种颜色，所以由引理 `G_1+uv=G` 是可 `\Delta(G)` 正常边着色的，即:
+      <div align="center">
+        `\chi'(G) = \Delta(G)`
+      </div>
+    </li>
+    <li>
+      <p>若简单图 `G` 恰好有两个相邻的最大度点 `u` 和 `v`。设 `G_1=G-uv`，那么 `\Delta(G_1)=\Delta(G)-1`。同理由 <theorm>4</theorm> 可得:
+      <div align="center">
+      `\chi'(G_1) \le (\Delta(G)-1)+1 = \Delta(G)`
+      </div>
+      <p>于是 `G_1` 是可 `\Delta (G)` 正常边着色的，因为 `G_1` 的每个顶点都至少缺少一种颜色，所以由引理 `G_1+uv=G` 是可 `\Delta(G)` 正常边着色的，即:
+      <div align="center">
+        `\chi'(G) = \Delta(G)`
+      </div>
+    </li>
+  </ol>
+  </div>
+
+  <h4 class="title">第二类图的特殊图</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面给出另一个定理：
+
+  <div class="theorm">
+  设 `G` 是简单图，若顶点数 `n=2k+1` 且边数 `m>k\Delta`，则: `\chi'(G) = \Delta(G)+1` (i.e. 第二类图)
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了证明 <theorm>6</theorm>，我们给出另一个定理并且予以证明:
+
+  <div class="theorm">
+  对于简单图 `G` 的正常边着色 `\pi`，其一种颜色能使用至多 `\ceil{\frac{n-1}{2}}` 次。
+  </div>
+
+  <div class="theorm_prove">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;证明:
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;考虑最极端的情况，图 `G` 的每一个顶点的度数不超过 2 (i.e. 最小化边之间邻接的可能性)，也即 `G` 是一条路，此时 `G` 中一共有 `n-1` 条边，并且 `G` 的边色数 `\chi'(G)=2`。则有:
+    <ol>
+      <li>
+        <p>若 `n` 是偶数，则一种颜色可以最多使用 `\ceil{\frac{n-1}{2}}` 次;
+        <div class="img" title="偶数点图">
+          <img src="./pic/even.png" height="30px" />
+        </div>
+      </li>
+      <li>
+        <p>若 `n` 是偶数，则一种颜色可以最多使用 `\frac{n-1}{2}` 次;
+        <div class="img" title="奇数点图">
+          <img src="./pic/odd.png" height="30px" />
+        </div>
+      </li>
+    </ol>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;综上，一种颜色能使用至多 `\ceil{\frac{n-1}{2}}` 次。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于 <theorm>7</theorm>，我们对 <theorm>6</theorm> 进行证明。
+
+  <div class="theorm_prove">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;若不然，由 <theorm>4</theorm> 可得 `\chi'(G) = \Delta(G)`。
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;设 `\pi` 是 `G` 的 `\Delta (G)` 正常边着色方案，基于 <theorm>7</theorm>，对于 `G` 的每个色类来说，其包含的边数至多是 `\ceil{\frac{n-1}{2}} = \ceil{\frac{2k+1-1}{2}} = k` 条，这样一来边数的上界就为 `m \le k \cdot \Delta(G)`，这与假设矛盾，因此得证。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们给出另一个定理:
+
+  <div class="theorm">
+    设 `G` 是奇数阶 `\Delta` 正则简单图，若 `\Delta > 0`，则 `\chi'(G)=\Delta(G)+1` (i.e. 第二类图)
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设 `n=2k+1`，又由于 `G` 是奇数阶 `\Delta` 正则简单图，可得:
+
+  <div align="center">
+    `m(G) = \frac{n \cdot \Delta}{2} = \frac{(2k+1) \cdot \Delta}{2} > k\Delta`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由 <theorm>6</theorm> 可得，`\chi'(G) = \Delta(G) + 1`
+  </div>
+</div>
+
+<h2 class="title">边着色的应用</h2>
+<div class="div_learning_post">
+  <h3 class="title">排课表问题</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在一个学校中，有 `7` 个教师 `12` 个班级。在 `5` 天教学日条件下，教课的要求由如下矩阵给出:
+
+  <div class="cmath" align="center">
+  `P=((3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3),(1, 3, 6, 0, 4, 2, 5, 1, 3, 3, 0, 4),(5, 0, 5, 5, 0, 0, 5, 0, 5, 0, 5, 5),(2, 4, 2, 4, 2, 4, 2, 4, 2, 4, 2, 3),(3, 5, 2, 2, 0, 3, 1, 4, 4, 3, 2, 5),(5, 5, 0, 0, 5, 5, 0, 5, 0, 5, 5, 0),(0, 3, 4, 3, 4, 3, 4, 3, 4, 3, 3, 0))`
+  </div><br>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其中，`p_{ij}` 表示教师 `x_i` 必须教 `y_j` 班的节数，求: 一天分成几节课，才能满足所提出的 `5` 天教学日的要求?
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;问题可以被建模为一个二部图问题 (i.e. 班级 `y_j` & 老师 `x_i`)，找出这个二部图的最大度 (i.e. 教师 `x_1` 的度数为 35)，即可得到这个二部图的边色数 (`\chi'(G) = \Delta(G) = 35`)，则可得最少的总课时为 35 节课，因此每天需要安排 7 节课。
+
+  <h3 class="title">比赛安排问题</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Alvin (A) 曾邀请 3 对夫妇到他的避暑别墅住一个星期，他们是: Bob 和 Carrie, David 和 Edith, Frank 和 Gena。由于这 6 人都喜欢网球运动，所以他们决定进行网球比赛。6 位客人的每一位都要和其配偶之外的每位客人比赛。另外，Alvin 将分别和 David, Edith, Frank, Gena 进行一场比赛。若没有人在同一天进行 2 场比赛，则要在最少天数完成比赛，如何安排?
+
+  <div class="img" title="比赛安排问题建模">
+    <img src="./pic/app.png" height="300px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;用点表示参赛人，两点连线当且仅当两人有比赛，这样得到如 <imaging>8</imaging> 所示的比赛状态图。问题对应于求状态图的一种最优边着色 (i.e. 用最少色数进行正常边着色)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于 `n=2 \times 3 + 1`，故 `k=3`，每天最多有三场比赛，而 `\Delta=5`，有 `m=16 > 3 \times 5 = k \Delta`，所以由 <theorm>7</theorm> 可知 `\chi'(G)=6`。
+</div>
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+
+
+<!--图片、引用-->
+<!-- 
+<div class="img" title="brabra">
+  <img src="" height="">
+</div>
+
+<imaging>1</imaging>
+-->
+
+<!--等式、引用-->
+<!-- 
+<div class="equation">
+</div>
+
+<equation>1</equation>
+-->
+
+<!--定理、引用、证明-->
+<!-- 
+<div class="theorm">
+</div>
+
+<theorm>1</theorm>
+
+<div class="theorm_prove">
+</div>
+-->
+
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
+          <li>GRAPH_THEORY_25_EDGE_COLORING</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
