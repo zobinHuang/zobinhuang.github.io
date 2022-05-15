@@ -28,13 +28,16 @@
 <meta property="og:description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/pre_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/pre_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/pre_3.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/complete_graph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/bipartite_graph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/dual_graph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/complement_graph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_1_Concept_of_Graph/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-08T13:02:07.708Z">
-<meta property="article:modified_time" content="2022-03-08T13:02:07.708Z">
+<meta property="article:published_time" content="2022-05-15T07:05:10.398Z">
+<meta property="article:modified_time" content="2022-05-15T07:05:10.398Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -260,6 +263,45 @@
 </div><br>
 
 <!-- Start your post here -->
+<h2 class="title">数学前置知识</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在开启图论之旅之前，我们首先对必要的数学前置知识进行回顾。
+
+  <h3 class="title">充分条件和必要条件</h3>
+
+  <div class="img" title="充分条件">
+    <img src="./pic/pre_1.png" height="200px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上图诠释了充分条件的概念。充分条件可以理解为数字电路中的 "或" 门。如果 `A` 是 `B` 的充分条件，则只要 `A` 满足，则 `B` 也成立。而使得 `B` 成立的条件有可能不止有 `A` 一个。
+
+  <div class="img" title="必要条件">
+    <img src="./pic/pre_2.png" width="400px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上图诠释了充分条件的概念。必要条件可以理解为数字电路中的 "或" 门。如果 `A` 是 `B` 的必要条件，则 `A` 只是使得 `B` 成立的条件中的一环。如果 `A` 成立，`B` 不一定成立；但是如果 `A` 不成立，则 `B` 一定不成立。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在一个命题 `p \rightarrow q` 中，`p` 是 `q` 的充分条件，而 `q` 是 `p` 的必要条件。事实上，充分条件与必要条件是同一个命题的两个不同视角，其阐明的是命题中条件与结论的逻辑关系。
+
+  <div class="img" title="充要条件">
+    <img src="./pic/pre_3.png" width="200px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由上面的分析可得，如果 `A` 是 `B` 的充要条件，则说明只有 `A` 能证明 `B`，也即 `A` 是导致 `B` 的唯一因素，因此这是一种对称的关系，也即「`B` 是 `A` 的充要条件」也成立。
+
+  <h3 class="title">反证法</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上面的「充分条件」和「必要条件」的理解，现在让我们来提供在图论中经常出现的反证法的思路。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;以我们要证「`A` 是 `B` 的充分条件」(i.e. `A` 成立就有 `B` 成立) 为例，如果我们无法正面证明，我们其实可以转而证明「`\bar{A}` 是 `\bar{B}` 的必要条件」(i.e. 如果 `\bar{A}` 不成立，则 `\bar{B}` 一定不成立)，因为如果我们能证明后者，那么根据我们原本要证明的命题的假设 `A` 是成立的，则 `\bar{A}` 一定不成立，则 `\bar{B}` 也就不成立，则就有 `B` 成立。
+</div>
+
 <h2 class="title">关于图的一些定义</h2>
 <div class="div_learning_post">
   <p>

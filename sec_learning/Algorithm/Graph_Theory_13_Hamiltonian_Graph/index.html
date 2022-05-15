@@ -28,11 +28,18 @@
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/h_property.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/h_property_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/max_non_h.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/h_add_edge.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/h_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/h_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/non_close.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/close.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/closure.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-25T09:09:33.800Z">
-<meta property="article:modified_time" content="2022-03-25T09:09:33.800Z">
+<meta property="article:published_time" content="2022-05-15T08:30:04.444Z">
+<meta property="article:modified_time" content="2022-05-15T08:30:04.444Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -276,71 +283,169 @@
 </div><br>
 
 <!-- Start your post here -->
-<h2 class="title">哈密尔顿图 与 哈密尔顿路 的定义</h2>
+<h2 class="title">「哈密尔顿图」与「哈密尔顿路」的定义</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;图 `G` 中存在经过每个顶点恰好一次的圈, 称 `G` 为 <def>哈密尔顿图 (Hamiltonian graph)</def>，简称 `H` 图。该圈是 `G` 的一个生成圈，称为 `G` 的 <def>哈密尔顿圈 (Hamiltonian Cycle)</def>，简称 `H` 圈。
+  &nbsp;&nbsp;&nbsp;&nbsp;图 $G$ 中存在经过每个顶点恰好一次的圈, 称 $G$ 为 <def>哈密尔顿图 (Hamiltonian graph)</def>，简称 $H$ 图。该圈是 $G$ 的一个生成圈，称为 $G$ 的 <def>哈密尔顿圈 (Hamiltonian Cycle)</def>，简称 $H$ 圈。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;把条件放松，如果存在经过 `G` 的每个顶点的路, 称该路为 `G` 的 <def>哈密尔顿路 (Hamiltonian Path)</def>，简称 `H` 路，称 `G` 为 <def>可迹的 (Traceable)</def>。
+  &nbsp;&nbsp;&nbsp;&nbsp;把条件放松，如果存在经过 $G$ 的每个顶点的路, 称该路为 $G$ 的 <def>哈密尔顿路 (Hamiltonian Path)</def>，简称 $H$ 路，称 $G$ 为 <def>可迹的 (Traceable)</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;与我们在 <a href="/sec_learning/Algorithm/Graph_Theory_12_Eulerian_Graph_Chinese_Postman/index.html">欧拉图和中国邮递员问题</a> 中讨论的欧拉迹的概念对比着来看，我们会发现其实哈密尔顿圈是在求「点不重」的环游方式，而欧拉迹是在求「边不重」的环游方式。 
 </div>
 
 <h2 class="title">性质与判定</h2>
 <div class="div_learning_post">
   <h3 class="title">性质</h3>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;必要条件 (哈密尔顿 -> 性质):
+   <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们给出一个与哈密尔顿图的必要条件 (哈密尔顿所具有的性质):
 
-  <div align="center" class="div_learning_post_border">
-  若图 `G` 为 `H` 图，则对 `V(G)` 的任一非空顶点子集 `S`，有 `\omega(G-S) \le |S|`。
+  <div class="theorm">
+  若图 $G$ 为 $H$ 图，则对 $V(G)$ 的任一非空顶点子集 $S$，有 $\omega(G-S) \le |S|$。
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <div class="img" title="示例用图">
+    <img src="./pic/h_property.png" width="700px" />
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明: `G` 是 `H` 图，设 `C` 是 `G` 的 `H` 圈，则对 `V(G)` 的任意非空子集 `S`，容易知道: `\omega(C-S) \le |S|` (i.e. 从圈上删点，有可能会产生新的连通分支，也可能不会)，因此有 `\omega(G-S) \le \omega(C-S) \le |S|`。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;上述不等式是 `H` 图的性质，并不能用来判断一个图是否为 `H` 图。但是不满足上述性质的图一定不是 `H` 图。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面再给出几个判断一个图不是 `H` 图的结论:
-
-  <div align="center" class="div_learning_post_border">
-  有割点 (不是分离点) 的图必不是 `H` 图
-  </div>
-
-  <div align="center" class="div_learning_post_border">
-  不等部的二部图必不是 `H` 图
+  &nbsp;&nbsp;&nbsp;&nbsp;$G$ 是 $H$ 图，设 $C$ 是 $G$ 的 $H$ 圈，则对 $V(G)$ 的任意非空子集 $S$，容易知道: $\omega(C-S) \le |S|$ (i.e. 从圈上删点，有可能会产生新的连通分支，也可能不会)，因此有 $\omega(G-S) \le \omega(C-S) \le |S|$。
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面给出一个关于 `H` 路的结论:
+  &nbsp;&nbsp;&nbsp;&nbsp;上述不等式是 $H$ 图的性质，并不能用来判断一个图是否为 $H$ 图，但是不满足上述性质的图一定不是 $H$ 图。
 
-  <div align="center" class="div_learning_post_border">
-  若图 `G` 包含 `H` 路，则对 `V(G)` 的任一非空顶点子集 `S`，有 `\omega(G-S) \le |S|+1`
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面再给出几个判断一个图不是 $H$ 图的充分条件:
+
+  <div class="theorm">
+  有割点 (不是分离点) 的图必不是 $H$ 图
+  </div>
+
+  <div class="theorm">
+  不等部的二部图必不是 $H$ 图
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面给出一个关于 $H$ 路的类似的结论:
+
+  <div class="theorm">
+  若图 $G$ 包含 $H$ 路，则对 $V(G)$ 的任一非空顶点子集 $S$，有 $\omega(G-S) \le |S|+1$
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <div class="img" title="示例用图">
+    <img src="./pic/h_property_2.png" width="700px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;$G$ 是 $H$ 图，设 $P$ 是 $G$ 的 $H$ 路，则对 $V(G)$ 的任意非空子集 $S$，容易知道: $\omega(P-S) \le |S|+1$ (i.e. 从路上删去 $|S|$ 个点，可最多产生 $|S|+1$ 个分支)，因此有 $\omega(G-S) \le \omega(P-S) \le |S|+1$。
   </div>
 
   <h3 class="title">判定</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;图的 `H` 性判定是 `NP`-完全问题. 到目前为止, 有关的定理有 300+, 但没有一个是理想的(充分必要的)。
+  &nbsp;&nbsp;&nbsp;&nbsp;图的 $H$ 性判定是 $NP$-完全问题. 到目前为止, 有关的定理有 300+, 但没有一个是理想的(充分必要的)。下面我们介绍几个著名的定理。
 
   <h4 class="title">Dirac 定理</h4>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;下面对和充分性有关的 <def>Dirac 定理</def> 进行介绍。
 
-  <div align="center" class="div_learning_post_border">
-  对于 `n \ge 3` 的简单图 `G`，如果 `G` 中有 `\delta(G) \ge \frac{n}{2}`，那么 `G` 是 `H` 图。
+  <div class="theorm">
+  对于 $n \ge 3$ 的简单图 $G$，如果 $G$ 中有 $\delta(G) \ge \frac{n}{2}$，那么 $G$ 是 $H$ 图。
   </div>
 
-  <div align="center" class="div_learning_post_border">
-  设 `G` 是 `2`-连通的 `n \ge 3` 阶图，若 `G` 的每个顶点的度都不小于 `k`，则 `G` 中包含一条长度至少为 `2k` 的圈或 `H` 圈。
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们给出关于这个定理的证明。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们反转思路，采用反证法证明：
+
+  <div align="center">
+  <p>如果 $G$ 是 $n \ge 3$ 的非 $H$ 图，则有$\delta(G) < \frac{n}{2}$ 成立
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，我们假设 $G$ 是极大非 $H$ 简单图 (i.e. 给定点数，边数最多的非 $H$ 图)。这里选择极大非 $H$ 简单图是合理的，因为:
+
+  <div class="img" title="非 H 图到极大非 H 图的转化">
+    <img src="./pic/max_non_h.png" width="400px" />
+  </div>
+
+  <ol>
+    <li>命题中的假设是非 $H$ 图，则可以是任意的非 $H$ 图，我们选择极大非 $H$ 简单图以后面证明的方便;</li>
+    <li>选择极大非 $H$ 简单图并不失一般性，因为非极大的 $H$ 图可以通过加边得到极大的非 $H$ 图，而如果我们如果能够基于极大非 $H$ 图证明出关于最小度上界的结论，那么通过删边，自然关于最小度上界的结论仍然会成立，也即极大非 $H$ 图是我们对我们证明结论最不利的情况。</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们正式开始证明。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，$G$ 一定不能是完全图，否则 $G$ 是 $H$ 图。于是可以考虑在 $G$ 中任意取两个不相邻的顶点 $u$ 和 $v$。考虑 $G+uv$，由 $G$ 的极大性，可以知道 $G+uv$ 是 $H$ 图，并且 $G+uv$ 的每一个 $H$ 圈必然包含边 $uv$，如下图所示。
+
+  <div class="img" title="示例用图加边">
+    <img src="./pic/h_add_edge.png" width="200px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;所以在 $G$ 中存在起点为 $u$ 而终点为 $v$ 的 $H$ 路 $P$。不失一般性，设起点为 $u$ 终点为 $v$ 的 $H$ 路 $P$ 为: $P=v_1v_2...v_n$ ($u=v_1$, $v_n=v$)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们令 
+  \begin{cases}
+  S=\{v_i|uv_{i+1} \in E(G)\}, i=1,2,...,n-1 \\ 
+  T=\{v_j|v_jv \in E(G)\}, j=1,2=...,n-1 
+  \end{cases}
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以把 $S$ 理解为，如果 $u$ 和 $P$ 路上的点 $v_i$ 相邻，那么点 $v_i$ 在 $P$ 路上的前一个点 $v_{i-1}$ 就会被加入到集合中；可以 $T$ 理解为，如果 $v$ 和 $P$ 路上的点 $v_j$ 相邻，那么点 $v_j$ 在本身就会被加入到集合中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于这层定义，显然: $P$ 路上 $v_n$ 没有下一个点，并且 $v_n$ 本身并不与自己邻接，因此有 $v_n \notin S \cup T$，所以 $|S \cup T| < n$。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 $|S \cap T| \ne \emptyset$，则 $\exists v_i \in S \cap T$，使得 $uv_{i+1}, vv_i \in E(G)$，如下图所示。
+
+  <div class="img" title="示意图">
+    <img src="./pic/h_1.png" width="500px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这种情况下会出现 $H$ 圈，如下图所示:
+
+  <div class="img" title="H 圈示意图">
+    <img src="./pic/h_2.png" width="500px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这与我们极大非 $H$ 图的假设相违背，因此我们可以得到结论 $S \cap T = \emptyset$，因此有:
+
+<p>  $$d(u)+d(v) = |S|+|T| = |S \cup T| + |S \cap T| = |S \cup T| &lt; n$$</p>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此可以整得 $d(u)$ 和 $d(v)$ 中至少有一个的度数小于 $\frac{n}{2}$，逆否命题证毕，因此有原命题成立。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上述定理还有增强版形式，如下所示。我们不予以证明。
+
+  <div class="theorm">
+  设 $G$ 是 $2$-连通的 $n \ge 3$ 阶图，若 $G$ 的每个顶点的度都不小于 $k$，则 $G$ 中包含一条长度至少为 $2k$ 的圈或 $H$ 圈。
   </div>
 
   <h4 class="title">Ore 定理</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Ore 对 Dirac 定理 进行了优化：
+  &nbsp;&nbsp;&nbsp;&nbsp;Ore 对 Dirac 定理进行了优化，如下所示，我们不予以证明。
 
-  <div align="center" class="div_learning_post_border">
-  对于 `n \ge 3` 的简单图 `G`，若图 `G` 中的任意两个不相邻顶点 `u`，`v` 有: `d(u)+d(v) \ge n`，那么 `G` 是 `H` 图。
+  <div class="theorm">
+  对于 $n \ge 3$ 的简单图 $G$，若图 $G$ 中的任意两个不相邻顶点 $u$，$v$ 有: $d(u)+d(v) \ge n$，那么 $G$ 是 $H$ 图。
   </div>
 
   <h4 class="title">Bondy-Chvátal 定理</h4>
@@ -348,87 +453,105 @@
   &nbsp;&nbsp;&nbsp;&nbsp;Bondy 和 Chvátal 又对 Ore 定理进行了优化，我们下面先给出一些引理和定义，然后给出 Chvátal 定理。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;首先给出引理：
+  &nbsp;&nbsp;&nbsp;&nbsp;首先给出引理，证明过程略。
 
-  <div align="center" class="div_learning_post_border">
-  对于简单图 `G`，若图 `G` 中，如果 `G` 中有两个不相邻顶点 `u`，`v` 有: `d(u)+d(v) \ge n` <br> 那么 `G` 是 `H` 图当且仅当 `G+uv` 是 `H` 图。
+  <div class="theorm">
+  对于简单图 $G$，若图 $G$ 中，如果 $G$ 中有两个不相邻顶点 $u$，$v$ 有: $d(u)+d(v) \ge n$ <br> 那么 $G$ 是 $H$ 图当且仅当 $G+uv$ 是 $H$ 图。
   </div>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;下面给出一些定义。
 
-  <div align="center">
-    <img src="./pic/close.png" width=600px>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 $n$ 阶简单图中，若对 $d(u) + d(v) \ge n$ 的任意一对顶点 $u$ 与 $v$，均有 $u \leftrightarrow v$，则称 $G$ 是 <def>闭图 (closed)</def>。
+
+  <div class="img" title="非闭图">
+    <img src="./pic/non_close.png" width=150px>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在 `n` 阶简单图中，若对 `d(u) + d(v) \ge n` 的任意一对顶点 `u` 与 `v`，均有 `u \leftrightarrow v`，则称 `G` 是 <def>闭图 (closed)</def>。
+  &nbsp;&nbsp;&nbsp;&nbsp;如上所示是一个非闭图，而如下所示是一个闭图。值得注意的是，下面的图中并不存在 $d(u)+d(v) \ge n$ 的点，因此自然没有点需要满足闭图的条件，所以也算作是一个闭图。
 
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;反复连接 `G` 中度和不小于 `n` 的不相邻顶点对，直到没有这样的顶点对存在为止，得到的图称作 `G` 的 <def>闭包 (closure)</def>，记作 <def>c(G)</def>。
-
-  <div align="center">
-    <img src="./pic/closure.png" width=600px>
+  <div class="img" title="闭图">
+    <img src="./pic/close.png" width=150px>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如果 `G` 本身是闭图，则其闭包是它本身；如果 `G` 不是闭图，则可以通过在度和大于等于 `n` 的不相邻顶点对间加边来构造 `G` 的闭包。
+  &nbsp;&nbsp;&nbsp;&nbsp;反复连接 $G$ 中度和不小于 $n$ 的不相邻顶点对，直到没有这样的顶点对存在为止，得到的图称作 $G$ 的 <def>闭包 (closure)</def>，记作 <def>c(G)</def>。
+
+  <div class="img" title="闭包">
+    <img src="./pic/closure.png" width=400px>
+  </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;不是任意图的闭包都是完全图，如 `C_5`。
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 $G$ 本身是闭图，则其闭包是它本身；如果 $G$ 不是闭图，则可以通过在度和大于等于 $n$ 的不相邻顶点对间加边来构造 $G$ 的闭包。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面有一个结论：
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，不是任意图的闭包都是完全图，如 $C_5$。
 
-  <div align="center" class="div_learning_post_border">
-  图 `G` 的闭包 `C(G)` 是唯一的。
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面有一个结论，我们不加证明地给出。
+
+  <div class="theorm">
+  图 $G$ 的闭包 $C(G)$ 是唯一的。
   </div>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;下面是 <def>Bondy-Chvátal 定理</def>，也称为 <def>闭包定理</def>:
 
-  <div align="center" class="div_learning_post_border">
-  图 `G` 是 `H` 图当且仅当它的闭包是 `H` 图
+  <div class="theorm">
+  图 $G$ 是 $H$ 图当且仅当它的闭包是 $H$ 图
   </div>
 
+  <div class="theorm_prove">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;上述定理的必要性显然，证明略去。
+  &nbsp;&nbsp;&nbsp;&nbsp;下面给出证明:
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;充分性证明: TODO。
+  &nbsp;&nbsp;&nbsp;&nbsp;必要性：如果 $G$ 本身已经是 $H$ 图，在 $G$ 之上添加边并不会改变 $G$ 的哈密尔顿性质，因此其闭包自然地也就是 $H$ 图。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;充分性证明: 假设 $G$ 的闭包是 $H$ 图，下面我们证明 $G$ 是 $H$ 图。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 $G$ 的闭包就是它本身，则结论显然。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;若不然，设 $e_i (1 \le i \le k)$ 是为构造 $G$ 的闭包而添加的所有边，由 <theorm>8</theorm> 可知，$G$ 是 $H$ 图当且仅当 $G+e_1$ 是 $H$ 图，而 $G+e_1$ 是 $H$ 图当且仅当 $G+e_1+e_2$ 是 $H$ 图。如此反复，可以得到结论。
+  </div>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;闭包定理可以推导出 Dirac 和 Ore 定理: TODO。
 
   <h4 class="title">度序列判定法</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在闭包定理的基础上，Chvátal 进一步得到图的 `H` 性的度序列判定法:
+  &nbsp;&nbsp;&nbsp;&nbsp;在闭包定理的基础上，Chvátal 进一步得到图的 $H$ 性的度序列判定法:
 
   <div align="center" class="div_learning_post_border">
-  设简单图 `G` 的度序列是 `(d_1,d_2, …,d_n)`，其中，`d_1 \le d_2 \le … \le d_n`，并且 `n \ge 3`：若对任意的`1 \le i \le \frac{n}{2}`，有 `d_i>i` 或 `d_{n−i} \ge n−i`，则 `G` 是 `H` 图。
+  设简单图 $G$ 的度序列是 $(d_1,d_2, …,d_n)$，其中，$d_1 \le d_2 \le … \le d_n$，并且 $n \ge 3$：若对任意的$1 \le i \le \frac{n}{2}$，有 $d_i>i$ 或 $d_{n−i} \ge n−i$，则 $G$ 是 $H$ 图。
   </div>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;等价表述是：
 
   <div align="center" class="div_learning_post_border">
-  设简单图 `G` 的度序列是 `(d_1,d_2, …,d_n)`，其中，`d_1 \le d_2 \le … \le d_n`，并且 `n \ge 3`：若不存在 `1 \le i \le \frac{n}{2}`，使得 `d_i \le i` 或 `d_{n−i} < n−i`，则 `G` 是 `H` 图。
+  设简单图 $G$ 的度序列是 $(d_1,d_2, …,d_n)$，其中，$d_1 \le d_2 \le … \le d_n$，并且 $n \ge 3$：若不存在 $1 \le i \le \frac{n}{2}$，使得 $d_i \le i$ 或 $d_{n−i} < n−i$，则 $G$ 是 $H$ 图。
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明思路是证明满足上述条件的 `G` 的闭包 `C(G)` 是完全图，这样 `C(G)` 就是 `H` 图，故原图即 `H` 图。我们可以使用反证法证明 `C(G)` 是一个完全图。我们假设满足上述条件的 `C(G)` 不是一个完全图，然后证明: 存在 `1 \le i \le \frac{n}{2}`，使得 `d_i \le i` 和 `d_{n-i} \le n-i` 同时成立，即与条件矛盾。
+  &nbsp;&nbsp;&nbsp;&nbsp;证明思路是证明满足上述条件的 $G$ 的闭包 $C(G)$ 是完全图，这样 $C(G)$ 就是 $H$ 图，故原图即 $H$ 图。我们可以使用反证法证明 $C(G)$ 是一个完全图。我们假设满足上述条件的 $C(G)$ 不是一个完全图，然后证明: 存在 $1 \le i \le \frac{n}{2}$，使得 $d_i \le i$ 和 $d_{n-i} \le n-i$ 同时成立，即与条件矛盾。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;若 `C(G)` 不是完全图:
+  &nbsp;&nbsp;&nbsp;&nbsp;若 $C(G)$ 不是完全图:
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;首先证明第一个成立条件。则在 `C(G)` 中存在不相邻的两点 `u` 和 `v`，使得 `d(v)+d(u) < n`。不妨设 `d(v)+d(u)` 是满足上述条件的和最大的值。再定 `d(u) \le d(v)`。那么 `1 \le d(u) < \frac{n}{2}`。设 `d(u)=i`，则 `d(v) < n-i`，也即 `d(v) \le n-1-i`，说明与 `v` 相邻的节点不超过 `n-1-i` 个邻点，故与 `i` 不相邻的节点至少有 `i` 个，而与 `i` 相邻的点中 `u` 的度最大 (i.e. `d(u)=i`)，即有 `i` 个点度不超过 `i`，故有 `d_i \le i`。
+  &nbsp;&nbsp;&nbsp;&nbsp;首先证明第一个成立条件。则在 $C(G)$ 中存在不相邻的两点 $u$ 和 $v$，使得 $d(v)+d(u) < n$。不妨设 $d(v)+d(u)$ 是满足上述条件的和最大的值。再定 $d(u) \le d(v)$。那么 $1 \le d(u) < \frac{n}{2}$。设 $d(u)=i$，则 $d(v) < n-i$，也即 $d(v) \le n-1-i$，说明与 $v$ 相邻的节点不超过 $n-1-i$ 个邻点，故与 $i$ 不相邻的节点至少有 $i$ 个，而与 $i$ 相邻的点中 $u$ 的度最大 (i.e. $d(u)=i$)，即有 $i$ 个点度不超过 $i$，故有 $d_i \le i$。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;然后证明第二个条件成立。由于 `d(u)=i`。这说明与 `u` 邻接的点有 `i` 个，则与 `u` 不相邻的点有 `n-1-i` 个，而这些点中 `v` 的度最大，有 `d(v) < n-i`。因此我们已经找到了 `n-1-i` 个点，它们的度小于 `n-i`。再加上 `u` 自己，我们就找到了 `n-i` 个点的度小于 `n-i`，也即 `d_{n-i} < n-i`。
+  &nbsp;&nbsp;&nbsp;&nbsp;然后证明第二个条件成立。由于 $d(u)=i$。这说明与 $u$ 邻接的点有 $i$ 个，则与 $u$ 不相邻的点有 $n-1-i$ 个，而这些点中 $v$ 的度最大，有 $d(v) < n-i$。因此我们已经找到了 $n-1-i$ 个点，它们的度小于 $n-i$。再加上 $u$ 自己，我们就找到了 $n-i$ 个点的度小于 $n-i$，也即 $d_{n-i} < n-i$。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;可见，若 `C(G)` 不是完全图，`C(G)` 将违背假设条件，因此 `C(G)` 是完全图，故 `C(G)` 是 `H` 图，故 `G` 是 `H` 图。
+  &nbsp;&nbsp;&nbsp;&nbsp;可见，若 $C(G)$ 不是完全图，$C(G)$ 将违背假设条件，因此 $C(G)$ 是完全图，故 $C(G)$ 是 $H$ 图，故 $G$ 是 $H$ 图。
 </div>
 
 <div class="div_ref" id="ref_container"></div>
@@ -474,7 +597,7 @@
 <!--矩阵公式-->
 <!--
 <div class="cmath" align="center">
-  `((1, 0),(1, 0))`
+  $((1, 0),(1, 0))$
 </div><br>
 -->
 
@@ -512,7 +635,7 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 <!--正文-->
 <!--
 <p>
-&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>$\overline{A}\overline{B}$</span>
 </p>
 -->
       </div>

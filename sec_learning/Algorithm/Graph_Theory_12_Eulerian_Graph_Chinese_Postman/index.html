@@ -29,9 +29,14 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_12_Eulerian_Graph_Chinese_Postman/pic/eularian_graph.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_12_Eulerian_Graph_Chinese_Postman/pic/exp_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_12_Eulerian_Graph_Chinese_Postman/pic/exp_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_12_Eulerian_Graph_Chinese_Postman/pic/exp_3.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_12_Eulerian_Graph_Chinese_Postman/pic/exp_4.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_12_Eulerian_Graph_Chinese_Postman/pic/exp_5.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_12_Eulerian_Graph_Chinese_Postman/pic/xxx.png">
-<meta property="article:published_time" content="2022-04-30T05:54:52.096Z">
-<meta property="article:modified_time" content="2022-04-30T05:54:52.096Z">
+<meta property="article:published_time" content="2022-05-15T05:53:31.606Z">
+<meta property="article:modified_time" content="2022-05-15T05:53:31.606Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -289,29 +294,27 @@
   &nbsp;&nbsp;&nbsp;&nbsp;如果存在一条迹，起点和终点相同，并且经过一个图的所有边，则说这是一条 <def>欧拉闭迹</def>。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对连通图 `G`，若 `G` 中存在经过每条边的闭迹, 则称 `G` 为 <def>欧拉图 (Eulerian Graph)</def>。
+  &nbsp;&nbsp;&nbsp;&nbsp;对连通图 `G` (p.s. <note>注意得是连通图!</note>)，若 `G` 中存在经过每条边的闭迹, 则称 `G` 为 <def>欧拉图 (Eulerian Graph)</def>。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;欧拉闭迹又称为 <def>欧拉环游 (Eulerian Circuit)</def>。若非欧拉图 `G` 存在欧拉迹, 则称为 <def>半欧拉图 (Semi-Eulerian Graph)</def>。
 
-   <h3 class="title">性质</h3>
-   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面的陈述对于非平凡连通图 `G` 是等价的:
-
-  <div class="div_learning_post_border" align="center">
-  [1] `G` 是欧拉图
-  </div>
-
-  <div class="div_learning_post_border" align="center">
-  [2] `G` 的每个顶点的度均为偶数
-  </div>
-
-  <div class="div_learning_post_border" align="center">
-  [3] `G` 的边集能划分为边不交圈的并
-  </div>
-
+  <h3 class="title">性质</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面进行证明。
+  &nbsp;&nbsp;&nbsp;&nbsp;下面给出关于欧拉图性质的定理
+
+  <div class="theorm">
+  下面的陈述对于非平凡连通图 `G` 是等价的:
+  <ol>
+    <li>`G` 是欧拉图</li>
+    <li>`G` 的每个顶点的度均为偶数</li>
+    <li>`G` 的边集能划分为边不交圈的并</li>
+  </ol>
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明：
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;首先证明 [1] `\rightarrow` [2]: 由 [1],  设 `C` 是欧拉图 `G` 的任一欧拉环游, `v` 是 `G` 中任意顶点, `v` 在环游中每出现一次, 意味在 `G` 中有两条不同边与 `v` 关联。所以, 在 `G` 中与 `v` 关联的边数为偶数，即 `v` 的度数为偶数, 由 `v` 的任意性，即证明 [2]。
@@ -326,27 +329,51 @@
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;最后证明 [3] `\rightarrow` [1]: 设 `C_1` 是 `G` 的边划分中的唯一的圈。若 `G` 仅由此圈组成,  则 `G` 显然是欧拉图。否则, 由于 `G` 连通，所以，必然存在圈 `C_2`, 它和 `C_1` 有公共顶点。于是，`C_1 \cup C_2` 是一条含有 `C_1` 与 `C_2` 的边的欧拉闭迹，如此拼接下去,得到包含 `G` 的所有边的一条欧拉闭迹。即证 `G` 是欧拉图。 
+  </div>
+
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面给出两个推论:
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上面的推到，我们可以下面给出两个推论:
 
-  <div class="div_learning_post_border" align="center">
+  <div class="theorm">
   连通图 `G` 是欧拉图当且仅当它的所有顶点的度数都为偶数
   </div>
 
-  <div class="div_learning_post_border" align="center">
+  <div class="theorm">
   连通图 `G` 是半欧拉图当且仅当 `G` 中恰有两个顶点度数为奇数
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;关于卡式乘积，又如下结论:
+  &nbsp;&nbsp;&nbsp;&nbsp;关于卡式乘积 (p.s. 卡式乘积定义见 <a href="/sec_learning/Algorithm/Graph_Theory_2_Subgraph/index.html#3.8%20Cartesian%20积图">Cartesian 积图</a>)，又如下结论:
 
-  <div class="div_learning_post_border" align="center">
+  <div class="theorm">
   若 `G` 和 `H` 是欧拉图, 则 `G` □ `H` 也是是欧拉图. 
   </div>
 
+  <div class="theorm_prove">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明: TODO
+  &nbsp;&nbsp;&nbsp;&nbsp;证明: 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于做了卡式乘积，因此对于任意的 `u \in V(G)`，`v \in V(H)`，有:
+
+  <div align="center">
+  `d(u)+d(v) = d[(u`,`v)]`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;所以，`G □ H` 每个顶点的度数均为偶数。下面我们只要证明 `G □ H` 是一个连通图，即可证明 `G □ H` 是一个欧拉图。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 `\forall (u_1,v_1)`, `(u_2,v_2) \in V(G □ H)`，由于 `G` 和 `H` 都是欧拉图，因此它们都是连通图。设最短的 `u_1,u_2` 路和最短的 `v_1,v_2` 路分别为: `u_1x_1x_2...x_ku_2` 和 `v_1y_1y_2...y_mv_2`。那么由 `G □ H` 的定义，在 `G □ H` 中就有路:
+
+  <div align="center">
+  `(u_1,v_1)(x_1,v_1)...(x_k,v_1)(u_2,v_1)(u_2,y_1)...(u_2,y_m)(u_2,v_2)`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此 `G □ H` 是一个连通图，加上它每一个顶点都是偶数，它就是一个欧拉图。
+  </div>
 </div>
 
 <h2 class="title">Fleury 算法</h2>
@@ -355,7 +382,7 @@
   &nbsp;&nbsp;&nbsp;&nbsp;<def>Fleury 算法</def> 用于 <note>在欧拉图中</note> 求出一条具体欧拉环游的方法，方法是尽可能避割边行走。具体算法流程如下:
 
   <ol>
-    <li>任意选择一个顶点 `v_0`，置 `w_0=v_0`；</li>
+    <li>任意选择一个顶点 `v_0`，置初始迹 `w_0=v_0`；</li>
     <li>
     假设迹 `w_i=v_0e_1v_1…e_iv_i` 已经选定,  那么按下述方法从 `E−{e_1, e_2, …, e_i}` 中选取边 `e_{i+1}`：
       <ol>
@@ -365,6 +392,34 @@
       <li>当 (2) 不能执行时，算法停止. </li>
     </li>
   </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面给出一个基于 Fleury 算法证明的定理:
+
+  <div class="theorm">
+  若 `G` 有 `2k>0` 个奇度点，则存在 `k` 条边不重的迹 `Q_1`, `Q_2`, `...`, `Q_k`，使得:
+  <div align="center">
+  `E(G) = E(Q_1) \cup E(Q_2) \cup ... \cup E(Q_k)`
+  </div>
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;不失一般性，就图是连通图进行证明。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设图 `G` 的 `2k` 个奇度点分别是 `v_1`, `v_2`, `...`, `v_k`, `v_{k+1}`, `...`, `v_{2k}`。我们在 `v_i` 和 `v_{i+k}` 之间连新边 `e_i`，得到图 `G^{\star}` `(1 \le i < k)`。由于此时所有的奇数点都已经被消除，所以 `G^{\star}` 是欧拉图。因此，由 Fleury 算法可以得到欧拉环游 `C`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于得到的欧拉环游 `C`，在 `C` 中删去 `e_i` `(1 \le i \le k)`，即得到 `k` 条边不重的迹 `Q_i` `(1 \le i < k)`:
+  <div align="center">
+  `E(G) = E(Q_1) \cup E(Q_2) \cup ... \cup E(Q_k)`
+  </div>
+  </div>
+
 </div>
 
 <h2 class="title">中国邮递员问题</h2>
@@ -375,7 +430,7 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;管梅谷给出的定理是:
 
-  <div class="div_learning_post_border">
+  <div class="theorm">
   若 `W` 是包含图 `G` 的每条边至少一次的闭途径，则 `W` 具有最小权值当且仅当下列两个条件被满足：
   <ol>
     <li>`G` 的每条边在 `W` 中最多重复一次 (i.e. 出现两次)；</li>
@@ -384,7 +439,81 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在上面的条件中，[1] —— 出现重复边的目的是消除奇数度的点。
+  &nbsp;&nbsp;&nbsp;&nbsp;简单地进行理解，中国邮递员针对的图不一定是欧拉图，因此就有可能存在奇数度的点。在上面的条件中，(1) 出现重复边的目的是消除奇数度的点，而这样的操作需要一次就可以进行消除了，因此最多重复一次。下面我们进行证明。
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明: (只证明必要性)
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，设 `G` 是连通非欧拉图，`u` 与 `v` 是 `G` 的两个奇度顶点，把连接 `u` 与 `v` 的路上的边改为 `2` 重边，则路中的点的度数奇偶性没有改变，仍然为偶数，但 `u` 与 `v` 的度数由奇数变成了偶数。如果对 `G` 中每对奇度点都如此处理，则最终得到的图为欧拉图。设该图为 `G_1`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其次,  对 `G_1` 作修改:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果在 `G_1` 中，边 `e` 重复数大于 `2`，则在 `G_1` 中删掉 `2` 条重复的 `e` 边后，所得之图仍然是包含 `G` 的欧拉图。在 `G_1` 中，对每组平行边都做这样的处理，最后得到一个重复边数最多为 `1` 的包含 `G` 的欧拉图 `G_2`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这说明，若 `W` 是包含 `G` 的所有边的欧拉环游，则 `G` 中每条边至多在 `W` 里出现两次，这就证明了 (1)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;又设 `C` 是 `G2` 中<note>任意一个圈</note>。在该圈中，如果重复边的总权值超过该圈中非重复边总权值，那么可以把该圈中平行边改为非平行边，而把非平行边改为平行边。如此修改，得到的图仍然是包含 `G` 的欧拉图，但对应的欧拉环游长度减小了。这就是说，只要对 `G_2` 的每个圈都作这样的修改，最后得到的图仍然为包含 `G` 的欧拉图，而最后的图正好满足 (2)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;必要性证毕。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;管梅谷并没有提出好的算法，因此基于上述定理及其证明，只能通过穷举的方法来从图中找出一个最优欧拉环游。下面我们来看一个例子:
+
+  <div class="img" title="示例用图">
+    <img src="./pic/exp_1.png" width="500px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们先将所有的奇数点补齐为偶数度的点:
+
+  <div class="img" title="奇数点补齐">
+    <img src="./pic/exp_2.png" width="500px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们从图中观察各个圈，确认各个圈中的重边的权重和小于单边的权重和。如果不满足，则进行置换，如下所示：
+
+  <div class="img" title="第一次置换">
+    <img src="./pic/exp_3.png" width="500px" />
+  </div>
+
+  <div class="img" title="第二次置换">
+    <img src="./pic/exp_4.png" width="500px" />
+  </div>
+
+  <div class="img" title="第三次置换">
+    <img src="./pic/exp_5.png" width="500px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们给出一个针对只有两个奇数点 `u` 和 `v` 的边赋权图 `G` 的求解最优欧拉环游的算法。
+
+  <ol>
+    <li>在 `u` 与 `v` 之间求出一条最短路 `P`;</li>
+    <li>在最短路 `P` 上，给每条边添加一条平行边得到 `G` 的欧拉图 `G^{\star}`;</li>
+    <li>在 `G` 的欧拉图 `G^{\star}` 中用 Fleury 算法求出来一条欧拉环游</li>
+  </ol>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们证明算法求出的欧拉环游是最优的:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设 `u` 和 `v` 是两个奇度顶点，`G^{\star}` 是 `G` 上添加重复边的基础上得到的任意一个欧拉图。考虑 `G^{\star}[E^{\star}-E]`，显然它只有两个奇度点 `u` 与 `v` (i.e. 因为只保留了添加的边)，当然它们必须在 `G^{\star}[E^{\star}-E]` 的同一个分支中，否则就存在其它的奇数点。因此，存在 `(u,v)` 路 `P^{\star}`。所以有:
+
+  <div align="center">
+  `\sum_{e \in E^{\star}-E} w(e) \ge w(P^{\star}) \ge w(P)`
+  </div>
+
+  </div>
 </div>
 
 <div class="div_ref" id="ref_container"></div>
