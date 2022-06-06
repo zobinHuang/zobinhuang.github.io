@@ -29,13 +29,13 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_15_Hypohamiltonian/pic/peterson.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_15_Hypohamiltonian/pic/thomassen.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_15_Hypohamiltonian/pic/peterson_h.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_15_Hypohamiltonian/pic/e_h.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_15_Hypohamiltonian/pic/n_line_graph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_15_Hypohamiltonian/pic/subdivision_graph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_15_Hypohamiltonian/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-28T09:53:26.499Z">
-<meta property="article:modified_time" content="2022-03-28T09:53:26.499Z">
+<meta property="article:published_time" content="2022-05-16T13:10:48.368Z">
+<meta property="article:modified_time" content="2022-05-16T13:10:48.368Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -283,57 +283,49 @@
 <div class="div_learning_post">
   <h3 class="title">超哈密尔顿图</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;若图 `G` 是非 `H` 图, 但对于 `G` 中任意点 `v`，都有 `G−v` 是 `H` 图，则称 `G` 是 <def>超 `H` 图 (Hypohamiltonian)</def>。
+  &nbsp;&nbsp;&nbsp;&nbsp;若图 $G$ 是非 $H$ 图, 但对于 $G$ 中任意点 $v$，都有 $G−v$ 是 $H$ 图，则称 $G$ 是 <def>超 $H$ 图 (Hypohamiltonian)</def>。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面有一个定义:
+  &nbsp;&nbsp;&nbsp;&nbsp;下面有一个定理:
 
-  <div class="div_learning_post_border" align="center">
-    <div align="center">
-      <img src="./pic/peterson.png" width=300px>
-    </div>
+  <div class="theorm">
   Peterson 图是超哈密尔顿图
   </div>
 
+  <div class="img" title="Peterson 图">
+    <img src="./pic/peterson.png" width=240px>
+  </div>
+
+  <div class="theorm_prove">
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;证明:
 
-  <ol>
-    <li>首先证明 Peterson 图不是 `H` 图，TODO</li>
-    <li>然后证明 Peterson 图是超 `H` 图，TODO</li>
-  </ol>
-
-  <h3 class="title">超哈密尔顿迹</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;图 `G` 称为是 <deF>可迹的 (Traceable)</def> 如果 `G` 包含一条 `H` 路。
+  &nbsp;&nbsp;&nbsp;&nbsp;证明 Peterson 图不是 $H$ 图的过程略。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;若 `G` 中没有 `H` 路，但是对 `G` 中任意点 `v`，`G−v` 存在 `H` 路，则称 `G` 是 <def>超可迹的 (Hypotraceable)</def>。
+  &nbsp;&nbsp;&nbsp;&nbsp;下面基于已知 Peterson 图不是 $H$ 图的结论，证明 Peterson 图是超 $H$ 图。
 
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面有一个定义:
-
-  <div class="div_learning_post_border" align="center">
-    <div align="center">
-      <img src="./pic/thomassen.png" width=300px>
-    </div>
-  Thomassen 图是超可迹图
+  <div class="img" title="删点的 Peterson 图中的 H 圈">
+    <img src="./pic/peterson_h.png" width=200px>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+  &nbsp;&nbsp;&nbsp;&nbsp;由对称性可知，只需考虑 $G-v_1$ 的情形即可。如上图所示即是删去 $v_1$ 之后的图中存在的 $H$ 圈。因此，Peterson 图是超 $H$ 图。
+  </div>
 
-  <ol>
-    <li>首先证明 Thomassen 图 `G` 不存在 `H` 路，TODO</li>
-    <li>然后证明对于 Thomassen 图 `G`，`G-v` 存在 `H` 路，TODO</li>
-  </ol>
+  <h3 class="title">超哈密尔顿迹的概念</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;图 $G$ 称为是 <deF>可迹的 (Traceable)</def> 如果 $G$ 包含一条 $H$ 路。
 
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;若 $G$ 中没有 $H$ 路，但是对 $G$ 中任意点 $v$，$G−v$ 存在 $H$ 路，则称 $G$ 是 <def>超可迹的 (Hypotraceable)</def>。
 </div>
 
 <h2 class="title">欧拉图和哈密尔顿图的关系</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如下所示，`E` 图和 `H` 图之间似乎并不存在关系:
+  &nbsp;&nbsp;&nbsp;&nbsp;如下所示，$E$ 图和 $H$ 图之间似乎并不存在关系:
 
   <div align="center">
     <img src="./pic/e_h.png" width=80%>
@@ -344,56 +336,63 @@
 
   <h3 class="title">线图的定义</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;设 `G` 是图，`G` 的线图 `L(G)` 定义为:
+  &nbsp;&nbsp;&nbsp;&nbsp;设 $G$ 是图，$G$ 的线图 $L(G)$ 定义为:
 
   <div align="center">
-  `V(L(G)) = E(G)`<br>
-  `(e_1,e_2) \in E(L(G)) \Leftrightarrow` 在 `G` 中有  `e_1` 与 `e_2` 邻接
+  $V(L(G)) = E(G)$<br>
+  $(e_1,e_2) \in E(L(G)) \Leftrightarrow$ 在 $G$ 中有  $e_1$ 与 $e_2$ 邻接
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;事实上，线图可以看作图 `G` 的边集的交图。
+  &nbsp;&nbsp;&nbsp;&nbsp;上述定义的含义是，将 $G$ 中的各条边转换为 $L(G)$ 中的点。如果 $G$ 的两条边在 $G$ 中相邻，则它们所对应的点在 $L(G)$ 中相邻。
 
   <div align="center">
     <img src="./pic/n_line_graph.png" width=80%>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;再给出一个定义: `G` 的 <def>`n` 次迭代线图 (n-th Iterated Line Graph)</def> `L^n(G)` 为: `L^n(G)=L(L^{n-1}(G))`，如上图所示。
+  &nbsp;&nbsp;&nbsp;&nbsp;再给出一个定义: $G$ 的 <def>$n$ 次迭代线图 (n-th Iterated Line Graph)</def> $L^n(G)$ 为: $L^n(G)=L(L^{n-1}(G))$，如上图所示。
 
   <h3 class="title">线图的性质</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;线图有如下性质:
 
-  <div class="div_learning_post_border" align="center">
-  线图 `L(G)` 顶点数等于 `G` 的边数，若 `e=uv` 是 `G` 的边，则 `e` 作为 `L(G)` 的顶点度数为: `d(e)=d(u)+d(v)−2`。
+  <div class="theorm">
+  <ol>
+    <li>线图 $L(G)$ 顶点数等于 $G$ 的边数，若 $e=uv$ 是 $G$ 的边，则 $e$ 作为 $L(G)$ 的顶点度数为: $d(e)=d(u)+d(v)−2$;</li>
+    <li>
+      若 $G=(n,m)$，则线图 $L(G)$ 的边数为:
+      $$m[L(G)]=-m+\frac{1}{2}\sum_{v \in V(G)}d^2(v)$$
+    </li>
+  </ol>
+
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;(1) 显然，下面对 (2) 使用两种方法进行证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>证法 1</b>: 由线图 $L(G)$ 有 $m$ 个顶点，则对于 $G$ 中任一顶点 $v$，关联于该顶点的 $d(v)$ 条边将产生 $L(G)$ 中 $C_{d(v)}^{2}$ 条边 (i.e. 任两条边在 $L(G)$ 代表的点都是邻接的)，所以 $L(G)$ 中的总边数为:
+  $$m[L(G)] = \sum_{v \in V(G)}C^2_{d(v)} = \frac{1}{2} \sum_{v \in V(G)} d(v) \cdot [d(v)-1] = -m + \frac{1}{2} \sum_{v \in V(G)} d^2(v)$$
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>证法 2</b>: 对线图使用握手定理，可得:
+  $$m[L(G)] = \frac{1}{2} \sum_{uv \in E(G)} d_{L(G)}(uv) = \frac{1}{2} \sum_{uv \in E(G)} (d_G(u) + d_G(v) - 2) = \frac{1}{2} \sum_{uv \in E(G)}(d_G(u)+d_G(v)) - \frac{1}{2} \cdot 2|E(G)| = -m + \frac{1}{2} d_G^2(w) $$
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明: TODO。
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，有结论:
 
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;另外：
-
-  <div class="div_learning_post_border" align="center">
-  若 `G=(n,m)`，则线图 `L(G)` 边数为: `m(L(G))=-m+\frac{1}{2}\sum_{v \in V(G)}d^2(v)`
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明: TODO。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;另外：
-
-  <div class="div_learning_post_border" align="center">
+  <div class="theorm">
   一个连通图同构于它的线图，当且仅当它是圈。
   </div>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;另外：
 
-  <div class="div_learning_post_border" align="center">
-  若图 `G` 和 `H` 有同构的线图，则除了 `K_3` 和 `K_{1,3}` 外，`G` 和 `H` 同构。
+  <div class="theorm">
+  若图 $G$ 和 $H$ 有同构的线图，则除了 $K_3$ 和 $K_{1,3}$ 外，$G$ 和 $H$ 同构。
   </div>
 
   <h3 class="title">剖分图</h3>
@@ -402,33 +401,36 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;图 `G` 的 <def>`n` 次剖分图 (n-iterated Subdivision Graph)</def>，是指将 `G` 的每条边中插入 `n` 个 `2` 度顶点, 记为 `S_n(G)`。如上图所示是 `S_1(G)`。
+  &nbsp;&nbsp;&nbsp;&nbsp;图 $G$ 的 <def>$n$ 次剖分图 (n-iterated Subdivision Graph)</def>，是指将 $G$ 的每条边中插入 $n$ 个 $2$ 度顶点, 记为 $S_n(G)$。如上图所示是 $S_1(G)$。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如果我们定义 `L_n(G)=L(S_{n-1}(G))` (p.s. 注意和 `L^n(G)` 区分)，则我们有:
+  &nbsp;&nbsp;&nbsp;&nbsp;如果我们定义 $L_n(G)=L(S_{n-1}(G))$ (p.s. 注意和 $L^n(G)$ 区分)，则我们有:
 
-  <div class="div_learning_post_border" align="center">
-  一个图 `G` 是 `E` 图的充要条件是 `L_3(G)` 为 `H` 图。
+  <div class="theorm">
+  一个图 $G$ 是 $E$ 图的充要条件是 $L_3(G)$ 为 $H$ 图。
   </div>
 
-  <h3 class="title">`E` 图和 `H` 图的关系</h3>
+  <h3 class="title">$E$ 图和 $H$ 图的关系</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;有如下关系:
 
-  <div class="div_learning_post_border" align="center">
-  若 `G` 是 `E` 图，则 `L(G)` 既是 `E` 图又是 `H` 图
+  <div class="theorm">
+  若 $G$ 是 $E$ 图，则 $L(G)$ 既是 $E$ 图又是 $H$ 图
   </div>
 
-  <div class="div_learning_post_border" align="center">
-  若 `G` 是 `H` 图，则 `L(G)` 是 `H` 图(i.e. 原因是因为 `G` 中的任意一个顶点在线图中都是一个团)
-  </div>
-
-  <div class="div_learning_post_border" align="center">
-  若 `G` 是具有 `n` 个点 `(n \ge 3)` 连通图且不是一条路，则当 `k \ge n‒3` 时，图 `L^{k}(G)` 是 `H` 图
+  <div class="theorm">
+  若 $G$ 是 $H$ 图，则 $L(G)$ 是 $H$ 图(i.e. 原因是因为 $G$ 中的任意一个顶点在线图中都是一个团)
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;基于上述定理，定义图 `G` 的 <deF>哈密尔顿指数 (Hamiltonian Index)</def> 是使得 `L^k(G)` 是 `H` 图的最小非负整数 `k`，记作 `h(G)`。对于一般图来说，求解 `h(G)` 是 NP-Hard 的。
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，上述定理的逆不成立。
+
+  <div class="theorm">
+  若 $G$ 是具有 $n$ 个点 $(n \ge 3)$ 连通图且不是一条路，则当 $k \ge n‒3$ 时，图 $L^{k}(G)$ 是 $H$ 图
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述定理，定义图 $G$ 的 <deF>哈密尔顿指数 (Hamiltonian Index)</def> 是使得 $L^k(G)$ 是 $H$ 图的最小非负整数 $k$，记作 $h(G)$。对于一般图来说，求解 $h(G)$ 是 NP-Hard 的。
 </div>
 
 <div class="div_ref" id="ref_container"></div>
@@ -474,7 +476,7 @@
 <!--矩阵公式-->
 <!--
 <div class="cmath" align="center">
-  `((1, 0),(1, 0))`
+  $((1, 0),(1, 0))$
 </div><br>
 -->
 
@@ -512,7 +514,7 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 <!--正文-->
 <!--
 <p>
-&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>$\overline{A}\overline{B}$</span>
 </p>
 -->
       </div>

@@ -38,8 +38,8 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/close.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/closure.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/pic/xxx.png">
-<meta property="article:published_time" content="2022-05-15T08:37:01.470Z">
-<meta property="article:modified_time" content="2022-05-15T08:37:01.470Z">
+<meta property="article:published_time" content="2022-05-15T10:31:16.275Z">
+<meta property="article:modified_time" content="2022-05-15T10:31:16.275Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -524,41 +524,57 @@
   &nbsp;&nbsp;&nbsp;&nbsp;由于完全图一定是 $H$ 图，因此我们可以得到结论：
 
   <div class="theorm">
-  若 $G$ 是 $n \ge 3$ 的简单图，若 $G$ 的闭包
+  若 $G$ 是 $n \ge 3$ 的简单图，若 $G$ 的闭包是完全图，则 $G$ 也一定是 $H$ 图。
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;闭包定理可以推导出 Dirac 和 Ore 定理: TODO。
+  &nbsp;&nbsp;&nbsp;&nbsp;闭包定理可以推导出 Dirac 和 Ore 定理: 
+
+  <div class="theorm">
+  设 $G$ 是 $n \ge 3$ 的简单图，
+  <ol>
+    <li>若 $\delta (G) \ge \frac{n}{2}$，则 $G$ 是 $H$ 图 (Dirac 定理);</li>
+    <li>若对于 $G$ 中任意不相邻的顶点 $u$ 和 $v$，都有 $d(u)+d(v) \ge n$，则 $G$ 是 $H$ 图 (Ore 定理)</li>
+  </ol>
+  </div>
 
   <h4 class="title">度序列判定法</h4>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;在闭包定理的基础上，Chvátal 进一步得到图的 $H$ 性的度序列判定法:
 
-  <div align="center" class="div_learning_post_border">
-  设简单图 $G$ 的度序列是 $(d_1,d_2, …,d_n)$，其中，$d_1 \le d_2 \le … \le d_n$，并且 $n \ge 3$：若对任意的$1 \le i \le \frac{n}{2}$，有 $d_i>i$ 或 $d_{n−i} \ge n−i$，则 $G$ 是 $H$ 图。
+  <div class="theorm">
+  设简单图 $G$ 的度序列是 $(d_1,d_2, …,d_n)$，其中，$d_1 \le d_2 \le … \le d_n$，并且 $n \ge 3$：若对任意的$1 \le i \le \frac{n}{2}$，有 $d_i>i$ (i.e. 等价于 $d_{n−i} \ge n−i$)，则 $G$ 是 $H$ 图。
   </div>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;等价表述是：
 
-  <div align="center" class="div_learning_post_border">
-  设简单图 $G$ 的度序列是 $(d_1,d_2, …,d_n)$，其中，$d_1 \le d_2 \le … \le d_n$，并且 $n \ge 3$：若不存在 $1 \le i \le \frac{n}{2}$，使得 $d_i \le i$ 或 $d_{n−i} < n−i$，则 $G$ 是 $H$ 图。
+  <div class="theorm">
+  设简单图 $G$ 的度序列是 $(d_1,d_2, …,d_n)$，其中，$d_1 \le d_2 \le … \le d_n$，并且 $n \ge 3$：若不存在 $1 \le i \le \frac{n}{2}$，使得 $d_i \le i$ (i.e. 等价于 $d_{n−i} < n−i$)，则 $G$ 是 $H$ 图。
   </div>
 
+  <div class="theorm_prove">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明思路是证明满足上述条件的 $G$ 的闭包 $C(G)$ 是完全图，这样 $C(G)$ 就是 $H$ 图，故原图即 $H$ 图。我们可以使用反证法证明 $C(G)$ 是一个完全图。我们假设满足上述条件的 $C(G)$ 不是一个完全图，然后证明: 存在 $1 \le i \le \frac{n}{2}$，使得 $d_i \le i$ 和 $d_{n-i} \le n-i$ 同时成立，即与条件矛盾。
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;思路是证明满足上述条件的 $G$ 的闭包 $C(G)$ 是完全图，这样 $C(G)$ 就是 $H$ 图，故原图即 $H$ 图。我们使用反证法证明 $C(G)$ 是一个完全图。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们假设满足上述条件的 $C(G)$ 不是一个完全图，然后证明: 存在 $1 \le i \le \frac{n}{2}$，使得 $d_i \le i$ 和 $d_{n-i} \le n-i$ 同时成立，即与条件矛盾。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;若 $C(G)$ 不是完全图:
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;首先证明第一个成立条件。则在 $C(G)$ 中存在不相邻的两点 $u$ 和 $v$，使得 $d(v)+d(u) < n$。不妨设 $d(v)+d(u)$ 是满足上述条件的和最大的值。再定 $d(u) \le d(v)$。那么 $1 \le d(u) < \frac{n}{2}$。设 $d(u)=i$，则 $d(v) < n-i$，也即 $d(v) \le n-1-i$，说明与 $v$ 相邻的节点不超过 $n-1-i$ 个邻点，故与 $i$ 不相邻的节点至少有 $i$ 个，而与 $i$ 相邻的点中 $u$ 的度最大 (i.e. $d(u)=i$)，即有 $i$ 个点度不超过 $i$，故有 $d_i \le i$。
+  &nbsp;&nbsp;&nbsp;&nbsp;首先证明第一个假设 $d_i \le i$。则在 $C(G)$ 中存在不相邻的两点 $u$ 和 $v$，使得 $d(v)+d(u) < n$，且不妨设 $u$ 和 $v$ 是不相邻点中度和 $d(v)+d(u)$ 最大的两点。另一方面，不妨设 $d(u) \le d(v)$，那么 $1 \le d(u) < \frac{n}{2}$。设 $d(u)=i$，则 $d(v) < n-i$，也即 $d(v) \le n-1-i$，说明与 $v$ 相邻的节点不超过 $n-1-i$ 个邻点，故与 $v$ 不相邻的节点至少有 $i$ 个，而与 $v$ 相邻的点中 $u$ 的度最大 (i.e. $d(u)=i$)，即有 $i$ 个点度不超过 $i$，故有 $d_i \le i$。这与假设矛盾。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;然后证明第二个条件成立。由于 $d(u)=i$。这说明与 $u$ 邻接的点有 $i$ 个，则与 $u$ 不相邻的点有 $n-1-i$ 个，而这些点中 $v$ 的度最大，有 $d(v) < n-i$。因此我们已经找到了 $n-1-i$ 个点，它们的度小于 $n-i$。再加上 $u$ 自己，我们就找到了 $n-i$ 个点的度小于 $n-i$，也即 $d_{n-i} < n-i$。
+  &nbsp;&nbsp;&nbsp;&nbsp;然后证明第二个假设 $d_{n-i} \le n-i$。由于 $d(u)=i$。这说明与 $u$ 邻接的点有 $i$ 个，则与 $u$ 不相邻的点有 $n-1-i$ 个，而这些点中 $v$ 的度最大，有 $d(v) < n-i$。因此我们已经找到了 $n-1-i$ 个点，它们的度小于 $n-i$。再加上 $u$ 自己，我们就找到了 $n-i$ 个点的度小于 $n-i$，也即 $d_{n-i} < n-i$。这与假设矛盾。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;可见，若 $C(G)$ 不是完全图，$C(G)$ 将违背假设条件，因此 $C(G)$ 是完全图，故 $C(G)$ 是 $H$ 图，故 $G$ 是 $H$ 图。
+  </div>
 </div>
 
 <div class="div_ref" id="ref_container"></div>

@@ -32,8 +32,8 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_4_Algebra_And_Spectrum/pic/incident_matrix.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_4_Algebra_And_Spectrum/pic/laplacian_matrix.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_4_Algebra_And_Spectrum/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-08T12:50:35.832Z">
-<meta property="article:modified_time" content="2022-03-08T12:50:35.832Z">
+<meta property="article:published_time" content="2022-05-19T01:49:34.934Z">
+<meta property="article:modified_time" content="2022-05-19T01:49:34.934Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -281,49 +281,49 @@
 <div>
   <h3 class="title">邻接矩阵</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们可以使用 <def>邻接矩阵 (adjacency matrix)</def> 来完成一个图在计算机中的表示。其表示方法为: 设 `G` 为 `n` 阶图, `V={v_1, v_2, …, v_n}`, 邻接矩阵 `A(G)=(a_{ij})`, 其中:
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以使用 <def>邻接矩阵 (adjacency matrix)</def> 来完成一个图在计算机中的表示。其表示方法为: 设 $G$ 为 $n$ 阶图, $V={v_1, v_2, …, v_n}$, 邻接矩阵 $A(G)=(a_{ij})$, 其中:
 
   <ul>
-    <li>`a_{ij}=l`, 其中 `l` 为 `i` 和 `j` 之间的边数 (p.s. 自环的情况下 `l=2`)</li>
-    <li>`a_{ij}=0`，当 `i` 和 `j` 之间不邻接时</li>
+    <li>$a_{ij}=l$, 其中 $l$ 为 $i$ 和 $j$ 之间的边数 (p.s. 自环的情况下 $l=2$)</li>
+    <li>$a_{ij}=0$，当 $i$ 和 $j$ 之间不邻接时</li>
   </ul>  
 
   <h3 class="title">邻接矩阵的性质</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<b>非负性</b>: 由邻接矩阵定义知 `a_{ij}` 是非负整数, 即邻接矩阵是非负整数矩阵;
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>非负性</b>: 由邻接矩阵定义知 $a_{ij}$ 是非负整数, 即邻接矩阵是非负整数矩阵;
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<b>对称性</b>: 在图中点 `v_i` 与 `v_j` 邻接, 有 `v_j` 与 `v_i` 邻接, 即 `a_{ij}=a_{ji}`。所以, 邻接矩阵是对称矩阵;
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>对称性</b>: 在图中点 $v_i$ 与 $v_j$ 邻接, 有 $v_j$ 与 $v_i$ 邻接, 即 $a_{ij}=a_{ji}$。所以, 邻接矩阵是对称矩阵;
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;同一图的不同形式的邻接矩阵是相似矩阵，这是因为同图的两种不同形式矩阵可以通过交换行和相应的列变成一致。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如果 `G` 为简单图, 则 `A(G)` 为布尔矩阵 (i.e. 元素只取 `0` 或 `1` 的矩阵)，且: 行和(列和)等于对应顶点的度数; 矩阵元素总和为图的总度数，也就是G的边数的2倍。
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 $G$ 为简单图, 则 $A(G)$ 为布尔矩阵 (i.e. 元素只取 $0$ 或 $1$ 的矩阵)，且: 行和(列和)等于对应顶点的度数; 矩阵元素总和为图的总度数，也就是G的边数的2倍。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;`G` 连通的充分必要条件是: `A(G)` 不能与如下矩阵相似:
+  &nbsp;&nbsp;&nbsp;&nbsp;$G$ 连通的充分必要条件是: $A(G)$ 不能与如下矩阵相似:
 
   <div class="cmath" align="center">
-    `((A_{11}, 0),(0, A_{22}))`
+    $((A_{11}, 0),(0, A_{22}))$
   </div><br>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;下面我们给出一个定理:
 
   <div class="div_learning_post_border" align="center">
-  设 `A^k(G)=(a_{ij}^{(k)})`，则 `a_{ij}^{(k)}` 表示顶点 `v_i` 到 `v_j` 的长度为 `k` 的途径条数。
+  设 $A^k(G)=(a_{ij}^{(k)})$，则 $a_{ij}^{(k)}$ 表示顶点 $v_i$ 到 $v_j$ 的长度为 $k$ 的途径条数。
   </div>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;我们使用数学归纳法来对这个定理进行证明:
 
   <ol>
-    <li>当 `k=1` 时，`A^1(G)=A(G)`，由邻接矩阵的定义可得上述定理成立;</li>
+    <li>当 $k=1$ 时，$A^1(G)=A(G)$，由邻接矩阵的定义可得上述定理成立;</li>
     <li>
-    假设当 `k−1` 时结论均成立。则当为 `k` 时:<br>
-    `A^k = A^{k-1} \cdot A = (a_{i1}^{(k-1)} \cdot a_{1j} + a_{i2}^{(k-1)} \cdot a_{2j} + ... + a_{i n}^{(k-1)} \cdot a_{nj})_{n \times n}`，也即<br>
-    `a^k = a_{i1}^{(k-1)} \cdot a_{1j} + a_{i2}^{(k-1)} \cdot a_{2j} + ... + a_{i n}^{(k-1)} \cdot a_{nj}`
+    假设当 $k−1$ 时结论均成立。则当为 $k$ 时:<br>
+    $A^k = A^{k-1} \cdot A = (a_{i1}^{(k-1)} \cdot a_{1j} + a_{i2}^{(k-1)} \cdot a_{2j} + ... + a_{i n}^{(k-1)} \cdot a_{nj})_{n \times n}$，也即<br>
+    $a^k = a_{i1}^{(k-1)} \cdot a_{1j} + a_{i2}^{(k-1)} \cdot a_{2j} + ... + a_{i n}^{(k-1)} \cdot a_{nj}$
     </li>
   </ol>
 
@@ -332,17 +332,17 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;分析上面的最后一个式子，实际上其含义可以使用上图来进行表达: `a_{i n}^{(k-1)}` 算的是从顶点 `i` 到 `n` 之间的长为 `k-1` 的路径的条数，`a_{nj}` 算的是从顶点 `n` 到 `j` 之间的长为 `1` 的路径的条数。因此上述式子的相乘后相加的形式，实际上就算出了从顶点 `i` 到 `j` 之间的长为 `k` 的路径的条数。
+  &nbsp;&nbsp;&nbsp;&nbsp;分析上面的最后一个式子，实际上其含义可以使用上图来进行表达: $a_{i n}^{(k-1)}$ 算的是从顶点 $i$ 到 $n$ 之间的长为 $k-1$ 的路径的条数，$a_{nj}$ 算的是从顶点 $n$ 到 $j$ 之间的长为 $1$ 的路径的条数。因此上述式子的相乘后相加的形式，实际上就算出了从顶点 $i$ 到 $j$ 之间的长为 $k$ 的路径的条数。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;基于上面的定理，我们可以得出两个推论:
 
   <div class="div_learning_post_border" align="center">
-  `A^2` 的元素 `a_{ii}^{(2)}` 是 `v_i` 的度，`A^3` 的元素 `a_{ii}^{(3)}` 是图中含 `v_i` 的三角形的个数
+  $A^2$ 的元素 $a_{ii}^{(2)}$ 是 $v_i$ 的度，$A^3$ 的元素 $a_{ii}^{(3)}$ 是图中含 $v_i$ 的三角形的个数
   </div>
 
   <div class="div_learning_post_border" align="center">
-  若图 `G` 是连通的，对于 `i\nej`，`v_i` 和 `v_j` 之间的距离 `d` 是使得 `A^d` 中 `a_{ij}^{(d)}\ne0` 的最小整数
+  若图 $G$ 是连通的，对于 $i\nej$，$v_i$ 和 $v_j$ 之间的距离 $d$ 是使得 $A^d$ 中 $a_{ij}^{(d)}\ne0$ 的最小整数
   </div>
 
   <h3 class="title">关联矩阵</h3>
@@ -352,7 +352,7 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;图的 <def>关联矩阵 (Incidence Matrix)</def> 记录的是图的顶点和边的关系，若图有 `n` 个点，`m` 条边，则图的关联矩阵定义为 `M(G)=(a_{ij})_{n \times m}`。一个例子如上图所示，其中每一行代表的是各个顶点，每一列代表的是一条边。根据关联矩阵的定义，我们可以得到关联矩阵的两个性质如下:
+  &nbsp;&nbsp;&nbsp;&nbsp;图的 <def>关联矩阵 (Incidence Matrix)</def> 记录的是图的顶点和边的关系，若图有 $n$ 个点，$m$ 条边，则图的关联矩阵定义为 $M(G)=(a_{ij})_{n \times m}$。一个例子如上图所示，其中每一行代表的是各个顶点，每一列代表的是一条边。根据关联矩阵的定义，我们可以得到关联矩阵的两个性质如下:
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;关联矩阵的元素为 0，1 或 2(非简单图)。 
@@ -367,8 +367,8 @@
   &nbsp;&nbsp;&nbsp;&nbsp;关联矩阵和邻接矩阵存在如下关系:
 
   <ul>
-    <li>对于简单图，有: `MM^{T}=A+D`，其中 `M` 即关联矩阵，`A` 为邻接矩阵，`D` 为度矩阵;</li>
-    <li>`M^{T}M = 2I+A(L(G))`，其中 `I` 是单位矩阵，`A(L(G))` 代表 `G` 的线图 `L(G)` 的邻接矩阵;</li>
+    <li>对于简单图，有: $MM^{T}=A+D$，其中 $M$ 即关联矩阵，$A$ 为邻接矩阵，$D$ 为度矩阵;</li>
+    <li>$M^{T}M = 2I+A(L(G))$，其中 $I$ 是单位矩阵，$A(L(G))$ 代表 $G$ 的线图 $L(G)$ 的邻接矩阵;</li>
   </ul>
 
   <h3 class="title">Laplacian 矩阵</h3>
@@ -377,14 +377,14 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;定义图的 <def>Laplacian 矩阵</def> 为: `L=D-A`，其中 `D` 是图的度矩阵，`A` 是图的邻接矩阵。
+  &nbsp;&nbsp;&nbsp;&nbsp;定义图的 <def>Laplacian 矩阵</def> 为: $L=D-A$，其中 $D$ 是图的度矩阵，$A$ 是图的邻接矩阵。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;Laplacian 矩阵的一些性质如下所示:
 
   <ul>
-    <li>`L` 的特征值中的 `0` 的重数与图的连通分支数相等;</li>
-    <li>`L` 的第二小特征值大于 `0` 当且仅当图连通.</li>
+    <li>$L$ 的特征值中的 $0$ 的重数与图的连通分支数相等;</li>
+    <li>$L$ 的第二小特征值大于 $0$ 当且仅当图连通.</li>
   </ul>
 
   <p>
@@ -393,33 +393,21 @@
 
 <h2 class="title">邻接谱与图的邻接代数</h2>
 <div>
-  <h3 class="title">邻接谱</h3>
+  <h3 class="title">图的特征多项式</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;定义邻接矩阵 `A(G)` 的 <def>特征多项式 (Characteristic Polynomial)</def> 为:
-
-  <div align="center">
-  `f(G,\lamda)=|\lamdaE-A|=\lamda^{n}+a_1\lamda^{n-1}+a_2\lamda^{n-2}+...+a_{n-1}\lamda+a_n`
-  </div>
-
-  <p>
-  其中 `E` 是 `n\timesn` 的单位矩阵。
+  &nbsp;&nbsp;&nbsp;&nbsp;定义邻接矩阵 $A(G)$ 的 <def>特征多项式 (Characteristic Polynomial)</def> 为:
+  \begin{align}
+  f(G,\lambda) &= |\lambda I -A| \\ \\ 
+  &= \begin{vmatrix} \lambda-a_{11} & -a_{12} & ... & -a_{1n} \\ -a_{21} & \lambda - a_{22} & ... & -a_{2n} \\ ... & ... & ... & ... \\ -a_{n1} & -a_{n2} & ... & \lambda-a_{nn} \end{vmatrix} \\ \\
+  &= \lambda^{n}+a_1\lambda^{n-1}+a_2\lambda^{n-2}+...+a_{n-1}\lambda+a_n \\
+  \end{align}
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于简单图来说，我们有:
+  其中 $E$ 是 $n \times n$ 的单位矩阵。
 
-  <div class="div_learning_post_border">
-  <ul>
-    <li>`a_1=0`</li>
-    <li>`-a_2=m(G)`</li>
-    <li>`-a_3` 是 `G` 中三角形数目的 `2` 倍</li>
-  </ul>
-  </div>
-
+  <h3 class="title">图的邻接谱</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们下面对上面的定理分别进行证明。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;图的邻接矩阵 $A(G)$ 的特征多项式的 <def>特征值 (Eigenvalue)</def> 及其 <def>重数 (Multiplicity)</def>，称为 $G$ 的 <def>邻接谱 (Adjacency Spectrum)</def>。 
 
   <h3 class="title">图空间</h3>
   <p>
@@ -470,7 +458,7 @@
 <!--矩阵公式-->
 <!--
 <div class="cmath" align="center">
-  `((1, 0),(1, 0))`
+  $((1, 0),(1, 0))$
 </div><br>
 -->
 
@@ -508,7 +496,7 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 <!--正文-->
 <!--
 <p>
-&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>$\overline{A}\overline{B}$</span>
 </p>
 -->
       </div>

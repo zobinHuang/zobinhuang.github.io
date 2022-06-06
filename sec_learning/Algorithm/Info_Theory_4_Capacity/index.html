@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:type" content="website">
+<meta property="og:title" content="信道容量">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/pic/discrete_channel.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/pic/discrete_dmc_channel.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/pic/sym_dmc_exp_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/pic/sym_dmc_exp_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/pic/continuous_channel.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/pic/continuous__memoryless_channel.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/pic/addable_channel.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/pic/xxx.png">
+<meta property="article:published_time" content="2022-06-06T17:58:30.169Z">
+<meta property="article:modified_time" content="2022-06-06T17:58:30.169Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>信道容量 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">信道容量
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
+          <li>INFO_THEORY_4_CAPACITY</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body onload="load_page()">
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：June 5 2022</i></font></h4>
+</div>
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+<br>
+<div class="div_catalogue">
+  <div align="center">
+    <h1> 目录 </h1>
+    <p>
+    <font size="3px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_load_catalogue_alert" id="load_catalogue_alert">正在加载目录...</div>
+  <div class="div_catalogue_container" id="catalogue_container">
+  </div>
+</div><br>
+
+<!-- Start your post here -->
+<h2 class="title">离散信道及其容量</h2>
+<div class="div_learning_post">
+  <h3 class="title">离散信道</h3>
+  <div class="img" title="离散信道建模">
+    <img src="./pic/discrete_channel.png" height="170px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>离散信道</def> 指的是输入空间 $X$ 和输出空间 $Y$ 均为离散事件集的信道。集 $X$ 和 $Y$ 中的事件的个数可能为有限的或者无限可数的，又相应地称为 <def>有限离散信道</def> 和 <def>无限离散信道</def>。我们可以使用如下条件概率方式来表征一个离散信道：
+
+  <div class="equation">
+  $\mathcal{P}(\textbf{y}|\textbf{x}) = \mathcal{P}(y^{(1)}, y^{(2)}, ..., y^{(N)} | x^{(1)}, x^{(2)}, ..., x^{(N)})$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<equation>1</equation> 中，$\textbf{x}$ 表示一个输入序列，$\textbf{y}$ 表示一个输出序列，$x^{(i)}$ 表示输入序列中的第 $i$ 个符号，$y^{(i)}$ 表示输出序列中的第 $i$ 个符号。
+
+  <h3 class="title">离散无记忆信道</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于 <equation>1</equation> 的信道表征方式，如果对于任意 $N$ 长的输入和输出序列，有:
+
+  <div class="equation">
+  $\mathcal{P}(\textbf{y}|\textbf{x}) = \prod_{n \in N} \mathcal{P}(y^{(n)}|x^{(n)})$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;则称之为 <def>离散无记忆信道 (Discrete Memoryless Channel)</def>，简称为 DMC。对于 DMC 来说，$N$ 长序列的信息传输问题可以归结为单个时刻的传输问题，也即我们可以把 <imaging>1</imaging> 中所示的信道模型简化为如下形式:
+
+  <div class="img" title="DMC 信道建模">
+    <img src="./pic/discrete_dmc_channel.png" height="170px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此，对于单个序列传输时刻 $x^{(t)} \rightarrow y^{(t)}$，我们可以使用 <def>信道转移概率矩阵</def> 对其进行描述，如下所示:
+
+  <div class="equation">
+  $\mathcal{P} = [\; \mathcal{P}(y_j|x_k) \;] = \begin{bmatrix} 
+    P(y_0|x_0) & P(y_1|x_0) & ... & P(y_{J-1}|x_0) \\ 
+    P(y_0|x_1) & P(y_1|x_1) & ... & P(y_{J-1}|x_1) \\ 
+    ... & ... & ... & ... \\ 
+    P(y_0|K-1) & P(y_1|x_{K-1}) & ... & P(y_{J-1}|x_{K-1}) 
+  \end{bmatrix}$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;矩阵的每一行代表着一个信道的输入，每一列代表着一个信道的输出。对于每一行，有 $\sum_{j=0}^{J-1} p(y_j|x_k)=1$ 成立，也即每一行的所有元素的和为 $1$。
+
+  <h3 class="title">关于输入/输出对称的离散信道</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于 <equation>3</equation> 中对信道转移概率矩阵的定义，如果矩阵 $\mathcal{P}$ 中所有行矢都是第一行的一种置换，则称信道 <def>关于输入为对称的</def>，这类信道的一个例子如下所示：
+
+  <div class="img" title="关于输入对称的 DMC 信道">
+    <img src="./pic/sym_dmc_exp_1.png" height="300px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其转移概率矩阵表示为：
+
+  <div class="equation">
+  $\mathcal{P} = [\; \mathcal{P}(y_j|x_k) \;] = \begin{bmatrix} 
+    0.8 & 0.1 & 0.1 \\ 
+    0.1 & 0.1 & 0.8
+  \end{bmatrix}$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;容易发现，由于每一行都是由第一行进行行变换得来的，所以基于每一行求得的关于所有输出的平均条件熵 $H(Y|x_k) = - \sum_{j \in [0, J-1]} p(y_j|x_k) \log p(y_j|x_k), \; \forall k \in [0, K-1]$ 都是相等的，因此关于输入对称的信道有如下特征:
+
+  <div class="equation">
+  $H(Y|X) = H(Y|x_k) = - \sum_{j \in [0, J-1]} p(y_j|x_k) \log p(y_j|x_k), \; \forall k \in [0, K-1]$
+  </div>
+
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同理，如果矩阵 $\mathcal{P}$ 中所有列都是第一列的一种置换，则称信道 <def>关于输出为对称的</def>，这类信道的一个例子如下所示：
+
+  <div class="img" title="关于输出对称的 DMC 信道">
+    <img src="./pic/sym_dmc_exp_2.png" height="300px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其转移概率矩阵表示为：
+
+  <div class="equation">
+  $\mathcal{P} = [\; \mathcal{P}(j|k) \;] = \begin{bmatrix} 
+    0.5 & 0.1 & 0.4 \\ 
+    0.4 & 0.5 & 0.1 \\
+    0.1 & 0.4 & 0.5 \\
+  \end{bmatrix}$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当信道是关于输出对称的，且输入事件等概 (i.e. $\mathcal{Q}(x_k) = \frac{1}{K}, \; \forall k \in [0, K-1]$)，则有：
+
+  <div class="equation">
+  $\Omega(y_j) = \sum_{k=0}^{K-1} \mathcal{Q}(x_k) \mathcal{P}(y_j|x_k) = \frac{1}{K} \sum_{k=0}^{K-1} \mathcal{P}(y_j|x_k)$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于列矢量各个分量之和 $\sum_{k=0}^{K-1} \mathcal{P}(y_j|x_k)$ 和具体 $y_j$ 无关，而各个列向量又是由第一个列向量变换得来，因此易得:
+
+  <div class="equation">
+  $\Omega(y_j) = \frac{1}{J}, \; \forall j \in [0,J-1]$
+  </div>
+
+  <h3 class="title">对称和准对称的离散信道</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述的「关于输入对称」和「关于输出对称」的定义，若信道输出集 $Y$ 可以划分为几个子集，每一个子集对应的信道转移概率矩阵 $\mathcal{P}$ 中的列所组成的子阵具有下述性质:
+
+  <ol>
+    <li>每一行都是第一行的置换</li>
+    <li>每一列都是第一列的置换</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;则称该信道为 <def>准对称信道</def>。一个显而易见的结论是：准对称信道关于输入一定是对称的。特别地，如果此时信道输出集 $Y$ 划分的子集数目只有一个，此时信道关于输入和输出都是对称的，则称它为 <def>对称信道</def>。
+
+  <h3 class="title">DMC 的信道容量定义</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;研究信道的目的是要讨论信道中平均每个符号所能传送的信息量，即信道的信息传输率。我们可以使用平均互信息量 $I(X;Y)$ 来进行表示，可以理解为接收到符号 $Y$ 后平均每个符号获得的关于 $X$ 的信息量。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们对针对 DMC 的这一过程进行量化表示。首先给定一个 DMC 信道，若给定输入分布 $\mathcal{Q}(x)$ 和转移概率分布 $\mathcal{P}(y|x)$，则其概率输出分布为:
+
+  <div class="equation">
+  $\Omega (y) = \sum_{x \in X} \mathcal{Q}(x) \cdot \mathcal{P}(y|x)$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;也即事件集 $Y$ 中第 $j$ 个字母出现的概率为：
+
+  <div class="equation">
+  $\Omega (y_j) = \sum_{k=0}^{K-1} \mathcal{Q}(x_k) \cdot \mathcal{P}(y_j|x_k)$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由平均互信息的定义式可得:
+
+  <div class="equation">
+  \begin{aligned}
+  I(X;Y) &= \sum_{k=0}^{K-1} \sum_{j=0}^{J-1} \mathcal{P}(x_k, y_j) \cdot \log \frac{\mathcal{P}(y_j|x_k)}{\Omega(y_j)} \\
+  &= \sum_{k=0}^{K-1} \sum_{j=0}^{J-1} \mathcal{Q}(x_k) \cdot \mathcal{P}(y_j|x_k) \cdot \log \frac{\mathcal{P}(y_j|x_k)}{\Omega(y_j)} \\
+  &= \sum_{k=0}^{K-1} \sum_{j=0}^{J-1} \mathcal{Q}(x_k) \cdot \mathcal{P}(y_j|x_k) \cdot \log \frac{\mathcal{P}(y_j|x_k)}{\sum_{i=0}^{K-1} \mathcal{Q}(x_i) \cdot \mathcal{P}(y_j|x_i)}
+  \end{aligned}
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以发现，平均互信息是关于 <note>信道输入概率 $\mathcal{Q}(x_k)$</note> 和 <note>信道转移概率 $\mathcal{P}(y_j|x_k)$</note> 的函数。基于这层理解，我们现在明确我们的任务：在给定信道的情况下，也就相当于信道转移概率 $\mathcal{P}(y_j|x_k)$ 给定的情况下，找到一种信道输入概率 $\mathcal{Q}(x_k)$ 分布情况，使得基于分布 $\mathcal{Q}(x_k)$，信宿在接收到符号 $Y$ 后，平均每个符号获得的关于 $X$ 的信息量最大。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上面的这层理解，我们给出 DMC 的信道容量定义:
+
+  <div class="equation">
+  $C = \max_{\mathcal{Q}_k} I(X;Y)$
+  </div>
+
+  <h3 class="title">达到信道容量 $C$ 的充要条件</h3>
+
+  <div class="theorm">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;输入概率矢量 $\mathcal{Q}(X) = \{\mathcal{Q}(x_1), \mathcal{Q}(x_2), ..., \mathcal{Q}(x_n)\}$ 达到转移概率为 $\{\mathcal{P}(y_j|x_k))\}$ 的 DMC 的容量 $C$ 的充要条件为:
+  \begin{cases}
+  I(x=x_k;Y) = C \;\; \forall k, \mathcal{Q}(x_k) > 0 \\ \\
+  I(x=x_k;Y) \le C \;\; \forall k, \mathcal{Q}(x_k) = 0 \\
+  \end{cases}
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对上述定理的理解: TODO
+  </div>
+
+  <h3 class="title">准对称 DMC 的信道容量</h3>
+
+  <div class="theorm">
+  实现准对称 DMC 信道容量的输入分布为等概分布，信道容量为:
+  $$C = \sum_{j=0}^{J-1} \mathcal{P}(y_j|x_k) \log \frac{\mathcal{P(y_j|x_k)}}{\sum_{i=1}^{K-1}}$$
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对上述定理的理解: TODO
+  </div>
+
+  <h3 class="title">一般 DMC 信道容量</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于一般的 DMC 信道，下面我们给出通用的信道容量的计算方法:
+
+  <div class="theorm">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;假定信道输入符号的概率为 $\mathcal{Q}(x_k)$，则可以得信道输出符号的概率为:
+
+<p>  $$\Omega(y_j) = \sum_{i=1}^{K-1} \mathcal{Q}(x_i) \cdot \mathcal{P}(y_j|x_i), \quad j=[0, J-1]$$</p>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由 <theorm>1</theorm> 给出的充要条件可得:
+
+<p>  $$I(x=k;Y) = \sum_{j=0}^{J-1} \mathcal{P}(y_j|x_k) \cdot \log \frac{\mathcal{P}(y_j|x_k)}{\Omega(y_j)} = C, \quad k=[0,K-1]$$</p>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;稍作化简可得:
+
+<p>  $$I(x=k;Y) = \sum_{j=0}^{J-1} \mathcal{P}(y_j|x_k) \cdot \log \mathcal{P}(y_j|x_k) - \sum_{j=0}^{J-1} \mathcal{P}(y_j|x_k) \cdot \log \Omega(y_j) = C, \quad k=[0,K-1]$$</p>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对上式进行移项，可得:
+
+<p>  $$\sum_{j=0}^{J-1} \mathcal{P}(y_j|x_k) \cdot \log \mathcal{P}(y_j|x_k) = \sum_{j=0}^{J-1} \mathcal{P}(y_j|x_k) \cdot [\underbrace{C + \log \Omega(y_j)}_{\beta_j}], \quad k=[0,K-1]$$</p>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们令上式中的 $C + \log \Omega(y_j)$ 为 $\beta_j$，也即得到了 $K$ 个有 $J$ 个未知数的方程组。若转移矩阵 $\mathcal{P}$ 是一个非奇异矩阵，则该方程组有唯一解。令 $\{ \beta_j \}$ 是其唯一解，由 $\beta_j$ 的定义可得 (p.s. 假设 $\log$ 底数为 $2$):
+
+<p>  $$\Omega(y_j) = 2^{\beta_j - C} = 2^{-C} 2^{\beta_j}$$</p>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由 $\sum_{j=1}^{J-1} \Omega(y_j) = 1$ 可得:
+
+<p>  $$C = \log( \sum_{j=0}^{J-1} 2^{\beta_j} )$$</p>
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;尤其值得注意的是，我们在求出所有的 $\Omega(y_j)$ 之后，需要验证在求出来的输出分布下，输入分布 $\mathcal{Q}(x_k)$ 是否满足 $\mathcal{Q}(x_k) > 0$，也即求解方程组:
+
+<p>  $$\Omega(y_j) = \sum_{i=1}^{K-1} \mathcal{Q}(x_i) \cdot \mathcal{P}(y_j|x_i), \quad j=[0, J-1]$$</p>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果求解出来发现有 $\mathcal{Q}(x_i) < 0$，则我们另 $\mathcal{Q}(x_i) = 0$，也即在信道转移矩阵中删除去该行，然后重新进行上述计算。知道求解出来的 $\mathcal{Q}(x_k)$ 满足全部非负的要求。
+  </div>
+  </div>
+
+  <h3 class="title">达到信道容量时的输入/输出分布的唯一性</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;容易证明，能够使得传输过程达到信道容量的输入分布是不唯一的，而达到信道容量时的输出分布是唯一的，任何导致这一输出分布的输入分布都是最优分布。
+</div>
+
+<h2 class="title">时间离散的无记忆连续信道及容量计算</h2>
+<div class="div_learning_post">
+  <h3 class="title">时间离散的无记忆连续信道</h3>
+  <label class="title">noise_addabel_channel</label>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面我们重点介绍了 DMC，下面我们来看每个时刻的输出值为连续，但时间仍为离散的信道的建模。
+
+  <div class="img" title="时间离散的连续信道建模">
+    <img src="./pic/continuous_channel.png" height="170px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设时间离散信道的输入、输出集分别为 $X$ 和 $Y$。$N$ 个单元时间的输入序列为 $\mathcal{x} = (x^{(1)}, x^{(2)}, ..., x^{(N)})$ ($x^{(n)} \in X$)，输出序列为 $\mathcal{y} = (y^{(1)}, y^{(2)}, ..., y^{(N)})$ ($y^{(n)} \in Y$)，信道转移概率密度为 $\mathcal{P}(y_j|x_k)$。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果是无记忆的信道，那么我们有:
+
+  <div class="equation">
+  $\mathcal{P}_{Y|X}(\textbf{y}|\textbf{x}) = \prod_{n=1}^{N} \mathcal{P}_{Y|X}(y^{(n)}|x^{(n)})$
+  </div>
+
+  <div class="img" title="时间离散的无记忆连续信道建模">
+    <img src="./pic/continuous__memoryless_channel.png" height="170px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;与离散信道类似，当信道是无记忆的时候，$N$ 长序列的信息传输问题可以归结为单个时刻的传输问题，也即我们可以把 <imaging>5</imaging> 中所示的信道模型简化为如上 <imaging>6</imaging> 的形式。
+
+  <h3 class="title">加性噪声信道</h3>
+
+  <div class="img" title="加性噪声信道">
+    <img src="./pic/addable_channel.png" width=400px />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;若连续信道的条件概率密度满足: $\mathcal{P}_{Y|X}(y|x) = \mathcal{P}_{Z}(y - x) = \mathcal{P}_{Z}(z)$ 时，我们称该信道为 <def>可加噪声信道</def>，其中 $z$ 称为 <def>加性噪声</def>。由于信道的噪声和输入是相互独立的，所以有:
+
+  <div class="equation">
+  $$\begin{aligned}
+  H_c(Y|X) &= - \int_{\infty}^{\infty} \int_{\infty}^{\infty} \mathcal{Q}(x) \cdot \mathcal{P}_{Y|X}(y|x) \cdot \log \mathcal{P}_{Y|X}(y|x) \ dx \ dy \\ \\
+  &= - \int_{\infty}^{\infty} \mathcal{Q}(x) \cdot \int_{\infty}^{\infty} \mathcal{P}_{Z}(z) \cdot \log \mathcal{P}_{Z}(z) \ dx \ dz \\ \\
+  &= - \int_{\infty}^{\infty} \mathcal{Q}(x) \cdot H_c(Z) \ dx \\ \\
+  &= H_c(Z)
+  \end{aligned}$$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;也即在给定输入的情况下，输出的不确定性完全是由噪声造成的，也即条件熵 $H_c(Y|X)$ 等于噪声熵 $H_c(Z)$。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述性质，我们可以得到:
+
+  <div class="equation">
+  $I(X;Y) = H_c(Y) - H_c(Y|X) = H_c(Y) - H_c(Z)$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于 <equation>14</equation>，我们可以知道: 给定信道相当于给定噪声熵 $H_c(Z)$，当我们尝试求解信道容量 $C=\max_{\mathcal{Q}_k}I(X;Y)$ 时，实际上是在对所有的输入分布求 $H_{c}(Y)$ 的最大值。
+
+  <h3 class="title">对输入不加约束的信道容量</h3>
+  <label class="title">no_constrain</label>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们考虑一种极端的情况: 给定一个加性噪声信道，其中:
+
+  <ol>
+    <li>干扰 $z$ 和信道输入 $x$ 相互独立;</li>
+    <li>
+    $z \sim N(0, \sigma_z^2)$;
+    </li>
+    <li>
+    $x \sim N(0, \sigma_x^2)$，也即 $\mathcal{P}_{X}(x) \; = \; \frac{1}{\sqrt{2 \pi \sigma_x}} \exp(- \frac{x^2}{2 \sigma_x^2})$
+    </li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述设定，我们可以得到信道的输出 $y$ 实际上是两个正态分布的叠加，也即:
+
+<p>  $$y \sim N(0, \sigma_x^2 + \sigma_z^2)$$</p>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;此时信道输入和输出之间的平均互信息量为:
+  \begin{aligned}
+  I(X;Y) &= H_c(Y) - H_c(Z) \\
+  &= \frac{1}{2} \log 2 \pi e(\sigma_x^2 + \sigma_z^2) - \frac{1}{2} \log 2 \pi e \sigma_z^2 \\
+  &= \frac{1}{2} \log (1+\frac{\sigma_x^2}{\sigma_z^2})
+  \end{aligned}
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以发现，在不对信源加以约束的情况下，并且在给定信道的情况下，信道输入和输出之间的平均互信息量可以为任意大。
+
+  <h3 class="title">平均功率受限可加噪声信道</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;实际信道中，不论是输入信号还是干扰，它们的功率都是受限的，因此我们在本节中，我们尝试给输入和干扰都加上关于功率 (i.e. 方差) 的约束。同样地，考虑信道噪声 $z$ 是均值为 $0$，方差为 $\sigma_z^2$ 的高斯随机变量。值得注意的是，这样的信道被称为 <def>高斯加性连续信道</def>，其具有如下性质:
+
+  <div class="equation">
+  $z \sim N(0, \sigma_z^2)$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;也即:
+
+  <div class="equation">
+  $\mathcal{P}_{Y|X}(y|x) \; = \; \mathcal{P}_{Z}(y-x) \; = \; \mathcal{P}_{Z}(z) \; = \; \frac{1}{\sqrt{2 \pi \sigma_z}} \exp(- \frac{z^2}{2 \sigma_z^2})$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此我们可以得到:
+
+  <div class="equation">
+  \begin{aligned}
+  H_c(Y|X) &= H_c(Z) \\ \\
+  &= - \int_{Z} \mathcal{P}(z) \cdot \log \mathcal{P}(z) \; dz \\ \\
+  &= - \int_{Z} \mathcal{P}(z) \cdot \log \frac{1}{\sqrt{2 \pi \sigma_z}} \exp(- \frac{z^2}{2 \sigma_z^2}) \; dz \\ \\
+  &( \textbf{借助} \log_2 z = \ln z \log_2 e ) \\ \\
+  &= \frac{1}{2} \log 2\pi \sigma_z^2 + \log_2 e \int_{Z} \mathcal{P}(z) \frac{z^2}{2 \sigma_z^2} \; dz \\ \\
+  &= \frac{1}{2} \log_2 2 \pi e \sigma_z^2
+  \end{aligned}
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此，根据 <equation>15</equation>，高斯加性连续信道的信道容量为:
+
+  <div class="equation">
+  \begin{aligned}
+  C &= \max_{\mathcal{Q}(x)}\{I(X;Y)\} \\ \\
+  &= \max_{\mathcal{Q}(x)}\{H_c(Y)\} - H_c(Z) \\ \\
+  &= \max_{\mathcal{Q}(x)}\{H_c(Y)\} - \frac{1}{2} \log_2 2 \pi e \sigma_z^2
+  \end{aligned}
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;明确的是，我们现在的目标仍然是求得使得 $H_c(Y)$ 最大的 $\mathcal{Q}(x)$ 分布。回归到我们的背景，由于我们输入的随机变量 $X$ 的平均功率是有限的，假设限定为 $S_x$，而噪声的平均功率也是有限的，上面 <equation>16</equation> 我们限制为了 $S_z = \sigma_z^2$，因此输出随机变量 $Y$ 的平均功率也是有限的，我们记为 $S_y$。根据 <note>最大连续熵定理</note>，要使得 $H_c(Y)$ 最大，$Y$ 必须是一个均值为 $0$，方差为 $\sigma_y = S_y$ 的高斯随机变量。因此，现在的问题又转化为: 输入的概率密度函数 $\mathcal{Q}(x)$ 需要是什么样的函数时，才能使得 $Y$ 呈现高斯分布。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于高斯加性信道中的输入 $X$ 和噪声 $Z$ 相互独立，且 $Y=X+Z$，因此由概率论可知，若输入 $X$ 的均值为 $0$，方差为 $\sigma_x = S_x$ 的随机变量，即 $X$ 的概率密度函数为:
+
+  <div class="equation">
+  $\mathcal{Q}(x) \; = \; \frac{1}{\sqrt{2 \pi \sigma_x}} \exp(- \frac{x^2}{2 \sigma_x^2})$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;则可以证明，输出 $Y$ 的概率密度函数就等于:
+
+  <div class="equation">
+  $\Omega(y) \; = \; \frac{1}{\sqrt{2 \pi \sigma_y}} \exp(- \frac{y^2}{2 \sigma_y^2})$，其中 $\sigma_y^2 = \sigma_x^2 + \sigma_z^2 = S_y$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;以上结论说明，当输入随机变量 $X$ 的概率密度是均值为 $0$，方差为 $\sigma_x^2$ 的高斯随机变量、噪声随机变量 $Z$ 的概率密度是均值为 $0$，方差为 $\sigma_z^2$ 的高斯随机变量时，输出随机变量 $Y$ 也是一个高斯随机变量，其均值为 $0$，方差为 $\sigma_y^2 = \sigma_x^2 + \sigma_z^2 = S_y$。此时输出端的连续熵 $H_c(Y)$ 达到最大值，即:
+
+  <div class="equation">
+  $\max_{\mathcal{Q}(x)}\{ H_c(Y) \} = \frac{1}{2} \log 2 \pi e (\sigma_x^2 + \sigma_z^2) = \frac{1}{2} \log 2 \pi e S_y$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;根据 <equation>19</equation> 的结论，当输出端的连续熵 $H_c(Y)$ 达到最大值时，我们可以求得信道容量:
+
+  <div class="equation">
+  \begin{aligned}
+  C &= \frac{1}{2} \log 2 \pi e (\sigma_x^2 + \sigma_z^2) - \frac{1}{2} \log_2 2 \pi e \sigma_z^2 \\ \\
+  &= \frac{1}{2} \log_2 \frac{\sigma_x^2 + \sigma_z^2}{\sigma_z^2} \\ \\
+  &= \frac{1}{2} \log_2 (1 + \underbrace{\frac{\sigma_x^2}{\sigma_z^2}}_{信噪比})
+  \end{aligned}
+  </div>
+</div>
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+
+
+<!--图片、引用-->
+<!-- 
+<div class="img" title="brabra">
+  <img src="" height="">
+</div>
+
+<imaging>1</imaging>
+-->
+
+<!--等式、引用-->
+<!-- 
+<div class="equation">
+</div>
+
+<equation>1</equation>
+-->
+
+<!--定理、引用、证明-->
+<!-- 
+<div class="theorm">
+</div>
+
+<theorm>1</theorm>
+
+<div class="theorm_prove">
+</div>
+-->
+
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
+          <li>INFO_THEORY_4_CAPACITY</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

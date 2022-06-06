@@ -32,10 +32,13 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_16_Match_of_Bipartite/pic/match_type.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_16_Match_of_Bipartite/pic/alternating_path.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_16_Match_of_Bipartite/pic/berge.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_16_Match_of_Bipartite/pic/bio_match.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_16_Match_of_Bipartite/pic/prove_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_16_Match_of_Bipartite/pic/vertex_cover.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_16_Match_of_Bipartite/pic/tutte.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_16_Match_of_Bipartite/pic/xxx.png">
-<meta property="article:published_time" content="2022-04-01T08:55:31.841Z">
-<meta property="article:modified_time" content="2022-04-01T08:55:31.841Z">
+<meta property="article:published_time" content="2022-05-17T03:19:03.925Z">
+<meta property="article:modified_time" content="2022-05-17T03:19:03.925Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -255,7 +258,7 @@
 <body onload="load_page()">
 
 <div align="center" class="div_indicate_source">
-  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Jan.30 2022</i></font></h4>
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：May.16 2022</i></font></h4>
 </div>
 <div class="div_licence">
   <br>
@@ -281,158 +284,191 @@
 <!-- Start your post here -->
 <h2 class="title">图的匹配与 Berge 定理</h2>
 <div class="div_learning_post">
-  <h3 class="title">图的匹配</h3>
+  <h3 class="title">图的匹配的概念</h3>
 
-  <div align="center">
+  <div class="img" title="图的匹配">
     <img src="./pic/match.png" width=600px>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如果 `M` 是图 `G` 的边子集 (不含自环)，且 `M` 中的任意两条边没有共同顶点，则称 `M` 是 `G` 的一个 <def>匹配 (Matching)</def> 或 (<def>对集</def>，<def>边独立集</def>)。
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 $M$ 是图 $G$ 的边子集 (不含自环)，且 $M$ 中的任意两条边没有共同顶点，则称 $M$ 是 $G$ 的一个 <def>匹配 (Matching)</def> 或 (<def>对集</def>，<def>边独立集</def>)。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如果 `G` 中顶点 `v` 是 `G` 的匹配 `M` 中某条边的端点，称它为 <def>`M` 饱和 (Saturated) 点</def>，否则为 <def>`M` 非饱和 (Unsaturated/Exposed) 点</def>。
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 $G$ 中顶点 $v$ 是 $G$ 的匹配 $M$ 中某条边的端点，称它为 <def>$M$ 饱和 (Saturated) 点</def>，否则为 <def>$M$ 非饱和 (Unsaturated/Exposed) 点</def>。
 
-  <div align="center">
+  <h3 class="title">图的匹配的种类</h3>
+
+  <div class="img" title="极大匹配, 最大匹配和完美匹配">
     <img src="./pic/match_type.png" width=600px>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如果不能通过加边使得匹配 `M` 增大, 称 `M` 是图 `G` 的 <def>极大匹配 (Maximal Matching)</def>。
+  &nbsp;&nbsp;&nbsp;&nbsp;如果不能通过加边使得匹配 $M$ 增大, 称 $M$ 是图 $G$ 的 <def>极大匹配 (Maximal Matching)</def>。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如果 `M` 是图 `G` 的包含边数最多的匹配，称 `M` 是 `G` 的一个 <def>最大匹配 (Maximum Matching)</def>。特别地，若最大匹配饱和了 `G` 的所有顶点，称它为 `G` 的一个 <def>完美匹配 (Perfect Matching)</def>。
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 $M$ 是图 $G$ 的包含边数最多的匹配，称 $M$ 是 $G$ 的一个 <def>最大匹配 (Maximum Matching)</def>。特别地，若最大匹配饱和了 $G$ 的所有顶点，称它为 $G$ 的一个 <def>完美匹配 (Perfect Matching)</def>。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;完美匹配图的阶数一定是偶数。
+  &nbsp;&nbsp;&nbsp;&nbsp;图的极大匹配不一定其是最大匹配，但其最大匹配一定是图的极大匹配。
 
-  <div align="center">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最大匹配不一定是完美匹配。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，完美匹配图的阶数一定是偶数。
+
+  <h3 class="title">图的 M 交错路和增广路</h3>
+
+  <div class="img" title="图的增广路">
     <img src="./pic/alternating_path.png" width=300px>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如果 `M` 是图 `G` 的匹配，`G` 中一条由 `M` 中的边和非 `M` 中的边交错形成的路，称为`G` 中的一条 <def>`M` 交错路 (M Alternating Path)</def>。特别地，若 `M` 交错路的起点与终点是 `M` 非饱和点，称这种 `M` 交错路为 <def>`M` 增广路(M Augmenting Path)</def> 或 `M` 可扩路。
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 $M$ 是图 $G$ 的匹配，$G$ 中一条由 $M$ 中的边和非 $M$ 中的边交错形成的路，称为$G$ 中的一条 <def>$M$ 交错路 (M Alternating Path)</def>。特别地，若 $M$ 交错路的起点与终点是 $M$ <note>非饱和点</note>，称这种 $M$ 交错路为 <def>$M$ 增广路(M Augmenting Path)</def> 或 $M$ <def>可扩路</def>。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;以上图为例，设 `M={v_7v_8,v_3v_4}`，则路 `v_6v_7v_8v_3v_4` 和 `v_1v_7v_8v_2` 都是 `M` 交错路，其中后者是 `M` 增广路。
+  &nbsp;&nbsp;&nbsp;&nbsp;以上图为例，设 $M={v_7v_8,v_3v_4}$，则路 $v_6v_7v_8v_3v_4$ 和 $v_1v_7v_8v_2$ 都是 $M$ 交错路，其中后者是 $M$ 增广路。
 
   <h3 class="title">Berge 定理</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;Berge 定理定义如下:
 
-  <div align="center" class="div_learning_post_border">
-  `G` 的匹配 `M` 是最大匹配，当且仅当 `G` 不包含 `M` 增广路。
+  <div class="theorm">
+  $G$ 的匹配 $M$ 是最大匹配，当且仅当 $G$ 不包含 $M$ 增广路。
   </div>
 
+  <div class="theorm_prove">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;首先采用反证法证明必要性: 在已知 `G` 的最大匹配 `M` 的条件下，若 `G` 包含一条 `M` 增广路 `P`，则可令该增广路为: `P=v_0v_1v_2...v_{2k}v_{2k+1}`。显然，`P` 中 `M` 中的边比非 `M` 中的边少一条。于是作新的匹配 `M_1`，它当中的边由 `P` 中非 `M` 中边组成。`M_1` 中边比 `M` 中多一条，这与 `M` 是 `G` 的最大匹配矛盾。
+  &nbsp;&nbsp;&nbsp;&nbsp;首先采用反证法证明必要性: 在已知 $G$ 的最大匹配 $M$ 的条件下，若 $G$ 包含一条 $M$ 增广路 $P$，则可令该增广路为: $P=v_0v_1v_2...v_{2k}v_{2k+1}$。显然，$P$ 中 $M$ 中的边比非 $M$ 中的边少一条。于是作新的匹配 $M_1$，它当中的边由 $P$ 中非 $M$ 中边组成。$M_1$ 中边比 $M$ 中多一条，这与 $M$ 是 $G$ 的最大匹配矛盾。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;然后使用反证法证明充分性: 在已知 `G` 不包含 `M` 增广路的条件下，假设 `M` 不是 `G` 的最大匹配。令 `M_1` 是 `G` 的最大匹配，则有 `|M_1|>|M|`，也即 `M_1` 中的边数至少比 `M` 多 `1`。下面考虑 `G[M_1\DeltaM]`，则
+  &nbsp;&nbsp;&nbsp;&nbsp;然后使用反证法证明充分性: 在已知 $G$ 不包含 $M$ 增广路的条件下，假设 $M$ 不是 $G$ 的最大匹配。令 $M_1$ 是 $G$ 的最大匹配，则有 $|M_1|>|M|$，也即 $M_1$ 中的边数至少比 $M$ 多 $1$。下面考虑 $G[M_1\Delta M]$ (p.s. $\Delta$ 是图的对称差运算，见 <a href="/sec_learning/Algorithm/Graph_Theory_2_Subgraph/index.html#3.6%20对称差运算">子图、图运算、路与连通性</a>)，则:
 
   <ol>
-    <li>`\Delta[G(M_1\triangleM)] \le 2`</li>
-    <li>`\delta[G(M_1\triangleM)] \ge 1`</li>
+    <li>$\Delta[G(M_1\triangle M)] \le 2$</li>
+    <li>$\delta[G(M_1\triangle M)] \ge 1$</li>
   </ol>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;可以断言，`G(M_1\triangleM)` 是不交圈和路的并，则考虑 `G(M_1\triangleM)` 导出分支的各种情况：
+  &nbsp;&nbsp;&nbsp;&nbsp;可以断言，$G(M_1\triangle M)$ 是不交圈和路的并，则考虑 $G(M_1\triangle M)$ 导出分支的各种情况：
 
-  <div align="center">
-    <img src="./pic/berge.png" width=500px>
+  <div class="img" title="导出分支是圈只能是偶长圈">
+    <img src="./pic/berge.png" width=600px>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;若导出分支是圈，则该圈一定是偶长圈，且来自 `M_1` 和 `M` 的边交替出现。如果是奇长圈，否则与匹配的定义相矛盾，具体如上图所示。若 `G(M_1\triangleM)` 只包含圈，则来自 `M_1` 和 `M` 的边数量相同，因此一定存在至少一条路 `P`，其首尾都是 `M` 非饱和点，则此时这条路 `P` 即为 `M` 增广路，与假设不符，因此充分性得证。
+  &nbsp;&nbsp;&nbsp;&nbsp;若导出分支是圈，则该圈一定是偶长圈，且来自 $M_1$ 和 $M$ 的边交替出现 (i.e. 因为如果是奇长圈，否则与匹配的定义相矛盾，具体如上图所示)。若 $G(M_1\triangle M)$ 只包含圈，则来自 $M_1$ 和 $M$ 的边数量相同。但是由于 $|M_1|>|M|$，因此一定存在至少一条路 $P$，其首尾都是 $M$ 非饱和点，则此时这条路 $P$ 即为 $M$ 增广路，与假设不符，因此充分性得证。
+  </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Berge 定理给我们提供了迭代扩大 `G` 的匹配的思路 (算法)。
+  &nbsp;&nbsp;&nbsp;&nbsp;Berge 定理给我们提供了迭代扩大 $G$ 的匹配的思路 (算法)。
 </div>
 
 <h2 class="title">二部图的匹配与覆盖</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;二部图匹配的意义：TODO。
+  &nbsp;&nbsp;&nbsp;&nbsp;考虑这样一个问题，有 $7$ 位求职者 $A,B,C,...,G$，它们求职的岗位有 $a,b,c,...,g$。它们投递的情况如下图所示，求解的是是否存在一种情况使得所有求职者都能找到工作。
 
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们要解决的实质问题是：
-
-  <ol>
-    <li>二部图匹配是否存在? </li>
-    <li>如何求出二部图匹配？</li>
-  </ol>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;本小节解决前面一个问题，下一小节解决第二个问题。
-
-  <h3 class="title">二部图的匹配的存在性</h3>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面给出一个定理：
-
-  <div align="center" class="div_learning_post_border">
-  设 `G=(X,Y)` 是二部图，则 `G` 存在饱和 `X` 每个顶点的匹配的充要条件是：对 `\forall S \subseteq X`，有 `|N(S)| \ge |S|`<br>其中 `N(S)` 表示 `S` 的邻点的集合。
+  <div class="img" title="二部图匹配问题示例">
+    <img src="./pic/bio_match.png" width="500px" />
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;首先使用反证法证明必要性：TODO。
+  &nbsp;&nbsp;&nbsp;&nbsp;事实上，上述问题是一个二部图求匹配的问题。我们从以下两方面开始对这个问题的探讨。
+
+  <ol>
+    <li>如何判定二部图的匹配是否存在?</li>
+    <li>如何求出二部图的匹配?</li>
+  </ol>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;然后使用反证法证明充分性：假设不存在饱和 `X` 每个顶点的匹配。不妨设 `M` 是 `G` 的最大匹配，但点 `u` 未被 `M` 饱和，`u\inX`。
+  &nbsp;&nbsp;&nbsp;&nbsp;下面的小节解决前面一个问题，再下一小节解决第二个问题。
+
+  <h3 class="title">二部图的匹配的存在性</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面给出 <def>Hall 定理</def>：
+
+  <div class="theorm">
+  设 $G=(X,Y)$ 是二部图，则 $G$ 存在饱和 $X$ 每个顶点的匹配的充要条件是：对 $\forall S \subseteq X$，有 $|N(S)| \ge |S|$，其中 $S$ 表示 $X$ 的一个点子集，$N(S)$ 表示 $S$ 的邻点的集合。
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先证明必要性。如果 $G$ 存在饱和 $X$ 每个顶点的匹配，则由匹配的定义，$X$ 的每个顶点在 $Y$ 中至少有一个邻点，所以 对 $\forall S \subseteq X$，有 $|N(S)| \ge |S|$。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后使用反证法证明充分性：假设不存在饱和 $X$ 每个顶点的匹配。不妨设 $M$ 是 $G$ 的最大匹配，但点 $u$ 未被 $M$ 饱和，$u \in X$。
 
   <div align="center">
     <img src="./pic/prove_2.png" width=500px>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;令 `Z` 是所有的以 `u` 为起点的 `M` 交错路的集合。记 `S=Z \cap X`，`T=Z \cap Y`。断言 `N(S) = T`。证明：显然有 `T \subseteq N(S)`，然后证明等号成立。假设 `\exists v\inN(S)`\`T`，此时可得到一条 `uv` 增广路，这与 `M` 是 `G` 的最大匹配矛盾，因此有 `N(S) = T` 成立。而事实上，`|S|=|T|+1`，故有 `|S| = |N(S)| + 1`，也即 `|N(S)|<|S|`，这与假设矛盾，故充分性得证。
+  &nbsp;&nbsp;&nbsp;&nbsp;令 $Z$ 是所有的以 $u$ 为起点的 $M$ 交错路的集合。记 $S=Z \cap X$，$T=Z \cap Y$。断言 $S$ 中所有点的邻居都在 $T$ 中，$T$ 中的所有点都是 $S$ 中点的邻居，也即 $N(S) = T$。证明：显然有 $T \subseteq N(S)$，然后证明等号成立。假设 $\exists v\in N(S)$ \ $T$，也即属于 $S$ 中点的邻居但不在 $T$ 中的一个点，此时可得到一条 $uv$ 增广路，根据 <theorm>1</theorm>，这与 $M$ 是 $G$ 的最大匹配矛盾，因此有 $N(S) = T$ 成立。而事实上，$|S|=|T|+1$ (i.e. $S$ 比 $T$ 多了一个点 $u$)，故有 $|S| = |N(S)| + 1$，也即 $|N(S)|<|S|$，这与假设矛盾，故充分性得证。
+  </div>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;上述定理存在如下推论：
 
-  <div align="center" class="div_learning_post_border">
-  若 `G` 是 `k(k>0)` 正则二部图，则 `G` 存在完美匹配。
+  <div class="theorm">
+  若 $G$ 是 $k$ 正则二部图 $(k>0)$，则 $G$ 存在完美匹配 (i.e. 存在最大匹配饱和图中所有的点)。
   </div>
 
+  <div class="theorm_prove">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明：TODO。
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一方面，由于 $G$ 是 $k$ 正则二部图，于是有 $k \cdot |X| = k \cdot |Y|$，故有 $|X|=|Y|$。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另一方面，对于 $X$ 的任一非空子集 $S$，设 $E_1$ 和 $E_2$ 分别是与 $S$ 和 $N(S)$ 相关联的边集，显然有 $E_1 \subset E_2$，也即 $k \cdot |S| \le k \cdot |N(S)|$，也即 $S \le |N(S)|$，由 <theorm>2</theorm> 可得，该二部图存在饱和 $X$ 中每个顶点的匹配。又因为 $|X|=|Y|$，所以一个匹配饱和了 $X$ 中的所有顶点相当于饱和了 $Y$ 中的所有顶点，因此图 $G$ 存在完美匹配。
+  </div>
+
 </div>
 
 <h3 class="title">点覆盖与 König 定理</h3>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;`G` 的一个顶点子集 `K` 称为 `G` 的一个 <def>点覆盖 (Vertex Cover)</def>，如果 `G` 的每条边都至少有一个端点在 `K` 中。
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们给出关于点覆盖的定理，用以求解二部图的匹配问题。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;`G` 的一个包含点数最少的点覆盖称为 `G` 的 <def>最小点覆盖</def>，其包含的点数称为 `G` 的覆盖数，记为 `\beta(G)`。 
+  &nbsp;&nbsp;&nbsp;&nbsp;$G$ 的一个顶点子集 $K$ 称为 $G$ 的一个 <def>点覆盖 (Vertex Cover)</def>，如果 $G$ 的每条边都至少有一个端点在 $K$ 中。
+
+  <div class="img" title="点覆盖与最小点覆盖">
+    <img src="./pic/vertex_cover.png" width="400px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;$G$ 的一个包含点数最少的点覆盖称为 $G$ 的 <def>最小点覆盖</def>，其包含的点数称为 $G$ 的覆盖数，记为 $\beta(G)$。 
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;下面给出一个定理：
 
-  <div align="center" class="div_learning_post_border">
-  设 `M` 是 `G` 的匹配，`K` 是 `G` 的点覆盖，若 `|M|=|K|`，则 `M` 是最大匹配，而 `K` 是最小点覆盖
+  <div class="theorm">
+  设 $M$ 是 $G$ 的匹配，$K$ 是 $G$ 的点覆盖，始终有 $|K|\ge|M|$。若 $|M|=|K|$，则 $M$ 是最大匹配，而 $K$ 是最小点覆盖。
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明：
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先证明始终有 $|K|\ge|M|$。由点覆盖和匹配的概念可知，$K$ 至少包含 $M$ 中每一条边的一个顶点，否则的话 $K$ 将不能覆盖图中所有的边。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后证明后面一个结论。假设 $M^{\star}$ 是 $G$ 的最大匹配，$K^{\star}$ 是 $G$ 的最小点覆盖，则有 $|M| \le |M^{\star}| \le |K^{\star}| \le |K|$，现在有 $|M|=|K|$，故不等式上的等号全成立。
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明：假设 `M^{\star}` 是 `G` 的最大匹配，`K^{\star}` 是 `G` 的最小点覆盖，则有 `|M| \le |M_{\star}| \le |K^{\star}| \le K`，现在有 `|M|=|K|`，故不等式上的等号全成立。
+  &nbsp;&nbsp;&nbsp;&nbsp;下面的 <def>König 定理</def> 给出了二部图的点覆盖与二部图匹配间的关系，证明过程略:
 
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面的 <def>König 定理</def> 给出了二部图的点覆盖与二部图匹配间的关系:
-
-  <div align="center" class="div_learning_post_border">
+  <div class="theorm">
   在二部图中，最大匹配的边数等于最小点覆盖的顶点数。
   </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明过程如下:
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;设 `G=(X,Y)` 是二部图,  `M^{\star}` 和 `K^{\star}` 分别是 `G` 的最大匹配和最小点覆盖，显然有 `|M^{\star}| \le |K^{\star}|`。下面对  `|M^{\star}| \ge |K^{\star}|` 进行证明。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;设 `U` 表示 `X` 中 `M^{\star}` 非饱和点集，`Z` 表示由 `U` 中的顶点出发的所有 `M^{\star}` 交错路上的点作成的集合，且令 `S=Z \cap X`，`T=Z \cap Y`。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;继续证明: TODO。
 </div>
 
 <h2 class="title">Tutte 定理</h2>
@@ -440,22 +476,45 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;上面看完了二部图的匹配，下面来看任意图的匹配问题。我们给出 <def>Tutte 定理</def>:
 
-  <div align="center" class="div_learning_post_border">
-  图 `G` 有完美匹配当且仅当对 `V(G)` 的任意子集 `S`，有 `o(G-S) \le |S|`
+  <div class="theorm">
+  图 $G$ 有完美匹配当且仅当对 $V(G)$ 的任意子集 $S$，有 $o(G-S) \le |S|$
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在上述定理中，`o(G−S)` 表示奇分支数目 (奇分支是阶数为奇的连通分支)，且 `S` 是 `V(G)` 的任意子集 (可以是空集)。
+  &nbsp;&nbsp;&nbsp;&nbsp;在上述定理中，$o(G−S)$ 表示奇分支数目 (奇分支是阶数为奇的连通分支)，且 $S$ 是 $V(G)$ 的任意子集 (可以是空集)。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;下面有推论：
 
-  <div align="center" class="div_learning_post_border">
-  3 正则无桥图存在完美匹配
+  <div class="theorm">
+  3 正则无桥图 (无割边) 存在完美匹配
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明: 
+
+  <div class="img" title="证明用图">
+  <img src="./pic/tutte.png" width="600px" />
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明: TODO
+  &nbsp;&nbsp;&nbsp;&nbsp;设 $S$ 是 $V$ 的任意一个非空真子集，$G_1,G_2,...,G_k$ 是 $G-S$ 的所有奇分支。设 $m_i$ $(1 \le i \le k)$ 表示端点分属于 $S$ 和 $G_i$ 的边数。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们对 $m_i$ 展开分析。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先在 $G_i$ 中，所有顶点度和为 $2E(G_i)$。在 $G_i$ 中，每个顶点在 $G$ 中的总度数为 $3|V(G_i)|$。所以我们可以得到:
+
+  <div align="center">
+  $m_i=3|V(G_i)|-2|E(G_i)|$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于 $G_i$ 都是奇分支，因此 $V(G_i)$ 为奇数，因此 $m_i$ 必然也为奇数。由于 $G$ 没有割边，所以 $m_i \ge 3$。因此我们可以得到：
+  $$o(G-S) = k \le \frac{1}{3} \sum_{i=1}^km_i \le \frac{1}{3} \sum_{v \in S} d(v) = \frac{1}{3} \cdot 3|S| = |S|$$
+  </div>
 </div>
 
 
@@ -502,7 +561,7 @@
 <!--矩阵公式-->
 <!--
 <div class="cmath" align="center">
-  `((1, 0),(1, 0))`
+  $((1, 0),(1, 0))$
 </div><br>
 -->
 
@@ -540,7 +599,7 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 <!--正文-->
 <!--
 <p>
-&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>$\overline{A}\overline{B}$</span>
 </p>
 -->
       </div>

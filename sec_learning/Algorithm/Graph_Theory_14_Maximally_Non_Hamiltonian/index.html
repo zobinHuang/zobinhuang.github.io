@@ -28,9 +28,12 @@
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_14_Maximally_Non_Hamiltonian/pic/construct_h.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_14_Maximally_Non_Hamiltonian/pic/prove.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_14_Maximally_Non_Hamiltonian/pic/edge_exchange.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_14_Maximally_Non_Hamiltonian/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-28T08:37:14.002Z">
-<meta property="article:modified_time" content="2022-03-28T08:37:14.002Z">
+<meta property="article:published_time" content="2022-05-16T12:12:22.044Z">
+<meta property="article:modified_time" content="2022-05-16T12:12:22.044Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -250,7 +253,7 @@
 <body onload="load_page()">
 
 <div align="center" class="div_indicate_source">
-  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Jan.30 2022</i></font></h4>
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：May.15 2022</i></font></h4>
 </div>
 <div class="div_licence">
   <br>
@@ -276,62 +279,101 @@
 <!-- Start your post here -->
 <h2 class="title">度极大非哈密尔顿图</h2>
 <div class="div_learning_post">
-  <h3 class="title">`C_{m,n}` 图定义</h3>
+  <h3 class="title">$C_{m,n}$ 图定义</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;介绍 `C_{m,n}` 图的原因是 `C_{n,m}` 图族中每个图都是某个 `n` 阶非 `H` 单图的极图。 (i.e. 再加一条边就是 `H` 图)。下面开始介绍。
+  &nbsp;&nbsp;&nbsp;&nbsp;介绍 $C_{m,n}$ 图的原因是 $C_{n,m}$ 图族中每个图都是某个 $n$ 阶非 $H$ 单图的极图。 (i.e. 再加一条边就是 $H$ 图)。下面开始介绍。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;图 `G` 称为 <def>度极大非 `H` 图 (Maximally Non-Hamiltonian)</def>，如果它的 <def>度不弱于 (Degree-majorized)</def> 其它非 `H` 图。
+  &nbsp;&nbsp;&nbsp;&nbsp;图 $G$ 称为 <def>度极大非 $H$ 图 (Maximally Non-Hamiltonian)</def>，如果它的 <def>度不弱于 (Degree-majorized)</def> 其它非 $H$ 图。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于 `1 \le m < \frac{n}{2}`，`C_{m,n}` 图定义为 `C_{m,n} = K_m \vee (\bar{K}_m + K_{n-2m})`。
+  &nbsp;&nbsp;&nbsp;&nbsp;定义了度极大非 $H$ 图后，我们来看关于它的作图方法。对于 $1 \le m < \frac{n}{2}$，$C_{m,n}$ 图定义为 $C_{m,n} = K_m \vee (\bar{K}_m + K_{n-2m})$，其中 $\vee$ 是图的联运算，具体可看 <a href="/sec_learning/Algorithm/Graph_Theory_2_Subgraph/index.html#3.7%20联运算">子图、图运算、路与连通性</a>。例如，对于 $C_{1,5}$，我们可以得到 $C_{1,5} = K_1 \vee (\bar{K_1} + K_{5-2 \times 1}) = K_1 \vee (\bar{K_1} + K_3)$，作图如下所示:
 
-  <h3 class="title">`C_{m,n}` 图性质</h3>
+  <div class="img" title="度极大非哈密尔顿图的构造示例">
+    <img src="./pic/construct_h.png" width="300px" />
+  </div>
+
+  <h3 class="title">$C_{m,n}$ 图性质</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;`C_{m,n}` 图有如下性质:
+  &nbsp;&nbsp;&nbsp;&nbsp;$C_{m,n}$ 图有如下性质:
 
-  <div align="center" class="div_learning_post_border">
-  对于 `1 \le m \le \frac{n}{2}` 的图 `C_{m,n}`，其不是 `H` 图。
+  <div class="theorm">
+  对于 $1 \le m \le \frac{n}{2}$ 的图 $C_{m,n}$，其不是 $H$ 图。
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <div class="img" title="示例用图">
+    <img src="./pic/prove.png" width="400px" />
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明: TODO。
+  &nbsp;&nbsp;&nbsp;&nbsp;取 $S=V(K_m)$，则 $\omega(G-S) = m+1 > |S| = m$，因此由我们在 <a href="/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/index.html#2.1%20性质">哈密尔顿图</a> 讨论的关于 $H$ 图的性质可知，$G$ 不是 $H$ 图。
+  </div>
 
-  <h3 class="title">Chvátal 非 `H` 图极图定理</h3>
+  <h3 class="title">Chvátal 非 $H$ 图极图定理</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;Chvátal 证明了:
 
-  <div align="center" class="div_learning_post_border">
-  若 `G` 是 `n \ge 3` 的非 `H` 简单图，则 `G` 度弱于某个 `C_{m,n}` 图，也即 `C_{n,m}` 图族中每个图都是某个 `n` 阶非 `H` 单图的极图。
+  <div class="theorm">
+  若 $G$ 是 $n \ge 3$ 的非 $H$ 简单图，则 $G$ 度弱于某个 $C_{m,n}$ 图，也即 $C_{n,m}$ 图族中每个图都是某个 $n$ 阶非 $H$ 单图的极图。
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明：
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设 $G$ 是度序列为 $(d_1, d_2, ..., d_n)$ 的非 $H$ 简单图，且 $d_1 \le d_2 \le ... \le d_n$, $n \ge 3$。则由我们在 <a href="/sec_learning/Algorithm/Graph_Theory_13_Hamiltonian_Graph/index.html#2.2.4%20度序列判定法">哈密尔顿图</a> 一文中阐述过的度序列判定法，我们知道当 $G$ 是非 $H$ 图时，存在 $m < \frac{n}{2}$，使得 $d_m \le m$，且 $d_{n-m} < n-m$。于是，$G$ 的度序列必弱于如下序列:
+  $$(\underbrace{m, m, ..., m}_{m个},\underbrace{n-m-1,n-m-1,...,n-m-1}_{n-2m个},\underbrace{n-1,n-1,...,n-1}_{m个})$$
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;原因是因为第 $m$ 个最小度 $d_m \le m$，因此我们令最小的 $m$ 个度都为 $m$; 然后有第 $n-m$ 个最小度 $d_{n-m}< n-m$，因此我们让从 $d_{m+1}$ 开始到 $d_{n-m}$ 的 $(n-m)-(m+1)+1=n-2m$ 个度数为 $n-m+1$，然后令剩下的 $m$ 个没有约束的度数为最大值，也即 $n-1$。综上可以得到上述度序列。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面的度序列正好是图 $C_{m,n}$ 的度序列。
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明：TODO。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;上述定理是充分条件而不是不要条件，也即 `G` 度弱于某个 `C_{m,n}` 图，不能说明它是非 `H` 图。
+  &nbsp;&nbsp;&nbsp;&nbsp;上述定理是充分条件而不是必要条件，也即 $G$ 度弱于某个 $C_{m,n}$ 图，不能说明它是非 $H$ 图。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;下面有一个推论:
 
-  <div class="div_learning_post_border">
-    <div class="cmath" align="center">
-      若 `G` 是 `n \ge 3` 的简单图，若 `|E(G)| > ((n-1),(2))` 则 `G` 是 `H` 图。
-      <br>并且，具有 `n` 个顶点，`((n-1),(2))+1` 条边的非 `H` 图只有 `C_{1,n}` 和 `C_{2,5}`。
-    </div>
+  <div class="theorm">
+  <ol>
+    <li>若 $G$ 是 $n \ge 3$ 的简单图，若 $|E(G)| > \begin{pmatrix} n-1 \\ 2 \end{pmatrix}+1$，则 $G$ 是 $H$ 图。</li>
+    <li>并且，具有 $n$ 个顶点，$\begin{pmatrix} n-1 \\ 2 \end{pmatrix}+1$ 条边的非 $H$ 图只有 $C_{1,n}$ 和 $C_{2,5}$。</li>
+  </ol>
   </div>
 
+  <div class="theorm_prove">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;证明: TODO。
+  &nbsp;&nbsp;&nbsp;&nbsp;证明: 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们证明满足条件 $|E(G)| > \begin{pmatrix} n-1 \\ 2 \end{pmatrix}+1$ 的图是 $H$ 图。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;若不然，由 <theorm>2</theorm> 可知，图 $G$ 度弱于某个 $C_{m,n}$ 图，于是有:
+  $$
+  \begin{align}
+  |E(G)| &\le |E(C_{m,n})| \\
+  &= \frac{1}{2}[]
+  \end{align}
+  $$
+  </div>
 </div>
 
 <h2 class="title">TSP 问题</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<def>TSP 问题</def> 即 <def>旅行商问题</def>，是应用图论中典型问题之一。问题提法为：一售货员要到若干城市去售货，每座城市恰好经过一次且要回到出发城市，问如何安排行走路线，使其行走的总路程最短。
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>TSP (Travel Salesman Problem) 问题</def> 即 <def>旅行商问题</def>，是应用图论中典型问题之一。问题提法为：一售货员要到若干城市去售货，每座城市恰好经过一次且要回到出发城市，问如何安排行走路线，使其行走的总路程最短。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在赋权图中求最小 `H` 圈是 NP-hard 问题，也就是说TSP问题不存在多项式时间算法。
+  &nbsp;&nbsp;&nbsp;&nbsp;在赋权图中求最小 $H$ 圈是 NP-hard 问题，也就是说 TSP 问题不存在多项式时间算法。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;事实上近似算法(启发式算法)有很多，如最近邻算法、分枝定界法、贪婪算法、遗传算法和边交换技术等。
@@ -341,26 +383,36 @@
   &nbsp;&nbsp;&nbsp;&nbsp;<def>边交换技术</def> 的流程如下所示：
 
   <ol>
-    <li>在赋权完全图中取一个初始的 `H` 圈 `C=v_1,v_2,...,v_n,v_1`;</li>
-    <li>...</li>
-    <li>...(迭代)</li>
+    <li>
+      在赋权完全图中取一个初始的 $H$ 圈 $C=v_1,v_2,...,v_n,v_1$;
+    </li>
+    <li>
+      <div class="img" title="边交换技术">
+        <img src="./pic/edge_exchange.png" width="500px" />
+      </div>
+      如果存在上图中的红色边，并且 $w(v_iv_{i+1})+w(v_jv_{j+1}) > w(v_iv_j)+w(v_{i+1}v_{j+1})$，则把 $C$ 修改为 $C_1=v_1v_2,...,v_i,v_j,...,v_{i+1},v_{j+1},...,v_n,v_1$
+    </li>
+    <li>迭代 (2) 直到找不到满足 (2) 条件的交叉边</li>
   </ol>
 
-  <h3 class="title">最优 `H` 圈的下界</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;给出 `H` 圈下界的原因是因为我们不存在多项式时间的求解方法，因此只能进行近似。而评估近似结果的方法就是将近似结果和最优 `H` 圈的下界进行比较，因此我们需要对最优 `H` 圈的下界进行研究。
+  &nbsp;&nbsp;&nbsp;&nbsp;再次强调的是，上述算法只能保证获得一个近似最优解。为了得到进一步的优解，可以从几个不同的初始圈开始，通过边交换技术得到几个近似最优解，然后从中选取一个近似解。
+
+  <h3 class="title">最优 $H$ 圈的下界</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;给出 $H$ 圈下界的原因是因为我们不存在多项式时间的求解 $H$ 圈的方法，因此只能进行近似。而评估近似结果的方法就是将近似结果和最优 $H$ 圈的下界进行比较，因此我们需要对最优 $H$ 圈的下界进行研究。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;求解最优 `H` 圈的下界的方法如下:
+  &nbsp;&nbsp;&nbsp;&nbsp;求解最优 $H$ 圈的下界的方法如下:
 
   <ol>
-    <li>TODO</li>
-    <li>TODO</li>
-    <li>TODO</li>
+    <li>在 $G$ 中删掉任意的一点 $v$ 得到图 $G_1$;</li>
+    <li>在图 $G_1$ 中求出一颗最小生成树 $T$;</li>
+    <li>在 $v$ 的关联变种选出两条权值最小的 $e_1$ 和 $e_2$;</li>
   </ol>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;若 $H$ 是 $G$ 的最优圈，则 $w(H) \ge w(T)+w(e_1)+w(e_2)$。
 </div>
 
 <div class="div_ref" id="ref_container"></div>
@@ -406,7 +458,7 @@
 <!--矩阵公式-->
 <!--
 <div class="cmath" align="center">
-  `((1, 0),(1, 0))`
+  $((1, 0),(1, 0))$
 </div><br>
 -->
 
@@ -444,7 +496,7 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 <!--正文-->
 <!--
 <p>
-&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>$\overline{A}\overline{B}$</span>
 </p>
 -->
       </div>
