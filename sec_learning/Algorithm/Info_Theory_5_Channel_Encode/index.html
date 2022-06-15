@@ -22,17 +22,16 @@
 
   <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:type" content="website">
-<meta property="og:title" content="局部加权回归和逻辑回归">
-<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_3_Locally_Weighted_And_Logistic_Regression/index.html">
+<meta property="og:title" content="信道编码">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_5_Channel_Encode/index.html">
 <meta property="og:site_name" content="Zobin">
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_3_Locally_Weighted_And_Logistic_Regression/pic/lr_exp.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_3_Locally_Weighted_And_Logistic_Regression/pic/lwg.png">
-<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_3_Locally_Weighted_And_Logistic_Regression/pic/xxx.png">
-<meta property="article:published_time" content="2022-06-15T18:00:08.034Z">
-<meta property="article:modified_time" content="2022-06-15T18:00:08.034Z">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_5_Channel_Encode/pic/channel_encoder.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_5_Channel_Encode/pic/xxx.png">
+<meta property="article:published_time" content="2022-06-07T13:33:38.484Z">
+<meta property="article:modified_time" content="2022-06-07T13:33:38.484Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -42,7 +41,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 
-<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_3_Locally_Weighted_And_Logistic_Regression/">
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_5_Channel_Encode/">
 
 
 <script id="page-configurations">
@@ -55,7 +54,7 @@
   };
 </script>
 
-  <title>局部加权回归和逻辑回归 | Zobin
+  <title>信道编码 | Zobin
 </title>
   
 
@@ -180,7 +179,7 @@
     <div class="post-block" lang="cn">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">局部加权回归和逻辑回归
+<h1 class="post-title" itemprop="name headline">信道编码
 </h1>
 
 <div class="post-meta">
@@ -189,7 +188,7 @@
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
             <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
-          <li>ML_3_LOCALLY_WEIGHTED_AND_LOGISTIC_REGRESSION</li>
+          <li>INFO_THEORY_5_CHANNEL_ENCODE</li>
         
   </ul>
 
@@ -252,7 +251,7 @@
 <body onload="load_page()">
 
 <div align="center" class="div_indicate_source">
-  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Apr.5 2022</i></font></h4>
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：June 7 2022</i></font></h4>
 </div>
 <div class="div_licence">
   <br>
@@ -276,118 +275,118 @@
 </div><br>
 
 <!-- Start your post here -->
-<h2 class="title">Locally Weighted Regression</h2>
+<h2 class="title">信道编码器</h2>
 <div class="div_learning_post">
+  <h3 class="title">信道编码器的定义</h3>
 
-  <div class="img" title="线性回归">
-    <img src="./pic/lr_exp.png" width=400px>
+  <div class="img" title="信道编码器模型">
+    <img src="./pic/channel_encoder.png" width="600px" />
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;回顾我们在 <a href="/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/index.html">线性回归和梯度下降</a> 一文中介绍的 Linear Regression (LR) 算法，我们基于 LR 可以在 Training Set 上拟合出来一条直线，用于对新数据进行预测，如上图所示。但是倘若我们的样本空间中的数据并不能很好地使用一条直线来进行拟合的话，我们使用 LR 算法进行预测的结果将是十分糟糕的。
+  &nbsp;&nbsp;&nbsp;&nbsp;如 <imaging>1</imaging> 所示，设信源输出的消息集 $\mathcal{W} = \{w_1, w_2, ..., w_M\}$，我们假设消息集中的消息是以等概率 $\frac{1}{M}$ 随机选取的，这样一来每一个消息的信息长度即为 $\log M$。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;本小节介绍一种针对 LR 算法进行优化的方法，Namely <def>Locally Weighted Regression</def> (LWR, 局部加权回归)。
+  &nbsp;&nbsp;&nbsp;&nbsp;信道编码过程把信源输出的长度为 $\log M$ 的消息编码为码字，我们设编码方程为 $f: \{w\} \rightarrow \mathcal{X}^n$，其中 $\mathcal{X}^n$ 代表了由输入字符集 $\mathcal{X}$ 中的符号组成的长度为 $n$ 的码字。为了简单，我们下面把编码器表示为: $X = f(\mathcal{W})$。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;回顾我们上一篇文章使用 LR 解决问题时定义的 Lost Function:
-
-  <div class="equation" label="equ_loss_define">
-  $\mathcal{J}(\Theta) = \frac{1}{2} \cdot \sum\limits_{i=0}^{m}(h(X^{(i)};\Theta)-Y^{(i)})^2$
-  </div>
+  &nbsp;&nbsp;&nbsp;&nbsp;信道译码过程把信道输出的长度为 $n$ 的码字翻译为消息，设译码方程为 $g: \mathcal{Y}^n \rightarrow \{w\}$，其中 $\mathcal{Y}^n$ 代表了由输出字符集 $\mathcal{Y}$ 中的符号组成的长度为 $n$ 的码字。为了简单，我们下面把编码器表示为: $\hat{W} = g(Y)$ (i.e. 对消息 $W$ 的估计)。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;LWR 的基本思路是: 对新数据 $X^{(\text{new})}$ 进行预测时，首先在 Training Set 中找到与 $X^{(\text{new})}$ 更加接近的 Samples，基于这些 Samples 使用 LR 算出来一组参数 $\Theta^{(s)}$，然后使用 $\Theta^{(s)}$ 完成对 $X^{(\text{new})}$ 的预测。
+  &nbsp;&nbsp;&nbsp;&nbsp;对于如上所示的信道编码，我们称之为 <def>$(n,M)$ 码</def>。
 
+  <h3 class="title">错误概率的定义</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;基于上述思路，我们修改我们的 Lost Function 如下所示:
+  &nbsp;&nbsp;&nbsp;&nbsp;对于所有的输入信道编码器的消息 $1 \le w \le M$，定义消息 $w$ 的条件错误概率为:
 
   <div class="equation">
-  $\mathcal{J}(\Theta) = \frac{1}{2} \cdot \sum\limits_{i=0}^{m}$ <note><b>$w^{(i)}$</b></note> $(h(X^{(i)};\Theta)-Y^{(i)})^2$
+  $\lambda_w = \Pr\{ \hat{W} \ne w | W = w \} = \sum_{y \in \mathcal{Y}^n: g(y) \ne w} \Pr\{Y=y | X=f(w)\}$
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;其中的 $w^{(i)}$ 定义如下:
-
-  <div class="equation" label="equ_omega_define">
-  `w^{(i)} = exp(-\frac{[X^{(i)}-X^{(\text{new})}]^2}{2\tau^2})`
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;$w^{(i)}$ 的含义是：对于 Training Set 中的各条 Samples $(X^{(i)},Y^{(i)})$，距离 $X^{(\text{new})}$ 越近的 Sample 的权值 $w^{(i)}$ 将更接近于 1，距离 $X^{(\text{new})}$ 越远的 Sample 的权值 $w^{(i)}$ 将更接近于 $0$。这样一来，Training Set 中的各条 Samples 对最终训练出来的参数的影响就有区别了。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;另外，<equation>equ_omega_define</equation> 中的 $\tau$ 是一个 <def>Hyperparameter</def>，用于控制权值函数的 "胖瘦" 情况，如下图所示:
-
-  <div class="img" title="超参用于控制影响范围">
-    <img src="./pic/lwg.png" width=400px>
-  </div>
-</div>
-
-<h2 class="title">Pobabilistic Interpretation</h2>
-<div class="div_learning_post">
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在上一篇文章 <a href="/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/index.html">线性回归和梯度下降</a> 中，我们定义了 <equation>equ_loss_define</equation> 的 Lost Function，在本节中我们从概率的角度将说明为什么将 Lost Function 定义为这样是合理的。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;首先我们假设，在 Training Set 中，各条 Sample 的 Label 和 Features 存在如下关系：
+  &nbsp;&nbsp;&nbsp;&nbsp;我们定义 $(n,M) 码$ 的 <def>最大错误概率</def> 为:
 
   <div class="equation">
-  $Y^{(i)}=\Theta^TX^{(i)}+\epsilon^{(i)}$
-  </div> 
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;其中 $\epsilon^{(i)}$ 是一个误差项，是一个随机变量，描述了 Unmodel Effects，也即我们没办法在我们的 LR 模型上进行描述的关系。我们进一步假设 $\epsilon^{(i)}$ 是 <def>Independently and Identically Distributed</def> (i.e. IID, 独立同分布) 的，并且服从的是均值为 $0$，方差为 $\sigma^2$ 的正态分布，$\epsilon^{(i)} \sim N(0,\sigma^2)$，也即:
-
-  <div class="equation">
-  $p(\epsilon^{(i)})=\frac{1}{\sqrt{2\pi}\sigma} \cdot \exp(-\frac{(\epsilon^{(i)})^2}{2\sigma^2})$
+  $\lambda_{\max} = \max \lambda_w$
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;IID 的性质表明，各个样本的 Unmodel Effects 是相互独立的，并不会相互干扰，并且服从如上所示的分布。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;基于上述的定义，我们可以推出，对于第 $i$ 条 Sample，在已知 Features $X^{(i)}$ 和给定参数 $\Theta$ 的情况下，Label $Y^{(i)}$ 同样是一个服从正态分布的随机变量，其以 $2\sigma^2$ 为方差在 $\Theta^TX^{(i)}$ 附近波动，也即满足如下关系:
-
-  <div class="equation">
-  $p(Y^{(i)}|X^{(i)};\Theta) = \frac{1}{\sqrt{2\pi}\sigma} \cdot \exp(-\frac{(Y^{(i)}-\Theta^TX^{(i)})^2}{2\sigma^2})$
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;也即：$(Y^{(i)}|X^{(i)};\Theta) \sim N(\Theta^TX^{(i)},2\sigma^2)$。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;好了，现在让我们思考我们的初衷: 我们的目的是选取一组参数 $\Theta$，使得给予我们的模型预测的结果 $\Theta^TX^{(i)}$ 更加接近我们的 Label $Y^{(i)}$，也就是说 $\Theta$ 是一个我们希望调整的量，而 $X^{(i)}$ 和 $Y^{(i)}$ 对于我们来说是定量。在上面的分析中，我们一直基于给定的 $\Theta$，使用对预测值 $Y^{(i)}$ 的「概率分布」这个概念来描述我们的系统。因此现在我们转换思路，把 $\Theta$ 视为可变量来描述我们的系统，在数学上的相关概念是 <def>Likelyhood (似然函数)</def>。你可以通过阅读拓展博文 <a href="./extend.html">延伸阅读 —— 统计推断的基本原理和分类</a> 来理解「似然」的概念。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;来到我们的具体问题，我们定义关于参数 `\Theta` 的似然函数 `\mathcal{L}(\Theta)` 如下:
+  &nbsp;&nbsp;&nbsp;&nbsp;我们定义 $(n,M) 码$ 的 <def>平均错误概率</def> 为:
 
   <div class="equation">
   \begin{aligned}
-  \mathcal{L}(\Theta) &= p(Y|X;\Theta) \\ \\
-  & (由于我们对 \epsilon 有 \text{i.i.d} 的假设，因此原式可以展开为如下形式) \\ \\
-  &= \prod_{i=0}^{m} p(Y^{(i)}|X^{(i)};\Theta) \\ \\
-  &=
+  P_e &= \Pr \{ \hat{W} \ne W \} \\ \\
+  &= \sum_{w} \Pr \{W = w\} \cdot \Pr \{\hat{W} \ne w | W = w\} \\ \\
+  &= \sum_{w} \frac{1}{M} \Pr \{\hat{W} \ne w | W = w\} \\ \\
+  &= \frac{1}{M} \sum_{w} \lambda_w
   \end{aligned}
+  </div>
+
+  <h3 class="title">信道编码的码率</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;定义 $(n,M)$ 码的码率为:
+
+  <div class="equation">
+  $R = \frac{1}{n} \log_2 M \; \text{bit/码元}$
   </div>
 </div>
 
-<h2 class="title">Logistic Regression</h2>
+<h2 class="title">联合典型序列</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;令 $X$ 和 $Y$ 是两个概率空间: $\textbf{x} = (x^{(1)}, x^{(2)}, ..., x^{(N)}) \in X^N$, $\textbf{y}= (y^{(1)}, y^{(2)}, ..., y^{(N)}) \in Y^n$，若对序列 $\textbf{x}$ 和 $\textbf{y}$ 满足:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;$\textbf{x}$ 是 $\epsilon$ 典型序列，即对任意小的正数 $\epsilon$，存在 $N$ 使得
+
+  <div class="equation">
+  $|-\frac{1}{N} \log \mathcal{P}(\textbf{x} - H(X))| \le \epsilon$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;$\textbf{y}$ 是 $\epsilon$ 典型序列，即对任意小的正数 $\epsilon$，存在 $N$ 使得
+
+  <div class="equation">
+  $|-\frac{1}{N} \log \mathcal{P}(\textbf{y} - H(Y))| \le \epsilon$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;$\textbf{xy}$ 是 $\epsilon$ 典型序列，即对任意小的正数 $\epsilon$，存在 $N$ 使得
+
+  <div class="equation">
+  $|-\frac{1}{N} \log \mathcal{P}(\textbf{xy} - H(XY))| \le \epsilon$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;则称序列对 $x$ 和 $y$ 是 <def>联合 $\epsilon$ 典型序列</def>。
+</div>
+
+<h2 class="title">信道编码定理</h2>
 <div class="div_learning_post">
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 
-<h2 class="title">Newton's Method</h2>
+<h2 class="title">xxx</h2>
 <div class="div_learning_post">
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;
 </div>
+
 
 <div class="div_ref" id="ref_container"></div>
 
 </body>
 
+
+<!--图片、引用-->
+<!-- 
+<div class="img" title="brabra">
+  <img src="" height="">
+</div>
+
+<imaging>1</imaging>
+-->
 
 <!--等式、引用-->
 <!-- 
@@ -499,7 +498,7 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
             <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
-          <li>ML_3_LOCALLY_WEIGHTED_AND_LOGISTIC_REGRESSION</li>
+          <li>INFO_THEORY_5_CHANNEL_ENCODE</li>
         
   </ul>
 

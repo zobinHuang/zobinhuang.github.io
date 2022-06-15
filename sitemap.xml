@@ -2,23 +2,79 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_3_Locally_Weighted_And_Logistic_Regression/extend.html</loc>
     
-    <lastmod>2022-06-06</lastmod>
+    <lastmod>2022-06-15</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_3_Locally_Weighted_And_Logistic_Regression/index.html</loc>
+    
+    <lastmod>2022-06-15</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/index.html</loc>
+    
+    <lastmod>2022-06-15</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_Survey_of_GNN_Model/index.html</loc>
+    
+    <lastmod>2022-06-14</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/template_post/index.html</loc>
+    
+    <lastmod>2022-06-13</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_Survey_of_GNN_Model/ref.json</loc>
+    
+    <lastmod>2022-06-13</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
     
-    <lastmod>2022-06-05</lastmod>
+    <lastmod>2022-06-12</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/index.html</loc>
+    
+    <lastmod>2022-06-12</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_5_Channel_Encode/index.html</loc>
+    
+    <lastmod>2022-06-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_5_Channel_Encode/ref.json</loc>
+    
+    <lastmod>2022-06-07</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/ref.json</loc>
     
-    <lastmod>2022-06-05</lastmod>
+    <lastmod>2022-06-07</lastmod>
     
   </url>
   
@@ -233,37 +289,9 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_3_Locally_Weighted_And_Logistic_Regression/index.html</loc>
-    
-    <lastmod>2022-04-14</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_3_Locally_Weighted_And_Logistic_Regression/extend.html</loc>
-    
-    <lastmod>2022-04-11</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_3_Locally_Weighted_And_Logistic_Regression/ref.json</loc>
     
     <lastmod>2022-04-10</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/template_post/index.html</loc>
-    
-    <lastmod>2022-04-10</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/index.html</loc>
-    
-    <lastmod>2022-04-09</lastmod>
     
   </url>
   
@@ -2181,7 +2209,7 @@
 
   <url>
     <loc>http://www.zobinhuang.com:10082/</loc>
-    <lastmod>2022-06-06</lastmod>
+    <lastmod>2022-06-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

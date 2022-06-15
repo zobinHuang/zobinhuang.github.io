@@ -8,6 +8,8 @@ async function load_page(){
         }
     )
     
+    _load_pic()
+
     _load_equation()
 
     _load_theorm()
@@ -21,6 +23,51 @@ async function load_page(){
     _load_citation()
 }
 
+// 处理文章中所有的图片
+async function _load_pic(){
+    let img_index_list = new Array()
+    let img_containers = document.getElementsByClassName("img")
+
+    // 记录所有 img 的编号，并且在 img div 中标识 img 的序号
+    for(let i = 0; i < img_containers.length; i++){
+        // 设置 id 和 name
+        img_containers[i].setAttribute("id",`image_${i+1}`)
+        img_containers[i].setAttribute('name', `image_${img_containers[i].id}`)
+
+        // 记录 label
+        let img_label = img_containers[i].getAttribute('label')
+        img_index_list[img_label] = i+1
+
+        // 创建标号
+        let img_index = document.createElement('img_index')
+        if(!img_containers[i].title)
+            img_index.innerHTML = `Figure ${i+1}`
+        else
+        img_index.innerHTML = `Figure ${i+1}: ${img_containers[i].title}`
+
+        // 显示标号
+        img_containers[i].append(img_index)
+    }
+
+    // 替换所有的图片引用
+    let img_refs = document.getElementsByTagName("imaging")
+    for(let i = 0; i < img_refs.length; i++){
+         // 获取 Equation 标识号
+         let selected_img_index = img_index_list[img_refs[i].innerHTML]
+
+        // 创建链接
+        let img_link = document.createElement('a')
+        img_link.setAttribute('href', `#image_${selected_img_index}`)
+
+        // 修改 imaging 的内部内容
+        img_link.innerHTML = `Figure ${selected_img_index}`
+
+        // 塞入原先位置
+        img_refs[i].innerHTML = ''
+        img_refs[i].append(img_link)
+    }
+}
+
 // 处理文章中所有的等式
 async function _load_equation(){
     let equation_index_list = new Array()
@@ -31,8 +78,9 @@ async function _load_equation(){
         // 设置 id
         equation_containers[i].setAttribute("id",`equation_${i+1}`)
 
-        // 记录编号
-        equation_index_list[equation_containers[i].id] = i+1
+        // 记录标签
+        let equation_label = equation_containers[i].getAttribute("label")
+        equation_index_list[equation_label] = i+1
 
         // 创建标号
         let equation_index = document.createElement('equation_index')
@@ -47,12 +95,14 @@ async function _load_equation(){
     // 替换所有的等式
     let equation_refs = document.getElementsByTagName("equation")
     for(let i = 0; i < equation_refs.length; i++){
+        // 获取 equation id
+        let selected_equation_index = equation_index_list[equation_refs[i].innerHTML]
+
         // 创建链接
         let equation_link = document.createElement('a')
-        equation_link.setAttribute('href', `#${equation_refs[i].innerHTML}`)
+        equation_link.setAttribute('href', `#equation_${selected_equation_index}`)
 
-        // 获取 Equation 标识号
-        let selected_equation_index = equation_index_list[`equation_${equation_refs[i].innerHTML}`]
+        // 修改 equation 的内部内容
         equation_link.innerHTML = `Equation ${selected_equation_index}`
 
         // 塞入原先位置
@@ -72,11 +122,12 @@ async function _load_theorm(){
         theorm_containers[i].setAttribute("id",`theorm_${i+1}`)
 
         // 记录编号
-        theorm_index_list[theorm_containers[i].id] = i+1
+        let theorm_label = theorm_containers[i].getAttribute("label")
+        theorm_index_list[theorm_label] = i+1
 
         // 创建标号
         let theorm_index = document.createElement('theorm_index')
-        theorm_index.setAttribute('name', theorm_containers[i].id)
+        theorm_index.setAttribute('name', `theorm_${i+1}`)
         theorm_index.innerHTML = `Theorm ${i+1}`
 
         // 显示标号
@@ -87,12 +138,14 @@ async function _load_theorm(){
     // 替换所有的定理
     let theorm_refs = document.getElementsByTagName("theorm")
     for(let i = 0; i < theorm_refs.length; i++){
+        // 获取 theorm id
+        let selected_theorm_index = theorm_index_list[theorm_refs[i].innerHTML]
+
         // 创建链接
         let theorm_link = document.createElement('a')
-        theorm_link.setAttribute('href', `#${theorm_refs[i].innerHTML}`)
+        theorm_link.setAttribute('href', `#theorm_${selected_theorm_index}`)
 
-        // 获取 Theorm 标识号
-        let selected_theorm_index = theorm_index_list[`theorm_${theorm_refs[i].innerHTML}`]
+        // 修改 theorm 的内部内容
         theorm_link.innerHTML = `Theorm ${selected_theorm_index}`
 
         // 塞入原先位置
