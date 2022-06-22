@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:type" content="website">
 <meta property="og:title" content="哈希方法的概率性分析">
 <meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Algorithm_Intro_4_Hash/index.html">
 <meta property="og:site_name" content="Zobin">
-<meta property="og:description" content="run_maths &#x3D; function() {     if (document.querySelector(&#39;[class*&#x3D;&quot;cmath&quot;]&#39;) !&#x3D;&#x3D; null) {       if (typeof (mjax_path)&#x3D;&#x3D;&#39;undefined&#39;) { mjax_path&#x3D;&#39;https:&#x2F;&#x2F;cdn.jsdelivr.net&#x2F;npm&#x2F;mathjax@2">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Algorithm_Intro_4_Hash/pic/hash_chain.png">
@@ -36,8 +36,8 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Algorithm_Intro_4_Hash/pic/uniform_difference_property.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Algorithm_Intro_4_Hash/pic/pairwise_independent.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/Algorithm_Intro_4_Hash/pic/xxx.png">
-<meta property="article:published_time" content="2022-02-11T15:32:28.696Z">
-<meta property="article:modified_time" content="2022-02-11T15:32:28.696Z">
+<meta property="article:published_time" content="2022-06-17T02:05:12.180Z">
+<meta property="article:modified_time" content="2022-06-17T02:05:12.180Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -213,6 +213,24 @@
 <!--导入网页脚本-->
 <script src="script/index.js"></script>
 
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
 <!--支持网页公式显示-->    
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
 
@@ -239,7 +257,7 @@
 <body onload="load_page()">
 
 <div align="center" class="div_indicate_source">
-  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Jan.30 2022</i></font></h4>
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：June 16 2022</i></font></h4>
 </div>
 <div class="div_licence">
   <br>
@@ -262,20 +280,17 @@
   </div>
 </div><br>
 
-<h2 class="title">Hash with Chaining</h2>
+<h2 class="title">哈希建模与分析方法</h2>
 <div class="div_learning_post">
-  <desp class="title">介绍了链式哈希的过程和理论分析</desp>
-
   <h3 class="title">链式哈希模型</h3>
-  <desp class="title">分析了链式哈希的模型和哈希过程</desp>
-  <label class="title">hash_chain_method</label>
 
+<p>  <label class="title">hash_chain_method</label></p>
   <div align="center">
     <img src="./pic/hash_chain.png" width=80%>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<def>链式哈希方法 (Hash With Chaining)</def> 是一种用于解决哈希冲突的方法。如上图所示，我们定义一个集合`u` (i.e. Universe)，它里面包括了所有可能的 Key 值，也即 Keyspace。在 `u` 中，我们假设已经存在着 `n` 个已经被存储在 Hash Table 中的 Key 值。我们还定义了一个哈希函数，各个 Key 值经过该哈希函数，将会被投影到 Hash Table 的一个 Slot 中，我们假设 Hash Table 中一共有 `m` 个 Slot。每一个 Slot 实际上就是一个链表，对于发生 Hash Collision 的 Key，它们将被组织成链表的形式。 
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>链式哈希方法 (Hash With Chaining)</def> 是一种用于解决哈希冲突的方法。如上图所示，我们定义一个集合$u$ (i.e. Universe)，它里面包括了所有可能的 Key 值，也即 Keyspace。在 $u$ 中，我们假设已经存在着 $n$ 个已经被存储在 Hash Table 中的 Key 值。我们还定义了一个哈希函数，各个 Key 值经过该哈希函数，将会被投影到 Hash Table 的一个 Slot 中，我们假设 Hash Table 中一共有 $m$ 个 Slot。每一个 Slot 实际上就是一个链表，对于发生 Hash Collision 的 Key，它们将被组织成链表的形式。 
 
   <h3 class="title">性能分析内容与分析思路</h3>
   <label class="title">hash_performace_analyse_method</label>
@@ -306,8 +321,8 @@
   &nbsp;&nbsp;&nbsp;&nbsp;事实上，对 Hash 方法的性能进行分析，归根结底是在分析其 <def>随机性 (Randomness)</def>。如上图所示，我把 Hash 系统涉及到的随机性分为两个部分:
 
   <ul>
-    <li>Hash 系统面对的输入的所有可能性来自于 Keyspace `u`。`u` 中各个 Key 值输入 Hash 系统的概率分布是具有随机性的，我称之为 <def>输入的随机性</def>;</li>
-    <li>由于 Hash Function 的选取具有随机性，或者说 Hash Function 中的某些参数的概率分布具有一定的随机性。Hash 系统在部署的时候将会从一个 Hash Function 集合 `H` 中随机抽取一个 Hash Function `h`。因此对于一个输入 Key 值，其经由 Hash Function 被投射到各个 Slot 的概率分布是具有随机性的。我称之为 <def>Hash Function 的随机性</def></li>
+    <li>Hash 系统面对的输入的所有可能性来自于 Keyspace $u$。$u$ 中各个 Key 值输入 Hash 系统的概率分布是具有随机性的，我称之为 <def>输入的随机性</def>;</li>
+    <li>由于 Hash Function 的选取具有随机性，或者说 Hash Function 中的某些参数的概率分布具有一定的随机性。Hash 系统在部署的时候将会从一个 Hash Function 集合 $H$ 中随机抽取一个 Hash Function $h$。因此对于一个输入 Key 值，其经由 Hash Function 被投射到各个 Slot 的概率分布是具有随机性的。我称之为 <def>Hash Function 的随机性</def></li>
   </ul>
 
   <p>
@@ -317,98 +332,162 @@
   &nbsp;&nbsp;&nbsp;&nbsp;首先，第一个原因是: 我们必须保证 Hash 系统的随机性。在不对输入 Key 值的分布进行假设的情况下，如果我们对一个已经确定的 (deterministic) Hash Function 展开研究，我们无法给出任何的概率性的保证，这不利于算法的分析。因此在不对输入 Key 值的分布进行假设的情况下，我们必须引入 Hash 系统的随机性，方法是在 Hash Function 中的一些参数上设置随机性，并且基于它们的随机性分析 Hash 系统的性能: 一个 Hash 系统的随机性越好，说明输入的 Key 值被分布到 Hash Table 各个 Slot 的个数就更加均匀，Hash 冲突的概率就更小，完成一次基于 Hash 查找的时间复杂度就更低，我们在下面将会看到基于一定假设的 Hash 系统的查找时间复杂度是常数时间复杂度。<cite>wikipedia_univeral_hashing</cite>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;另一个原因是: 既然我们需要随机性，一个最简单粗暴的办法就是直接部署一个随机函数 (Completely Hash Function)，比如每来一个 Key 值，我们就抛一次 `\log_2m`-bits 的硬币，以决定将该 Key 值哈希到哪个 Slot 上去。这样做是否合理呢？实际上是不合理的，因为我们必须保证 Insert 一个 Key 的时候的哈希值和 Query 一个 Key 的时候的哈希值是相等的，这样 Hash Table 才有意义，这样就意味着我们必须存储针对各个 Key 值的哈希结果。因此，如果采用随机函数的方案，我们将花费一个很大的空间来存储各个 Key 值抛硬币的结果，这是得不偿失的。替代的方案是在不对输入 Key 值的分布进行假设的情况下，我们在 Hash Function 中设置一定的概率性参数，这些参数的概率分布使得我们可以像分析随机函数那样来分析这个 Hash 系统，尽管这些参数在部署 Hash 系统的那一刻开始就已经被确定，但是在部署之前我们仍然可以基于这些参数的概率特性来分析整个系统的性能。
+  &nbsp;&nbsp;&nbsp;&nbsp;另一个原因是: 既然我们需要随机性，一个最简单粗暴的办法就是直接部署一个随机函数 (Completely Hash Function)，比如每来一个 Key 值，我们就抛一次 $\log_2m$-bits 的硬币，以决定将该 Key 值哈希到哪个 Slot 上去。这样做是否合理呢？实际上是不合理的，因为我们必须保证 Insert 一个 Key 的时候的哈希值和 Query 一个 Key 的时候的哈希值是相等的，这样 Hash Table 才有意义，这样就意味着我们必须存储针对各个 Key 值的哈希结果。因此，如果采用随机函数的方案，我们将花费一个很大的空间来存储各个 Key 值抛硬币的结果，这是得不偿失的。替代的方案是在不对输入 Key 值的分布进行假设的情况下，我们在 Hash Function 中设置一定的概率性参数，这些参数的概率分布使得我们可以像分析随机函数那样来分析这个 Hash 系统，尽管这些参数在部署 Hash 系统的那一刻开始就已经被确定，但是在部署之前我们仍然可以基于这些参数的概率特性来分析整个系统的性能。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;在对 Hash 系统进行分析的时候，为了更加简单和合理，我们应该只保留两个随机性的其中一个。我们在下面将分别对这两个随机性进行讨论: 在 <ref>hash_performace_analyse_random_input</ref> 中看到对输入 Key 值随机性的讨论，在 <ref>hash_performace_analyse_hash_function</ref> 中看到对 Hash Function 随机性的讨论。
+</div>
 
-  <h3 class="title">基于输入分布的性能分析</h3>
+<h2 class="title">基于输入分布的性能分析</h2>
+<div class="div_learning_post">
   <label class="title">hash_performace_analyse_random_input</label>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;本小节主要参考自 <cite>mit6006hashing</cite>。
 
-  <div align="center">
+  <div class="img" title="基于输入分布的性能分析">
     <img src="./pic/randomness_1.png" width=600px>
   </div>
 
 <p>  在本小节的分析中，我们将基于输入随机性进行讨论，换句话说，我们将忽略 Hash Function 的随机性，我们暂时假设 Hash Function 是一个确定的函数，转而我们对输入 Key 值的分布作出一定假设，使得基于一个已知 Hash Function 的系统满足如下性质:</p>
   <ol>
-    <li><b>均匀性 (Uniformity)</b>: 基于输入 Key 值的分布，从 Keyspace 中抽取出一个 Key，它经过 Hash Function 被哈希到 Hash Table 中的任意一个 Slot 的可能性是相等的 `1/m`，其中 `m` 为 Hash Table 中 Slot 的个数;</li>
+    <li><b>均匀性 (Uniformity)</b>: 基于输入 Key 值的分布，从 Keyspace 中抽取出一个 Key，它经过 Hash Function 被哈希到 Hash Table 中的任意一个 Slot 的可能性是相等的 $\frac{1}{m}$，其中 $m$ 为 Hash Table 中 Slot 的个数;</li>
     <li><b>独立性 (Independence)</b>: Keyspace 的每个 Key 值在 Hash Table 中的投射都是相互独立的，也就是说对于各个 Key 的投射都满足上述的均匀性，一个 Key 的哈希投射不会受到其他 Key 的哈希投射结果的影响</li> 
   </ol>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;我们把上面的这两个针对输入 Key 值的分布的假设称为 <def>Simple Uniform Hashing</def>，其基本思路可以概括为下图，即 <note>通过控制输入 Key 值的概率分布来实现均匀 Hash</note>。
 
-  <h4 class="title">哈希碰撞的概率</h4>
+  <h3 class="title">哈希碰撞的概率</h3>
   <label class="title">hash_collision_simple_uniform_hashing</label>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们知道，基于 Key 值的分布，我们抽取一个 Key 值 `k_1` 使其落入某个 Slot 的概率为:
+  &nbsp;&nbsp;&nbsp;&nbsp;我们知道，基于 Key 值的分布，我们抽取一个 Key 值 $k_1$ 使其落入某个 Slot 的概率为:
 
-  <div align="center">
-    `P_{k_1 \in n}[h(k_1)=S_j] = 1/m`,&nbsp;&nbsp;&nbsp;&nbsp;`j = 0, 1, ..., m-1`
+  <div class="equation" label="equ_hash_map">
+  $\mathcal{P}_{k_1 \in n}[h(k_1)=S_j] = \frac{1}{m}$,&nbsp;&nbsp;&nbsp;&nbsp;$j = 0, 1, ..., m-1$
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Keyspace 的每个 Key 值在 Hash Table 中的投射都是相互独立的，因此，我们可以得到，基于 Key 值的分布，Keyspace 中不同的两个 Key 值 `k_1` 和 `k_2` 被映射入同一个 Slot 的概率为:
+  &nbsp;&nbsp;&nbsp;&nbsp;Keyspace 的每个 Key 值在 Hash Table 中的投射都是相互独立的，因此，我们可以得到，基于 Key 值的分布，Keyspace 中不同的两个 Key 值 $k_1$ 和 $k_2$ 被映射入同一个 Slot 的概率为:
 
-  <div align="center">
-    `P_{k_1, k_2 \in n}[h(k_1) = h(k_2)] = \sum_{j=0}^{m-1}\{ P_{k_1 \in n}[h(k_1)=S_j] \cdot P_{k_2 \in n}[h(k_2)=S_j]\} = m \cdot 1/m \cdot 1/m = 1/m`
+  <div class="equation" label="equ_input_distribution_hash_collision">
+    $\mathcal{P}_{k_1 \ne k_2 \in n}[h(k_1) = h(k_2)] = \sum\limits_{j=0}^{m-1}\{ \mathcal{P}_{k_1 \in n}[h(k_1)=S_j] \cdot \mathcal{P}_{k_2 \in n}[h(k_2)=S_j]\} = m \cdot \frac{1}{m} \cdot \frac{1}{m} = \frac{1}{m}$
   </div>
 
-  <h4 class="title">单 Slot 的 Hash Chain 长度期望</h4>
+  <h3 class="title">单 Slot 的 Hash Chain 长度期望</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如果当前 Hash Table 中一共已经投射了 `n` 个 Key，基于上述假设，这个 `n` 个 Key 中的每个 Key 投射到各个 Slot 的概率分别为 `1/m`，并且各个 Key 值的投射是相互独立的。因此，对于一个 Slot 来说，它被投射的 Key 的个数的期望为 `\alpha = n \cdot 1/m = n/m`，我们把这个值称为 <def>load factor</def>。这个值可以被理解为在当前 Slot 上发生过的 Hash Collision 的次数的期望。
+  &nbsp;&nbsp;&nbsp;&nbsp;如果当前 Hash Table 中一共已经投射了 $n$ 个 Key，基于上述假设，这个 $n$ 个 Key 中的每个 Key 投射到各个 Slot 的概率分别为 $\frac{1}{m}$，并且各个 Key 值的投射是相互独立的。因此，对于一个 Slot 来说，它被投射的 Key 的个数的期望为:
+
+  <div class="equation" label="equ_load_factor">
+  $\alpha = n \cdot \frac{1}{m} = \frac{n}{m}$
+  </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;基于这个分析结果我们可以发现，如果 `m=\Theta(n)`，也即 Slot 个数的数量级和存在于 Hash Table 中的表项的个数的数量级相当，那么 `\alpha = \Theta(1)`，也即 Slot 上的链表的长度的期望将为常数值，也即 Hash Collision 发生的次数将为常数值。
+  &nbsp;&nbsp;&nbsp;&nbsp;我们把这个值称为 <def>load factor</def>。这个值可以被理解为在当前 Slot 上发生过的 Hash Collision 的次数的期望。
 
-  <h4 class="title">查找操作的复杂度</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于一次查找操作，首先需要进行 1 次哈希运算，然后在最坏情况下需要遍历对应 Slot 上的整条链表，因此查找操作的复杂度是 `O(1+|Chai n|) = O(1+\alpha)`。如果我们有 `m=\Theta(n)`，也即 `\alpha = \Theta(1)`，那么查找操作的复杂度将是 `O(1+|Chai n|) = O(1+\alpha) = O(1)`，也即一次哈希查找操作将花费常数时间复杂度。
+  &nbsp;&nbsp;&nbsp;&nbsp;基于这个分析结果我们可以发现，如果 $m=\Theta(n)$，也即 Slot 个数的数量级和存在于 Hash Table 中的表项的个数的数量级相当，那么 $\alpha = \Theta(1)$，也即 Slot 上的链表的长度的期望将为常数值，也即 Hash Collision 发生的次数将为常数值。
 
-  <h3 class="title">基于 Hash Function 分布的性能分析</h3>
+  <h3 class="title">查找操作的复杂度</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于一次查找操作，首先需要进行 $1$ 次哈希运算，然后在最坏情况下需要遍历对应 Slot 上的整条链表，因此查找操作的复杂度是: 
+
+  <div class="equation" label="equ_operation_complexity">
+  $O(1+|\text{Chain}|) = O(1+\alpha)$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果我们有 $m=\Theta(n)$，也即 $\alpha = \Theta(1)$，那么查找操作的复杂度将是 $O(1+|\text{Chain}|) = O(1+\alpha) = O(1)$，也即一次哈希查找操作将花费常数时间复杂度。
+</div>
+
+<h2 class="title">基于 Hash Function 分布的性能分析</h2>
+<div class="div_learning_post">
   <label class="title">hash_performace_analyse_hash_function</label>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;本小节主要参考自 <cite>mit6046hashing</cite>。
 
-  <div align="center">
+  <div class="img" title="基于哈希分布的性能分析">
     <img src="./pic/randomness_2.png" width=600px>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在 <ref>hash_performace_analyse_random_input</ref> 阐述的思路中，我们使用的思路是 <note>通过控制输入 Key 值的概率分布来实现均匀 Hash</note>。这种对输入进行假设的分析方法实际上是为了我们在进行概率分析的时候方便所作出的假设。实际上，我们对一个系统进行分析的时候，我们不应该对输入做任何假设，特别是在算法分析中，我们更习惯于考虑最坏的系统输入的情况，来分析系统性能的下限。因此，在本节中，我们将把对随机性的讨论转移到 Hash Function 本身。把随机性转移到 Hash Function 的做法是：我们不再像 <ref>hash_performace_analyse_random_input</ref> 那样中假定一个固定的 Hash Function，而是从一个 Hash Function 集合 `\H` 中随机选取一个 Hash Function `\h`，以此将随机性引入系统分析中，如上图所示。本节我们讨论的是 <def>Universal Hashing</def>。
+  &nbsp;&nbsp;&nbsp;&nbsp;在 <ref>hash_performace_analyse_random_input</ref> 阐述的思路中，我们使用的思路是 <note>通过控制输入 Key 值的概率分布来实现均匀 Hash</note>。这种对输入进行假设的分析方法实际上是为了我们在进行概率分析的时候方便所作出的假设。实际上，我们对一个系统进行分析的时候，我们不应该对输入做任何假设，特别是在算法分析中，我们更习惯于考虑最坏的系统输入的情况，来分析系统性能的下限。因此，在本节中，我们将把对随机性的讨论转移到 Hash Function 本身。把随机性转移到 Hash Function 的做法是：我们不再像 <ref>hash_performace_analyse_random_input</ref> 那样中假定一个固定的 Hash Function，而是从一个 Hash Function 集合 $\mathcal{H}$ 中随机选取一个 Hash Function $h$，以此将随机性引入系统分析中，如上图所示。
 
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述的说法，我们有两种办法以哈希分布的方式来对 Hash Function 展开分析，分别是 <def>Universal Hashing (全域哈希)</def> 和 <def>Perfect Hashing (完全哈希)</def>。这两者都不对输入展开假设，区别在于:
+
+  <ol>
+    <li>Universal Hashing 更加实用，因为它不对输入以及存在于哈希表中的键值有任何先验的假设，可以视为一种在线的哈希算法;</li>
+    <li>Perfect Hashing 展示了更加漂亮的理论结果，因为它虽然不对输入进行假设，但是它假设了存在于哈希表中的键值是固定不变的，可以视为一种离线的哈希算法</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们分别对他们展开进行分析。
+
+  <h3 class="title">Universal Hashing</h3>
   <h4 class="title">Universality</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于 Hash Function 集合 `\H` ，Universal Hashing 的基本要求是 `\H` 具有 <def>Universality</def>，其含义是: 对于 `\H` 中的任意 `\h`，都必须保证发生哈希冲突的概率要小于等于 `1/m`，可以表达为下式:
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Hash Function 集合 $\mathcal{H}$，我们说集合 $\mathcal{H}$ 是 <def>Universal (全域的)</def>，当: 对于 $\mathcal{H}$ 中的任意 $h$，都必须保证发生哈希冲突的概率要小于等于 $\frac{1}{m}$。这个性质可以表达为下式:
 
-  <div align="center">
-    `P_{\h \in \H}{h(k)=h(k')} \leq 1/m`,&nbsp;&nbsp;&nbsp;&nbsp;`\forall k,k' \in u`&nbsp;&nbsp;&nbsp;&nbsp;(`k` 和 `k'` 是不同的 Key 值)
-  </div><br>
+  <div class="equation" label="equ_universality">
+  $P_{h \in \mathcal{H}}\{h(k)=h(k')\} \leq \frac{1}{m}$,&nbsp;&nbsp;&nbsp;&nbsp;$\forall k,k' \in u$&nbsp;&nbsp;&nbsp;&nbsp;($k$ 和 $k'$ 是不同的 Key 值)
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于输入分布假设得到的的 <equation>equ_input_distribution_hash_collision</equation> 和基于哈希分布假设得到的 <equation>equ_universality</equation> 看起来似乎有相同的形式，但是实际上其背后的含义并不相同:
+
+  <ol>
+    <li><equation>equ_input_distribution_hash_collision</equation> 是基于「对输入进行了均匀性和独立性的假设」得出来的;</li>
+    <li><equation>equ_universality</equation> 是对具有 Universality 性质的 $\mathcal{H}$ 中的任意哈希函数 $h$ 所做出的假设，并没有对输入进行任何假设，也就是说对于任意输入 $k, k' \in u$ 成立</li>
+  </ol>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;Universality 的探究范围可以总结为下图，实际上规定的是两个不同的 Key 值在同一个 Slot 上发生碰撞的概率。
 
-  <div align="center">
+  <div class="img" title="Universality 描述的是两个不同 Key 值在同一个 Slot 上发生 Collision 的概率">
     <img src="./pic/universality.png" width=400px>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Universality 式子右边的取值 `1/m` 的含义是: `1/m` 是基于随机函数 (Completely Random Function) 的 Hash 系统的碰撞概率，求法是:
+  &nbsp;&nbsp;&nbsp;&nbsp;基于 <equation>equ_universality</equation> 的定义，我们可以求出 Universal Hashing 的平均 Slot 长度为:
 
-  <div align="center">
-    `Pr[h(x)=a] = 1/m`, `Pr[h(y)=b] = 1/m`<br><br>
-    故&nbsp;&nbsp;&nbsp;&nbsp; `Pr[h(x)=h(y)]` = `\sum_{p=1}^{m}Pr[ h(x)=S_p \wedge h(y)=S_p ]` = `\sum_{p=1}^{m}Pr[ h(x)=S_p] \cdot Pr[ h(y)=S_p ]` = `m \cdot 1/m \cdot 1/m` = `1/m`
-  </div><br>
+  <div class="theorm">
+  $E[\text{各个 Slot 的长度}] \le 1 + \alpha$&nbsp;&nbsp;&nbsp;&nbsp;(p.s. $\alpha$ 是 load factor，在 <equation>equ_load_factor</equation> 中被定义)
+  </div>
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;证明:
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;假设哈希表中的 $m$ 个 Slots 已经装载了 $n$ 条键值表项。对于任意键值 $k_i$ 和 $k_j$，我们定义 indicator valuable:
+
+  <div class="equation" label="equ_indicator_valuable">
+  $I_{i,j} = \begin{cases} 1, \text{i 和 j 映射在同一个 Slot 中} \\ \\ 0, \text{else}\end{cases}$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;则我们可以求出:
+
+  <div class="equation" label="equ_expectation_slot_length">
+  \begin{aligned}
+  E[k_i \text{所在的 Slot 的长度}] &= E[\sum\limits_{j \ne i} I_{i,j} + I_{i,i}] \\
+  &= \sum\limits_{j \ne i} E[I_{i,j}] + 1 \\
+  &= \sum\limits_{j \ne i} \mathcal{P}\{I_{i,j} = 1\} + 1 \\
+  &= \sum\limits_{j \ne i} \mathcal{P} \{ h(k_i) = h(k_j) \} + 1 \\
+  &\le \sum\limits_{j \ne i} \frac{1}{m} + 1 \\
+  &\le \frac{n}{m} + 1
+  \end{aligned}
+  </div>
+
+  </div>
 
   <h4 class="title">Uniform Difference Property</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于 Universal Hashing，存在一个更加严格的定义: <def>Uniform Difference Property</def>，其含义是: 对于 `\H` 中的任意 `\h`，都必须保证 `[h(k)-h(k')] mod m` 的结果在 `[m]` 上均匀分布。Uniform Difference Property 的探究范围可以总结为下图，实际上规定的是在一个 Key 值映射到一个 Slot 的情况下，另一个 Key 值在其它 Slot 上发生映射的分布情况。
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Universal Hashing，存在一个更加严格的定义: <def>Uniform Difference Property</def>，其含义是: 对于 $H$ 中的任意 $h$，都必须保证 $[h(k)-h(k')] \mod m$ 的结果在 $[m]$ 上均匀分布。Uniform Difference Property 的探究范围可以总结为下图，实际上规定的是在一个 Key 值映射到一个 Slot 的情况下，另一个 Key 值在其它 Slot 上发生映射的分布情况。
 
-  <div align="center">
+  <div class="img" title="Uniform Dirrerence">
     <img src="./pic/uniform_difference_property.png" width=400px>
   </div>
 
@@ -416,21 +495,71 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;Universal Hashing 更加严格的定义是 <def>Pairwise Independence</def> (或称为 Strong Universality)，其含义是: 
 
-  <div align="center">
-    `Pr[h(x)=z_1 \wedge h(y)=z_2] = (1/m)^2`
-  </div><br>
+  <div class="equation">
+  $Pr[h(x)=z_1 \wedge h(y)=z_2] = (\frac{1}{m})^2$
+  </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Pairwise Independence 的探究范围可以总结为下图，实际上其规定的就是 <note><b>2 个</b></note> Key 值分别映射到自己对应的 Slot 的概率分布情况。`(1/m)^2` 的概率结果形成的效果就好像这 2 个 Key 真的被进行了一次完美的随机 Hash 一样 (i.e. 实际上不是，只是概率分析结果)。
+  &nbsp;&nbsp;&nbsp;&nbsp;Pairwise Independence 的探究范围可以总结为下图，实际上其规定的就是 <note><b>2 个</b></note> Key 值分别映射到自己对应的 Slot 的概率分布情况。$(\frac{1}{m})^2$ 的概率结果形成的效果就好像这 2 个 Key 真的被进行了一次完美的随机 Hash 一样 (i.e. 实际上不是，只是概率分析结果)。
 
-  <div align="center">
+  <div class="img" title="Pairwise Independence">
     <img src="./pic/pairwise_independent.png" width=400px>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;除了 Pairwise Independence，可以想象的是我们还会有 <def>K-wise Independence</def>，它们对 Hash Function Family 的要求就变得更加严格。它们形成的 `(1/m)^k` 的概率结果形成的效果就好像 <note><b>k 个</b></note> Key 真的被进行了一次完美的随机 Hash 一样 (i.e. 实际上不是，只是概率分析结果)。
-</div>
+  &nbsp;&nbsp;&nbsp;&nbsp;除了 Pairwise Independence，可以想象的是我们还会有 <def>K-wise Independence</def>，它们对 Hash Function Family 的要求就变得更加严格。它们形成的 $(\frac{1}{m})^k$ 的概率结果形成的效果就好像 <note><b>k 个</b></note> Key 真的被进行了一次完美的随机 Hash 一样 (i.e. 实际上不是，只是概率分析结果)。
 
+  <h3 class="title">Perfect Hashing</h3>
+
+  <h4 class="title">基本介绍</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;和 Universal Hashing 不同，Perfect Hashing 假设映射到 Hash 表中的表项已经固定不变了，也即一种离线的哈希方法。可以理解为构建出来的哈希表仅仅有查询的功能，而不具有增删的功能。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Peferct Hashing 的目标是:
+
+  <ul>
+    <li>在很大概率下实现多项式时间的构建时间;</li>
+    <li>在最坏情况下，仍然实现 $O(1)$ 的搜索时间;</li>
+    <li>在最坏情况下，仍然实现 $O(n)$ 的存储复杂度;</li>
+  </ul>
+
+  <h4 class="title">构建过程</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Perfect Hashing 的构建方法如下所示:
+
+  <ol>
+    <li>从上述介绍的 Universal Hash Family 中选取出一个哈希函数 $h_1: \{0, 1, ..., u-1\} \rightarrow \{0, 1, ..., m-1\}$，保证 $m=\Theta(n)$，然后将所有的 $n$ 个待映射的 key 值映射到 $h_1$ 对应的 $m$ 个哈希桶中去;</li>
+    <li>
+    对于哈希函数 $h_1$ 对应的各个 Slot $j \in \{0, 1, ..., m-1\}$:
+    <ul>
+      <li>使用 $l_j$ 代表第 $j$ 个哈希桶中存储的表项的个数;</li>
+      <li>对于 Slot $j$，从 Universal Hash Family 中选取出一个哈希函数 $h_{2,j}: \{0, 1, ..., u-1\} \rightarrow \{0, 1, ..., m_j\}$，其中 $l_j^2 \le m_j \le O(l_j^2)$;</li>
+      <li>将第 1 步构建的 Hash with Chaining 的各个 Slot $j$ 上的链表替换为 $h_{2,j}$ 对应的哈希表;</li>
+    </ul>
+    </li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;综上，我们可以得到，整个结构占用的空间大小为:
+
+  <div class="equation">
+  $\text{Space} = O(n+\sum\limits_{j=0}^{m-1})$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了保证整体结构的存储复杂度是 $O(n)$，使用 $l_j$ 代表哈希函数 $h_1$ 对应的哈希表中，第 $j$ 个哈希桶中存储的表项的个数，如果 $\sum\limits_{j=0}^{m-1}l_j^2 > cn$，则重复第 1 步 (p.s. $c$ 是一个人为设置的参数);
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，我们可以得到整体的搜索时间为:
+
+  <div class="equation">
+  $\text{Search Time} = \underbrace{O(1)}_{\text{第一张哈希表} h_1 \text{对应的搜索时间}} \; +  \; \underbrace{O(\text{第二张哈希表中最长的 Chain 的长度})}_{\text{第二张哈希表} h_{2,j} \text{对应的搜索时间}}$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了保证搜索时间的复杂度为 $O(1)$，我们必须让第二张哈希表的搜索时间同样降低为 $O(1)$，因此在第二张哈希表中，当发生 Hash Collision，也即 $h_{2,j}(k_i) = h_{2,j}(k_{i'})$ 发生时，Perfect Hashing 需要对 $h_{2,j}$ 进行重新选择，并且重新哈希 $h_1$ 对应 Slot 中记录的 Key 值，直到没有冲突产生。
+</div>
 
 <div class="div_ref" id="ref_container"></div>
 </body>
@@ -455,7 +584,7 @@
 <!--矩阵公式-->
 <!--
 <div class="cmath" align="center">
-  `((1, 0),(1, 0))`
+  $((1, 0),(1, 0))$
 </div><br>
 -->
 
@@ -469,7 +598,7 @@
 <!--正文-->
 <!--
 <p>
-&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>$\overline{A}\overline{B}$</span>
 </p>
 -->
       </div>

@@ -2,6 +2,76 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/index.html</loc>
+    
+    <lastmod>2022-06-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
+    
+    <lastmod>2022-06-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/ref.json</loc>
+    
+    <lastmod>2022-06-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Build_GNN_Model/index.html</loc>
+    
+    <lastmod>2022-06-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Build_GNN_Model/ref.json</loc>
+    
+    <lastmod>2022-06-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Message_Passing_Paradigm/ref.json</loc>
+    
+    <lastmod>2022-06-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Message_Passing_Paradigm/index.html</loc>
+    
+    <lastmod>2022-06-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Algorithm_Intro_4_Hash/index.html</loc>
+    
+    <lastmod>2022-06-17</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey_Heavy_Hitter/index.html</loc>
+    
+    <lastmod>2022-06-16</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Algorithm_Intro_4_Hash/ref.json</loc>
+    
+    <lastmod>2022-06-16</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_3_Locally_Weighted_And_Logistic_Regression/extend.html</loc>
     
     <lastmod>2022-06-15</lastmod>
@@ -40,13 +110,6 @@
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_Survey_of_GNN_Model/ref.json</loc>
     
     <lastmod>2022-06-13</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
-    
-    <lastmod>2022-06-12</lastmod>
     
   </url>
   
@@ -709,13 +772,6 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey_Heavy_Hitter/index.html</loc>
-    
-    <lastmod>2022-03-06</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Stream_Algorithm_And_Network_Measurement_System_Survey_Heavy_Hitter/ref.json</loc>
     
     <lastmod>2022-03-05</lastmod>
@@ -892,20 +948,6 @@
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/index.html</loc>
-    
-    <lastmod>2022-02-11</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Algorithm_Intro_4_Hash/ref.json</loc>
-    
-    <lastmod>2022-02-11</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Algorithm_Intro_4_Hash/index.html</loc>
     
     <lastmod>2022-02-11</lastmod>
     
@@ -2209,7 +2251,7 @@
 
   <url>
     <loc>http://www.zobinhuang.com:10082/</loc>
-    <lastmod>2022-06-15</lastmod>
+    <lastmod>2022-06-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
