@@ -43,7 +43,16 @@ async function _load_pic(){
         if(!img_containers[i].title)
             img_index.innerHTML = `Figure ${i+1}`
         else
-        img_index.innerHTML = `Figure ${i+1}: ${img_containers[i].title}`
+            img_index.innerHTML = `Figure ${i+1}: ${img_containers[i].title}`
+        
+        // 创建源
+        if(img_containers[i].getAttribute('source')){
+            let link = document.createElement('a')
+            link.innerHTML = '[Source]'
+            link.setAttribute('href', img_containers[i].getAttribute('source'))
+            link.setAttribute('style', 'font-size:5px; font-family:italic; margin-left:5px; color:#FF4136')
+            img_index.append(link)
+        }
 
         // 显示标号
         img_containers[i].append(img_index)
@@ -312,13 +321,12 @@ async function _load_citation(){
                 cites[i].innerHTML = `[${ref_index}]`
             } else {
                 let ref_link = document.createElement('a')
-                ref_link.setAttribute('style', 'font-size:8px; font-family: italic; margin: 0px 2px;')
+                ref_link.setAttribute('style', 'font-size:12px; font-family: italic; margin-right: 2px;')
                 ref_link.setAttribute('href', `${mapping_links[`${short_ref}`]}`)
                 ref_link.innerHTML = `[${ref_index}]`
                 cites[i].innerHTML = ''
                 cites[i].append(ref_link)
             }
-            
         }
     })
 }

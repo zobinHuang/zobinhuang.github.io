@@ -2,23 +2,86 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/index.html</loc>
     
-    <lastmod>2022-06-22</lastmod>
+    <lastmod>2022-07-17</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/ref.json</loc>
+    
+    <lastmod>2022-07-17</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/post_index.json</loc>
+    
+    <lastmod>2022-07-16</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
     
-    <lastmod>2022-06-22</lastmod>
+    <lastmod>2022-07-11</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/index.html</loc>
+    
+    <lastmod>2022-07-10</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/ref.json</loc>
     
-    <lastmod>2022-06-22</lastmod>
+    <lastmod>2022-07-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Train/index.html</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Train/ref.json</loc>
+    
+    <lastmod>2022-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Dataset/index.html</loc>
+    
+    <lastmod>2022-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Dataset/ref.json</loc>
+    
+    <lastmod>2022-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/template_post/index.html</loc>
+    
+    <lastmod>2022-06-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Message_Passing_Paradigm/index.html</loc>
+    
+    <lastmod>2022-06-24</lastmod>
     
   </url>
   
@@ -38,13 +101,6 @@
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Message_Passing_Paradigm/ref.json</loc>
-    
-    <lastmod>2022-06-22</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Message_Passing_Paradigm/index.html</loc>
     
     <lastmod>2022-06-22</lastmod>
     
@@ -96,13 +152,6 @@
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_Survey_of_GNN_Model/index.html</loc>
     
     <lastmod>2022-06-14</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/template_post/index.html</loc>
-    
-    <lastmod>2022-06-13</lastmod>
     
   </url>
   
@@ -829,13 +878,6 @@
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/script/book_index.json</loc>
-    
-    <lastmod>2022-02-12</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/post_index.json</loc>
     
     <lastmod>2022-02-12</lastmod>
     
@@ -2251,7 +2293,7 @@
 
   <url>
     <loc>http://www.zobinhuang.com:10082/</loc>
-    <lastmod>2022-06-22</lastmod>
+    <lastmod>2022-07-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

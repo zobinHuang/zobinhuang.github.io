@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:type" content="website">
+<meta property="og:title" content="源码解析：借鉴 TVM 的 Python 和 C++ 的调用机制">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/pic/data_structure.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/pic/registry_arch.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/pic/full_chain.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/pic/xxx.png">
+<meta property="article:published_time" content="2022-07-17T13:54:28.663Z">
+<meta property="article:modified_time" content="2022-07-17T13:54:28.663Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>源码解析：借鉴 TVM 的 Python 和 C++ 的调用机制 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">源码解析：借鉴 TVM 的 Python 和 C++ 的调用机制
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
+          <li>GNN_DGL_PYTHON_CPP_CALLING</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body onload="load_page()">
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：July 11 2022</i></font></h4>
+</div>
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+<br>
+<div class="div_catalogue">
+  <div align="center">
+    <h1> 目录 </h1>
+    <p>
+    <font size="3px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_load_catalogue_alert" id="load_catalogue_alert">正在加载目录...</div>
+  <div class="div_catalogue_container" id="catalogue_container">
+  </div>
+</div><br>
+
+<!-- Start your post here -->
+<h2 class="title">前言</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 DGL 官方给出的为数不多的开发者文档 <cite>dgl_ffi</cite> 中，里面说到他们在大部分 DGL 的代码中使用 python 予以相关逻辑的实现，在性能关键的地方就是用 C++ 予以实现。因此在代码中将经常遇到需要使用 Python 代码对使用 C++ 代码定义的函数进行调用的情况。这篇文章我们将分析 DGL 实现这层机制的底层原理。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;DGL 所使用的 <def>Foreign Function Interface</def> 机制的实现实际上参考了 TVM 项目中 FFI 功能模块 <cite>tvm_official</cite> 的实现方法 <cite>dgl_ffi</cite>。TVM 是一个用于优化 ML 模型编译以及实现通用化模型部署的编译器栈，这里我们说到的 FFI 只是它其中的一个功能模块。下面我们先对 TVM 的 FFI 机制的实现进行分析，然后回到 DGL 来看其具体实现。
+</div>
+
+<h2 class="title">TVM FFI 机制</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TVM FFI 机制本质上是使用了 Python 提供的 <code>ctypes</code> 模块来调用 C++ 代码提供的 <code>ctypes</code> 是 Python 内建的可以用于调用 <note>C/C++ 动态链接库</note> 函数的功能模块。这意味着我们首先需要把使用 C++ 编写的函数到一个动态链接库文件中，然后再在 Python 中使用 <code>ctypes</code> 模块来加载动态链接库中的函数。在 <code>ctypes</code> 的官方文档中+是这么介绍 <code>ctypes</code> 的:
+
+  <div class="theorm_prove">
+  ctypes is a foreign function library for Python. It provides C compatible data types, and allows calling functions in DLLs or shared libraries. It can be used to wrap these libraries in pure Python.
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们首先从 C++ 侧来看 TVM 如何定义具体的函数功能接口，然后再来看 TVM 如何在 Python 侧实现对这些函数的加载和调用。
+
+  <h3 class="title">C++ 底层数据结构支撑</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 C++ 侧，<code>PackedFunc</code> 这个类用于描述和存储作为 FFI 的 C++ 函数，它是 Python 和 C++ 互相调用的桥梁。这个类是在 <code>include/tvm/runtime/packed_func.h</code> <cite>tvmsrc_packedfunc_h</cite> 中定义的。在阅读这个类的代码之前，我们首先对该类所使用到的关键数据结构进行分析，然后再回过头来分析 <code>PackedFunc</code>。
+
+  <div class="img" title="底层数据结构关系图" label="img_data_structure">
+    <img src="./pic/data_structure.png" height="200px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<imaging>img_data_structure</imaging> 展示了我们下面要进行分析的几个数据结构之间的关系，这几个数据结构本质上是对 <code>PackedFunc</code> 所使用的数据的封装，它们的功能如下所示:
+
+  <ul>
+    <li><code>TVMValue</code>: 对基本数据类型进行统一;</li>
+    <li><code>TVMPODValue_</code>: 封装了对数据类型进行强制类型转换的运算符;</li>
+    <li><code>TVMArgValue</code>: 用于封装传给 <code>PackedFunc</code> 的 <b>一个</b> 参数;</li>
+    <li><code>TVMArgs</code>: 用于封装传给 <code>PackedFunc</code> 的 <b>所有</b> 参数;</li>
+    <li><code>TVMRetValue</code>: 用于作为存放调用 <code>PackedFunc</code> 返回值的容器;</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们分别对它们进行分析。
+
+  <h4 class="title"><code>TVMValue</code></h4>
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*!</span></span><br><span class="line"><span class="comment"> * \brief Union type of values</span></span><br><span class="line"><span class="comment"> *  being passed through API and function calls.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">  <span class="keyword">int64_t</span> v_int64;</span><br><span class="line">  <span class="keyword">double</span> v_float64;</span><br><span class="line">  <span class="keyword">void</span>* v_handle;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span>* v_str;</span><br><span class="line">  DLDataType v_type;</span><br><span class="line">  DLDevice v_device;</span><br><span class="line">&#125; TVMValue;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先是最底层的 <code>TVMValue</code>，其是在 <code>tvm/include/tvm/runtime/c_runtime_api.h</code> <cite>tvmsrc_c_runtime_api_h</cite> 中定义的，是一个 union。它的功能主要是为了封装 C++ 和其它语言交互时所支持的几种类型的数据。
+
+  <h4 class="title"><code>TVMPODValue_</code></h4>
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*!</span></span><br><span class="line"><span class="comment"> * \brief Internal base class to</span></span><br><span class="line"><span class="comment"> *  handle conversion to POD values.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TVMPODValue_</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">operator</span> <span class="title">double</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> value_.v_float64; &#125;</span><br><span class="line">  <span class="function"><span class="keyword">operator</span> <span class="title">int64_t</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> value_.v_int64; &#125;</span><br><span class="line">  <span class="keyword">operator</span> <span class="keyword">void</span>*() <span class="keyword">const</span> &#123; <span class="keyword">return</span> value_.v_handle; &#125;</span><br><span class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">  <span class="function">T* <span class="title">ptr</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> <span class="keyword">static_cast</span>&lt;T*&gt;(value_.v_handle); &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">  TVMValue value_;</span><br><span class="line">  <span class="keyword">int</span> type_code_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后是 <code>TVMPODValue_</code>，其是在 <code>include/tvm/runtime/packed_func.h</code> <cite>tvmsrc_packedfunc_h</cite> 中定义的。这个类的实现核心是「强制类型转换运算符」重载。在 C++中，类型的名字，包括类的名字本身也是一种运算符，即类型强制转换运算符。如上面摘抄的定义所示，该类重载了「强制类型转换运算符」，可以实现对 <code>TVMValue</code> 存储的数据的类型转换。
+
+  <h4 class="title"><code>TVMArgValue</code></h4>
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*!</span></span><br><span class="line"><span class="comment"> * \brief A single argument value to PackedFunc.</span></span><br><span class="line"><span class="comment"> *  Containing both type_code and TVMValue</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *  Provides utilities to do type cast into other types.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TVMArgValue</span> :</span> <span class="keyword">public</span> TVMPODValue_ &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="comment">/*! \brief default constructor */</span></span><br><span class="line">  TVMArgValue() &#123;&#125;</span><br><span class="line">  <span class="comment">/*!</span></span><br><span class="line"><span class="comment">  * \brief constructor</span></span><br><span class="line"><span class="comment">  * \param value of the function</span></span><br><span class="line"><span class="comment">  * \param type_code The type code.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  TVMArgValue(TVMValue value, <span class="keyword">int</span> type_code) : TVMPODValue_(value, type_code) &#123;&#125;</span><br><span class="line">  <span class="comment">// reuse converter from parent</span></span><br><span class="line">  <span class="keyword">using</span> TVMPODValue_::<span class="keyword">operator</span> <span class="keyword">double</span>;</span><br><span class="line">  <span class="keyword">using</span> TVMPODValue_::<span class="keyword">operator</span> <span class="keyword">int64_t</span>;</span><br><span class="line">  <span class="keyword">using</span> TVMPODValue_::<span class="keyword">operator</span> <span class="keyword">uint64_t</span>;</span><br><span class="line">  <span class="keyword">using</span> TVMPODValue_::<span class="keyword">operator</span> <span class="keyword">int</span>;</span><br><span class="line">  <span class="keyword">using</span> TVMPODValue_::<span class="keyword">operator</span> <span class="keyword">bool</span>;</span><br><span class="line">  <span class="keyword">using</span> TVMPODValue_::<span class="keyword">operator</span> <span class="keyword">void</span>*;</span><br><span class="line">  <span class="keyword">using</span> TVMPODValue_::<span class="keyword">operator</span> DLTensor*;</span><br><span class="line">  <span class="keyword">using</span> TVMPODValue_::<span class="keyword">operator</span> NDArray;</span><br><span class="line">  <span class="keyword">using</span> TVMPODValue_::<span class="keyword">operator</span> Device;</span><br><span class="line">  <span class="keyword">using</span> TVMPODValue_::<span class="keyword">operator</span> Module;</span><br><span class="line">  <span class="keyword">using</span> TVMPODValue_::<span class="keyword">operator</span> PackedFunc;</span><br><span class="line">  <span class="keyword">using</span> TVMPODValue_::AsObjectRef;</span><br><span class="line">  <span class="keyword">using</span> TVMPODValue_::IsObjectRef;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// conversion operator.</span></span><br><span class="line">  <span class="function"><span class="keyword">operator</span> <span class="title">std::string</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (type_code_ == kTVMDataType) &#123;</span><br><span class="line">      <span class="keyword">return</span> DLDataType2String(<span class="keyword">operator</span> DLDataType());</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (type_code_ == kTVMBytes) &#123;</span><br><span class="line">      TVMByteArray* arr = <span class="keyword">static_cast</span>&lt;TVMByteArray*&gt;(value_.v_handle);</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">std</span>::<span class="built_in">string</span>(arr-&gt;data, arr-&gt;size);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (type_code_ == kTVMStr) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">std</span>::<span class="built_in">string</span>(value_.v_str);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      ICHECK(IsObjectRef&lt;tvm::runtime::String&gt;())</span><br><span class="line">          &lt;&lt; <span class="string">&quot;Could not convert TVM object of type &quot;</span> &lt;&lt; runtime::Object::TypeIndex2Key(type_code_)</span><br><span class="line">          &lt;&lt; <span class="string">&quot; to a string.&quot;</span>;</span><br><span class="line">      <span class="keyword">return</span> AsObjectRef&lt;tvm::runtime::String&gt;().<span class="keyword">operator</span> <span class="built_in">std</span>::<span class="built_in">string</span>();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> FType&gt;</span><br><span class="line">  <span class="keyword">operator</span> TypedPackedFunc&lt;FType&gt;() <span class="keyword">const</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> TypedPackedFunc&lt;FType&gt;(<span class="keyword">operator</span> PackedFunc());</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">const</span> TVMValue&amp; <span class="title">value</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> value_; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> = <span class="keyword">typename</span> <span class="built_in">std</span>::enable_if&lt;<span class="built_in">std</span>::is_class&lt;T&gt;::value&gt;::type&gt;</span><br><span class="line">  <span class="keyword">inline</span> <span class="keyword">operator</span> T() <span class="keyword">const</span>;</span><br><span class="line">  <span class="function"><span class="keyword">inline</span> <span class="keyword">operator</span> <span class="title">DLDataType</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">inline</span> <span class="keyword">operator</span> <span class="title">DataType</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后是 <code>TVMArgValue</code>，其是在 <code>include/tvm/runtime/packed_func.h</code> <cite>tvmsrc_packedfunc_h</cite> 中定义的。这个类继承自前面介绍的 <code>TVMPODValue_</code> 类，用作表示 <code>PackedFunc</code> 的一个参数，它和 <code>TVMPODValue_</code> 的区别是扩充了一些数据类型的支持，比如 <code>string</code>、<code>PackedFunc</code>、<code>TypedPackedFunc</code> 等，其中对后两个的支持是在 C++ 代码中能够调用 Python 函数的根本原因。这个类只使用所保存的 underlying data，而不会去做释放。
+
+  <h4 class="title"><code>TVMArgs</code></h4>
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*! \brief Arguments into TVM functions. */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TVMArgs</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="keyword">const</span> TVMValue* values;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span>* type_codes;</span><br><span class="line">  <span class="keyword">int</span> num_args;</span><br><span class="line">  <span class="comment">/*!</span></span><br><span class="line"><span class="comment">  * \brief constructor</span></span><br><span class="line"><span class="comment">  * \param values The argument values</span></span><br><span class="line"><span class="comment">  * \param type_codes The argument type codes</span></span><br><span class="line"><span class="comment">  * \param num_args number of arguments.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  TVMArgs(<span class="keyword">const</span> TVMValue* values, <span class="keyword">const</span> <span class="keyword">int</span>* type_codes, <span class="keyword">int</span> num_args)</span><br><span class="line">      : values(values), type_codes(type_codes), num_args(num_args) &#123;&#125;</span><br><span class="line">  <span class="comment">/*! \return size of the arguments */</span></span><br><span class="line">  <span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">  <span class="comment">/*!</span></span><br><span class="line"><span class="comment">  * \brief Get i-th argument</span></span><br><span class="line"><span class="comment">  * \param i the index.</span></span><br><span class="line"><span class="comment">  * \return the ith argument.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="keyword">inline</span> TVMArgValue <span class="keyword">operator</span>[](<span class="keyword">int</span> i) <span class="keyword">const</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后是 <code>TVMArgs</code>，它是在 <code>include/tvm/runtime/packed_func.h</code> <cite>tvmsrc_packedfunc_h</cite> 中定义的。这个类主要是为了封装传给代表着 C++ FFI 的 <code>PackedFunc</code> 的所有参数，这个类也比较简单原始，主要基于 <code>TVMValue</code>、参数类型编码、参数个数来实现。值得注意的是 <code>TVMArgs</code> 使用的是 <code>TVMValue</code> 数组来存储传入的所有参数，而对于迭代访问运算符 <code>[]</code>，其返回的又是 <code>TVMArgValue</code> 类型的值。因此上面介绍的 <code>TVMArgValue</code> 实际上并不存储传入的参数本身，而用于对传入的参数进行处理使用。
+
+  <h4 class="title"><code>TVMRetValue</code></h4>
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TVMRetValue</span> :</span> <span class="keyword">public</span> TVMPODValue_ &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="comment">// ctor and dtor, dtor will release related buffer</span></span><br><span class="line">  TVMRetValue() &#123;&#125;</span><br><span class="line">  ~TVMRetValue() &#123; <span class="keyword">this</span>-&gt;Clear(); &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// conversion operators</span></span><br><span class="line">  <span class="function"><span class="keyword">operator</span> <span class="title">std::string</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> *ptr&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt;(); &#125;</span><br><span class="line">  <span class="function"><span class="keyword">operator</span> <span class="title">DLDataType</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> value_.v_type; &#125;</span><br><span class="line">  <span class="function"><span class="keyword">operator</span> <span class="title">PackedFunc</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> *ptr&lt;PackedFunc&gt;(); &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// Assign operators</span></span><br><span class="line">  TVMRetValue&amp; <span class="keyword">operator</span>=(<span class="keyword">double</span> value) &#123;&#125;</span><br><span class="line">  TVMRetValue&amp; <span class="keyword">operator</span>=(<span class="keyword">void</span>* value) &#123;&#125;</span><br><span class="line">  TVMRetValue&amp; <span class="keyword">operator</span>=(<span class="keyword">int64_t</span> value) &#123;&#125;</span><br><span class="line">  TVMRetValue&amp; <span class="keyword">operator</span>=(<span class="built_in">std</span>::<span class="built_in">string</span> value) &#123;&#125;</span><br><span class="line">  TVMRetValue&amp; <span class="keyword">operator</span>=(PackedFunc f) &#123;&#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="comment">// judge type_code_, release underlying data</span></span><br><span class="line">  <span class="keyword">void</span> Clear() &#123;</span><br><span class="line">    <span class="keyword">if</span> (type_code_ == kTVMStr || type_code_ == kTVMBytes) &#123;</span><br><span class="line">      <span class="keyword">delete</span> ptr&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt;();</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(type_code_ == kTVMPackedFuncHandle) &#123;</span><br><span class="line">      <span class="keyword">delete</span> ptr&lt;PackedFunc&gt;();</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(type_code_ == kTVMNDArrayHandle) &#123;</span><br><span class="line">      NDArray::FFIDecRef(</span><br><span class="line">        <span class="keyword">static_cast</span>&lt;TVMArrayHandle&gt;(value_.v_handle));</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(type_code_ == kTVMModuleHandle </span><br><span class="line">        || type_code_ == kTVMObjectHandle ) &#123;</span><br><span class="line">      <span class="keyword">static_cast</span>&lt;Object*&gt;(value_.v_handle)-&gt;DecRef();</span><br><span class="line">    &#125;</span><br><span class="line">    type_code_ = kTVMNullptr;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后是 <code>TVMRetValue</code>，它是在 <code>include/tvm/runtime/packed_func.h</code> <cite>tvmsrc_packedfunc_h</cite> 中定义的。这个类也是继承自 <code>TVMPODValue_</code> 类，主要作用是作为存放调用 <code>PackedFunc</code> 返回值的容器，它和 <code>TVMArgValue</code> 的区别是，它会管理所保存的 underlying data，会对其做释放。这个类主要由四部分构成：
+
+  <ol>
+    <li>构造和析构函数;</li>
+    <li>对强制类型转换运算符重载的扩展;</li>
+    <li>对赋值运算符的重载;</li>
+    <li>辅助函数，包括释放资源的 <code>Clear</code> 函数</li>
+  </ol>
+
+  <h4 class="title"><code>TVMArgsSetter</code></h4>
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TVMArgsSetter</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  TVMArgsSetter(TVMValue* values, <span class="keyword">int</span>* type_codes) </span><br><span class="line">    : values_(values), type_codes_(type_codes) &#123;&#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="keyword">size_t</span> i, <span class="keyword">double</span> value)</span> <span class="keyword">const</span> </span>&#123;</span><br><span class="line">    values_[i].v_float64 = value;</span><br><span class="line">    type_codes_[i] = kDLFloat;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="keyword">size_t</span> i, <span class="keyword">const</span> <span class="built_in">string</span>&amp; value)</span> <span class="keyword">const</span> </span>&#123;</span><br><span class="line">    values_[i].v_str = value.c_str();</span><br><span class="line">    type_codes_[i] = kTVMStr;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="keyword">size_t</span> i, <span class="keyword">const</span> PackedFunc&amp; value)</span> <span class="keyword">const</span> </span>&#123;</span><br><span class="line">    values_[i].v_handle = <span class="keyword">const_cast</span>&lt;PackedFunc*&gt;(&amp;value);</span><br><span class="line">    type_codes_[i] = kTVMPackedFuncHandle;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  TVMValue* values_;</span><br><span class="line">  <span class="keyword">int</span>* type_codes_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，<code>TVMArgsSetter</code> 是一个用于给 <code>TVMValue</code> 对象赋值的辅助类，主要通过重载函数调用运算符来实现。
+
+  <h4 class="title"><code>PackedFunc</code> 的具体实现</h4>
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*!</span></span><br><span class="line"><span class="comment">* \brief Packed function is a type-erased function.</span></span><br><span class="line"><span class="comment">*  The arguments are passed by packed format.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">*  This is an useful unified interface to call generated functions,</span></span><br><span class="line"><span class="comment">*  It is the unified function function type of TVM.</span></span><br><span class="line"><span class="comment">*  It corresponds to TVMFunctionHandle in C runtime API.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PackedFunc</span> :</span> <span class="keyword">public</span> ObjectRef &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="comment">/*! </span></span><br><span class="line"><span class="comment">   * \brief Constructor from null</span></span><br><span class="line"><span class="comment">   *        构造函数：传入空指针的构造函数，初始化自身也初始化父类</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  PackedFunc(<span class="built_in">std</span>::<span class="keyword">nullptr_t</span> null) : ObjectRef(<span class="literal">nullptr</span>) &#123;&#125;  <span class="comment">// NOLINT(*)</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">/*!</span></span><br><span class="line"><span class="comment">  * \brief Constructing a packed function from a callable type</span></span><br><span class="line"><span class="comment">  *        whose signature is consistent with `PackedFunc`</span></span><br><span class="line"><span class="comment">  *        构造函数：基于传入的函数进行初始化，传入的函数类型必须要能转换成</span></span><br><span class="line"><span class="comment">  *                 void(TVMArgs, TVMRetValue*) 的形式</span></span><br><span class="line"><span class="comment">  * \param data the internal container of packed function.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TCallable,</span><br><span class="line">            <span class="keyword">typename</span> = <span class="built_in">std</span>::<span class="keyword">enable_if_t</span>&lt;</span><br><span class="line">                <span class="built_in">std</span>::is_convertible&lt;TCallable, <span class="built_in">std</span>::function&lt;<span class="keyword">void</span>(TVMArgs, TVMRetValue*)&gt;&gt;::value &amp;&amp;</span><br><span class="line">                !<span class="built_in">std</span>::is_base_of&lt;TCallable, PackedFunc&gt;::value&gt;&gt;</span><br><span class="line">  <span class="keyword">explicit</span> PackedFunc(TCallable data) &#123;</span><br><span class="line">    <span class="keyword">using</span> ObjType = PackedFuncSubObj&lt;TCallable&gt;;</span><br><span class="line">    data_ = make_object&lt;ObjType&gt;(<span class="built_in">std</span>::forward&lt;TCallable&gt;(data));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/*!</span></span><br><span class="line"><span class="comment">  * \brief Call packed function by directly passing in unpacked format.</span></span><br><span class="line"><span class="comment">  * \param args Arguments to be passed.</span></span><br><span class="line"><span class="comment">  * \tparam Args arguments to be passed.</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  * 重载函数调用符号</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  * \code</span></span><br><span class="line"><span class="comment">  *   // Example code on how to call packed function</span></span><br><span class="line"><span class="comment">  *   void CallPacked(PackedFunc f) &#123;</span></span><br><span class="line"><span class="comment">  *     // call like normal functions by pass in arguments</span></span><br><span class="line"><span class="comment">  *     // return value is automatically converted back</span></span><br><span class="line"><span class="comment">  *     int rvalue = f(1, 2.0);</span></span><br><span class="line"><span class="comment">  *   &#125;</span></span><br><span class="line"><span class="comment">  * \endcode</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Args&gt;</span><br><span class="line">  <span class="function"><span class="keyword">inline</span> TVMRetValue <span class="title">operator</span><span class="params">()</span><span class="params">(Args&amp;&amp;... args)</span> <span class="keyword">const</span></span>;</span><br><span class="line">  <span class="comment">/*!</span></span><br><span class="line"><span class="comment">  * \brief Call the function in packed format.</span></span><br><span class="line"><span class="comment">  * \param args The arguments</span></span><br><span class="line"><span class="comment">  * \param rv The return value.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="function">TVM_ALWAYS_INLINE <span class="keyword">void</span> <span class="title">CallPacked</span><span class="params">(TVMArgs args, TVMRetValue* rv)</span> <span class="keyword">const</span></span>;</span><br><span class="line">  <span class="comment">/*! \return Whether the packed function is nullptr */</span></span><br><span class="line">  <span class="keyword">bool</span> <span class="keyword">operator</span>==(<span class="built_in">std</span>::<span class="keyword">nullptr_t</span> null) <span class="keyword">const</span> &#123; <span class="keyword">return</span> data_ == <span class="literal">nullptr</span>; &#125;</span><br><span class="line">  <span class="comment">/*! \return Whether the packed function is not nullptr */</span></span><br><span class="line">  <span class="keyword">bool</span> <span class="keyword">operator</span>!=(<span class="built_in">std</span>::<span class="keyword">nullptr_t</span> null) <span class="keyword">const</span> &#123; <span class="keyword">return</span> data_ != <span class="literal">nullptr</span>; &#125;</span><br><span class="line"></span><br><span class="line">  TVM_DEFINE_OBJECT_REF_METHODS(PackedFunc, ObjectRef, PackedFuncObj);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有了前面所述的数据结构作为基础，再来看 <code>PackedFunc</code> 的实现，它是在 <code>include/tvm/runtime/packed_func.h</code> <cite>tvmsrc_packedfunc_h</cite> 中定义的。<code>PackedFunc</code> 代表了用户自定义的一个 C++ 函数，最终将被编译和注册到动态链接库中，以供 Python 程序调用。<code>PackedFunc</code> 使用了一个储存函数指针的变量 <code>data_</code> (p.s. 继承自 <code>ObjectRef</code>)，再通过重载函数调用运算符 <code>()</code> 来调用这个函数指针所指向的函数。重载 <code>()</code> 运算符的定义是在同个文件下实现的，定义如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Args&gt;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> TVMRetValue <span class="title">PackedFunc::operator</span><span class="params">()</span><span class="params">(Args&amp;&amp;... args)</span> <span class="keyword">const</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> kNumArgs = <span class="keyword">sizeof</span>...(Args);</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> kArraySize = kNumArgs &gt; <span class="number">0</span> ? kNumArgs : <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 初始化两个数组存放，用于存放转化用户传入的参数后的若干 TVMValue</span></span><br><span class="line">  <span class="comment">// 以及它们的 type_codes </span></span><br><span class="line">  TVMValue values[kArraySize];</span><br><span class="line">  <span class="keyword">int</span> type_codes[kArraySize];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 使用 TVMArgsSetter 将用户传入的参数初始化为 TVMValue，放入数组中</span></span><br><span class="line">  detail::for_each(TVMArgsSetter(values, type_codes), <span class="built_in">std</span>::forward&lt;Args&gt;(args)...);</span><br><span class="line">  TVMRetValue rv;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 调用在 data_ 中存储的函数</span></span><br><span class="line">  (<span class="keyword">static_cast</span>&lt;PackedFuncObj*&gt;(data_.get()))</span><br><span class="line">      -&gt;CallPacked(TVMArgs(values, type_codes, kNumArgs), &amp;rv);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 返回由 TVMRetValue rv 存储的函数返回值</span></span><br><span class="line">  <span class="keyword">return</span> rv;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面代码的相关注释以及解释了整个调用流程。我们可以发现在调用的时候，TVM 先把 转化为 <code>PackedFuncObj</code> 类实例，然后再调用其 <code>CallPacked</code> 函数以完成对函数的执行。
+
+  <h3 class="title">基于 <code>PackedFunc</code> 的函数注册机</h3>
+
+  <div class="img" title="注册机数据结构关系图">
+    <img src="./pic/registry_arch.png" height="300px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成对 <code>PackedFunc</code> 的理解后，下面我们对代码是如何将各个 <code>PackedFunc</code> 实例注册到动态链接库 (以供 Python 程序调用) 进行分析。
+
+  <h4 class="title"><code>TVM_REGISTER_GLOBAL</code> 宏</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注册过程中最常使用的宏是 <code>TVM_REGISTER_GLOBAL</code>，调用这个宏将返回一个 <code>Registry</code> 对象，基于这个对象，我们可以调用诸如 <code>set_body</code> 等注册接口，将函数进行注册。下面是一个例子:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/topi/nn.cc</span></span><br><span class="line">TVM_REGISTER_GLOBAL(<span class="string">&quot;topi.nn.relu&quot;</span>)</span><br><span class="line">    .set_body([](TVMArgs args, TVMRetValue* rv) &#123;</span><br><span class="line">  *rv = relu&lt;<span class="keyword">float</span>&gt;(args[<span class="number">0</span>]);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，<code>set_body</code> 等注册接口可以接收普通函数，也可以接收 Lambda 表达式 <cite>cpp_lambda</cite>，如上所示的例子接收的就是 Lambda 表达式。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们对 <code>TVM_REGISTER_GLOBAL</code> 宏定义进行分析。这个宏是在 <code>include/tvm/runtime/registry.h</code> <cite>tvmsrc_registry_h</cite> 中定义的。如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TVM_REGISTER_GLOBAL(OpName) \</span></span><br><span class="line">  TVM_STR_CONCAT(TVM_FUNC_REG_VAR_DEF, __COUNTER__) = ::tvm::runtime::Registry::Register(OpName)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 辅助 macro</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TVM_ATTRIBUTE_UNUSED __attribute__((unused))</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TVM_FUNC_REG_VAR_DEF static TVM_ATTRIBUTE_UNUSED ::tvm::runtime::Registry&amp; __mk_##TVM</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TVM_STR_CONCAT_(__x, __y) __x##__y</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TVM_STR_CONCAT(__x, __y) TVM_STR_CONCAT_(__x, __y)</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以发现，<code>TVM_REGISTER_GLOBAL</code> 实际上就是基于它接收的参数 <code>OpName</code>，在调用宏的位置定义了一个 <code>static</code> 的引用变量，引用到注册机内部 <code>new</code> 出来的一个新的 <code>Registry</code> 对象。上面的代码中使用到了 <code>__COUNTER</code> 编译器扩展宏，GCC 的文档里对该宏的描述如下所示:
+
+  <div class="theorm_prove">
+  This macro expands to sequential integral values starting from 0. In conjunction with the ## operator, this provides a convenient means to generate unique identifiers. Care must be taken to ensure that __COUNTER__ is not expanded prior to inclusion of precompiled headers which use it. Otherwise, the precompiled headers will not be used.  
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;将上面的宏进行展开，实际上就是在调用宏的地方，运行了这么一句代码:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> TVM_ATTRIBUTE_UNUSED \</span><br><span class="line">  ::tvm::runtime::Registry&amp; __mk_##TVM[编译器扩展宏 __COUNTER__] =</span><br><span class="line">  ::tvm::runtime::Registry::Register(OpName);</span><br></pre></td></tr></table></figure>
+  <h4 class="title"><code>Registry</code> 类</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们对 <code>Registry</code> 这个关键的类进行分析，它是在 <code>include/tvm/runtime/registry.h</code> <cite>tvmsrc_registry_h</cite> 中被定义的，这个类的每一个实例代表着被注册的每一个函数。<code>Registry</code> 有一个友元结构体 <code>Manager</code>，它用于存储全局所有的 <code>Registry</code> 实例。我们首先对它进行分析，下面是它在 <code>src/runtime/registry.cc</code> <cite>tvmsrc_registry_cc</cite> 中的具体定义:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Registry</span>:</span>:Manager &#123;</span><br><span class="line">  <span class="comment">// map storing the functions.</span></span><br><span class="line">  <span class="comment">// We deliberately used raw pointer.</span></span><br><span class="line">  <span class="comment">// This is because PackedFunc can contain callbacks into the host language (Python) and the</span></span><br><span class="line">  <span class="comment">// resource can become invalid because of indeterministic order of destruction and forking.</span></span><br><span class="line">  <span class="comment">// The resources will only be recycled during program exit.</span></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">unordered_map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, Registry*&gt; fmap;</span><br><span class="line">  <span class="comment">// mutex</span></span><br><span class="line">  <span class="built_in">std</span>::mutex mutex;</span><br><span class="line"></span><br><span class="line">  Manager() &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">static</span> Manager* <span class="title">Global</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// We deliberately leak the Manager instance, to avoid leak sanitizers</span></span><br><span class="line">    <span class="comment">// complaining about the entries in Manager::fmap being leaked at program</span></span><br><span class="line">    <span class="comment">// exit.</span></span><br><span class="line">    <span class="keyword">static</span> Manager* inst = <span class="keyword">new</span> Manager();</span><br><span class="line">    <span class="keyword">return</span> inst;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;从上面定义的 <code>Global</code> 函数可以发现，友元结构体 <code>Manager</code> 实际上是一种单例的设计模式 <cite>cpp_single_instance</cite>，因为被声明为 <code>static</code> 的局部变量只会在第一次被访问的时候被初始化 <cite>cpp_new_static_local</cite>，上面 <code>Global</code> 函数中的 <code>inst</code> 就是这样一种变量。全局的其他函数可以通过结构体 <code>Manager</code> 的 <code>Global</code> 函数访问到全局唯一的一个 <code>Manager</code> 实例。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，我们还可以发现 <code>Manager</code> 使用的是 <code>std::unordered_map</code> 来存储注册的信息，注册的对象是 <code>Registry</code> 指针。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后我们来到了 <code>Register</code> 这个类，这个类是在 <code>include/tvm/runtime/registry.h</code> <cite>tvmsrc_registry_h</cite> 中被定义的。相关定义摘抄如下:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Registry</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function">Registry&amp; <span class="title">set_body</span><span class="params">(PackedFunc f)</span></span>;</span><br><span class="line">  <span class="function">Registry&amp; <span class="title">set_body_typed</span><span class="params">(FLambda f)</span></span>;</span><br><span class="line">  <span class="function">Registry&amp; <span class="title">set_body_method</span><span class="params">(R (T::*f)(Args...))</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">static</span> Registry&amp; <span class="title">Register</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; name)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">const</span> PackedFunc* <span class="title">Get</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; name)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="built_in">std</span>::<span class="built_in">vector</span> <span class="title">ListNames</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">string</span> name_;</span><br><span class="line">  PackedFunc func_;</span><br><span class="line">  <span class="keyword">friend</span> <span class="class"><span class="keyword">struct</span> <span class="title">Manager</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面进行分析:
+
+  <ul>
+  <!-- 第一点 -->
+  <li>
+  首先 <code>Registry</code> 类首先提供了若干个 <code>set_body</code> 注册接口，这些接口将会基于用户传入的 <code>PackedFunc</code> 初始化 <code>Registry</code> 实例，具体定义代码如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// include/tvm/runtime/registry.h</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Registry</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="comment">/*!</span></span><br><span class="line"><span class="comment">  * \brief set the body of the function to be f</span></span><br><span class="line"><span class="comment">  * \param f The body of the function.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="function">TVM_DLL Registry&amp; <span class="title">set_body</span><span class="params">(PackedFunc f)</span></span>;  <span class="comment">// NOLINT(*)</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">/*!</span></span><br><span class="line"><span class="comment">  * \brief set the body of the function to be f</span></span><br><span class="line"><span class="comment">  * \param f The body of the function.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TCallable,</span><br><span class="line">            <span class="keyword">typename</span> = <span class="keyword">typename</span> <span class="built_in">std</span>::<span class="keyword">enable_if_t</span>&lt;</span><br><span class="line">                <span class="built_in">std</span>::is_convertible&lt;TCallable, <span class="built_in">std</span>::function&lt;<span class="keyword">void</span>(TVMArgs, TVMRetValue*)&gt;&gt;::value &amp;&amp;</span><br><span class="line">                !<span class="built_in">std</span>::is_base_of&lt;PackedFunc, TCallable&gt;::value&gt;&gt;</span><br><span class="line">  Registry&amp; set_body(TCallable f) &#123;  <span class="comment">// NOLINT(*)</span></span><br><span class="line">    <span class="keyword">return</span> set_body(PackedFunc(f));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">  <span class="comment">/*! \brief internal packed function */</span></span><br><span class="line">  PackedFunc func_;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// include/tvm/runtime/registry.cc</span></span><br><span class="line"><span class="function">Registry&amp; <span class="title">Registry::set_body</span><span class="params">(PackedFunc f)</span> </span>&#123;  <span class="comment">// NOLINT(*)</span></span><br><span class="line">  func_ = f;</span><br><span class="line">  <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以发现 <code>set_body</code> 等接口实际上就是把用户传入的函数存储到了 <code>Registry</code> 的私有变量 <code>func_</code> 中。
+  </li>
+
+  <!-- 第二点 -->
+  <li>
+  <code>Registry</code> 类还提供了用于创建 <code>Registry</code> 对象的 <code>Register</code> 静态接口，这个接口具体是在 <code>tvm/src/runtime/registry.cc</code> <cite>tvmsrc_registry_cc</cite> 中被定义的，具体代码如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Registry&amp; <span class="title">Registry::Register</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; name, <span class="keyword">bool</span> can_override)</span> </span>&#123;  <span class="comment">// NOLINT(*)</span></span><br><span class="line">  Manager* m = Manager::Global();</span><br><span class="line">  <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lock</span><span class="params">(m-&gt;mutex)</span></span>;</span><br><span class="line">  <span class="keyword">if</span> (m-&gt;fmap.count(name)) &#123;</span><br><span class="line">    ICHECK(can_override) &lt;&lt; <span class="string">&quot;Global PackedFunc &quot;</span> &lt;&lt; name &lt;&lt; <span class="string">&quot; is already registered&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Registry* r = <span class="keyword">new</span> Registry();</span><br><span class="line">  r-&gt;name_ = name;</span><br><span class="line">  m-&gt;fmap[name] = r;</span><br><span class="line">  <span class="keyword">return</span> *r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以发现 <code>Register</code> 函数实际上就是实例化出了一个 <code>Registry</code> 对象，并且将它存储在我们上面介绍的全局唯一的 <code>Manager</code> 的 <code>std::unordered_map</code> 中。
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这里穿插一句题外话，我们从上面 <code>Registry</code> 和 <code>Manager</code> 的代码中可以发现，TVM prefer 使用静态类成员函数来实例化一个类对象，<code>Registry</code> 使用 <code>Register</code> 函数; <code>Manager</code> 使用 <code>Global</code> 函数，这样子写的好处是可以将类对象的初始化逻辑包括在类的相关定义中，给外界提供一个更加简洁的接口。
+  </div>
+  </li>
+
+  <!-- 第三点 -->
+  <li>
+  <code>Registry</code> 还提供了一个根据名称来获取注册函数的接口 <code>Get</code>，这个接口具体是在 <code>tvm/src/runtime/registry.cc</code> <cite>tvmsrc_registry_cc</cite> 中被定义的，具体代码如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">const</span> PackedFunc* <span class="title">Registry::Get</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; name)</span> </span>&#123;</span><br><span class="line">  Manager* m = Manager::Global();</span><br><span class="line">  <span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lock</span><span class="params">(m-&gt;mutex)</span></span>;</span><br><span class="line">  <span class="keyword">auto</span> it = m-&gt;fmap.find(name);</span><br><span class="line">  <span class="keyword">if</span> (it == m-&gt;fmap.end()) <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">  <span class="keyword">return</span> &amp;(it-&gt;second-&gt;func_);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这个接口代码比较简单，不再过多赘述。
+  </li>
+  </ul>
+
+
+  <h3 class="title">Python 的加载和调用细节</h3>
+
+  <div class="img" title="Python 程序对动态链接库函数接口的封装和调用链">
+    <img src="./pic/full_chain.png" width="100%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在理解了 <code>PackedFunc</code> 和 <code>Registry</code> 后，现在让我们来看 Python 程序是如何调用 C++ 函数接口的。
+
+  <h4 class="title">C++ 侧暴露的函数接口</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们上面看到了，所有的在 C++ 端定义的函数实际上都会存储在全局唯一的 <code>Manager</code> 下的 <code>std::unordered_map</code> 中存储的各个 <code>Registry</code> 对象实例中。基于这层结构，在 <code>tvm/include/tvm/runtime/c_runtime_api.h</code> <cite>tvmsrc_c_runtime_api_h</cite> 中，TVM 定义了动态链接库侧暴露给 Python 程序的接口。代码摘抄如下:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> &#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*!</span></span><br><span class="line"><span class="comment">* \brief List all the globally registered function name</span></span><br><span class="line"><span class="comment">* \param out_size The number of functions</span></span><br><span class="line"><span class="comment">* \param out_array The array of function names.</span></span><br><span class="line"><span class="comment">* \return 0 when success, nonzero when failure happens</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function">TVM_DLL <span class="keyword">int</span> <span class="title">TVMFuncListGlobalNames</span><span class="params">(<span class="keyword">int</span>* out_size, <span class="keyword">const</span> <span class="keyword">char</span>*** out_array)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*!</span></span><br><span class="line"><span class="comment">* \brief Get a global function.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* \param name The name of the function.</span></span><br><span class="line"><span class="comment">* \param out the result function pointer, NULL if it does not exist.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* \note The function handle of global function is managed by TVM runtime,</span></span><br><span class="line"><span class="comment">*  So TVMFuncFree is should not be called when it get deleted.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function">TVM_DLL <span class="keyword">int</span> <span class="title">TVMFuncGetGlobal</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* name, TVMFunctionHandle* out)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*!</span></span><br><span class="line"><span class="comment">* \brief Call a Packed TVM Function.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* \param func node handle of the function.</span></span><br><span class="line"><span class="comment">* \param arg_values The arguments</span></span><br><span class="line"><span class="comment">* \param type_codes The type codes of the arguments</span></span><br><span class="line"><span class="comment">* \param num_args Number of arguments.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* \param ret_val The return value.</span></span><br><span class="line"><span class="comment">* \param ret_type_code the type code of return value.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* \return 0 when success, nonzero when failure happens</span></span><br><span class="line"><span class="comment">* \note TVM calls always exchanges with type bits=64, lanes=1</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* \note API calls always exchanges with type bits=64, lanes=1</span></span><br><span class="line"><span class="comment">*   If API call returns container handles (e.g. FunctionHandle)</span></span><br><span class="line"><span class="comment">*   these handles should be managed by the front-end.</span></span><br><span class="line"><span class="comment">*   The front-end need to call free function (e.g. TVMFuncFree)</span></span><br><span class="line"><span class="comment">*   to free these handles.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function">TVM_DLL <span class="keyword">int</span> <span class="title">TVMFuncCall</span><span class="params">(TVMFunctionHandle func, TVMValue* arg_values, <span class="keyword">int</span>* type_codes, <span class="keyword">int</span> num_args,</span></span></span><br><span class="line"><span class="function"><span class="params">                        TVMValue* ret_val, <span class="keyword">int</span>* ret_type_code)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></span><br><span class="line">&#125;  <span class="comment">// TVM_EXTERN_C</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上面的代码中，首先，对于动态链接库提供的 API，需要使用符合 C 语言编译和链接约定的 API，因为 Python 的 <code>ctype</code> 只和 C 兼容，而 C++ 编译器会对函数和变量名进行 name mangling，所以需要使用 <code>__cplusplus</code> 宏和 <code>extern "C"</code> 来得到符合 <code>C</code> 语言编译和链接约定的 API。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其次，我们观察到上面的三个接口都是用了 <code>TVM_DLL</code> 加以修饰。<code>TVM_DLL</code> 的定义如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TVM_DLL __attribute__((visibility(<span class="meta-string">&quot;default&quot;</span>)))</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Linux 的动态链接文件 (.so) 来说，GCC 的 <code>visibility</code> 属性可以控制共享库文件导出的符号。当我们为某个函数、变量、模板或者 C++ 类声明加上 <code>__attribute__((visibility("default")))</code> 的编译属性，并且在编译该动态链接库的时候基于 <code>-fvisibility=hidden</code> 参数进行编译时，形成的动态链接文件的动态链接表中就只会包含附带该属性的函数、变量、模板或者 C++ 类 <cite>gcc_attribute_visibility</cite>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此，回到 TVM 的代码中，使用 <code>TVM_DLL</code> 宏进行修饰的函数接口将会被最终呈现在动态链接表中，可以被 Python 程序所使用。
+
+  <h4 class="title">Python 侧加载动态链接库</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TVM 的 Python 代码从 <code>python/tvm/__init__.py</code> <cite>tvmsrc_python_init_py</cite> 中开始真正执行:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ._ffi.base <span class="keyword">import</span> TVMError, __version__, _RUNTIME_ONLY</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在运行到这行代码时，参考我的另一篇博客 <a href="/sec_learning/Tech_Program/Python_Circular_Import/index.html">Python 循环 Import (Circular Import) 陷阱原理</a>，此时 Python 解释器将会执行 <code>python/tvm/_ffi/__init__.py</code> <cite>tvmsrc_python_ffi_init_py</cite>:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> _pyversion</span><br><span class="line"><span class="keyword">from</span> .base <span class="keyword">import</span> register_error</span><br><span class="line"><span class="keyword">from</span> .registry <span class="keyword">import</span> register_object, register_func, register_extension</span><br><span class="line"><span class="keyword">from</span> .registry <span class="keyword">import</span> _init_api, get_global_func</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面的第一句，又会导致 <code>python/tvm/_ffi/base.py</code> <cite>tvmsrc_python_ffi_base_py</cite> 中的下面代码被执行：
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_load_lib</span>():</span></span><br><span class="line">  <span class="string">&quot;&quot;&quot;Load libary by searching possible path.&quot;&quot;&quot;</span></span><br><span class="line">  lib_path = libinfo.find_lib_path()</span><br><span class="line">  <span class="comment"># The dll search path need to be added explicitly in</span></span><br><span class="line">  <span class="comment"># windows after python 3.8</span></span><br><span class="line">  <span class="keyword">if</span> sys.platform.startswith(<span class="string">&quot;win32&quot;</span>) <span class="keyword">and</span> sys.version_info &gt;= (<span class="number">3</span>, <span class="number">8</span>):</span><br><span class="line">      <span class="keyword">for</span> path <span class="keyword">in</span> libinfo.get_dll_directories():</span><br><span class="line">          os.add_dll_directory(path)</span><br><span class="line">  lib = ctypes.CDLL(lib_path[<span class="number">0</span>], ctypes.RTLD_GLOBAL)</span><br><span class="line">  lib.TVMGetLastError.restype = ctypes.c_char_p</span><br><span class="line">  <span class="keyword">return</span> lib, os.path.basename(lib_path[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">_LIB, _LIB_NAME = _load_lib()</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;此时，Python 运行时将可以获得 <code>_LIB</code> 和 <code>_LIB_NAME</code> 两个变量。其中，<code>_LIB</code> 可以理解为动态链接库在 Python 侧的操作句柄，<code>_LIB_NAME</code> 则是 <code>"libtvm.so"</code> 这个字符串，代表着动态链接库的名字。后续在 Python 中，TVM 将通过 <code>_LIB</code> 这个桥梁不断地和 C++ 的部分进行交互。
+
+  <h4 class="title">Python 侧关联 C++ 侧的 <code>PackedFunc</code></h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在有了 <code>_LIB</code> 这个 Python 和动态链接库之间的桥梁后，现在让我们来看 Python 侧是如何基于动态链接库暴露出来的接口拿到 TVM 使用 <code>PackedFunc</code> 封装的函数的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Python 中获取 TVM C++ 使用 <code>PackedFunc</code> 封装的 API 的底层函数是 <code>_get_global_func</code>，它是在 <code>python/tvm/_ffi/_ctypes/packed_func.py</code> <cite>tvmsrc_python_ffi_packed_func_py</cite> 中定义的，具体定义如下:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_get_global_func</span>(<span class="params">name, allow_missing=<span class="literal">False</span></span>):</span></span><br><span class="line">  handle = PackedFuncHandle()</span><br><span class="line">  check_call(_LIB.TVMFuncGetGlobal(c_str(name), ctypes.byref(handle)))</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> handle.value:</span><br><span class="line">      <span class="keyword">return</span> _make_packed_func(handle, <span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> allow_missing:</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">raise</span> ValueError(<span class="string">&quot;Cannot find global function %s&quot;</span> % name)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;从上面的代码可以发现，Python 侧的 <code>_get_global_func</code> 函数实际上调用了动态链接库暴露的 <code>TVMFuncGetGlobal</code> 接口。下面是 C++ 侧关于 <code>TVMFuncGetGlobal</code> 接口的实现，这部分代码位于 <code>src/runtime/registry.cc</code> <cite>tvmsrc_registry_cc</cite> 中:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">TVMFuncGetGlobal</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* name, TVMFunctionHandle* out)</span> </span>&#123;</span><br><span class="line">  API_BEGIN();</span><br><span class="line">  <span class="keyword">const</span> tvm::runtime::PackedFunc* fp = tvm::runtime::Registry::Get(name);</span><br><span class="line">  <span class="keyword">if</span> (fp != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">    tvm::runtime::TVMRetValue ret;</span><br><span class="line">    ret = *fp;</span><br><span class="line">    TVMValue val;</span><br><span class="line">    <span class="keyword">int</span> type_code;</span><br><span class="line">    ret.MoveToCHost(&amp;val, &amp;type_code);</span><br><span class="line">    *out = val.v_handle;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    *out = <span class="literal">nullptr</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  API_END();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以发现 <code>TVMFuncGetGlobal</code> 接口实际上就是调用了我们上面介绍过的 <code>Registry</code> 的 <code>Get</code> 接口，来根据给出的 API 名称获得对应的 <code>PackedFunc*</code> 函数指针。如果无法基于给定的名称找到对应的函数，则返回空指针。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到 Python 侧，在调用 <code>_LIB.TVMFuncGetGlobal</code> 获取函数指针后，函数指针被保存在了 <code>handle</code> 变量中。我们可以看到 Python 侧随后调用了 <code>_make_packed_func</code> API 来在 Python 侧创建一个 Python 侧的函数封装对象。<code>_make_packed_func</code> 是在 <code>python/tvm/_ffi/_ctypes/packed_func.py</code> <cite>tvmsrc_python_ffi_packed_func_py</cite> 中定义的，具体如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_make_packed_func</span>(<span class="params">handle, is_global</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;Make a packed function class&quot;&quot;&quot;</span></span><br><span class="line">    obj = _CLASS_PACKED_FUNC.__new__(_CLASS_PACKED_FUNC)</span><br><span class="line">    obj.is_global = is_global</span><br><span class="line">    obj.handle = handle</span><br><span class="line">    <span class="keyword">return</span> obj</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以看见 <code>_make_packed_func</code> 接口基于传入的 <code>handle</code> 参数，初始化了一个 <code>PackedFunc</code> 类实例，这是一个空实现的类，在 <code>python/tvm/runtime/packed_func.py</code> <cite>tvmsrc_python_runtime_packed_func_py</cite> 中予以实现，其继承自 <code>PackedFuncBase</code> 类，后者是在 <code>python/tvm/_ffi/_ctypes/packed_func.py</code> <cite>tvmsrc_python_ffi_ctypes_packed_func_py</cite> 中被定义的。
+
+  <h4 class="title">Python 侧调用 C++ 侧的 <code>PackedFunc</code></h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当 Python 侧想要调用动态链接库里的函数时，其是通过调用 <code>PackedFunc</code> 类实现的，调用 <code>PackedFunc</code> 类间接调用了 <code>PackedFuncBase</code> 父类，后者中实现了一个 <code>__cal__</code> 方法以供调用，如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PackedFuncBase</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__call__</span>(<span class="params">self, *args</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;Call the function with positional arguments</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    args : list</span></span><br><span class="line"><span class="string">      The positional arguments to the function call.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    temp_args = []</span><br><span class="line">    values, tcodes, num_args = _make_tvm_args(args, temp_args)</span><br><span class="line">    ret_val = TVMValue()</span><br><span class="line">    ret_tcode = ctypes.c_int()</span><br><span class="line">    <span class="keyword">if</span> (</span><br><span class="line">        _LIB.TVMFuncCall(</span><br><span class="line">            self.handle,</span><br><span class="line">            values,</span><br><span class="line">            tcodes,</span><br><span class="line">            ctypes.c_int(num_args),</span><br><span class="line">            ctypes.byref(ret_val),</span><br><span class="line">            ctypes.byref(ret_tcode),</span><br><span class="line">        )</span><br><span class="line">        != <span class="number">0</span></span><br><span class="line">    ):</span><br><span class="line">        <span class="keyword">raise</span> get_last_ffi_error()</span><br><span class="line">    _ = temp_args</span><br><span class="line">    _ = args</span><br><span class="line">    <span class="keyword">return</span> RETURN_SWITCH[ret_tcode.value](ret_val)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;从上面可以看出，<code>__call__</code> 函数调用了 C++ 侧的 <code>TVMFuncCall</code> 这个 API，把前面保存有 C++ <code>PackedFunc</code> 对象地址的 <code>handle</code> 以及相关的函数参数传了进去。在 C++ 侧，<code>TVMFuncCall</code> 是在 <code>src/runtime/c_runtime_api.cc</code> <cite>tvmsrc_src_runtime_c_runtime_api_cc</cite> 中定义的，其完成了对函数的调用，以及函数返回值的处理，主体代码如下:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">TVMFuncCall</span><span class="params">(TVMFunctionHandle func, TVMValue* args, <span class="keyword">int</span>* arg_type_codes, <span class="keyword">int</span> num_args,</span></span></span><br><span class="line"><span class="function"><span class="params">                TVMValue* ret_val, <span class="keyword">int</span>* ret_type_code)</span> </span>&#123;</span><br><span class="line">  API_BEGIN();</span><br><span class="line"></span><br><span class="line">  TVMRetValue rv;</span><br><span class="line">  (<span class="keyword">static_cast</span>&lt;<span class="keyword">const</span> PackedFuncObj*&gt;(func))</span><br><span class="line">      -&gt;CallPacked(TVMArgs(args, arg_type_codes, num_args), &amp;rv);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// handle return string.</span></span><br><span class="line">  <span class="keyword">if</span> (rv.type_code() == kTVMStr || rv.type_code() == kTVMDataType || rv.type_code() == kTVMBytes) &#123;</span><br><span class="line">    TVMRuntimeEntry* e = TVMAPIRuntimeStore::Get();</span><br><span class="line">    <span class="keyword">if</span> (rv.type_code() != kTVMDataType) &#123;</span><br><span class="line">      e-&gt;ret_str = *rv.ptr&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt;();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      e-&gt;ret_str = rv.<span class="keyword">operator</span> <span class="built_in">std</span>::<span class="built_in">string</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (rv.type_code() == kTVMBytes) &#123;</span><br><span class="line">      e-&gt;ret_bytes.data = e-&gt;ret_str.c_str();</span><br><span class="line">      e-&gt;ret_bytes.size = e-&gt;ret_str.length();</span><br><span class="line">      *ret_type_code = kTVMBytes;</span><br><span class="line">      ret_val-&gt;v_handle = &amp;(e-&gt;ret_bytes);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      *ret_type_code = kTVMStr;</span><br><span class="line">      ret_val-&gt;v_str = e-&gt;ret_str.c_str();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    rv.MoveToCHost(ret_val, ret_type_code);</span><br><span class="line">  &#125;</span><br><span class="line">  API_END();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <h4 class="title">将动态链接库定义的函数接口关联到各个 Python 模块</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面我们分析了 Python 程序如何检索和调用动态链接库中提供的函数接口，最后让我们来看动态链接库中的函数接口如何被绑定到各个 Python 模块上去的。这里的 "绑定" 指的是在完成动态链接库构建，以及 Python 和动态链接库之间实现可访问之后，使用 Python 模块的函数实现对底层动态链接库函数接口的封装。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先让我们来看位于 <code>python/tvm/_ffi/registry.py</code> <cite>tvmsrc_python_ffi_registry_py</cite> 中的函数 <code>_init_api</code> 和 <code>_init_api_prefix</code> 函数，这是实现模块绑定的两个关键 API。
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_init_api</span>(<span class="params">namespace, target_module_name=<span class="literal">None</span></span>):</span></span><br><span class="line">  <span class="string">&quot;&quot;&quot;Initialize api for a given module name</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  namespace : str</span></span><br><span class="line"><span class="string">     The namespace of the source registry</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  target_module_name : str</span></span><br><span class="line"><span class="string">     The target module name if different from namespace</span></span><br><span class="line"><span class="string">  &quot;&quot;&quot;</span></span><br><span class="line">  target_module_name = target_module_name <span class="keyword">if</span> target_module_name <span class="keyword">else</span> namespace</span><br><span class="line">  <span class="keyword">if</span> namespace.startswith(<span class="string">&quot;tvm.&quot;</span>):</span><br><span class="line">      _init_api_prefix(target_module_name, namespace[<span class="number">4</span>:])</span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">      _init_api_prefix(target_module_name, namespace)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_init_api_prefix</span>(<span class="params">module_name, prefix</span>):</span></span><br><span class="line">  module = sys.modules[module_name]</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> name <span class="keyword">in</span> list_global_func_names():</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">not</span> name.startswith(prefix):</span><br><span class="line">          <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">      fname = name[<span class="built_in">len</span>(prefix) + <span class="number">1</span> :]</span><br><span class="line">      target_module = module</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> fname.find(<span class="string">&quot;.&quot;</span>) != -<span class="number">1</span>:</span><br><span class="line">          <span class="keyword">continue</span></span><br><span class="line">      f = get_global_func(name)</span><br><span class="line">      ff = _get_api(f)</span><br><span class="line">      ff.__name__ = fname</span><br><span class="line">      ff.__doc__ = <span class="string">&quot;TVM PackedFunc %s. &quot;</span> % fname</span><br><span class="line">      <span class="built_in">setattr</span>(target_module, ff.__name__, ff)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;从函数的定义可以看出，<code>_init_api</code> 实际上是 <code>_init_api_prefix</code> 的一个 wrapper，我们直接对后者进行分析。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;后者调用 <code>sys.modules</code> 列表获取指定 Python 模块名的 Python 模块，然后调用 <code>list_global_func_names</code> 函数获取所有的在动态链接库中的 API，然后基于传入的名称前缀 (prefix) 对这些 API 进行过滤，对于符合前缀的 API 名称，就使用我们上面介绍过的 <code>_get_global_func</code> 函数获得封装有动态链接库函数指针的 <code>PackedFunc</code> 实例 (p.s. 上面代码中使用的 <code>get_global_func</code> 是对 <code>_get_global_func</code> 的直接封装)，然后调用 <code>setattr</code> 函数 <cite>runoob_python_setattr</cite> 将这个实例绑定到指定的模块下。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上面介绍的 <code>_init_api</code> 函数，TVM 在 Python 程序的一些模块中对 <code>_init_api</code> 进行了调用，就完成了这些模块和动态链接库中的函数接口之间的关联。代码中的几处示例如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># python/tvm/runtime/_ffi_api.py</span></span><br><span class="line">tvm._ffi._init_api(<span class="string">&quot;runtime&quot;</span>, __name__)</span><br><span class="line"></span><br><span class="line"><span class="comment"># python/tvm/relay/op/op.py</span></span><br><span class="line">tvm._ffi._init_api(<span class="string">&quot;relay.op&quot;</span>, __name__)</span><br><span class="line"></span><br><span class="line"><span class="comment"># python/tvm/relay/backend/_backend.py</span></span><br><span class="line">tvm._ffi._init_api(<span class="string">&quot;relay.backend&quot;</span>, __name__)</span><br></pre></td></tr></table></figure>
+  <h4 class="title">Python 关联 C++ 函数接口例子</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们以 TVM 中求绝对值的函数 <code>abs</code> 为例，这个函数实现在 <code>tir</code> 模块，函数的功能很简单，不会造成额外的理解负担，我们只关注从 Python 调用是怎么映射到 C++ 中的，先看在 C++ 中 <code>abs</code> 函数的定义和注册:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/tir/op/op.cc</span></span><br><span class="line"><span class="comment">// 函数定义</span></span><br><span class="line"><span class="function">PrimExpr <span class="title">abs</span><span class="params">(PrimExpr x, Span span)</span> </span>&#123; ... &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数注册</span></span><br><span class="line">TVM_REGISTER_GLOBAL(<span class="string">&quot;tir.abs&quot;</span>).set_body_typed(tvm::<span class="built_in">abs</span>);</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;再看 Python 端对动态链接库中该函数接口的封装过程:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># python/tvm/tir/_ffi_api.py</span></span><br><span class="line"><span class="comment"># 把c++ tir中注册的函数以python PackedFunc</span></span><br><span class="line"><span class="comment"># 对象的形式关联到了_ffi_api这个模块</span></span><br><span class="line">tvm._ffi._init_api(<span class="string">&quot;tir&quot;</span>, __name__)</span><br><span class="line"></span><br><span class="line"><span class="comment"># python/tvm/tir/op.py</span></span><br><span class="line"><span class="comment"># 定义了abs的python函数，其实内部调用了前面</span></span><br><span class="line"><span class="comment"># 关联到_ffi_api这个模块的python PackedFunc对象</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">abs</span>(<span class="params">x, span=<span class="literal">None</span></span>):</span></span><br><span class="line">    <span class="keyword">return</span> _ffi_api.<span class="built_in">abs</span>(x, span)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完成封装后，用户就可以基于 <code>tir</code> 这个 Python 模块实现对动态链接库中的函数接口的调用:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tvm</span><br><span class="line"><span class="keyword">from</span> tvm <span class="keyword">import</span> tir</span><br><span class="line"></span><br><span class="line">rlt = tir.<span class="built_in">abs</span>(-<span class="number">100</span>)</span><br><span class="line">print(<span class="string">&quot;abs(-100) = %d&quot;</span> % (rlt)</span><br></pre></td></tr></table></figure>
+</div> 
+
+<h2 class="title">DGL FFI 机制</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+
+
+<!--图片、引用-->
+<!-- 
+<div class="img" title="img title" label="img_label" source="url">
+  <img src="" height="" />
+</div>
+
+<imaging>img_label</imaging>
+-->
+
+<!--等式、引用-->
+<!-- 
+<div class="equation" label="equation_label">
+</div>
+
+<equation>equation_label</equation>
+-->
+
+<!--定理、引用、证明-->
+<!-- 
+<div class="theorm" label="theorm_label">
+</div>
+
+<theorm>theorm_label</theorm>
+
+<div class="theorm_prove">
+</div>
+-->
+
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Algorithm/">ALGORITHM</a></li>
+          <li>GNN_DGL_PYTHON_CPP_CALLING</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
