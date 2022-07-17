@@ -32,8 +32,8 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/pic/registry_arch.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/pic/full_chain.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/pic/xxx.png">
-<meta property="article:published_time" content="2022-07-17T13:54:28.663Z">
-<meta property="article:modified_time" content="2022-07-17T13:54:28.663Z">
+<meta property="article:published_time" content="2022-07-17T16:05:59.437Z">
+<meta property="article:modified_time" content="2022-07-17T16:05:59.437Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -568,7 +568,20 @@
 <h2 class="title">DGL FFI 机制</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;在理解了 TVM 的 FFI 机制后，我们来到 DGL 的代码，会发现基本上框架是一样的。举个例子来说，比如创建一个异构图的结构，DGL 在 <code>src/graph/heterograph_capi.cc</code> <cite>dglsrc_src_graph_heterograph_capi_cc</cite> 中有如下的实现:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">DGL_REGISTER_GLOBAL(<span class="string">&quot;heterograph_index._CAPI_DGLHeteroCreateUnitGraphFromCOO&quot;</span>)</span><br><span class="line">.set_body([] (DGLArgs args, DGLRetValue* rv) &#123;</span><br><span class="line">    <span class="keyword">int64_t</span> nvtypes = args[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">int64_t</span> num_src = args[<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">int64_t</span> num_dst = args[<span class="number">2</span>];</span><br><span class="line">    IdArray row = args[<span class="number">3</span>];</span><br><span class="line">    IdArray col = args[<span class="number">4</span>];</span><br><span class="line">    List&lt;Value&gt; formats = args[<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">bool</span> row_sorted = args[<span class="number">6</span>];</span><br><span class="line">    <span class="keyword">bool</span> col_sorted = args[<span class="number">7</span>];</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;SparseFormat&gt; formats_vec;</span><br><span class="line">    <span class="keyword">for</span> (Value val : formats) &#123;</span><br><span class="line">      <span class="built_in">std</span>::<span class="built_in">string</span> fmt = val-&gt;data;</span><br><span class="line">      formats_vec.push_back(ParseSparseFormat(fmt));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">auto</span> code = SparseFormatsToCode(formats_vec);</span><br><span class="line">    <span class="keyword">auto</span> hgptr = CreateFromCOO(nvtypes, num_src, num_dst, row, col,</span><br><span class="line">        row_sorted, col_sorted, code);</span><br><span class="line">    *rv = HeteroGraphRef(hgptr);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同样是通过调用宏 <code>DGL_REGISTER_GLOBAL</code> 注册的方式，DGL 将函数注册进了注册机中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Python 侧，在 <code>python/dgl/heterograph_index.py</code> <cite>dglsrc_python_dgl_heterograph_index_py</cite> 中，通过调用 <code>_init_api</code> 的方式，将动态链接库中的函数接口绑定到了 <code>heterograph_index</code> 模块中:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># python/dgl/heterograph_index.py</span></span><br><span class="line">_init_api(<span class="string">&quot;dgl.heterograph_index&quot;</span>)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这样一来，在这个模块中的代码就可以直接使用 C++ 函数接口了:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># python/dgl/heterograph_index.py</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_unitgraph_from_coo</span>(<span class="params">num_ntypes, num_src, num_dst, row, col,</span></span></span><br><span class="line"><span class="function"><span class="params">                              formats, row_sorted=<span class="literal">False</span>, col_sorted=<span class="literal">False</span></span>):</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(formats, <span class="built_in">str</span>):</span><br><span class="line">        formats = [formats]</span><br><span class="line">    <span class="keyword">return</span> _CAPI_DGLHeteroCreateUnitGraphFromCOO(</span><br><span class="line">        <span class="built_in">int</span>(num_ntypes), <span class="built_in">int</span>(num_src), <span class="built_in">int</span>(num_dst),</span><br><span class="line">        F.to_dgl_nd(row), F.to_dgl_nd(col),</span><br><span class="line">        formats, row_sorted, col_sorted)</span><br></pre></td></tr></table></figure>
 </div>
 
 <div class="div_ref" id="ref_container"></div>
