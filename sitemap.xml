@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Compiler_Cmake_Tutorial/index.html</loc>
+    
+    <lastmod>2022-07-17</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/post_index.json</loc>
+    
+    <lastmod>2022-07-17</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Compiler_Cmake_Tutorial/ref.json</loc>
+    
+    <lastmod>2022-07-17</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/index.html</loc>
     
     <lastmod>2022-07-17</lastmod>
@@ -12,13 +33,6 @@
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/ref.json</loc>
     
     <lastmod>2022-07-17</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/post_index.json</loc>
-    
-    <lastmod>2022-07-16</lastmod>
     
   </url>
   
@@ -1024,7 +1038,7 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/GNU_attribute_keyword/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Compiler_GCC_attribute_Keyword/index.html</loc>
     
     <lastmod>2022-02-11</lastmod>
     
@@ -2293,7 +2307,7 @@
 
   <url>
     <loc>http://www.zobinhuang.com:10082/</loc>
-    <lastmod>2022-07-17</lastmod>
+    <lastmod>2022-07-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
