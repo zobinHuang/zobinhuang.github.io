@@ -74,3 +74,21 @@ img{margin-right: 20px;}
         font-size: 15px;
     }
 }
+
+origin_tag {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: #ff5353;
+    color: #FFFFFF;
+    padding: 2px 10px;
+    margin-right: 10px;
+    border-radius: 8px;
+}
+
+forward_tag {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: #9b9b9b;
+    color: #FFFFFF;
+    padding: 2px 10px;
+    margin-right: 10px;
+    border-radius: 8px;
+}

@@ -2,14 +2,140 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Compiler_Cmake_Tutorial/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_Vivado_Ubuntu_Installation/index.html</loc>
     
-    <lastmod>2022-07-17</lastmod>
+    <lastmod>2022-07-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_Vivado_Ubuntu_Installation/ref.json</loc>
+    
+    <lastmod>2022-07-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_about/index.html</loc>
+    
+    <lastmod>2022-07-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/index.html</loc>
+    
+    <lastmod>2022-07-22</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/post_index.json</loc>
+    
+    <lastmod>2022-07-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/CPP_/ref.json</loc>
+    
+    <lastmod>2022-07-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/CPP_/index.html</loc>
+    
+    <lastmod>2022-07-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/CPP_Memory_Leak_And_Smart_Pointer/ref.json</loc>
+    
+    <lastmod>2022-07-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/CPP_Memory_Leak_And_Smart_Pointer/index.html</loc>
+    
+    <lastmod>2022-07-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
+    
+    <lastmod>2022-07-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/index.html</loc>
+    
+    <lastmod>2022-07-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Memory_Management/index.html</loc>
+    
+    <lastmod>2022-07-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Memory_Management/ref.json</loc>
+    
+    <lastmod>2022-07-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/ref.json</loc>
+    
+    <lastmod>2022-07-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/post_index.json</loc>
+    
+    <lastmod>2022-07-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_FPGA_PCIe_Development/index.html</loc>
+    
+    <lastmod>2022-07-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_FPGA_PCIe_Development/ref.json</loc>
+    
+    <lastmod>2022-07-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Intro/index.html</loc>
+    
+    <lastmod>2022-07-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Intro/ref.json</loc>
+    
+    <lastmod>2022-07-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Compiler_Cmake_Tutorial/index.html</loc>
     
     <lastmod>2022-07-17</lastmod>
     
@@ -33,27 +159,6 @@
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/ref.json</loc>
     
     <lastmod>2022-07-17</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
-    
-    <lastmod>2022-07-11</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/index.html</loc>
-    
-    <lastmod>2022-07-10</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/ref.json</loc>
-    
-    <lastmod>2022-07-10</lastmod>
     
   </url>
   
@@ -201,13 +306,6 @@
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/ref.json</loc>
     
     <lastmod>2022-06-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Intro/index.html</loc>
-    
-    <lastmod>2022-05-25</lastmod>
     
   </url>
   
@@ -373,13 +471,6 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_about/index.html</loc>
-    
-    <lastmod>2022-05-09</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_26_Coloring/ref.json</loc>
     
     <lastmod>2022-05-09</lastmod>
@@ -430,13 +521,6 @@
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_5_Verilog_Language/ref.json</loc>
-    
-    <lastmod>2022-04-08</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/post_index.json</loc>
     
     <lastmod>2022-04-08</lastmod>
     
@@ -528,13 +612,6 @@
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Graph_Theory_9_Cut_Edge_Node_And_Block/index.html</loc>
-    
-    <lastmod>2022-04-02</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/index.html</loc>
     
     <lastmod>2022-04-02</lastmod>
     
@@ -1062,13 +1139,6 @@
     <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Backend_Development/Non_Archived_DDNS_with_Tencent_Cloud/ref.json</loc>
     
     <lastmod>2022-02-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Intro/ref.json</loc>
-    
-    <lastmod>2022-02-04</lastmod>
     
   </url>
   
@@ -2307,7 +2377,7 @@
 
   <url>
     <loc>http://www.zobinhuang.com:10082/</loc>
-    <lastmod>2022-07-18</lastmod>
+    <lastmod>2022-07-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

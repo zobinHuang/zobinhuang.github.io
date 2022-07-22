@@ -77,10 +77,41 @@ async function _load_catalogue(){
                             link.setAttribute('href', module.posts[k].external_link)
                         }
                         
+                        // 将标题塞入 link
                         let link_title = document.createElement('b')
                         link_title.innerHTML = module.posts[k].post_title
                         link.append(link_title)
                         table_entry_td.append(link)
+
+                        // 在 td 最前面加上 [原创/转载] 的标签
+                        if(module.posts[k].hasOwnProperty("origin")){
+                            if(module.posts[k].origin){
+                                let origin_tag = document.createElement('origin_tag')
+                                origin_tag.innerHTML = `原创`
+                                let fc = table_entry_td.firstChild
+                                table_entry_td.insertBefore(origin_tag,fc)
+                            } else {
+                                let forward_tag = document.createElement('forward_tag')
+                                forward_tag.innerHTML = `转载`
+                                let fc = table_entry_td.firstChild
+                                table_entry_td.insertBefore(forward_tag,fc)
+                            }
+                        } else {
+                            // 兼容老版本 (文章没有 origin 属性)
+                            if(module.posts[k].external_link === ""){
+                                let origin_tag = document.createElement('origin_tag')
+                                origin_tag.innerHTML = `原创`
+                                let fc = table_entry_td.firstChild
+                                table_entry_td.insertBefore(origin_tag,fc)
+                            } else {
+                                let forward_tag = document.createElement('forward_tag')
+                                forward_tag.innerHTML = `转载`
+                                let fc = table_entry_td.firstChild
+                                table_entry_td.insertBefore(forward_tag,fc)
+                            }
+                        }
+                        
+                        // 将 td 塞入 tr
                         module_table.append(table_entry_tr)
 
                         if(module.posts[k].post_brief != ""){
@@ -154,6 +185,35 @@ async function _load_catalogue(){
                         link_title.innerHTML = module.posts[k].post_title
                         link.append(link_title)
                         table_entry_td.append(link)
+
+                        // 在 td 最前面加上 [原创/转载] 的标签
+                        if(module.posts[k].hasOwnProperty("origin")){
+                            if(module.posts[k].origin){
+                                let origin_tag = document.createElement('origin_tag')
+                                origin_tag.innerHTML = `原创`
+                                let fc = table_entry_td.firstChild
+                                table_entry_td.insertBefore(origin_tag,fc)
+                            } else {
+                                let forward_tag = document.createElement('forward_tag')
+                                forward_tag.innerHTML = `转载`
+                                let fc = table_entry_td.firstChild
+                                table_entry_td.insertBefore(forward_tag,fc)
+                            }
+                        } else {
+                            // 兼容老版本 (文章没有 origin 属性)
+                            if(module.posts[k].external_link === ""){
+                                let origin_tag = document.createElement('origin_tag')
+                                origin_tag.innerHTML = `原创`
+                                let fc = table_entry_td.firstChild
+                                table_entry_td.insertBefore(origin_tag,fc)
+                            } else {
+                                let forward_tag = document.createElement('forward_tag')
+                                forward_tag.innerHTML = `转载`
+                                let fc = table_entry_td.firstChild
+                                table_entry_td.insertBefore(forward_tag,fc)
+                            }
+                        }
+
                         module_table.append(table_entry_tr)
 
                         // 创建分隔符
@@ -222,6 +282,35 @@ async function _load_catalogue(){
                         link_title.innerHTML = module.posts[k].post_title
                         link.append(link_title)
                         table_entry_td.append(link)
+
+                        // 在 td 最前面加上 [原创/转载] 的标签
+                        if(module.posts[k].hasOwnProperty("origin")){
+                            if(module.posts[k].origin){
+                                let origin_tag = document.createElement('origin_tag')
+                                origin_tag.innerHTML = `原创`
+                                let fc = table_entry_td.firstChild
+                                table_entry_td.insertBefore(origin_tag,fc)
+                            } else {
+                                let forward_tag = document.createElement('forward_tag')
+                                forward_tag.innerHTML = `转载`
+                                let fc = table_entry_td.firstChild
+                                table_entry_td.insertBefore(forward_tag,fc)
+                            }
+                        } else {
+                            // 兼容老版本 (文章没有 origin 属性)
+                            if(module.posts[k].external_link === ""){
+                                let origin_tag = document.createElement('origin_tag')
+                                origin_tag.innerHTML = `原创`
+                                let fc = table_entry_td.firstChild
+                                table_entry_td.insertBefore(origin_tag,fc)
+                            } else {
+                                let forward_tag = document.createElement('forward_tag')
+                                forward_tag.innerHTML = `转载`
+                                let fc = table_entry_td.firstChild
+                                table_entry_td.insertBefore(forward_tag,fc)
+                            }
+                        }
+
                         module_table.append(table_entry_tr)
 
                         // 创建分隔符
