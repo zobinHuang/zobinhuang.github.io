@@ -8,6 +8,8 @@ async function load_page(){
         }
     )
     
+    _load_table()
+
     _load_pic()
 
     _load_equation()
@@ -21,6 +23,60 @@ async function load_page(){
     _load_keyword()
 
     _load_citation()
+}
+
+// 处理文章中所有的表格
+async function _load_table(){
+    let table_index_list = new Array()
+    let table_containers = document.getElementsByClassName("table")
+
+    // 记录所有 table 的编号，并且在 table div 中标识 table 的序号
+    for(let i = 0; i < table_containers.length; i++){
+        // 设置 id 和 name
+        table_containers[i].setAttribute("id",`table_${i+1}`)
+        table_containers[i].setAttribute('name', `table_${table_containers[i].id}`)
+
+        // 记录 label
+        let table_label = table_containers[i].getAttribute('label')
+        table_index_list[table_label] = i+1
+
+        // 创建标号
+        let table_index = document.createElement('table_index')
+        if(!table_containers[i].title)
+            table_index.innerHTML = `Table ${i+1}`
+        else
+            table_index.innerHTML = `Table ${i+1}: ${table_containers[i].title}`
+
+        // 创建源
+        if(table_containers[i].getAttribute('source')){
+            let link = document.createElement('a')
+            link.innerHTML = '[Source]'
+            link.setAttribute('href', table_containers[i].getAttribute('source'))
+            link.setAttribute('style', 'font-size:12px; font-family:italic; margin-left:5px; color:#FF4136')
+            table_index.append(link)
+        }
+
+        // 显示标号
+        table_containers[i].append(table_index)
+    }
+
+    // 替换所有的表格引用
+    let table_refs = document.getElementsByTagName("tableref")
+    for(let i = 0; i < table_refs.length; i++){
+         // 获取 Equation 标识号
+         let selected_table_index = table_index_list[table_refs[i].innerHTML]
+
+        // 创建链接
+        let table_link = document.createElement('a')
+        table_link.setAttribute('href', `#table_${selected_table_index}`)
+
+        // 修改 tableref 的内部内容
+        table_link.innerHTML = `Table ${selected_table_index}`
+
+        // 塞入原先位置
+        table_refs[i].innerHTML = ''
+        table_refs[i].append(table_link)
+    }
 }
 
 // 处理文章中所有的图片
@@ -50,7 +106,7 @@ async function _load_pic(){
             let link = document.createElement('a')
             link.innerHTML = '[Source]'
             link.setAttribute('href', img_containers[i].getAttribute('source'))
-            link.setAttribute('style', 'font-size:5px; font-family:italic; margin-left:5px; color:#FF4136')
+            link.setAttribute('style', 'font-size:12px; font-family:italic; margin-left:5px; color:#FF4136')
             img_index.append(link)
         }
 
@@ -59,7 +115,7 @@ async function _load_pic(){
     }
 
     // 替换所有的图片引用
-    let img_refs = document.getElementsByTagName("imaging")
+    let img_refs = document.getElementsByTagName("imgref")
     for(let i = 0; i < img_refs.length; i++){
          // 获取 Equation 标识号
          let selected_img_index = img_index_list[img_refs[i].innerHTML]
@@ -68,7 +124,7 @@ async function _load_pic(){
         let img_link = document.createElement('a')
         img_link.setAttribute('href', `#image_${selected_img_index}`)
 
-        // 修改 imaging 的内部内容
+        // 修改 imgref 的内部内容
         img_link.innerHTML = `Figure ${selected_img_index}`
 
         // 塞入原先位置

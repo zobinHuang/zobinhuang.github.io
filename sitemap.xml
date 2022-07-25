@@ -2,6 +2,41 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.zobinhuang.com:10082/index.html</loc>
+    
+    <lastmod>2022-07-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Memory_Management/index.html</loc>
+    
+    <lastmod>2022-07-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Memory_Management/ref.json</loc>
+    
+    <lastmod>2022-07-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
+    
+    <lastmod>2022-07-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/index.html</loc>
+    
+    <lastmod>2022-07-22</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_Vivado_Ubuntu_Installation/index.html</loc>
     
     <lastmod>2022-07-22</lastmod>
@@ -23,72 +58,9 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/index.html</loc>
-    
-    <lastmod>2022-07-22</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/post_index.json</loc>
     
     <lastmod>2022-07-22</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/CPP_/ref.json</loc>
-    
-    <lastmod>2022-07-22</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/CPP_/index.html</loc>
-    
-    <lastmod>2022-07-22</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/CPP_Memory_Leak_And_Smart_Pointer/ref.json</loc>
-    
-    <lastmod>2022-07-22</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/CPP_Memory_Leak_And_Smart_Pointer/index.html</loc>
-    
-    <lastmod>2022-07-22</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
-    
-    <lastmod>2022-07-22</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/index.html</loc>
-    
-    <lastmod>2022-07-22</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Memory_Management/index.html</loc>
-    
-    <lastmod>2022-07-21</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Memory_Management/ref.json</loc>
-    
-    <lastmod>2022-07-21</lastmod>
     
   </url>
   
@@ -282,28 +254,28 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Info_Theory_4_Capacity/index.html</loc>
     
     <lastmod>2022-06-12</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_5_Channel_Encode/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Info_Theory_5_Channel_Encode/index.html</loc>
     
     <lastmod>2022-06-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_5_Channel_Encode/ref.json</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Info_Theory_5_Channel_Encode/ref.json</loc>
     
     <lastmod>2022-06-07</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/Info_Theory_4_Capacity/ref.json</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Info_Theory_4_Capacity/ref.json</loc>
     
     <lastmod>2022-06-07</lastmod>
     
@@ -2377,7 +2349,7 @@
 
   <url>
     <loc>http://www.zobinhuang.com:10082/</loc>
-    <lastmod>2022-07-22</lastmod>
+    <lastmod>2022-07-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
