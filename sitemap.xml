@@ -2,7 +2,63 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Compiler_CMake_Tutorial/index.html</loc>
+    
+    <lastmod>2022-07-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Compiler_CMake_Tutorial/ref.json</loc>
+    
+    <lastmod>2022-07-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/post_index.json</loc>
+    
+    <lastmod>2022-07-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/CUDA_Profiling/index.html</loc>
+    
+    <lastmod>2022-07-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/CUDA_Profiling/ref.json</loc>
+    
+    <lastmod>2022-07-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/post_index.json</loc>
+    
+    <lastmod>2022-07-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/CUDA_1_Vector_Addition/index.html</loc>
+    
+    <lastmod>2022-07-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/template_post/index.html</loc>
+    
+    <lastmod>2022-07-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/CUDA_1_Vector_Addition/ref.json</loc>
     
     <lastmod>2022-07-25</lastmod>
     
@@ -11,7 +67,14 @@
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Memory_Management/index.html</loc>
     
-    <lastmod>2022-07-24</lastmod>
+    <lastmod>2022-07-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/index.html</loc>
+    
+    <lastmod>2022-07-25</lastmod>
     
   </url>
   
@@ -52,13 +115,6 @@
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_about/index.html</loc>
-    
-    <lastmod>2022-07-22</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/post_index.json</loc>
     
     <lastmod>2022-07-22</lastmod>
     
@@ -107,20 +163,6 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Compiler_Cmake_Tutorial/index.html</loc>
-    
-    <lastmod>2022-07-17</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Compiler_Cmake_Tutorial/ref.json</loc>
-    
-    <lastmod>2022-07-17</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/index.html</loc>
     
     <lastmod>2022-07-17</lastmod>
@@ -159,13 +201,6 @@
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Dataset/ref.json</loc>
     
     <lastmod>2022-06-25</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/template_post/index.html</loc>
-    
-    <lastmod>2022-06-24</lastmod>
     
   </url>
   
@@ -278,13 +313,6 @@
     <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Info_Theory_4_Capacity/ref.json</loc>
     
     <lastmod>2022-06-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/post_index.json</loc>
-    
-    <lastmod>2022-05-21</lastmod>
     
   </url>
   
@@ -695,7 +723,7 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Tracing_Ftrace/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Kernel_Tracing_Ftrace/index.html</loc>
     
     <lastmod>2022-03-20</lastmod>
     
@@ -730,7 +758,7 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Tracing_Ftrace/ref.json</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Linux_Kernel_Tracing_Ftrace/ref.json</loc>
     
     <lastmod>2022-03-16</lastmod>
     
@@ -1444,14 +1472,14 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Paper_Walk_Through/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Non_Archived_Segment_And_Section/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Non_Archived_Segment_And_Section/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning_backup/Paper_Walk_Through/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
