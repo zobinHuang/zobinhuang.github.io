@@ -29,8 +29,8 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_Program/Compiler_CMake_Tutorial/pic/xxx.png">
-<meta property="article:published_time" content="2022-07-25T17:42:42.709Z">
-<meta property="article:modified_time" content="2022-07-25T17:42:42.709Z">
+<meta property="article:published_time" content="2022-07-26T06:21:23.126Z">
+<meta property="article:modified_time" content="2022-07-26T06:21:23.126Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -95,7 +95,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="تشغيل شريط التصفح">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -350,8 +350,20 @@
   &nbsp;&nbsp;&nbsp;&nbsp;同理，按照上面的流程，我们启动构建，并运行最终可执行程序文件:
 
   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">pwd</span></span><br><span class="line">[Path to root]</span><br><span class="line"></span><br><span class="line">$ cmake -S . -B ./out/build/</span><br><span class="line">-- Configuring <span class="keyword">done</span></span><br><span class="line">-- Generating <span class="keyword">done</span></span><br><span class="line">-- Build files have been written to: [Path to root]/out/build</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">cd</span> ./out/build/</span><br><span class="line">$ make</span><br><span class="line">Scanning dependencies of target cmake_learn</span><br><span class="line">[ 33%] Building CXX object CMakeFiles/cmake_learn.dir/main.cpp.o</span><br><span class="line">[ 66%] Building CXX object CMakeFiles/cmake_learn.dir/printer.cpp.o</span><br><span class="line">[100%] Linking CXX executable cmake_learn</span><br><span class="line">[100%] Built target cmake_learn</span><br><span class="line"></span><br><span class="line">$ ./cmake_learn </span><br><span class="line">Hello World!</span><br><span class="line">Bye!</span><br></pre></td></tr></table></figure>
-  <h3 class="title">将程序编译为静态库</h3>
-  <label class="title">static_library</label>
+  <h3 class="title"><code>target_xxx</code>: 辅助生成目标</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>cmake</code> 的 <def>目标</def> 由 <code>add_library</code> 或者 <code>add_executable</code> 生成，前者仅完成编译，生成 library；后者完成编译+链接，生成可执行文件。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们对三个辅助生成目标的 <code>cmake</code> 脚本 API 进行总结:
+
+  <ul>
+    <li><code>target_include_directories</code> <cite>cmake_doc_target_include_directories</cite>: 指定目标包含的头文件路径;</li>
+    <li><code>target_link_libraries</code> <cite>cmake_doc_target_link_libraries</cite>: 指定目标链接的库;</li>
+    <li><code>target_compile_options</code> <cite>cmake_doc_target_compile_options</cite>: 指定目标的编译选项;</li>
+  </ul>
+
+  <h4 class="title"><code>target_link_libraries</code>: 添加链接时所使用的库</h4>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;现在我们尝试把我们上面编写的 <code>printer.cpp</code> 部分的代码编译为静态库。为了在 <code>main.cpp</code> 中正常调用 <code>printerBye</code> 函数，我们需要在最终链接阶段指定我们编译出来的静态库。
 
@@ -387,23 +399,6 @@
   &nbsp;&nbsp;&nbsp;&nbsp;运行可执行文件，如下所示:
 
   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">pwd</span></span><br><span class="line">[Path to root]/out/build</span><br><span class="line"></span><br><span class="line">$ ./cmake_learn </span><br><span class="line">Hello World!</span><br><span class="line">Bye!</span><br></pre></td></tr></table></figure>
-  <h3 class="title"><code>target_xxx</code>: 辅助生成目标</h3>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;由上面的脚本可以总结出，<code>cmake</code> 的 <def>目标</def> 由 <code>add_library</code> 或者 <code>add_executable</code> 生成，前者仅完成编译，生成 library；后者完成编译+链接，生成可执行文件。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;下面我们对三个辅助生成目标的 <code>cmake</code> 脚本 API 进行总结:
-
-  <ul>
-    <li><code>target_include_directories</code> <cite>cmake_doc_target_include_directories</cite>: 指定目标包含的头文件路径;</li>
-    <li><code>target_link_libraries</code> <cite>cmake_doc_target_link_libraries</cite>: 指定目标链接的库;</li>
-    <li><code>target_compile_options</code> <cite>cmake_doc_target_compile_options</cite>: 指定目标的编译选项;</li>
-  </ul>
-
-  <h4 class="title"><code>target_link_libraries</code>: 添加链接时所使用的库</h4>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;见 <ref>static_library</ref>。
-
   <h4 class="title"><code>target_include_directories</code>: 添加头文件检索目录</h4>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;基于我们上一节的内容，我们接着实现一个功能: 为代码添加头文件检索目录。我们进一步修改 <code>[Path to root]/CMakeLists.txt</code> 如下所示:
@@ -421,7 +416,9 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;TODO
 
-
+  <h3 class="title">Submodules</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 
 
@@ -598,10 +595,10 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          المحتويات
+          Inhaltsverzeichnis
         </li>
         <li class="sidebar-nav-overview">
-          عام
+          Übersicht
         </li>
       </ul>
 
