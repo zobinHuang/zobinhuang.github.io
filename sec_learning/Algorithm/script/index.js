@@ -55,7 +55,14 @@ async function _load_catalogue(){
                     table_title_align_container.setAttribute('align', 'center')
                     let table_title = document.createElement('h1')
                     table_title.innerHTML = module.post_module_name
-                    table_title_align_container.append(table_title)
+
+                    // 创建链接
+                    let table_label_link = document.createElement('a')
+                    table_label_link.setAttribute('name', `${module.post_module_label}`)
+                    
+                    // 组合
+                    table_label_link.append(table_title)
+                    table_title_align_container.append(table_label_link)
                     table_entry_td.append(table_title_align_container)
                     module_table.append(table_entry_tr)
 
