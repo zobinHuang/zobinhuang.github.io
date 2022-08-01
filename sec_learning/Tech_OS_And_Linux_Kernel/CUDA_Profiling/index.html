@@ -28,9 +28,11 @@
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale">
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/CUDA_Profiling/pic/two_phase.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/CUDA_Profiling/pic/line_info.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/CUDA_Profiling/pic/xxx.png">
-<meta property="article:published_time" content="2022-07-27T06:25:51.304Z">
-<meta property="article:modified_time" content="2022-07-27T06:25:51.304Z">
+<meta property="article:published_time" content="2022-07-28T10:05:10.055Z">
+<meta property="article:modified_time" content="2022-07-28T10:05:10.055Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -95,7 +97,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -295,7 +297,69 @@
   </ul>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;本文中，我们将
+  &nbsp;&nbsp;&nbsp;&nbsp;本文中，我们将基于上述的两个工具，展开对 CUDA 程序的性能分析。
+</div>
+
+<h2 class="title">Two-Phase Profiling</h2>
+<div class="div_learning_post">
+  <div class="img" title="Two-Phase Profiling" source="https://www.carlpearson.net/pdf/20200416_nsight.pdf" label="two_phase">
+    <img src="./pic/two_phase.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们先明确我们对 GPU 程序进行 Profiling 的流程 —— Two Phase Profiling。我们会首先在安装有目标 GPU 设备和存储着目标 CUDA 程序的机器上，基于 Nsight System 或者 Compute 完成程序的执行和 Profiling，然后把结果存储在一个文件中，之后我们就可以在本地对该文件使用 NVIDIA 官方提供的具有 UI 界面的 Nsight System 或者 Compute 程序对 Profiling 结果展开分析。
+</div>
+
+<h2 class="title">性能分析前的准备</h2>
+<div class="div_learning_post">
+  <h3 class="title">代码注释</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以在我们要进行性能分析的代码中，加入由 NVIDIA 官方提供的 <def>NVIDIA Tools Extensions (NVTX)</def> 工具包，以实现 Profling 注释的插入，如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nvtxRangePush(“sleeping”);</span><br><span class="line">sleep(<span class="number">100</span>);</span><br><span class="line">nvtxRangePop();</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 <code>sleep(100)</code> 前后加入对应的注释，我们将能够在后续的 Profiling 界面中看到该相关的注释，以帮助我们定位对应的程序位置。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;使用该工具包需要在程序头文件中加入:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;nvToolsExt.h&gt;</span></span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;并且需要在程序链接的时候，链接对应的静态库文件 <code>-lnvToolsExt</code>。
+
+  <h3 class="title">纠正程序的异常内存行为</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有时候 CUDA 程序中微妙的错误，比如在超出 allocated memory 的地方写入数据，并不会再正常运行程序的时候导致程序崩溃，但会在 Profiling 的时候导致程序崩溃。因此我们需要借助 CUDA 提供的工具来帮助我们查看程序的一些异常的内存行为:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cuda-memcheck ./my-cuda-binary</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，使用这个工具进行 CUDA 可执行文件的运行，将会导致程序有 100x 的运行速度减慢，因此需要确保在做内存测试的过程中，程序的输入不会过大。
+
+  <h3 class="title">程序编译</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，NVCC 编译器默认在程序编译的过程中加入很多优化过程，以减少内存引用的个数，提高程序的性能。为了做程序的 Profiling，建议保留这些优化。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其次，我们需要去除编译时的 <code>-g</code> 参数，它用于在 Host Code 中生成 Debug 的信息；去除编译时的 <code>-G</code> 参数，它既有 <code>-g</code> 参数的功能，又去除了 NVCC 编译器的优化功能。
+
+  <div class="img" title="在生成的 Device Code 中加入 Host Code 的 Line Info" source="https://www.carlpearson.net/pdf/20200416_nsight.pdf" label="line_info">
+    <img src="./pic/line_info.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后，我们在编译时可以加入 <code>-lineinfo</code> (或者 <code>--generate-line-info</code>) 参数，该参数可以用于在生成的 PTX Code 中加入关于相关 PTX 代码在源文件中的行数信息。
+
+  <h3 class="title">系统支持</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Nsight System 来说，它依赖于一些 System Hooks 来实现 Profiling。我们可以使用如下命令来检查我们系统对 Nsight System 的底层支持状态:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ nsys status -e</span><br><span class="line">Sampling Environment Check</span><br><span class="line">Linux Kernel Paranoid Level = 2: OK</span><br><span class="line">Linux Distribution = Ubuntu</span><br><span class="line">Linux Kernel Version = 4.16.15-41615: OK</span><br><span class="line">Linux perf_event_open syscall available: OK</span><br><span class="line">Sampling trigger event available: OK</span><br><span class="line">Intel(c) Last Branch Record support: Available</span><br><span class="line">Sampling Environment: OK</span><br></pre></td></tr></table></figure>
+</div>
+
+<h2 class="title">使用 Nsight Compute 对 Kernel 进行性能分析</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
 </div>
 
 
@@ -475,10 +539,10 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Inhaltsverzeichnis
+          المحتويات
         </li>
         <li class="sidebar-nav-overview">
-          Übersicht
+          عام
         </li>
       </ul>
 
