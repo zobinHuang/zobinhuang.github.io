@@ -2,14 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Memory_Management/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
     
-    <lastmod>2022-08-01</lastmod>
+    <lastmod>2022-08-02</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Memory_Management/ref.json</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Topo_Storage/index.html</loc>
+    
+    <lastmod>2022-08-02</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Topo_Storage/ref.json</loc>
     
     <lastmod>2022-08-01</lastmod>
     
@@ -54,13 +61,6 @@
     <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/CUDA_1_Vector_Addition/ref.json</loc>
     
     <lastmod>2022-07-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
-    
-    <lastmod>2022-07-26</lastmod>
     
   </url>
   
@@ -2391,7 +2391,7 @@
 
   <url>
     <loc>http://www.zobinhuang.com:10082/</loc>
-    <lastmod>2022-08-01</lastmod>
+    <lastmod>2022-08-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
