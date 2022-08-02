@@ -40,8 +40,8 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Topo_Storage/pic/metagraph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Topo_Storage/pic/metagraph_of_unitgraph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Topo_Storage/pic/xxx.png">
-<meta property="article:published_time" content="2022-08-02T06:39:46.024Z">
-<meta property="article:modified_time" content="2022-08-02T06:39:46.024Z">
+<meta property="article:published_time" content="2022-08-02T09:47:50.817Z">
+<meta property="article:modified_time" content="2022-08-02T09:47:50.817Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -922,8 +922,8 @@
   &nbsp;&nbsp;&nbsp;&nbsp;在 DGL 中，底层使用的是 <def>单元图 (Unit Graph)</def> 来存储顶层的图拓扑信息。所谓单元图，根据 DGL 的文档 <cite>dgl_doc_heterogeneous_graphs</cite> 和在动态链接库代码中的注释 <cite>dglsrc_src_graph_unit_graph_cc</cite>，是只包含一种关系 <code>(utype, etype, vtype)</code> 的图。在只有一种关系的定义下，单元图有如下两种情况:
 
   <ul>
-    <li><b>有向图</b>: <code>utype</code> 和 <code>vtype</code> 分属于两种不同类型；</li>
-    <li><b>无向图</b>: <code>utype</code> 和 <code>vtype</code> 类型相同</li>
+    <li><code>utype</code> 和 <code>vtype</code> 分属于两种不同类型；</li>
+    <li><code>utype</code> 和 <code>vtype</code> 类型相同</li>
   </ul>
 
   <p>

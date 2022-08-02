@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/index.html</loc>
     
     <lastmod>2022-08-02</lastmod>
     
@@ -10,6 +10,13 @@
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Topo_Storage/index.html</loc>
+    
+    <lastmod>2022-08-02</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
     
     <lastmod>2022-08-02</lastmod>
     
@@ -103,13 +110,6 @@
     <loc>http://www.zobinhuang.com:10082/index.html</loc>
     
     <lastmod>2022-07-25</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/index.html</loc>
-    
-    <lastmod>2022-07-22</lastmod>
     
   </url>
   
