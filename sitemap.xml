@@ -4,19 +4,40 @@
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/index.html</loc>
     
-    <lastmod>2022-08-02</lastmod>
+    <lastmod>2022-08-03</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Topo_Storage/index.html</loc>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/ref.json</loc>
     
-    <lastmod>2022-08-02</lastmod>
+    <lastmod>2022-08-03</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/index.html</loc>
+    
+    <lastmod>2022-08-03</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/post_index.json</loc>
+    
+    <lastmod>2022-08-03</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/template_post/index.html</loc>
+    
+    <lastmod>2022-08-03</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Topo_Storage/index.html</loc>
     
     <lastmod>2022-08-02</lastmod>
     
@@ -100,20 +121,6 @@
   </url>
   
   <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/template_post/index.html</loc>
-    
-    <lastmod>2022-07-25</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/index.html</loc>
-    
-    <lastmod>2022-07-25</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_Vivado_Ubuntu_Installation/index.html</loc>
     
     <lastmod>2022-07-22</lastmod>
@@ -131,13 +138,6 @@
     <loc>http://www.zobinhuang.com:10082/sec_about/index.html</loc>
     
     <lastmod>2022-07-22</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/ref.json</loc>
-    
-    <lastmod>2022-07-21</lastmod>
     
   </url>
   
@@ -2391,7 +2391,7 @@
 
   <url>
     <loc>http://www.zobinhuang.com:10082/</loc>
-    <lastmod>2022-08-02</lastmod>
+    <lastmod>2022-08-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
