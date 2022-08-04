@@ -34,8 +34,8 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/pic/codeflow_param.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/pic/codeflow_heterograph.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/pic/xxx.png">
-<meta property="article:published_time" content="2022-08-03T16:17:37.308Z">
-<meta property="article:modified_time" content="2022-08-03T16:17:37.308Z">
+<meta property="article:published_time" content="2022-08-04T07:28:31.870Z">
+<meta property="article:modified_time" content="2022-08-04T07:28:31.870Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -100,7 +100,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="تشغيل شريط التصفح">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -463,7 +463,23 @@
 
   <h3 class="title">创建异构图拓扑</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+  &nbsp;&nbsp;&nbsp;&nbsp;在获取存储着所有 Unit Graph 实例的 <code>rel_graphs</code>，结合上面创建的 Meta Graph 实例，函数调用了 <code>create_heterograph_from_relations</code> 函数 (<imgref>codeflow_hetero</imgref> 中 ⑥)，以创建异构图实例。这个函数是在 <code>python/dgl/heterograph_index.py</code><cite>dglsrc_heterograph_index_py</cite> 中被定义的，定义如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_heterograph_from_relations</span>(<span class="params">metagraph, rel_graphs, num_nodes_per_type</span>):</span></span><br><span class="line">    <span class="keyword">if</span> num_nodes_per_type <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span> _CAPI_DGLHeteroCreateHeteroGraph(metagraph, rel_graphs)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> _CAPI_DGLHeteroCreateHeteroGraphWithNumNodes(</span><br><span class="line">            metagraph, rel_graphs, num_nodes_per_type.todgltensor())</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以看到其实际上调用了动态链接库侧的函数 <code>_CAPI_DGLHeteroCreateHeteroGraphWithNumNodes</code>，后者是在 <code>src/graph/heterograph_capi.cc</code><cite>dglsrc_src_graph_heterograph_capi_cc</cite> 中定义的，如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">DGL_REGISTER_GLOBAL(<span class="string">&quot;heterograph_index._CAPI_DGLHeteroCreateHeteroGraphWithNumNodes&quot;</span>)</span><br><span class="line">.set_body([] (DGLArgs args, DGLRetValue* rv) &#123;</span><br><span class="line">    GraphRef meta_graph = args[<span class="number">0</span>];</span><br><span class="line">    List&lt;HeteroGraphRef&gt; rel_graphs = args[<span class="number">1</span>];</span><br><span class="line">    IdArray num_nodes_per_type = args[<span class="number">2</span>];</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;HeteroGraphPtr&gt; rel_ptrs;</span><br><span class="line">    rel_ptrs.reserve(rel_graphs.size());</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; ref : rel_graphs) &#123;</span><br><span class="line">      rel_ptrs.push_back(ref.sptr());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">auto</span> hgptr = CreateHeteroGraph(</span><br><span class="line">        meta_graph.sptr(), rel_ptrs, num_nodes_per_type.ToVector&lt;<span class="keyword">int64_t</span>&gt;());</span><br><span class="line">    *rv = HeteroGraphRef(hgptr);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;后者首先创建了一个用于存储 <code>HeteroGraphPtr</code> 的 STL <code>vector</code> 容器，然后将传入的所有 Unit Graph 的指针都存储该容器中，接着调用了 <code>CreateHeteroGraph</code> 用于创建 <code>HeteroGraph</code> 实例。函数 <code>CreateHeteroGraph</code> 是在 <code>src/graph/creators.cc</code><cite>dglsrc_src_graph_creators_cc</cite> 中被定义的，如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HeteroGraphPtr <span class="title">CreateHeteroGraph</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    GraphPtr meta_graph,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;HeteroGraphPtr&gt;&amp; rel_graphs,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int64_t</span>&gt;&amp; num_nodes_per_type)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> HeteroGraphPtr(<span class="keyword">new</span> HeteroGraph(meta_graph, rel_graphs, num_nodes_per_type));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们对上面涉及的 <code>HetroGraph</code> 的构造函数进行回顾 (在 <code>src/graph/heterograph.cc</code><cite>dglsrc_src_graph_heterograph_cc</cite> 中被定义)：
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">HeteroGraph::HeteroGraph(</span><br><span class="line">    GraphPtr meta_graph,</span><br><span class="line">    <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;HeteroGraphPtr&gt;&amp; rel_graphs,</span><br><span class="line">    <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int64_t</span>&gt;&amp; num_nodes_per_type) : BaseHeteroGraph(meta_graph) &#123;</span><br><span class="line">  <span class="keyword">if</span> (num_nodes_per_type.size() == <span class="number">0</span>)</span><br><span class="line">    num_verts_per_type_ = InferNumVerticesPerType(meta_graph, rel_graphs);</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    num_verts_per_type_ = num_nodes_per_type;</span><br><span class="line">  HeteroGraphSanityCheck(meta_graph, rel_graphs);</span><br><span class="line">  relation_graphs_ = CastToUnitGraphs(rel_graphs);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完成异构图 <code>HetroGraph</code> 实例的创建后，动态链接库侧 Runtime API 将该实例的指针进行返回，至此完成异构图实例的创建 (<imgref>codeflow_hetero</imgref> 中 ⑦)。
 </div>
 
 <h2 class="title">节点和边的特征</h2>
@@ -714,10 +730,10 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          المحتويات
+          Inhaltsverzeichnis
         </li>
         <li class="sidebar-nav-overview">
-          عام
+          Übersicht
         </li>
       </ul>
 
