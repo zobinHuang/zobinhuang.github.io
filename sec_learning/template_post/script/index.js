@@ -8,6 +8,8 @@ async function load_page(){
         }
     )
     
+    _load_sign_block()
+
     _load_table()
 
     _load_pic()
@@ -23,6 +25,63 @@ async function load_page(){
     _load_keyword()
 
     _load_citation()
+}
+
+// 处理文章中所有的 Sign Block
+async function _load_sign_block() {
+    // note block
+    let note_blocks = document.getElementsByTagName("noteblock")
+    for(let i = 0; i < note_blocks.length; i++){
+        note_block = note_blocks[i]
+
+        // 创建 Note 图片部分 Container
+        let note_block_sign_container = document.createElement('div')
+        note_block_sign_container.setAttribute('class', 'block_sign_container')
+        let note_block_sign = document.createElement('img')
+        note_block_sign.setAttribute('src', './pic/!.png')
+        note_block_sign.setAttribute('height', '40px')
+        note_block_sign.setAttribute('style', 'margin:0px;padding:0px;')
+        note_block_sign_container.append(note_block_sign)
+
+        // 创建 Note 文字部分 Container
+        let note_block_content_container = document.createElement('div')
+        note_block_content_container.setAttribute('class', 'block_content_container')
+        note_block.parentNode.insertBefore(note_block_content_container, note_block.nextElementSibling)
+        note_block_content_container.append(note_block)
+
+        let overall_container = document.createElement('div')
+        overall_container.setAttribute('class', 'note_block')
+        note_block_content_container.parentNode.insertBefore(overall_container, note_block_content_container.nextElementSibling)
+        overall_container.append(note_block_sign_container)
+        overall_container.append(note_block_content_container)
+    }
+
+    // question block
+    let question_blocks = document.getElementsByTagName("queblock")
+    for(let i = 0; i < question_blocks.length; i++){
+        question_block = question_blocks[i]
+
+        // 创建 Question 图片部分 Container
+        let question_block_sign_container = document.createElement('div')
+        question_block_sign_container.setAttribute('class', 'block_sign_container')
+        let question_block_sign = document.createElement('img')
+        question_block_sign.setAttribute('src', './pic/?.png')
+        question_block_sign.setAttribute('height', '40px')
+        question_block_sign.setAttribute('style', 'margin:0px;padding:0px;')
+        question_block_sign_container.append(question_block_sign)
+
+        // 创建 Question 文字部分 Container
+        let question_block_content_container = document.createElement('div')
+        question_block_content_container.setAttribute('class', 'block_content_container')
+        question_block.parentNode.insertBefore(question_block_content_container, question_block.nextElementSibling)
+        question_block_content_container.append(question_block)
+
+        let overall_container = document.createElement('div')
+        overall_container.setAttribute('class', 'question_block')
+        question_block_content_container.parentNode.insertBefore(overall_container, question_block_content_container.nextElementSibling)
+        overall_container.append(question_block_sign_container)
+        overall_container.append(question_block_content_container)
+    }
 }
 
 // 处理文章中所有的表格
