@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.zobinhuang.com:10082/index.html</loc>
+    
+    <lastmod>2022-08-16</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.zobinhuang.com:10082/sec_about/index.html</loc>
+    
+    <lastmod>2022-08-16</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_and_Exception_Intro/index.html</loc>
     
     <lastmod>2022-08-13</lastmod>
@@ -68,13 +82,6 @@
     <loc>http://www.zobinhuang.com:10082/sec_learning/Algorithm/GNN_DGL_Graph_Construction/ref.json</loc>
     
     <lastmod>2022-08-04</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/index.html</loc>
-    
-    <lastmod>2022-08-03</lastmod>
     
   </url>
   
@@ -164,13 +171,6 @@
   
   <url>
     <loc>http://www.zobinhuang.com:10082/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_Vivado_Ubuntu_Installation/ref.json</loc>
-    
-    <lastmod>2022-07-22</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.zobinhuang.com:10082/sec_about/index.html</loc>
     
     <lastmod>2022-07-22</lastmod>
     
@@ -2412,7 +2412,7 @@
 
   <url>
     <loc>http://www.zobinhuang.com:10082/</loc>
-    <lastmod>2022-08-13</lastmod>
+    <lastmod>2022-08-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
