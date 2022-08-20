@@ -217,12 +217,15 @@ queblock{
     background-color: #E0E0E0;
 }
 
+
+
 .border{
     margin-bottom: 20px;
     padding: 10px 10px; 
     font-size: 16px; 
     word-spacing:0px;  
     border:1px solid black;
+    border-radius: 15px;
 }
 
 .div_learning_post_background{
