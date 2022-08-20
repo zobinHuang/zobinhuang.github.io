@@ -45,10 +45,13 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_x86_Handle/pic/tpr.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_x86_Handle/pic/ppr.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_x86_Handle/pic/local_apic_flow.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_x86_Handle/pic/local_apic_id.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_x86_Handle/pic/ldr.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_x86_Handle/pic/dfr.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_x86_Handle/pic/generic_data_structure.jpg">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Interrupt_x86_Handle/pic/xxx.png">
-<meta property="article:published_time" content="2022-08-20T08:49:46.592Z">
-<meta property="article:modified_time" content="2022-08-20T08:49:46.592Z">
+<meta property="article:published_time" content="2022-08-20T19:04:46.157Z">
+<meta property="article:modified_time" content="2022-08-20T19:04:46.157Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -861,8 +864,12 @@
   &nbsp;&nbsp;&nbsp;&nbsp;系统软件在中断处理完成时，需要对 <b>EOI</b> 寄存器写 0 来通告底层硬件当前中断处理完成。
 
   <h5 class="title">TPR 和 PPR 寄存器</h5>
+  <label class="title">subsubsubsection_tpr_ppr</label>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;Intel 处理器对中断向量进行了优先级的划分。上文说到 Intel 处理器一共支持 256 个中断，也即 8-bits。中断向量的 <code>[7:4]</code> 称为中断的 <def>Interrupt-priority Class</def>，是中断分级的大类; <code>[3:0]</code> 即中断在其 Interrupt-priority Class 中的相对位置，是中断分级的子类。值得注意的是，由于 Intel 把 0~31 号中断划分给 Intel 处理器自用，因此 Interrupt-priority Class 的合法取值范围为 2(<code>0010</code>)~15(<code>1111</code>)，取值越大，优先级越高。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一般来说，我们直接食用的是 Interrupt-priority Class 作为一个中断向量的优先级，因此一个优先级中一共就包含了 16 个中断向量。
 
   <div 
     class="img" 
@@ -886,10 +893,10 @@
   &nbsp;&nbsp;&nbsp;&nbsp;在 Local APIC 中，有两个与中断优先级相关的寄存器 —— <b>TPR</b> (Task-Priority Register) 和 <b>PPR</b> (Processor-Priority Register)。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<b>TPR</b> 用于被操作系统软件设置，其包含的值代表着当前操作系统允许被中断的中断向量值的下限，低于该值的中断将被操作系统暂时封锁不予处理。因此 <b>TPR</b> 是一个可写的寄存器。如 <imgref>tpr</imgref> 所示，<b>TPR</b> 寄存器中采用了和中断向量值一样的分级机制，分为 <code>[7:4]</code> 的 Task-Priority Class 和 <code>[3:0]</code> 的 Task-Priority Sub-Class。
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>TPR</b> 用于被操作系统软件设置，其包含的值代表着当前操作系统<note>允许接受</note>的中断向量值的下限，低于该值的中断将被操作系统暂时封锁不予处理。因此 <b>TPR</b> 是一个可写的寄存器。如 <imgref>tpr</imgref> 所示，<b>TPR</b> 寄存器中采用了和中断向量值一样的分级机制，分为 <code>[7:4]</code> 的 Task-Priority Class 和 <code>[3:0]</code> 的 Task-Priority Sub-Class。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<b>PPR</b> 的值代表着当前处理器实际允许被中断的中断向量的下限，其是基于 <b>TPR</b> 和 <b>ISRV</b> 的值产生的，其中 <b>ISRV</b> 的值指的是 <b>ISR</b> 中被置位的优先级最高的中断对应的中断向量，<b>PPR</b> 是一个只读寄存器，具体的值产生方法如下:
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>PPR</b> 的值代表着当前处理器<note>允许被中断</note>的中断向量的下限，其是基于 <b>TPR</b> 和 <b>ISRV</b> 的值产生的，其中 <b>ISRV</b> 的值指的是 <b>ISR</b> 中被置位的优先级最高的中断对应的中断向量，<b>PPR</b> 是一个只读寄存器，具体的值产生方法如下:
 
   <ul>
     <li>
@@ -900,13 +907,22 @@
       <ul>
         <li>如果 <code>TPR[7:4]</code> > <code>ISRV[7:4]</code>，那么 <code>PPR[3:0]</code> = <code>TPR[3:0]</code>;</li>
         <li>如果 <code>TPR[7:4]</code> < <code>ISRV[7:4]</code>，那么 <code>PPR[3:0]</code> = 0;</li>
-        <li>如果 <code>TPR[7:4]</code> = <code>ISRV[7:4]</code>，那么 <code>PPR[3:0]</code> 是 model-specific 的</li>
+        <li>如果 <code>TPR[7:4]</code> = <code>ISRV[7:4]</code>，那么 <code>PPR[3:0]</code> 视处理器不同而不同;</li>
       </ul>
     </li>
   </ul>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;只有当中断向量值代表的优先级大于 <b>PPR</b> 中存储的值时，CPU Core 才会被中断并且对中断予以处理。当然，我们上面的说明针对的是 I/O APIC 中 <b>Delivery Mode</b> 字段为 Fixed 或者 Lowest Prority 的 RTE 所对应的中断，也即 <b>Vector</b> 字段有效的中断。
+  &nbsp;&nbsp;&nbsp;&nbsp;只有当中断向量值代表的优先级大于 <b>TPR</b> 中存储的值时，LAPIC 才有可能会将其交给 CPU 进行处理，否则会屏蔽它们，这里的屏蔽指的是 LAPIC 会接受它们，将他们 pending 到 <b>IRR</b> 中，但不会交给 CPU 进行处理。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;只有当中断向量值代表的优先级大于 <b>PPR</b> 中存储的值时，对应的中断消息才会被提交给 CPU Core 进行中断并且对中断予以处理。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当然，我们上面的说明针对的是 I/O APIC 中 <b>Delivery Mode</b> 字段为 Fixed 或者 Lowest Prority 的 RTE 所对应的中断，也即 <b>Vector</b> 字段有效的中断。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们上面在介绍 I/O APIC 时曾经说过，当 <b>Delivery Mode</b> 字段为 Lowest Prority 时，中断消息会被发送给 <b>Destination Field</b> 中指定的处理器中，优先级最低的一个进行处理，这里的优先级实际上指的就是各个处理器的 LAPIC 的 <b>TRP</b> 的值。我们下面举一个 Pentium4 和 Xeon 系列优先级仲裁的例子，说明谁是 Lowest Priority。假设有 CPU1、CPU2、CPU3 三个 CPU，相应的 <b>TPR</b> 值为：<b>TPR1=5</b>、<b>TPR2=6</b>、<b>TPR3=10</b>，I/O APIC 以 Lowest Priority 模式发送一条中断消息，该中断对应的优先级级别为 $3$，则 CPU1 具有最低优先级，接收该中断。此时，该中断被 Pending 到 <b>IRR</b> 中，但不会交给 CPU 处理，因为其优先级级别低于 <b>TPR</b> 值。
 
   <h5 class="title">LAPIC 中断处理后端流程</h5>
   <p>
@@ -944,6 +960,100 @@
     <li><note>[同 Pentium4、Xeon]</note> 软件写 <code>EOI</code> 通知中断处理完成。如果中断为 Level 触发，该 <code>EOI</code> 会通过总线消息广播到所有 I/O APIC。NMI、SMI、INIT、ExtINT、SIPI 类型中断无需写 <code>EOI</code>。</li>
   </ol>
   </div>
+
+  <h4 class="title">I/O APIC 发出的消息是如何找到 LAPIC 的?</h4>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面两个流程的第一步都是 LAPIC 确定是否由自己接收中断。前面我们提到，I/O APIC RTE 中的 <b>Destination Field</b> 用于指定由哪个 LAPIC 接收，并且分为 <b>Physical</b> 和 <b>Logical</b> 两种模式。对于 LAPIC，两种模式有着不同的意义。
+
+  <h5 class="title">Physical Mode</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在该模式下，RTE 中的 <b>Destination Field</b> 表示的是具体的 LAPIC ID，下面我们对 LAPIC 的 ID 进行讨论。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 LAPIC 来说，系统在 RESET 后，都会分配一个唯一的 ID 用作标识。我们可以通过 <b>LAPIC ID</b> 寄存器得到它。下图所示为其格式：
+
+  <div 
+    class="img" 
+    title="Local APIC ID"
+    label="img_local_apic_id"
+    source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+    <img src="./pic/local_apic_id.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在系统上电初始化的时候，系统会自动地向每一个 LAPIC 分配一个全局唯一的 APIC ID，各个 LAPIC 所被分配的 ID 也被操作系统和 BIOS 用于作为各个处理器核心的 ID。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;系统软件可以在 <b>EAX</b> 寄存器中填入 $1$ 的情况下，运行 <code>CPUID</code> 指令，软件将可以从 <b>EBX</b> 的 <code>[31:24]</code> 中获取到当前运行的处理器核心所对应的 LAPIC 的 ID。对于某些 CPU 来说，其允许软件对 LAPIC 的 ID 进行修改，但是 Intel 的官方手册建议不要这样做。不论怎么修改，运行 <code>CPUID</code> 指令获取的始终是 LAPIC 被系统初始化赋予的 LAPIC ID。
+
+  <div class="theorm_prove">
+  <h3>I/O APIC 的 ID</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;APIC ID 分为 LAPIC ID 和 I/O APIC ID。前者唯一的标识系统中某个 LAPIC，后者唯一标识某个 I/O APIC。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;与 LAPIC ID 在系统上电时被自动分配不同，I/O APIC ID 在系统上电时被统一清零，由操作系统或者 BIOS 负责验证 I/O APIC ID 是否唯一，并且在冲突时进行重新分配。分配的原则视系统中断架构不同而定:
+
+  <ul>
+    <li>对于使用系统总线进行中断消息通告的 Pentium4 和 Xeon 处理器，I/O APIC 之间分配的 ID 不重复即可，I/O APIC 的 ID 可以与 LAPIC 的 ID 相同。原因在于在此种系统中，LAPIC 需要使用 LAPIC ID 参与前端总线竞争，而 I/O APIC 却不用，因为是北桥代理它竞争总线，因此 I/O APIC ID 只用于区分多个 I/O APIC，它和 LAPIC ID 不在一个上下文;</li>
+    <li>对于使用 APIC Bus 的老式处理器，I/O APIC ID 要用于竞争总线，不能和 LAPIC ID 冲突，因此操作系统/BIOS 为 I/O APIC 分配 ID 的原则是从系统中所有 LAPIC ID 后最小的数字开始分配。</li>
+  </ul>
+  </div>
+
+  <h5 class="title">Logical Mode</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在该模式下，中断消息中的 <b>Destination Field</b> 包含的不是 LAPIC ID，而是被称为 <def>MDA (Message Destination Address，消息目的地地址)</def> 的信息。此时，LAPIC 需要两个额外的寄存器来判断自己是否为中断消息的目的地。它们是 <b>LDR</b> 和 <b>DFR</b>。
+
+  <div 
+    class="img" 
+    title="LDR 寄存器格式"
+    label="img_ldr"
+    source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+    <img src="./pic/ldr.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>LDR</b> 的格式如 <imgref>img_ldr</imgref> 所示，<b>LDR</b> 全称是 Logical Destination Register，逻辑目的地寄存器。该寄存器包含一个 8-bits 的逻辑 APIC ID (注意区分，它和 LAPIC ID 不是一个东西)，在 Logical 模式下用于和 MDA 匹配。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>LDR</b> 的格式由 <b>DFR</b> 指定，DFR 如 <imgref>img_dfr</imgref> 所示:
+
+  <div 
+    class="img" 
+    title="DFR 寄存器格式"
+    label="img_dfr"
+    source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+    <img src="./pic/dfr.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>DFR</b>，Destination Format Register，目的地格式寄存器。该寄存器包含一个 4-bits 的 <b>Model</b> 字段，用于指定 <b>LDR</b> 中的 Logical APIC ID 用何种方式与 <b>MDA</b> 匹配。通过这两个寄存器的配合，Logical 模式又被分为了 Flat 与 Cluster 两种模式:
+
+  <ul>
+    <li><b>Flat 模式</b>: <b>DFR</b> 的 <b>Model</b> 值为 <code>1111b</code>，此时，LAPIC 将 <b>MDA</b> 与 <b>LDR</b> 的 Logical APIC ID 做按位与，如结果不为 0 则接收中断。Logical APIC ID 中每个 bit 代表一个 LAPIC，故 8 bits 最多代表 8 个 CPU;</li>
+    <li>
+    <b>Cluster 模式</b>: <b>DFR</b> 的 <b>Model</b> 值为 <code>0000b</code>。Cluster 模式又分为两种模式：Flat Cluster 模式和 Hierarchical Cluster 模式:
+    <ul>
+      <li>
+      <p><b>Flat Cluster 模式</b>: 该模式只支持 P6 架构和 Pentium 系列 CPU，并假定所有 APIC 通过 APIC BUS 进行通信。该模式将 <b>MDA</b> 编码为两个部分，高 4 bits 为簇号，低 4 bits 标识 LAPIC 在该簇内的 ID (每个bit代表一个LAPIC，故一个簇最多有4 个 LAPIC)。与之对应，<b>LDR</b> 的 Logical APIC ID 也被编码成同样两个部分。
+      <p>工作在该模式时，LAPIC 先将 <b>MDA</b> 的高 4 bits 和 Logical APIC ID 的高 4 bits 比 较，以确定自己是否是中断的目的簇。若是，将 <b>MDA</b> 的低 4 bits 与 Logical APIC ID 的低 4 bits 按位与，若值不为 0 则接收中断，否则拒绝。
+      <p>通过这种方法，高 4 bits 的簇号可以表示 15 个簇，低 4 bits 的 ID 可以代表簇内的 4 个 CPU，最多可以支持 60 个 CPU。但由于 APIC BUS 的限制，具体的说是 APIC Arb ID（APIC 仲裁 ID）的限制，该模式最多只支持 15 个 CPU。
+      </li>
+      <li><b>Hierarchical Cluster 模式</b>: 支持 P6 架构和 Pentium 系列，以及 Xeon、Pentium4 系 列。该模式通过为每个簇引入一个 “簇管理器”，将 Flat Cluster 模式中平等的簇构成一个具有等级结构的分级网络，并最多支持 60 个 CPU。</li>
+    </ul>
+    </li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Flat Cluster 模式，我们下面给出一个例子 (此例中，中断为 Fix delivery mode。关于 Lowest Prority 的例子见 <ref>subsubsubsection_tpr_ppr</ref>)。假设有三个 CPU 的 Logical 模式配置为: CPU1 的 <b>LDR</b> 值为 <code>0000 0001b</code>，CPU2 的 <b>LDR</b> 值为 <code>0001 0010b</code>，CPU3 的 <b>LDR</b> 值为 <code>0000 0100b</code>，并且此时 <b>DFR</b> 的 <b>Model</b> 值为 <code>0000b</code>，也即 Flat Cluster 模式，则此时 CPU1、CPU3 为一簇，CPU2 为另一簇。若 I/O APIC 发出一条中断消息，其 <b>Destination Mode</b> 为 1，<b>Destination Field</b> 值为 <code>0000 00001b</code>。三个 LAPIC 收到该消息后，CPU1、CPU3 通过 <b>Destination Field</b> 的高 4 bits 判断出该消息目的地为本簇，再将自身 Logical APIC ID 的低 4 bits 与 <b>Destination Field</b> 低 4 bits 按位与，最终 CPU1 接收该中断消息，CPU2、CPU3 丢弃。
+
+  <h3 class="title">PCI(e) 设备中断</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
 </div>
 
 <h2 class="title">通用中断层</h2>
