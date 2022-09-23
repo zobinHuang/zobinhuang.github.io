@@ -17,13 +17,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"zobinhuang.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;下面我们以 Intel E1000 网卡为例，展示数据包从物理网卡 (p.s. E1000 是一个虚拟机网卡，它实现了对 Intel 82545EM 网卡的仿真 vmware_e1000) 到内核中的大致流程，我们在后面的章节中会对具体的细节进行分析。大致流程如 fc_e1000_overview 所示。       flowchart TB">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Zobin">
-<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/backup.html">
+<meta property="og:url" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/backup.html">
 <meta property="og:site_name" content="Zobin">
 <meta property="og:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;下面我们以 Intel E1000 网卡为例，展示数据包从物理网卡 (p.s. E1000 是一个虚拟机网卡，它实现了对 Intel 82545EM 网卡的仿真 vmware_e1000) 到内核中的大致流程，我们在后面的章节中会对具体的细节进行分析。大致流程如 fc_e1000_overview 所示。       flowchart TB">
 <meta property="og:locale">
@@ -37,7 +37,7 @@
 <meta property="article:tag" content="Networking Engineering">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/backup">
+<link rel="canonical" href="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/backup">
 
 
 <script id="page-configurations">
