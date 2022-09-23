@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:type" content="website">
+<meta property="og:title" content="框架使用：构建 GNN 的单个层次">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_System_And_Network/GNN_DGL_Single_Layer/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_System_And_Network/GNN_DGL_Single_Layer/pic/sage.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_System_And_Network/GNN_DGL_Single_Layer/pic/sage_dgl_constrution.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_System_And_Network/GNN_DGL_Single_Layer/pic/mean_aggregate_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_System_And_Network/GNN_DGL_Single_Layer/pic/mean_aggregate_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_System_And_Network/GNN_DGL_Single_Layer/pic/xxx.png">
+<meta property="article:published_time" content="2022-09-08T09:58:13.402Z">
+<meta property="article:modified_time" content="2022-09-08T09:58:13.402Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_System_And_Network/GNN_DGL_Single_Layer/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>框架使用：构建 GNN 的单个层次 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">框架使用：构建 GNN 的单个层次
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_System_And_Network/">TECH_SYSTEM_AND_NETWORK</a></li>
+          <li>GNN_DGL_SINGLE_LAYER</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body onload="load_page()">
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：June 19 2022</i></font></h4>
+</div>
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+<br>
+<div class="div_catalogue">
+  <div align="center">
+    <h1> 目录 </h1>
+    <p>
+    <font size="3px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_load_catalogue_alert" id="load_catalogue_alert">正在加载目录...</div>
+  <div class="div_catalogue_container" id="catalogue_container">
+  </div>
+</div><br>
+
+<!-- Start your post here -->
+<h2 class="title">GraphSAGE 模型</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本文将以 GraphSAGE 模型为例，展开说明如何在 DGL 中构建 GNN Model Layer。下面我们先简要地复习一下 GraphSAGE 模型的定义。
+
+  <div class="img" title="A GraphSAGE Layer">
+    <img src="./pic/sage.png" height="300px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>GraphSAGE</def> 模型来自 NIPS 2017 年的论文 <cite>sage</cite>, <cite>dgl_sage</cite>，其定义的模型如下所示。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在前向传播过程中，首先 Node 会聚合其邻居节点在上一层的表示:
+
+  <div class="equation" label="forward_1">
+  $h_{\mathcal{N}(i)}^{(l+1)} = \mathrm{aggregate}\left(\{h_{j}^{l}, \forall j \in \mathcal{N}(i) \}\right)$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后 Node 会把聚合结果和其在上一层的表示进行 Concatenate:
+
+  <div class="equation" label="forward_2">
+  $h_{i}^{(l+1)} = \sigma \left(W \cdot \mathrm{concat}(h_{i}^{l}, h_{\mathcal{N}(i)}^{l+1}) \right)$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后 Node 会将其在本层的表示进行归一化:
+
+  <div class="equation" label="forward_3">
+  $h_{i}^{(l+1)} = \mathrm{norm}(h_{i}^{(l+1)})$
+  </div>
+</div>
+
+<h2 class="title">在 DGL 上构建 GraphSAGE Layer</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本节参考自 DGL 官方提供的 GraphSAGE 代码 <cite>dgl_sage_class</cite> 以及 DGL 官方提供的说明文档 <cite>dgl_build_own_block</cite>，但是对它们做了更新的说明。
+
+  <h3 class="title">构造函数</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们需要为我们的 GraphSAGE Layer 构建一个 <code>class</code>。取决于所使用的后端框架的不同，构建出来的 <code>class</code> 需要继承自不同的父类。对于 PyTorch 后端， 它应该继承 PyTorch 的 <code>NN.Module</code> 类。
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SAGEConv</span>(<span class="params">nn.Module</span>):</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;GraphSAGE 类的构造函数如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">    self,</span></span></span><br><span class="line"><span class="function"><span class="params">    in_feats,</span></span></span><br><span class="line"><span class="function"><span class="params">    out_feats,</span></span></span><br><span class="line"><span class="function"><span class="params">    aggregator_type,</span></span></span><br><span class="line"><span class="function"><span class="params">    feat_drop=<span class="number">0.</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">    bias=<span class="literal">True</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">    norm=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">    activation=<span class="literal">None</span></span></span></span><br><span class="line"><span class="function"><span class="params">  </span>):</span></span><br><span class="line">  <span class="built_in">super</span>(SAGEConv, self).__init__()</span><br><span class="line">  valid_aggre_types = &#123;<span class="string">&#x27;mean&#x27;</span>, <span class="string">&#x27;gcn&#x27;</span>, <span class="string">&#x27;pool&#x27;</span>, <span class="string">&#x27;lstm&#x27;</span>&#125;</span><br><span class="line">  <span class="keyword">if</span> aggregator_type <span class="keyword">not</span> <span class="keyword">in</span> valid_aggre_types:</span><br><span class="line">      <span class="keyword">raise</span> DGLError(</span><br><span class="line">          <span class="string">&#x27;Invalid aggregator_type. Must be one of &#123;&#125;. &#x27;</span></span><br><span class="line">          <span class="string">&#x27;But got &#123;!r&#125; instead.&#x27;</span>.<span class="built_in">format</span>(valid_aggre_types, aggregator_type)</span><br><span class="line">      )</span><br><span class="line"></span><br><span class="line">  self._in_src_feats, self._in_dst_feats = expand_as_pair(in_feats)</span><br><span class="line">  self._out_feats = out_feats</span><br><span class="line">  self._aggre_type = aggregator_type</span><br><span class="line">  self.norm = norm</span><br><span class="line">  self.feat_drop = nn.Dropout(feat_drop)</span><br><span class="line">  self.activation = activation</span><br><span class="line">  <span class="comment"># aggregator type: mean/pool/lstm/gcn</span></span><br><span class="line">  <span class="keyword">if</span> aggregator_type == <span class="string">&#x27;pool&#x27;</span>:</span><br><span class="line">      self.fc_pool = nn.Linear(self._in_src_feats, self._in_src_feats)</span><br><span class="line">  <span class="keyword">if</span> aggregator_type == <span class="string">&#x27;lstm&#x27;</span>:</span><br><span class="line">      self.lstm = nn.LSTM(self._in_src_feats, self._in_src_feats, batch_first=<span class="literal">True</span>)</span><br><span class="line">  <span class="keyword">if</span> aggregator_type != <span class="string">&#x27;gcn&#x27;</span>:</span><br><span class="line">      self.fc_self = nn.Linear(self._in_dst_feats, out_feats, bias=<span class="literal">False</span>)</span><br><span class="line">  self.fc_neigh = nn.Linear(self._in_src_feats, out_feats, bias=<span class="literal">False</span>)</span><br><span class="line">  <span class="keyword">if</span> bias:</span><br><span class="line">      self.bias = nn.parameter.Parameter(torch.zeros(self._out_feats))</span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">      self.register_buffer(<span class="string">&#x27;bias&#x27;</span>, <span class="literal">None</span>)</span><br><span class="line">  self.reset_parameters()</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下图展示了各个传入参数和实际模型 Layer 之间的关系:
+
+  <div class="img" title="构造函数传入参数的具体含义">
+    <img src="./pic/sage_dgl_constrution.png" height="300px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在传入的参数中:
+
+  <ul>
+    <li>
+    <p><b><code>in_feats</code></b> & <b><code>out_feats</code></b>: 对于一般的 PyTorch 模块，维度通常包括输入的维度、输出的维度和隐层的维度。对于图神经网络，输入维度可被分为源节点特征维度和目标节点特征维度。<code>in_feats</code> 指明了 $h^{(l)}_i$ 以及点 $i$ 的各个邻居 $h^{(l)}_j, \; j \in \mathcal{N}(i)$ 的维度，<code>out_feats</code> 则指明了 $h^{(l+1)}_i$ 的维度。
+    <div class="theorm_prove">
+    <p>值得注意的是，<code>in_feats</code> 有可能传入的是一个数，也可能传入的是一个 <code>pair</code>。
+    <ul>
+      <li>当传入的是一个数时，说明当前 Layer 处理的是一个 <def>同构图 (Homogeneous Graph)</def>，边的关系只有一种，所有点的类型都是一样的，因此所有点的 Feature 的长度也是一样的; </li>
+      <li>当传入的是一个 <code>pair</code> 时，说明当前 Layer 处理的是一个 <def>异构图 (Heterogeneous Graph)</def>，边的关系有多种，点的类型也不止一种。在 DGL 中，异构图会被拆分成为若干个 <def>二部图 (Bipartite Graph)</def>，每一个二部图对应于一种关系。这样一来，每一个 Layer 处理的就是一个二部图。对于这样一个二部图来说，图上两种不同类型的 Node 的 Feature 长度不一定是相等的，因此这里 <code>in_feats</code> 传入的就是一个 <code>pair</code>，形式是 <code>(_in_src_feats, _in_dst_feats)</code>，分别代表图上两种 Node 的 Feature 长度，我们在下面将会看到相关的处理代码。</li>
+    </ul>
+    </div>
+    </li>
+    <li><b><code>aggregator_type</code></b>: 指定 <equation>forward_1</equation> 中的聚合函数类型，对于特定目标节点，聚合类型决定了如何聚合不同边上的信息。常用的聚合类型包括 $\mathrm{mean}$、$\mathrm{sum}$、$\mathrm{max}$ 和 $\mathrm{min}$。一些模块可能会使用更加复杂的聚合函数，比如 $\mathrm{lstm}$。</li>
+    <li><b><code>norm</code></b>: 一个 callable function，用于对 Aggregate 和 Update 后的 $h^{(l+1)}_i$ 进行归一化操作，也即 <equation>forward_3</equation>。</li>
+    <li><b><code>activation</code></b>: 一个 callable function，用于对 Aggregate 和 Update 后的 $h^{(l+1)}_i$ 进行激活操作，也即 <equation>forward_2</equation>。</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;构造函数的 Line 19 中我们调用了 <code>expand_as_pair</code> 函数，基于传入的 <code>in_feats</code> 的值，初始化了私有变量 <code>_in_src_feats</code> 和 <code>_in_dst_feats</code>，这两个变量的含义分别是点 $i$ 的邻居传入的特征的维度 $|h^{(l)}_j|, \forall j \in \mathcal{N}(i)$，以及点 $i$ 本身的特征的维度 $|h^{(l)}_i|$。在上面我们提到构造函数传入的参数 <code>in_feats</code> 的值有可能是一个数，也有可能是一个 <code>pair</code>，分别对应于处理的图的类型的不同。DGL 中定义了 <code>expand_as_pair</code> 函数，以应对在不同图类型下对特征维度值的初始化，其定义如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">expand_as_pair</span>(<span class="params">input_, g=<span class="literal">None</span></span>):</span></span><br><span class="line">  <span class="keyword">if</span> <span class="built_in">isinstance</span>(input_, <span class="built_in">tuple</span>):</span><br><span class="line">      <span class="comment"># 二分图的情况 (i.e. 传入的 input_ 是 pair): 直接返回传入的 pair</span></span><br><span class="line">      <span class="keyword">return</span> input_</span><br><span class="line">  <span class="keyword">elif</span> g <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> g.is_block:</span><br><span class="line">      <span class="comment"># 子图块的情况</span></span><br><span class="line">      <span class="keyword">if</span> <span class="built_in">isinstance</span>(input_, Mapping):</span><br><span class="line">        input_dst = &#123;</span><br><span class="line">          k: F.narrow_row(v, <span class="number">0</span>, g.number_of_dst_nodes(k))</span><br><span class="line">          <span class="keyword">for</span> k, v <span class="keyword">in</span> input_.items()&#125;</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">        input_dst = F.narrow_row(input_, <span class="number">0</span>, g.number_of_dst_nodes())</span><br><span class="line">      <span class="keyword">return</span> input_, input_dst</span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">      <span class="comment"># 同构图的情况 (i.e. 传入的 input_ 是一个数): 返回该数形成的 pair，也即所有点的特征有相同的维度</span></span><br><span class="line">      <span class="keyword">return</span> input_, input_</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Line 23 中，我们初始化了一个 <code>nn.Dropout</code> 实例 <cite>torch_nn_dropout</cite>，并且将其存储在私有变量 <code>self.feat_drop</code> 中。<code>nn.Dropout</code> 用于在训练过程中随机地将输入 Tensor 的某些 Elements 置为 0，以防止训练的过拟合。注意到我们传入了一个 <code>float</code> 类型的参数 <code>feat_drop</code>，这个参数可以理解为采样率，最终 <code>nn.Dropout</code> 将会以 <code>feat_drop</code> 的采样率来随机置零。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;构造函数的 Line 25~32 对本层 Layer 的 $\text{aggregate}$ 函数进行了初始化。根据传入的 $\text{aggregate}$ 函数的类型的不同，初始化私有变量成员也有所不同:
+
+  <ul>
+    <li><b><code>pool</code></b>: 使用 <code>nn.Linear</code> 函数 <cite>torch_nn_linear</cite> 定义了一个全连接层，全连接层输入和输出的维度都为 <code>_in_src_feats</code>，也即邻居节点的特征的维度大小。</li>
+    <li><b><code>lstm</code></b>: 使用 <code>nn.LSTM</code> 函数 <cite>torch_nn_lstm</cite> 定义了一个单层 LSTM RNN，全连接层输入和输出的维度都为 <code>_in_src_feats</code>，也即邻居节点的特征的维度大小，同时代码中还设置了 <code>batch_first</code> 参数，使得输入和输出的 tensor 的格式为 <code>[batch, seq, feature]</code>。</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，如果我们传入的 $\text{aggregate}$ 函数的类型不为 <code>gcn</code>，则在 Line 31 中我们还使用 <code>nn.Linear</code> 函数 <cite>torch_nn_linear</cite> 创建了一个名为 <code>fc_self</code> 的全连接层，其输入维度为 <code>_in_dst_feats</code>，也即点 $i$ 在第 $l$ 层的特征的维度 $|h^{(l)}_i|$，输出维度为 <code>out_feats</code>，也即点 $i$ 在第 $l+1$ 层的特征的维度 $|h^{(l+1)}_i|$。这个 <code>fc_neigh</code> 层的作用实际上适用于实现 <note>输入源节点维度 $\rightarrow$ 输出维度</note> 的维度转换。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，在 Line 32 中我们还定义了一个名为 <code>fc_neigh</code> 的全连接层，其输入维度为 <code>_in_src_feats</code>，也即点 $i$ 的邻居们 $j \in \mathcal{N}(i)$ 在第 $l$ 层的特征的维度 $|h^{(l)}_j|$，输出维度为 <code>out_feats</code>，也即点 $i$ 在第 $l+1$ 层的特征的维度 $|h^{(l+1)}_i|$。这个 <code>fc_neigh</code> 层的作用实际上适用于实现 <note>输入目的节点维度 $\rightarrow$ 输出维度</note> 的维度转换。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后，构造函数的 Line 37 中我们调用了 <code>reset_parameters</code> 私有方法对上述创建的神经网络的可学习参数进行了初始化。<code>reset_parameters</code> 私有方法定义如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">reset_parameters</span>(<span class="params">self</span>):</span></span><br><span class="line">  gain = nn.init.calculate_gain(<span class="string">&#x27;relu&#x27;</span>)</span><br><span class="line">  <span class="keyword">if</span> self._aggre_type == <span class="string">&#x27;pool&#x27;</span>:</span><br><span class="line">      nn.init.xavier_uniform_(self.fc_pool.weight, gain=gain)</span><br><span class="line">  <span class="keyword">if</span> self._aggre_type == <span class="string">&#x27;lstm&#x27;</span>:</span><br><span class="line">      self.lstm.reset_parameters()</span><br><span class="line">  <span class="keyword">if</span> self._aggre_type != <span class="string">&#x27;gcn&#x27;</span>:</span><br><span class="line">      nn.init.xavier_uniform_(self.fc_self.weight, gain=gain)</span><br><span class="line">  nn.init.xavier_uniform_(self.fc_neigh.weight, gain=gain)</span><br></pre></td></tr></table></figure>
+  <h3 class="title">Forward 函数</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 PyTorch 的 <code>NN.Module</code> 类中，<code>forward</code> 函数执行了实际的前向传播计算。与传统以张量为参数的 PyTorch <code>NN.Module</code> 相比，DGL 的 <code>NN.Module</code> 额外增加了 $1$ 个参数 <code>dgl.DGLGraph</code> —— 也即指定被训练的图，其函数原型如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, graph, feat</span>):</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在查看 <code>forward</code> 的源码时，我们会发现所有的代码都被包装在 <code>garph.local_scope()</code> <cite>dgl_local_scope</cite> 中:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, graph, feat</span>):</span></span><br><span class="line"><span class="keyword">with</span> graph.local_scope():</span><br><span class="line">  <span class="comment"># ......</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;简单来说，这个函数的目的是为我们操作的 <code>graph</code> 创建一个 local 的操作空间，在这个空间中操作 <core>graph</code> 的各种 Node Feature 和 Edge Feature 的时候，都不会影响到原有的 <code>graph</code> 实例，仅在这个局部空间中生效。并且值得注意的是，只有 "out-place" 的修改是不影响的，而 "in-place" 的修改在 <code>local_scope</code> 中仍然会引起对原有 <code>graph</code> 实例的修改，举例来说如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在 local_scope 中的 out-place 的修改不会引起对原有 graph 数据的更新</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">foo</span>(<span class="params">g</span>):</span></span><br><span class="line">  <span class="keyword">with</span> g.local_scope():</span><br><span class="line">      g.edata[<span class="string">&#x27;h&#x27;</span>] = torch.ones((g.num_edges(), <span class="number">3</span>))</span><br><span class="line">      g.edata[<span class="string">&#x27;h2&#x27;</span>] = torch.ones((g.num_edges(), <span class="number">3</span>))</span><br><span class="line">      <span class="keyword">return</span> g.edata[<span class="string">&#x27;h&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在 local_scope 中的 in-place 的修改将会引起对原有 graph 数据的更新</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">foo</span>(<span class="params">g</span>):</span></span><br><span class="line">  <span class="keyword">with</span> g.local_scope():</span><br><span class="line">      <span class="comment"># in-place operation</span></span><br><span class="line">      g.edata[<span class="string">&#x27;h&#x27;</span>] += <span class="number">1</span></span><br><span class="line">      <span class="keyword">return</span> g.edata[<span class="string">&#x27;h&#x27;</span>]</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;具体例子可见 DGL 的参考文档 <cite>dgl_local_scope</cite>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于 <code>forward</code> 函数的函数原型，我们可以发现其传入了三个参数，这三个参数的含义分别是:
+
+  <ul>
+    <li><code>graph</code>: 一个 DGLGraph 实例，包含了图的拓扑信息;</li>
+    <li>
+      <code>feat</code>: 图上各个 Node 的特征，具体来说有两种可能的情况:
+      <ul>
+        <li>传入的是 <note>单个</note> <code>torch.Tensor</code>: 代表着此时处理的是一个同构图，该 Tensor 中包含了图上各个 Node 的 Feature (i.e. 代表着构造函数的传入参数 <code>in_feats</code> 是一个数，也即图上所有 Nodes 的 Features 的维度都是相同的);</li>
+        <li>传入的是 <note>一对</note> <code>torch.Tensor</code>: 代表着此时处理的是一个二部图，两个 Tensors 分别包含了图上两种类型的 Node 的 Feature (i.e. 代表着构造函数的传入参数 <code>in_feats</code> 是一个 <code>pair</code>);</li>
+      </ul>
+    </li>
+    <li><code>edge_weight</code> (可选地): 包含了各条 Edge 的 Weight 的 <code>torch.Tensor</code>。</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述传入的三个参数，<code>forward</code> 函数的内容一般可以分为3项操作：
+
+  <ol>
+    <li>对特征进行处理;</li>
+    <li>消息传递和聚合;</li>
+    <li>聚合后，更新特征作为输出</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完整的 <code>forward</code> 函数的定义如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, graph, feat, edge_weight=<span class="literal">None</span></span>):</span></span><br><span class="line">  self._compatibility_check()</span><br><span class="line">  <span class="keyword">with</span> graph.local_scope():</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(feat, <span class="built_in">tuple</span>):</span><br><span class="line">      feat_src = self.feat_drop(feat[<span class="number">0</span>])</span><br><span class="line">      feat_dst = self.feat_drop(feat[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">      feat_src = feat_dst = self.feat_drop(feat)</span><br><span class="line">      <span class="keyword">if</span> graph.is_block:</span><br><span class="line">          feat_dst = feat_src[:graph.number_of_dst_nodes()]</span><br><span class="line">    msg_fn = fn.copy_src(<span class="string">&#x27;h&#x27;</span>, <span class="string">&#x27;m&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> edge_weight <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">      <span class="keyword">assert</span> edge_weight.shape[<span class="number">0</span>] == graph.number_of_edges()</span><br><span class="line">      graph.edata[<span class="string">&#x27;_edge_weight&#x27;</span>] = edge_weight</span><br><span class="line">      msg_fn = fn.u_mul_e(<span class="string">&#x27;h&#x27;</span>, <span class="string">&#x27;_edge_weight&#x27;</span>, <span class="string">&#x27;m&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    h_self = feat_dst</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Handle the case of graphs without edges</span></span><br><span class="line">    <span class="keyword">if</span> graph.number_of_edges() == <span class="number">0</span>:</span><br><span class="line">      graph.dstdata[<span class="string">&#x27;neigh&#x27;</span>] = torch.zeros(</span><br><span class="line">          feat_dst.shape[<span class="number">0</span>], self._in_src_feats).to(feat_dst)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Determine whether to apply linear transformation before message passing A(XW)</span></span><br><span class="line">    lin_before_mp = self._in_src_feats &gt; self._out_feats</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Message Passing</span></span><br><span class="line">    <span class="keyword">if</span> self._aggre_type == <span class="string">&#x27;mean&#x27;</span>:</span><br><span class="line">      graph.srcdata[<span class="string">&#x27;h&#x27;</span>] = self.fc_neigh(feat_src) <span class="keyword">if</span> lin_before_mp <span class="keyword">else</span> feat_src</span><br><span class="line">      graph.update_all(msg_fn, fn.mean(<span class="string">&#x27;m&#x27;</span>, <span class="string">&#x27;neigh&#x27;</span>))</span><br><span class="line">      h_neigh = graph.dstdata[<span class="string">&#x27;neigh&#x27;</span>]</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">not</span> lin_before_mp:</span><br><span class="line">          h_neigh = self.fc_neigh(h_neigh)</span><br><span class="line">    <span class="keyword">elif</span> self._aggre_type == <span class="string">&#x27;gcn&#x27;</span>:</span><br><span class="line">      check_eq_shape(feat)</span><br><span class="line">      graph.srcdata[<span class="string">&#x27;h&#x27;</span>] = self.fc_neigh(feat_src) <span class="keyword">if</span> lin_before_mp <span class="keyword">else</span> feat_src</span><br><span class="line">      <span class="keyword">if</span> <span class="built_in">isinstance</span>(feat, <span class="built_in">tuple</span>):  <span class="comment"># heterogeneous</span></span><br><span class="line">          graph.dstdata[<span class="string">&#x27;h&#x27;</span>] = self.fc_neigh(feat_dst) <span class="keyword">if</span> lin_before_mp <span class="keyword">else</span> feat_dst</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          <span class="keyword">if</span> graph.is_block:</span><br><span class="line">              graph.dstdata[<span class="string">&#x27;h&#x27;</span>] = graph.srcdata[<span class="string">&#x27;h&#x27;</span>][:graph.num_dst_nodes()]</span><br><span class="line">          <span class="keyword">else</span>:</span><br><span class="line">              graph.dstdata[<span class="string">&#x27;h&#x27;</span>] = graph.srcdata[<span class="string">&#x27;h&#x27;</span>]</span><br><span class="line">      graph.update_all(msg_fn, fn.<span class="built_in">sum</span>(<span class="string">&#x27;m&#x27;</span>, <span class="string">&#x27;neigh&#x27;</span>))</span><br><span class="line">      <span class="comment"># divide in_degrees</span></span><br><span class="line">      degs = graph.in_degrees().to(feat_dst)</span><br><span class="line">      h_neigh = (graph.dstdata[<span class="string">&#x27;neigh&#x27;</span>] + graph.dstdata[<span class="string">&#x27;h&#x27;</span>]) / (degs.unsqueeze(-<span class="number">1</span>) + <span class="number">1</span>)</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">not</span> lin_before_mp:</span><br><span class="line">          h_neigh = self.fc_neigh(h_neigh)</span><br><span class="line">    <span class="keyword">elif</span> self._aggre_type == <span class="string">&#x27;pool&#x27;</span>:</span><br><span class="line">      graph.srcdata[<span class="string">&#x27;h&#x27;</span>] = F.relu(self.fc_pool(feat_src))</span><br><span class="line">      graph.update_all(msg_fn, fn.<span class="built_in">max</span>(<span class="string">&#x27;m&#x27;</span>, <span class="string">&#x27;neigh&#x27;</span>))</span><br><span class="line">      h_neigh = self.fc_neigh(graph.dstdata[<span class="string">&#x27;neigh&#x27;</span>])</span><br><span class="line">    <span class="keyword">elif</span> self._aggre_type == <span class="string">&#x27;lstm&#x27;</span>:</span><br><span class="line">      graph.srcdata[<span class="string">&#x27;h&#x27;</span>] = feat_src</span><br><span class="line">      graph.update_all(msg_fn, self._lstm_reducer)</span><br><span class="line">      h_neigh = self.fc_neigh(graph.dstdata[<span class="string">&#x27;neigh&#x27;</span>])</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">      <span class="keyword">raise</span> KeyError(<span class="string">&#x27;Aggregator type &#123;&#125; not recognized.&#x27;</span>.<span class="built_in">format</span>(self._aggre_type))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># GraphSAGE GCN does not require fc_self.</span></span><br><span class="line">    <span class="keyword">if</span> self._aggre_type == <span class="string">&#x27;gcn&#x27;</span>:</span><br><span class="line">      rst = h_neigh</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">      rst = self.fc_self(h_self) + h_neigh</span><br><span class="line"></span><br><span class="line">    <span class="comment"># bias term</span></span><br><span class="line">    <span class="keyword">if</span> self.bias <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">      rst = rst + self.bias</span><br><span class="line"></span><br><span class="line">    <span class="comment"># activation</span></span><br><span class="line">    <span class="keyword">if</span> self.activation <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">      rst = self.activation(rst)</span><br><span class="line">    <span class="comment"># normalization</span></span><br><span class="line">    <span class="keyword">if</span> self.norm <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">      rst = self.norm(rst)</span><br><span class="line">    <span class="keyword">return</span> rst</span><br></pre></td></tr></table></figure>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们分别就 <code>forward</code> 的如上三个步骤进行展开说明。
+
+  <h4 class="title">对特征进行处理</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在进入 <code>forward</code> 函数后，首先对传入的特征参数 <code>feat</code> 进行了处理:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="built_in">isinstance</span>(feat, <span class="built_in">tuple</span>):</span><br><span class="line">  feat_src = self.feat_drop(feat[<span class="number">0</span>])</span><br><span class="line">  feat_dst = self.feat_drop(feat[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  feat_src = feat_dst = self.feat_drop(feat)</span><br><span class="line">  <span class="keyword">if</span> graph.is_block:</span><br><span class="line">    feat_dst = feat_src[:graph.number_of_dst_nodes()]</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们首先调用了私有函数 <code>feat_drop</code> 对 Node 的输入特征进行 Dropout 处理，上面的代码中针对传入的 <code>feat</code> 的情况的不同进行了不同的处理，这里不再赘述。
+
+  <h4 class="title">定义消息函数</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;接着我们对消息函数进行定义。如下所示，我们使用了 <code>copy_src</code> 的内置消息函数作为我们我们生成 Message 的方法 (p.s. 该函数已经被弃用，替代函数是 <code>copy_u</code>)，该函数简单地将源节点的特征 <code>h</code> 作为 Message <code>m</code>。注意到以下程序还对带权重的图进行了适配，如果输入的 <code>edge_weight</code> 不为空，则首先把 <code>edge_weight</code> 存为图的边上的特征 <code>_edge_weight</code>，然后应用 <code>u_mul_e</code> 内置消息函数进行带权的 Message 的计算。
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">msg_fn = fn.copy_src(<span class="string">&#x27;h&#x27;</span>, <span class="string">&#x27;m&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> edge_weight <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">  <span class="keyword">assert</span> edge_weight.shape[<span class="number">0</span>] == graph.number_of_edges()</span><br><span class="line">  graph.edata[<span class="string">&#x27;_edge_weight&#x27;</span>] = edge_weight</span><br><span class="line">  msg_fn = fn.u_mul_e(<span class="string">&#x27;h&#x27;</span>, <span class="string">&#x27;_edge_weight&#x27;</span>, <span class="string">&#x27;m&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+  <h4 class="title">消息传递过程</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在进行消息传递之前，DGL 进行了一个有趣的判断，如下所示。如果 DGL 发现源节点的输入特征维度 <code>_in_src_feats</code> 要比输出特征维度 <code>_out_feats</code> 要高的话，那么指示变量 <code>lin_before_mp</code> 将被赋为 <code>true</code>，也即在进行消息传递之前进行线性的矩阵计算，也即在运行消息传递之前，先完成 <code>fc_neigh</code> 全连接层所实现的维度转换，这样一来就可以在消息传递过程开始之前降低源节点的输入特征维度，以减小消息本身的维度，以减小计算量。我们在 <a href="/sec_learning/Algorithm/GNN_DGL_Message_Passing_Paradigm/index.html#3.%20高效的消息传递代码">在 DGL 上实现消息传递编程范式</a> 一文中有过讨论。
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Determine whether to apply linear transformation before message passing A(XW)</span></span><br><span class="line">lin_before_mp = self._in_src_feats &gt; self._out_feats</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于我们当下构造的模块提供了四种 $\text{Aggregate}$ 函数的类型选择，因此它们在消息传递的过程上也有若干区别。下面我们分别对它们进行分析。
+
+  <h5 class="title"><code>mean</code> 聚合</h5>
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph.srcdata[<span class="string">&#x27;h&#x27;</span>] = self.fc_neigh(feat_src) <span class="keyword">if</span> lin_before_mp <span class="keyword">else</span> feat_src</span><br><span class="line">graph.update_all(msg_fn, fn.mean(<span class="string">&#x27;m&#x27;</span>, <span class="string">&#x27;neigh&#x27;</span>))</span><br><span class="line">h_neigh = graph.dstdata[<span class="string">&#x27;neigh&#x27;</span>]</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> lin_before_mp:</span><br><span class="line">  h_neigh = self.fc_neigh(h_neigh)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面的代码比较简单，首先对源节点的 <code>h</code> 特征进行初始化以供后面借助 <code>msg_fn</code> 消息函数产生 Message：如果 <code>lin_before_mp</code> 为 <code>true</code>，则将源节点的 <code>h</code> 特征初始化为应用了线性计算后的结果，也即 <code>fc_neigh(feat_src)</code>；若不然则直接应用为 <code>feat_src</code>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;接着调用 <code>update_all</code>，以产生 Messages 和使用 <code>mean</code> 方法来更新各个节点的 <code>neigh</code> 特征。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 <code>lin_before_mp</code> 为 <code>true</code>，则我们已经完成了特征的更新，我们把节点的 <code>neigh</code> 特征提取到变量 <code>h_neigh</code> 中并返回；若不然则需要对节点的 <code>neigh</code> 特征进行线性运算之后，再保存到变量 <code>h_neigh</code> 中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;此处我们基于 Mean 聚合定义的消息传播层次可以用下图进行表示:
+
+  <div class="multi_img">
+    <div class="img" title="先线性变换再消息传递">
+        <img src="./pic/mean_aggregate_1.png" width="580px" />
+    </div>
+    <div class="img" title="先消息传递再线性变换">
+        <img src="./pic/mean_aggregate_2.png" width="580px" />
+    </div>
+  </div>
+
+  <h5 class="title"><code>gcn</code> 聚合</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;使用 <code>gcn</code> 聚合的代码如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">check_eq_shape(feat)</span><br><span class="line">graph.srcdata[<span class="string">&#x27;h&#x27;</span>] = self.fc_neigh(feat_src) <span class="keyword">if</span> lin_before_mp <span class="keyword">else</span> feat_src</span><br><span class="line"><span class="keyword">if</span> <span class="built_in">isinstance</span>(feat, <span class="built_in">tuple</span>):  <span class="comment"># heterogeneous</span></span><br><span class="line">  graph.dstdata[<span class="string">&#x27;h&#x27;</span>] = self.fc_neigh(feat_dst) <span class="keyword">if</span> lin_before_mp <span class="keyword">else</span> feat_dst</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="keyword">if</span> graph.is_block:</span><br><span class="line">      graph.dstdata[<span class="string">&#x27;h&#x27;</span>] = graph.srcdata[<span class="string">&#x27;h&#x27;</span>][:graph.num_dst_nodes()]</span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">      graph.dstdata[<span class="string">&#x27;h&#x27;</span>] = graph.srcdata[<span class="string">&#x27;h&#x27;</span>]</span><br><span class="line">graph.update_all(msg_fn, fn.<span class="built_in">sum</span>(<span class="string">&#x27;m&#x27;</span>, <span class="string">&#x27;neigh&#x27;</span>))</span><br><span class="line"><span class="comment"># divide in_degrees</span></span><br><span class="line">degs = graph.in_degrees().to(feat_dst)</span><br><span class="line">h_neigh = (graph.dstdata[<span class="string">&#x27;neigh&#x27;</span>] + graph.dstdata[<span class="string">&#x27;h&#x27;</span>]) / (degs.unsqueeze(-<span class="number">1</span>) + <span class="number">1</span>)</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> lin_before_mp:</span><br><span class="line">  h_neigh = self.fc_neigh(h_neigh)</span><br></pre></td></tr></table></figure>
+  <h5 class="title"><code>pool</code> 聚合</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;使用 <code>pool</code> 聚合的代码如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph.srcdata[<span class="string">&#x27;h&#x27;</span>] = F.relu(self.fc_pool(feat_src))</span><br><span class="line">graph.update_all(msg_fn, fn.<span class="built_in">max</span>(<span class="string">&#x27;m&#x27;</span>, <span class="string">&#x27;neigh&#x27;</span>))</span><br><span class="line">h_neigh = self.fc_neigh(graph.dstdata[<span class="string">&#x27;neigh&#x27;</span>])</span><br></pre></td></tr></table></figure>
+  <h5 class="title"><code>lstm</code> 聚合</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;使用 <code>lstm</code> 聚合的代码如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph.srcdata[<span class="string">&#x27;h&#x27;</span>] = feat_src</span><br><span class="line">graph.update_all(msg_fn, self._lstm_reducer)</span><br><span class="line">h_neigh = self.fc_neigh(graph.dstdata[<span class="string">&#x27;neigh&#x27;</span>])</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其中聚合函数 <code>_lstm_reducer</code> 的定义如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_lstm_reducer</span>(<span class="params">self, nodes</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;LSTM reducer</span></span><br><span class="line"><span class="string">NOTE(zihao): lstm reducer with default schedule (degree bucketing)</span></span><br><span class="line"><span class="string">is slow, we could accelerate this with degree padding in the future.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">m = nodes.mailbox[<span class="string">&#x27;m&#x27;</span>] <span class="comment"># (B, L, D)</span></span><br><span class="line">batch_size = m.shape[<span class="number">0</span>]</span><br><span class="line">h = (m.new_zeros((<span class="number">1</span>, batch_size, self._in_src_feats)),</span><br><span class="line">      m.new_zeros((<span class="number">1</span>, batch_size, self._in_src_feats)))</span><br><span class="line">_, (rst, _) = self.lstm(m, h)</span><br><span class="line"><span class="keyword">return</span> &#123;<span class="string">&#x27;neigh&#x27;</span>: rst.squeeze(<span class="number">0</span>)&#125;</span><br></pre></td></tr></table></figure>
+  <h4 class="title">Concatenate</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成 Messages 的聚合值 $h^{l+1}_{\mathcal{N}(i)}$ 的运算后，下一步我们需要将每一个节点上的聚合结果，结合节点自身在上一层输出的特征，进行 Concatenation。值得注意的是，如果我们使用了 GCN 作为我们的 Aggregator，则不需要进行 Concatenation 操作。具体代码如下所示。
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GraphSAGE GCN does not require fc_self.</span></span><br><span class="line"><span class="keyword">if</span> self._aggre_type == <span class="string">&#x27;gcn&#x27;</span>:</span><br><span class="line">    rst = h_neigh</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    rst = self.fc_self(h_self) + h_neigh</span><br></pre></td></tr></table></figure>
+  <h4 class="title">Activation</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下一步我们将激活函数应用在 Concatenate 结果上，代码如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># activation</span></span><br><span class="line"><span class="keyword">if</span> self.activation <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">  rst = self.activation(rst)</span><br></pre></td></tr></table></figure>
+  <h4 class="title">Normalization</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后我们进行归一化，就可以输出最终的特征结果了，代码如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># normalization</span></span><br><span class="line"><span class="keyword">if</span> self.norm <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">  rst = self.norm(rst)</span><br></pre></td></tr></table></figure>
+</div>
+
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+
+
+<!--图片、引用-->
+<!-- 
+<div class="img" title="img title" label="img_label">
+  <img src="" height="" />
+</div>
+
+<imaging>img_label</imaging>
+-->
+
+<!--等式、引用-->
+<!-- 
+<div class="equation" label="equation_label">
+</div>
+
+<equation>equation_label</equation>
+-->
+
+<!--定理、引用、证明-->
+<!-- 
+<div class="theorm" label="theorm_label">
+</div>
+
+<theorm>theorm_label</theorm>
+
+<div class="theorm_prove">
+</div>
+-->
+
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_System_And_Network/">TECH_SYSTEM_AND_NETWORK</a></li>
+          <li>GNN_DGL_SINGLE_LAYER</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

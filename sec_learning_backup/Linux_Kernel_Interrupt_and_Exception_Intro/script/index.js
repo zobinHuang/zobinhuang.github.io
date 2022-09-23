@@ -8,6 +8,10 @@ async function load_page(){
         }
     )
     
+    _load_paragraph()
+
+    _load_flow_chart()
+
     _load_sign_block()
 
     _load_table()
@@ -27,6 +31,15 @@ async function load_page(){
     _load_citation()
 }
 
+// 处理文章中所有的 paragraphs
+async function _load_paragraph(){
+    let paragraphs = document.getElementsByClassName("paragraph")
+    for(let i = 0; i < paragraphs.length; i++){
+        paragraphs[i].setAttribute('style', 'color:#0074D9;')
+        paragraphs[i].innerHTML = `❐ ${paragraphs[i].innerHTML}`
+    }
+}
+
 // 处理文章中所有的 Sign Block
 async function _load_sign_block() {
     // note block
@@ -38,7 +51,7 @@ async function _load_sign_block() {
         let note_block_sign_container = document.createElement('div')
         note_block_sign_container.setAttribute('class', 'block_sign_container')
         let note_block_sign = document.createElement('img')
-        note_block_sign.setAttribute('src', './pic/!.png')
+        note_block_sign.setAttribute('src', './pic/note_sign.png')
         note_block_sign.setAttribute('height', '40px')
         note_block_sign.setAttribute('style', 'margin:0px;padding:0px;')
         note_block_sign_container.append(note_block_sign)
@@ -65,7 +78,7 @@ async function _load_sign_block() {
         let question_block_sign_container = document.createElement('div')
         question_block_sign_container.setAttribute('class', 'block_sign_container')
         let question_block_sign = document.createElement('img')
-        question_block_sign.setAttribute('src', './pic/?.png')
+        question_block_sign.setAttribute('src', './pic/question_sign.png')
         question_block_sign.setAttribute('height', '40px')
         question_block_sign.setAttribute('style', 'margin:0px;padding:0px;')
         question_block_sign_container.append(question_block_sign)
@@ -135,6 +148,59 @@ async function _load_table(){
         // 塞入原先位置
         table_refs[i].innerHTML = ''
         table_refs[i].append(table_link)
+    }
+}
+
+// 处理文章中所有的 Flowchart
+async function _load_flow_chart(){
+    let flowchart_index_list = new Array()
+    let flowchart_containers = document.getElementsByTagName("flowchart")
+
+    console.log(flowchart_containers.length)
+
+    // 记录所有 flowchart 的编号，并且在 flowchart div 中标识 flowchart 的序号
+    for(let i = 0; i < flowchart_containers.length; i++){
+        // 设置 id 和 name
+        flowchart_containers[i].setAttribute("id",`flowchart_${i+1}`)
+        flowchart_containers[i].setAttribute('name', `flowchart_${flowchart_containers[i].id}`)
+
+        // 记录 label
+        let flowchart_label = flowchart_containers[i].getAttribute('label')
+        flowchart_index_list[flowchart_label] = i+1
+
+        // 创建标号
+        let flowchart_index = document.createElement('flowchart_index')
+        if(!flowchart_containers[i].title)
+            flowchart_index.innerHTML = `FlowChart ${i+1}`
+        else
+            flowchart_index.innerHTML = `FlowChart ${i+1}: ${flowchart_containers[i].title}`
+
+        // 在 flowchart 外面包上一个 container
+        let flowchart_container_wrapper = document.createElement('div')
+        flowchart_container_wrapper.setAttribute("class", "flowchart_wrapper")
+        flowchart_containers[i].parentNode.insertBefore(flowchart_container_wrapper, flowchart_containers[i].nextElementSibling)
+        flowchart_container_wrapper.appendChild(flowchart_containers[i])
+
+        // 显示标号
+        insertAfter(flowchart_index, flowchart_containers[i])
+    }
+
+    // 替换所有的 Flowchart 引用
+    let flowchart_refs = document.getElementsByTagName("flowchartref")
+    for(let i = 0; i < flowchart_refs.length; i++){
+         // 获取 Flowchart 标识号
+         let selected_flowchart_index = flowchart_index_list[flowchart_refs[i].innerHTML]
+
+        // 创建链接
+        let flowchart_link = document.createElement('a')
+        flowchart_link.setAttribute('href', `#flowchart_${selected_flowchart_index}`)
+
+        // 修改 flowchartref 的内部内容
+        flowchart_link.innerHTML = `FlowChart ${selected_flowchart_index}`
+
+        // 塞入原先位置
+        flowchart_refs[i].innerHTML = ''
+        flowchart_refs[i].append(flowchart_link)
     }
 }
 

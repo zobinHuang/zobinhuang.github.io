@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="任务切换">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_11_Task_Switch/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_11_Task_Switch/pic/xxx.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_11_Task_Switch/pic/process.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_11_Task_Switch/pic/task_switch.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_11_Task_Switch/pic/task_gate_interrupt.png">
+<meta property="article:published_time" content="2022-02-10T14:39:11.209Z">
+<meta property="article:modified_time" content="2021-11-28T14:36:17.714Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_11_Task_Switch/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>任务切换 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">任务切换
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>X86_ISA_11_TASK_SWITCH</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_border{
+      margin-bottom: 20px;
+      padding: 10px 10px; 
+      font-size: 16px; 
+      word-spacing:0px;  
+      border:1px solid black;
+    }
+    .div_learning_post_background{
+      background-color:#E3E2E2;
+      padding: 10px 40px; 
+      font-size: 16px;
+      word-spacing:0px;  
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+    .div_learning_post_background p{
+      margin: 0px;
+    }
+</style>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Aug.23 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=30%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_link_up"><font color="blue"><b>承上启下</b></font></a>：分析了本文和上一篇文章的工作，介绍了上下文；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_theory"><font color="blue"><b>任务切换</b></font></a>：介绍了两种类型的任务切换的相关理论知识；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.1 <a href="#2_theory_1"><font color="blue">任务切换实质</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.2 <a href="#2_theory_2"><font color="blue">基于中断的任务切换</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.2 <a href="#2_theory_3"><font color="blue">基于 call/jmp/iret 指令的任务切换</font></a>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_example"><font color="blue"><b>基于 call/jmp/iret 指令的任务切换实例</b></font></a>：以具体的例子展示了基于 call/jmp/iret 指令的任务切换方法；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.1 <a href="#3_example_1"><font color="blue">基本初始化</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.2 <a href="#3_example_2"><font color="blue">加载用户程序</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.3 <a href="#3_example_3"><font color="blue">执行任务切换</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.1 <a href="#3_example_4"><font color="blue">从用户任务中返回</font></a>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 4. <a href="#4_firmware_switch"><font color="blue"><b>处理器固件在任务切换时的工作</b></font></a>：分析了在发生任务切换时，处理器固件所做的工作
+
+  </div>
+</div>
+
+<!--标题-->
+<h2><a name="1_link_up">1. 承上启下</a></h2>
+<div class="div_learning_post">
+
+  <div align="center">
+    <img src="./pic/process.png" width=700px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上一篇文章中，我们关心了特权级机制。特别是在文章的后半部分，我们演示了基于多任务和特权级背景的内核代码。在当时我们采用了一种相对别扭的办法，如上图的上半部分所示，我们在进入保护模式之后，在一个 0 特权级的程序中创建了一个特权级为 3 的任务，随后假装我们是在这个任务中使用调用门切换到的高特权级的全局地址空间中，运用了投机取巧的假调用门返回跳转到了我们的 3 特权级程序中。上一篇文章中更多的是为了强调在特权级和多任务的背景下，我们是如何建立起一个任务的运行环境的，在流程上可能比较古怪一些。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在本文中，我们将采取如上图下半部分所示的比较正常的流程：在进入保护模式之后，我们在 0 特权级的程序中创建了一个特权级为 0 的任务，这个任务就是 0 特权级程序本身，相当于把自己塞进了一个任务，然后我们再在这个 0 特权级任务中去创建特权级为 3 的任务，然后使用我们本文要介绍的任务切换的一些方法进行任务之间的切换，这样就比较 make sense 了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们下面首先会介绍一些与任务切换相关的理论知识，然后会结合代码来进行分析。
+</div>
+
+<h2><a name="2_theory">2. 任务切换</a></h2>
+<div class="div_learning_post">
+  <h3><a name="2_theory_1">2.1 任务切换实质</a></h3>
+
+  <div align="center">
+    <img src="./pic/task_switch.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回忆一下，我们在上文 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_10_Task_And_Privilege/index.html#2_privilege">特权级保护</a> 一节开始的地方特别强调过，我们对于特权级的讨论都是针对在 <b><font color="red">一个任务之内</font></b> 的局部地址空间和全局地址空间而论的。而在本文讨论的任务切换中，我们面对的将是多个任务，它们有各自的局部地址空间，它们又共享同一个全局地址空间，并且可以通过调用门等方法发起对全局地址空间中的程序的访问，如上图所示。在这种情况下，任务切换的故事是发生在 <b><font color="red">多个任务之间</font></b> 的，这点先和读者朋友们交代清楚。
+
+  <h3><a name="2_theory_2">2.2 基于中断的任务切换</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完整的保护模式中断机制将在后面的文章进行讲解，本节只对任务切换相关的中断内容进行分析。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 32 位的处理器中，有一张全局的类似于 GDT 和 LDT 的 <font color="blue">中断描述符表</font>，也是用于保存描述符，描述符种类是<font color="blue">中断门</font>、<font color="blue">陷阱门</font>和 <font color="blue">任务门</font>。当有中断发生的时候，处理器用 "中断号`\times`8" (i.e. 每个描述符占 8 个字节)，作为索引访问中断描述符表，取出门描述符。门描述符中有中断处理过程的代码段选择子和段内偏移量，类似于调用门的逻辑，然后处理器就能够跳转到中断处理过程中去执行中断处理逻辑。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一般的中断处理过程使用的是 <font color="blue">中断门</font> 和 <font color="blue">陷阱门</font>。并且，读者朋友要意识到，一般的中断处理过程是发生在当前处理器正在运行的任务内部的，即跳转到了任务的全局地址空间中去运行中断处理程序。本质上是任务内部的控制转移行为，不是任务切换行为。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当处理器在 <font color="blue">中断描述符表</font> 中定位到的描述符是 <font color="blue">任务门 (Task Gate)</font> 时，事情就变得不一样了：处理器会进行任务切换。因此处理器需要中断当前任务的执行，保护现场到当前任务 TSS 中，然后转换到另一个任务中去执行。由于需要跳转到另外一个任务中去，所以可以预料到的是，任务门中包含着对应任务的 TSS 选择子，下面是它的格式：
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <td witdth="3%">长度</td>
+      <td witdth="50%">16b</td>
+      <td idth="1%">1b</td>
+      <td width="1%">2b</td>
+      <td width="20%">5b</td>
+      <td width="25%">8b</td>
+    </tr>
+    <tr>
+      <td witdth="3%">含义</td>
+      <td witdth="50%">[不使用]</td>
+      <td idth="1%">P</td>
+      <td width="1%">DAL</td>
+      <td width="20%">0 0 1 0 1</td>
+      <td width="25%">[不使用]</td>
+    </tr>
+  </table>
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <td witdth="10%">长度</td>
+      <td witdth="45%">16b</td>
+      <td witdth="45%">16b</td>
+    </tr>
+    <tr>
+      <td witdth="10%">含义</td>
+      <td witdth="45%">TSS 选择子</td>
+      <td witdth="45%">[不使用]</td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当任务门中的 P 位为 "0" 时，则表示不允许通过此门来执行任务切换。DAL 字段是任务门本身的特权级。在缘于中断的任务切换过程中，这个 DAL 字段是不会起作用的；在任务门的非中断的另外用法中，这个 DAL 字段才会起作用，我们在后面会进行介绍。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当处理器发现中断向量是一个任务门时，它会从中获取要切换的任务的 TSS，在把当前任务的现场保护到 TSS 中后，处理器会让 TR 寄存器指向新的任务，并且，处理器会把新任务的 TSS 描述符的 B 位置为 1。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这里十分值得注意的是，对于上面这种中断向量是任务门引发的任务切换过程，切换过去的新的任务是 <font color="blue">嵌套</font> 在原先的任务中的，嵌套的概念我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_10_Task_And_Privilege/index.html#3_example_8_1">TSS 格式</a> 稍微有提及。当一个任务是被 "嵌套" 的任务时，它基于之前的任务被创建，并且它的 TSS 中的任务链接域将被填写为它前一个任务的 TSS 描述符选择子，以便在这个新任务执行结束之后返回原先的任务，如下图所示。在中断触发任务门之后，创建了任务 2。任务 2 是嵌套在任务 1 中的，并且任务 1 和任务 2 TSS 描述符中的 B 位都为 1。B 位为 1 代表了这两个任务都是不可 <font color="blue">重入</font> 的。不可重入的意思是说：<font color="red">当处理器在进行任务切换的时候，新任务的状态不能为忙碌，也即无法切换到 B 位为 1 的任务去执行。</font>因此任务 2 将无法使用 <font color="blue">"call/jmp TSS选择子/任务门 : 偏移地址"</font> 指令来切换到任务 1 中去执行 (p.s. 远转移指令引发任务转换，下一小节会进行阐述)。这样设计的原因是为了保护 TSS 链的嵌套关系不被打乱。这里再补充一句，不可重入的设计还用来防止一个任务尝试切换到它自己本身，由于处理器固件的现场保护和恢复操作，切换到自身的尝试将引发不可预知的问题。
+
+  <div align="center">
+    <img src="./pic/task_gate_interrupt.png" width=400px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在了解了进入中断程序的逻辑以后，我们现在来看一下从中断程序中返回的逻辑。读者朋友可以思考一下：当中断发生时，引发的情况无非就两种：
+
+  <ol>
+    <li>中断描述符是中断门和陷阱门：进行任务内的代码段切换</li>
+    <li>中断描述符是任务门：进行任务切换</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当中断处理程序执行完毕后，我们会调用 <font color="blue">iret</font> 指令来进行返回：对于情况 1，处理器应该返回到任务内先前执行的位置继续执行；对于情况 2，处理器应该切换回先前被中断的任务中去。处理器应该如何区分这两种情况呢？
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;答案藏在任务的 EFLAGS 寄存器中。EFLAGS 寄存器的格式如下所示：
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <td width="4%">长度</td>
+      <td width="30%">10b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="6%">2b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+    </tr>
+    <tr>
+      <td width="4%">长度</td>
+      <td width="30%"><div align="center">保留为 0</div></td>
+      <td width="3%">ID</td>
+      <td width="3%"></td>
+      <td width="3%"></td>
+      <td width="3%"></td>
+      <td width="3%"></td>
+      <td width="3%"></td>
+      <td width="3%">0</td>
+      <td width="3%">NT</td>
+      <td width="6%">IOPL</td>
+      <td width="3%">OF</td>
+      <td width="3%">DF</td>
+      <td width="3%">IF</td>
+      <td width="3%">TF</td>
+      <td width="3%">SF</td>
+      <td width="3%">ZF</td>
+      <td width="3%">0</td>
+      <td width="3%">AF</td>
+      <td width="3%">0</td>
+      <td width="3%">PF</td>
+      <td width="3%">1</td>
+      <td width="3%">CF</td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当一个任务的 EFLAGS 寄存器中的 NT (Nested Task) 位为 1 时，说明当前正在执行的任务是嵌套在其它任务内的。因此，当 CPU 在执行 <font color="blue">iret</font> 指令以进行中断返回的时候，会去判断当前任务 EFLAGS 的 NT 位。如果 NT 位为 0，则说明当前正在运行的中断服务程序是处于清况 1 的情况，直接在任务内返回即可；如果 NT 位为 1，则说明当前正在运行的中断服务程序是处于一个嵌套的任务中，需要使用 TSS 中任务链接域里存储的 "前一个任务的 TSS 描述符选择子" 进行任务切换，以返回先前被中断的任务。
+
+  <h3><a name="2_theory_3">2.3 基于 call/jmp/iret 指令的任务切换</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;除了上述的基于中断任务门引发的任务切换以外，我们还可以使用远转移指令 <font color="blue">"call/jmp TSS选择子/任务门 : 偏移地址"</font> 来进行任务切换。处理器发现一个任务在执行目标是一个 TSS 选择子或者任务门的远转移指令的时候，就会执行任务切换的操作。细心的读者发现了，任务门不只是用在中断的过程中被处理器固件所使用，也可以被指令直接调用。并且，任务门既可以放在 <font color="blue">中断描述符表</font> 中，也可以放在 <font color="blue">GDT</font> 中，也可以放在 <font color="blue">LDT</font> 中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">call</font> 和 <font color="blue">jmp</font> 指令执行的任务切换过程是有区别的：
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 <font color="blue">call</font> 指令，它类似于上文所述的基于中断任务门的切换方式，在切换过后新任务是嵌套在旧任务中的：当前任务 (旧任务) TSS 描述符的 B 位保持原来的 "1" 不变，EFLAGS 寄存器的 NT 位也不发生变化 (i.e. 可能为 "1" 也可能为 "0"，取决于旧任务是否也是嵌套在其它任务中)，新任务 TSS 描述符的 B 位置 "1"，EFLAGS 寄存器的 NT 位也置 "1"，同时 TSS 中的任务链接域的内容改为旧任务的 TSS 描述符选择子。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 <font color="blue">jmp</font> 指令引起的任务切换，则不会形成任务的嵌套关系。执行任务切换时，当前任务 (旧任务) TSS 描述符的 B 位清零，EFLAGS 寄存器的 NT 位也不发生变化 (i.e. 可能为 "1" 也可能为 "0"，取决于旧任务是否也是嵌套在其它任务中)，新任务 TSS 描述符的 B 位置 "1"，EFLAGS 寄存器的 NT 位 <font color="red">保持从 TSS 加载时的状态不变。</font>
+</div>
+
+<h2><a name="3_example">3. 基于 call/jmp/iret 指令的任务切换实例</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在理解了两种任务切换方式之后，我们现在通过实例来分析一下其中的第二种任务切换方式：基于 call/jmp/iret 指令的任务切换；对于基于中断的任务切换实例，我们在后面分析保护模式中断的时候会重点分析。同样地，在本文中，我们只关心内核源代码的变化。对于 MBR 源代码和用户程序的相关代码，我们复用了前几篇文章中使用的代码。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于太长，我把内核的代码贴在了 <a href="./kernel.html">内核源代码</a> 中，读者朋友可以跳转阅读。
+
+  <h3><a name="3_example_1">3.1 基本初始化</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;代码的入口在 Line 844 的位置。从 Line 845~902 的代码是用户初始化的代码，设置了内核数据段选择子，以及安装了调用门，这部分与上一篇文章保持一致我们不再赘述。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回忆我们在 <a href="#1_link_up">承上启下</a> 中所说的，本文将在进入保护模式之后立刻把内核代码放进一个 0 特权级的任务中，并在该任务中切换到特权级为 3 的用户中去。为了创建 0 特权级的任务，我们在 Line 905~907 的地方为 TSS 分配了内存空间，在 Line 909~914 的地方设置了 TSS 中的内容：我们不为这个任务设置 LDT (<font color="red">p.s. 一个任务不设 LDT 是允许的</font>)，因此 LDT 选择子一项为 0；任务链接域填写为 0，我们当前的 0 特权级任务不嵌套于任何其他任务中；同时我们也不需要 0、1、2 特权级的堆栈，因为我们的任务不可能在任务内发生特权级转移的事情。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在设置完 TSS 后，我们在 Line 919~924 的地方由为 TSS 创建了描述符，并把它放到 GDT 中，此处不再赘述。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后，我们在 Line 928 通过把 TR 寄存器设置为我们刚刚创建的 TSS 描述符对应的选择子，我们的处理器就正式运行在我们创建的 0 特权级任务中了。
+
+  <h3><a name="3_example_2">3.2 加载用户程序</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们已经处在一个 0 特权级的任务中了，我们下面的工作是：首先和运用上一篇文章讲过的内容，搭建加载特权级为 3 的用户任务所需要的环境，然后切换到用户任务中执行。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;来到我们的代码，在 Line 934~936 的地方，我们为我们的用户任务首先创建了一个 TCB，并且把它挂到 TCB 链上去。然后我们调用熟悉的 load_relocate_program 为我们的用户程序创建运行环境。load_relocate_program 相比于上文的改动在于，当我们在为用户任务创建 TSS 的时候，我们必须把各个寄存器中的值填写完整。回忆一下上文 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_10_Task_And_Privilege/index.html#3_example_8_2">创建用户任务 TSS</a>，我们在当时并没有在 TSS 中填写各个寄存器的快照信息，这是因为在当时我们并没有要做任务切换，因此处理器不会从 TSS 中恢复各个寄存器的信息，所以我们无需填写。而在本文中，我们之后将会从 0 特权级的任务切换到 3 特权级的任务去执行，因此当我们执行任务切换的指令的时候，处理器将会从 3 特权级任务对应的 TSS 中恢复寄存器的值，所以我们在本文中，在创建 TSS 的时候，需要向其中填写各个寄存器在任务切换的时候会被处理器固件恢复的值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;好了，来看 load_relocate_program 过程被修改的地方：来到 Line 762~786，这里是我们向 TSS 中填入寄存器快照信息的地方，值得注意的是 Line 783~786，我们把 EFLAGS 寄存器的信息先用 "<font color="blue">pushfd</font>" 指令压入到栈中，然后再 "<font color="blue">pop</font>" 到 EDX 寄存器中，接着在把 EDX 寄存器的内容放到 TSS 的 EFLAGS 域中，兜这一大圈的原因是因为没有直接从 EFLAGS 寄存器中把值读到寄存器的指令。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其它的用户任务加载操作和上文基本一致，本文就不再赘述。
+
+  <h3><a name="3_example_3">3.3 执行任务切换</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到主程序，在执行完 load_relocate_program 过程之后，我们就为我们的用户任务创建好了运行的环境。我们在 Line 943 的地方使用了间接远转移指令 "<font color="blue">call far</font>" 实现了任务切换，注意到我们的操作数所指向的地址是 TCB 中存储的 "16-bits TSS 描述符选择子 + 32-bits TSS 基地址"。当处理器发现它使用我们给出的选择子在 GDT 找到的描述符是一个 TSS 的描述符的时候，它会自动忽略我们给出的偏移地址，然后开始执行任务切换的操作：保存当前寄存器快照到当前 TR 寄存器指向的 TSS，然后从新的 TSS 中加载各个寄存器，以构建新的运行环境。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这里可以再次强调的是，由于我们是使用的是 "<font color="blue">call (far)</font>" 来进行任务的切换，因此切换后的新任务是嵌套在旧任务中的。切换后，旧任务 TSS 描述符 B 位仍为 1，EFLAGS NT 位保持不变；新任务 TSS 描述符 B 位为 1，EFLAGS NT 位也为 1。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后，我们就到了 3 特权级的用户任务中了。
+
+  <h3><a name="3_example_4">3.4 从用户任务中返回</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;用户任务程序的源码链接在了 <a href="./user.html">用户程序源代码</a> 中，其中间的过程不再展开叙述。我们直接看最后用户任务程序返回的时候，Line 70 调用内核 TerminateProgram 例程，因此会跳转到任务的全局地址空间。让我们回到内核代码来看 TerminateProgram 例程。  
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TerminateProgram 的实际例程序是在 Line 350 的 terminate_current_task。在这个例程中，为了实现从用户程序任务切换回内核 0 特权级任务，如上文所述，我们需要从 EFLAGS 中提取当前任务的 NT 位，判断当前任务是否是嵌套在其它任务中的：如果是，则返回之前的任务；如果不是，则直接使用 <font color="blue">jmp</font> 指令切换即可。来到代码中，我们在 Line 354~356 中提取出当前 EFLAGS 寄存器的值，然后在 Line 361 进行了判断。注意到如果发现用户任务是嵌套在另一个任务中的话，我们会调用 "<font color="blue">iretd</font>" 指令来进行返回，它其实功能和 "<font color="blue">iret</font>" 完全相同。我们下面简单分析一下这个指令。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_7_Intel_32_CPU_And_IA_32/index.html#4_ia_32_isa_1">机器码</a> 曾经介绍过 32 位处理器的 16 位模式和 32 位模式。在 16 位模式下，"<font color="blue">iret</font>" 的操作数是 16 位的，机器码是 "0xCF"；要想使用 32 位的操作数则需要加上 "0x66" 前缀，NASM 为了方便提供了 "<font color="blue">iretd</font>" 指令来代表这种情况。在 32 位模式下，由于 "<font color="blue">iret</font>" 的操作数本身就是 32 位的，因此 32 位模式下的 "<font color="blue">iret</font>" 和 "<font color="blue">iretd</font>" 的含义和机器码都是一样的，都为 "0xCF"。这里稍作解释。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于我们的用户程序任务是使用 "<font color="blue">call (far)</font>" 指令跳转过来的，是属于嵌套的任务，因此我们会通过 "<font color="blue">iret</font>" 指令返回到 0 特权级内核任务中去。处理器固件在自动帮我们切换 TSS 和恢复现场之后，我们就来到了 Line 948 的位置。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Line 951~960，我们基于同样的用户程序又创建了一个新的任务，这次我们使用了 "<font color="blue">jmp</font>" 指令进行跳转，即创建了一个非嵌套的任务，因此当这个任务利用全局地址空间的 TerminateProgram 例程返回时，使用的是直接 "<font color="blue">jmp</font>" 的方式进行跳转。
+</div>
+
+<h2><a name="4_firmware_switch">4. 处理器固件在任务切换时的工作</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;发生任务切换的情形有以下四种：
+
+  <div class="div_learning_post_background">
+  <ul>
+    <li>当前程序、任务或者过程执行一个将控制转移到 GDT 内某个 TSS 描述符的 jmp 指令或者 call 指令</li>
+    <li>当前程序、任务或者过程执行一个将控制转移到 GDT 或者当前 LDT 内某个门描述符的 jmp 或者 call 指令</li>
+    <li>一个异常或者中断发生时，中断号指向中断描述符表内的任务门</li>
+    <li>在 EFLAGS 寄存器的 NT 位置位的情况下，当前任务执行了一个 iret 指令</li>
+  </ul>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在发生任务切换时，处理器固件将发生下面的操作：
+
+  <ol>
+    <li><b><font color="blue">准备工作：</font></b>从 <b>(1) jmp 或者 call 指令的操作数</b> / <b>(2) 任务门</b> / <b>(3) 当前任务 TSS 的任务链接域 (i.e. 以 iret 发起的任务切换)</b> 中获取新任务的 TSS 描述符选择子</li>
+    <li><b><font color="blue">任务切换有效性检查：</font></b>检查是否允许从当前任务切换到新任务：当前任务的 CPL 和新任务代码段选择子 RPL 必须在数值上小于等于 TSS 或者任务门的 DPL；异常、中断 (p.s. 除了 int n 指令引发的中断) 引起的任务切换忽略目标任务门或者 TSS 描述符的 DPL；对于以 int n 指令产生的中断，要检查 DPL</li>
+    <li><b><font color="blue">任务切换有效性检查：</font></b>检查新任务的 TSS 描述符是否已经标记为有效 (P=1)，并且界限也有效 (i.e. TSS 描述符的段界限字段 `\geq` 103)</li>
+    <li><b><font color="blue">任务切换有效性检查：</font></b>检查新任务是否可用 (i.e. 对于 call、jmp、异常或者中断引起的任务切换要求 B=0；对于 iret 引起的任务切换要求 B=1)</li>
+    <li><b><font color="blue">任务切换有效性检查：</font></b>检查当前任务和新任务的 TSS，以及所有在任务切换时用到的段描述符都已经安排到系统内存中</li>
+    <li><b><font color="blue">当前任务切换前处理：</font></b>如果任务切换是由 jmp 或者 iret 引起的，清除当前任务 TSS 描述符的 B 位；如果是由 call 指令、异常或者中断引起的，则保持当前任务 TSS 描述符的 B 位</li>
+    <li><b><font color="blue">当前任务切换前处理：</font></b>如果任务切换是由 iret 指令发起的，处理器建立 EFLAGS 寄存器的一个副本，并且清楚其 NT 标志；如果是由 call、jmp、异常或者中断发起的，则副本中的 NT 标志不变</li>
+    <li><b><font color="blue">当前任务切换前处理：</font></b>处理器从 TR 中找到当前 TSS 的基地址，然后把以下的寄存器值保存在 TSS 中：所有通用寄存器、段寄存器中的段选择子、7 中创建的 EFLAGS 寄存器副本、以及指令指针寄存器 EIP</li>
+    <li><b><font color="blue">新任务任务切换前处理：</font></b>如果任务切换是由 call 指令、异常或者中断发起的，处理器则把从新任务加载的 EFLAGS 寄存器的 NT 标志置位；如果是由 iret 或者 jmp 指令发起的，则 NT 标志位的状态则与新任务 TSS 中保存的 EFLAGS NT 位保持一致</li>
+    <li><b><font color="blue">新任务任务切换前处理：</font></b>如果任务切换是由 jmp 指令、call 指令、异常或者中断发起的，处理器则把从新任务 TSS 描述符中的 B 位置位；如果是由 iret 发起的，则新任务 TSS 描述符中的 B 位保持不变</li>
+    <li><b><font color="blue">执行切换：</font></b>用新任务的 TSS 选择子和 TSS 描述符加载任务寄存器 TR</li>
+    <li><b><font color="blue">执行切换：</font></b>新任务的 TSS 状态数据被加载到处理器，包括：LDTR、PDBR (控制寄存器 CR3)、EFLAGS 寄存器、EIP 寄存器、通用寄存器，以及段基址寄存器。载入期间只要发生一个故障，架构状态就会被破坏。(p.s. <font color="blue">架构</font> 是指处理器对外公开部分的规格和构造；<font color="blue">架构状态</font> 是指在不同条件下在 架构 上建立起来的状态，应该是严格的、可预见的，否则就意味着遭到了破坏)</li>
+    <li><b><font color="blue">执行切换：</font></b>与段选择子相对应的描述符将在验证之后被加载到对应的描述符高速缓存器中</li>
+    <li><b><font color="blue">切换完成：</font></b>开始执行新任务</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当处理器在上述 1~11 中的某一步发生不可恢复性的错误时，处理器将不能完成任务切换，会返回到执行发起任务切换的那条指令前的状态。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当处理器在第 12 步发生不可恢复型的错误时，架构状态就会被破坏。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当处理器在第 13 步发生不可恢复性的错误时，处理器将完成任务切换，并且在开始执行新任务之前产生一个相应的异常。
+</div>
+
+<!--ref-->
+<!--
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+1. golang.org, <a target="_blank" rel="noopener" href="https://golang.org/cmd/go/#hdr-GOPATH_environment_variable">GOPATH environment variable</a>
+</p>
+</div>-->
+
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>X86_ISA_11_TASK_SWITCH</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

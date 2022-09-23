@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="中断和异常的处理与抢占式多任务">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_13_Interrupt/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_13_Interrupt/pic/xxx.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_13_Interrupt/pic/idt.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_13_Interrupt/pic/stack_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_13_Interrupt/pic/stack_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_13_Interrupt/pic/idt_2.png">
+<meta property="article:published_time" content="2022-02-10T14:39:10.924Z">
+<meta property="article:modified_time" content="2021-11-28T14:36:17.716Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_13_Interrupt/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>中断和异常的处理与抢占式多任务 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">中断和异常的处理与抢占式多任务
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>X86_ISA_13_INTERRUPT</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_border{
+      margin-bottom: 20px;
+      padding: 10px 10px; 
+      font-size: 16px; 
+      word-spacing:0px;  
+      border:1px solid black;
+    }
+    .div_learning_post_background{
+      background-color:#E3E2E2;
+      padding: 10px 40px; 
+      font-size: 16px;
+      word-spacing:0px;  
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+    .div_learning_post_background p{
+      margin: 0px;
+    }
+</style>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Sept.10 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=30%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.1 <a href="#1_xxx"><font color="blue">xxx</font></a>：xxx
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
+
+  </div>
+</div>
+
+<!--标题-->
+<h2><a name="1_concept">1. 概念约定</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;相信经历过实模式的文章的描述，我们对中断/异常的概念已经不陌生。它们的作用是指示系统中的某个地方发生了一些事件，需要引起处理器的响应。当中断和异常发生时，典型的结果是迫使处理器将控制从当前正在执行的程序或者任务转移到另一个程序或者任务中去，执行的处理程序被称为 <font color="blue">中断处理程序</font>。下面我们将首先对一些概念进行约定和分析。
+
+  <h3><a name="1_concept_1">1.1 中断</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;中断 (Interrupt) 包括 <font color="blue">硬件中断</font> 和 <font color="blue">软中断</font>。硬件中断是由 I/O 设备发出，被中断控制器捕获的，并且会把中断信号发送给处理器。软中断是由 <font color="blue">int n</font> 指令引发的中断处理，n 是中断号/类型码。
+
+  <h3><a name="1_concept_2">1.2 异常</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;异常 (exception) 是由处理器内部产生的中断，代表了处理器在执行指令的过程中遭遇的错误的情况。按照类型来分，可以分为以下三种：
+
+  <ul>
+    <li><b>程序的执行错误：</b>比如使用 div 指令时除数为 0 的情况</li> 
+    <li><b>软件引发的异常：</b>使用 into、int3、bound 指令主动发起的异常，这些指令会在指令流的当前点上检查实施异常处理的条件是否满足，如果不满足则抛出异常</li>
+    <li><b>机器检查异常：</b>不同的处理器有不同的该类异常，与处理器自检有关的异常</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;从严重程度来分的话，异常可以分为以下几种：
+
+  <ul>
+    <li><b>故障 (Faults)</b>：处理器在访问内存时发现段/页不在内存中的情况抛出的异常就属于这种情况。故障通常是可以在异常处理程序中予以纠正的。因此处理器在进行跳转之前，保存到栈中的当前状态是在引起故障的那条指令之前的状态，这样一来当处理器从异常处理程序中恢复时，就可以重新执行该指令。</li>
+    <li><b>陷阱 (Traps)</b>：该类指令 (e.g. into, int3) 对应了上面所述的 "软件引发的异常" 这种情况，这类异常常用于调试目的，因此处理器在进行跳转之前，保存到栈中的当前状态是陷阱指令之后的一条指令，以便处理器从异常处理程序中恢复后的程序连续性</li>
+    <li><b>终止 (Aborts)</b>：这代表了最严重的异常等级，可以由硬件错误、GDT/LDT 数据有误或者无效等原因引起。</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当有中断和异常发生的时候，处理器会挂起当前正在执行的程序，转而执行中断/异常处理过程。在处理程序结束后，处理器会返回并且恢复先前程序的运行 (p.s. 除非遇到的是终止类型的异常)。
+</div>
+
+<h2><a name="2_protect_mode_interrupt">2. 保护模式下的中断处理原理</a></h2>
+<div class="div_learning_post">
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在保护模式下，为了处理中断和异常，处理器会使用内存中的 <font color="blue">中断描述符表 (Interrupt Descriptor Table, IDT)</font>。这张表中存储了和中断处理过程相关的段描述符：<font color="blue">中断门</font>、<font color="blue">陷阱门</font> 和 <font color="blue">任务门</font>。当中断和异常发生时，处理器用中断向量乘以 8 (i.e. 一个 中断门/陷阱门/任务门 的长度) 的结果去访问 IDT，随后就拿到了中断门/陷阱门/任务门。中断门、陷阱门、任务门和调用门是十分类似的，它们本质上都被用于实施控制转移，因此在它们中都保存了 16 位的目标代码段选择子，以及 32 位的段内偏移量。中断门和陷阱门只允许存放在 LDT 中，而任务门可以位于 GDT、LDT 和 IDT 中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;32 位处理器有一个专门的 48-bits 寄存器 —— <font color="blue">中断描述符表寄存器 (IDTR)</font>，用于存放 32-bits 的IDT 基地址和段界限，其格式如下所示。与 GDT 一样，整个系统中只需要一个 IDT 就够了，所以它们的内容是十分类似的。
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <td width="60%">IDT 线性基地址 (32-bits)</td>
+      <td width="40%">IDT 边界 (16-bits)</td>
+    </tr>
+  </table>
+
+  <h3><a name="2_protect_mode_interrupt_1">2.1 中断门、陷阱门</a></h3>
+
+  <div align="center">
+    <img src="./pic/idt.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，对于中断门/陷阱门，它们引起的是任务内的控制流转移。它们保存了目标代码段描述符的选择子，以及段内偏移量。取决于选择子的 TI 位，处理器访问 GDT 或者 LDT，取出目标代码段的描述符，接着从目标代码段的描述符中取得目标代码段所在的基地址，再同门描述符中的偏移量相加，就得到了中断处理程序的 32 位地址。注意！如果开启了分页功能，那么这 32 位地址还需要经过页部件的转化后才能形成真正的物理地址。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;中断门和陷阱门的格式如下所示：
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面是中断门：
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <td witdth="3%">长度</td>
+      <td witdth="50%">16b</td>
+      <td idth="1%">1b</td>
+      <td width="1%">2b</td>
+      <td width="20%">5b</td>
+      <td width="9%">3b</td>
+      <td width="16%">5b</td>
+    </tr>
+    <tr>
+      <td witdth="3%">含义</td>
+      <td witdth="50%">中断处理过程在目标代码段内的偏移量 [31~16]</td>
+      <td idth="1%">P</td>
+      <td width="1%">DAL</td>
+      <td width="20%">0 D 1 1 0</td>
+      <td width="9%">0 0 0</td>
+      <td width="16%">[不使用]</td>
+    </tr>
+  </table>
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <td witdth="10%">长度</td>
+      <td witdth="45%">16b</td>
+      <td witdth="45%">16b</td>
+    </tr>
+    <tr>
+      <td witdth="10%">含义</td>
+      <td witdth="45%">目标代码段描述符选择子</td>
+      <td witdth="45%">中断处理过程在目标代码段内的偏移量 [15~0]</td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面是陷阱门：
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <td witdth="3%">长度</td>
+      <td witdth="50%">16b</td>
+      <td idth="1%">1b</td>
+      <td width="1%">2b</td>
+      <td width="20%">5b</td>
+      <td width="9%">3b</td>
+      <td width="16%">5b</td>
+    </tr>
+    <tr>
+      <td witdth="3%">含义</td>
+      <td witdth="50%">中断处理过程在目标代码段内的偏移量 [31~16]</td>
+      <td idth="1%">P</td>
+      <td width="1%">DAL</td>
+      <td width="20%">0 D 1 1 1</td>
+      <td width="9%">0 0 0</td>
+      <td width="16%">[不使用]</td>
+    </tr>
+  </table>
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <td witdth="10%">长度</td>
+      <td witdth="45%">16b</td>
+      <td witdth="45%">16b</td>
+    </tr>
+    <tr>
+      <td witdth="10%">含义</td>
+      <td witdth="45%">目标代码段描述符选择子</td>
+      <td witdth="45%">中断处理过程在目标代码段内的偏移量 [15~0]</td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于中断门和陷阱门引发的任务内控制转移，处理器会对这样的转移进行特权级保护措施，具体为：目标代码段特权级 DPL 高于当前特权级 CPL 时 (i.e. 数值上 CPL < 目标代码段 DPL)，处理器将不允许将控制转移到对应的中断或者异常服务程序上去。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，中断门和陷阱门自身也有 DPL 字段，处理器只会在使用软中断 int n、使用单步中断 int3 以及 into 引发的中断和异常时，对中断门和陷阱门自身的 DPL 字段进行检查，具体为：中断门/陷阱门 DPL 高于当前特权级 CPL 时 (i.e. 数值上中断门/陷阱门 DPL < CPL)，处理器将禁止通过该中断门/陷阱门实施转移。这么做的原因是因为处理器为了防止低特权级的程序通过软中断的指令来访问一些只服务于内核的例程 <font color="red">[Question]</font>。而对于硬件中断和处理器异常，处理器则不会检查门的 DPL。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当基于中断门/陷阱门的中断发生时，任务内会发生控制流的切换。当切换前后的控制流的特权级不同时，根据我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_10_Task_And_Privilege/index.html#2_privilege_5">任务内切换代码段特权级时的栈切换</a> 中所描述的内容，处理器将会自动进行栈相关的操作，如下所示：
+
+  <div class="div_concurrent_img">
+    <img src="./pic/stack_1.png" width=400px>
+    <img src="./pic/stack_2.png" width=400px>
+  </div>
+
+  <ul>
+    <li>当控制流切换前后的特权级不变时：如上第一张图所示，不会发生栈切换，处理器将在原来的栈中压入 ELFAGS、CS 和 EIP 寄存器的值，有些异常处理程序需要错误代码，因此处理器也会在栈中压入错误代码。</li>
+    <li>当控制流切换前后的特权级发生改变时：如上第二张图所示，处理器会利用 TSS 自动进行栈切换，并向新栈中压入旧栈 (旧栈) 的栈顶指针 (i.e. SS 和 ESP)，同样地也会保存 EFLAGS、CS、EIP 和某些异常处理程序需要的错误代码。</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于中断门和陷阱门的区别：对于基于中断门发生的任务内控制流切换，在程序跳转后，处理器会将 EFLAGS 的 IT 位清零，即禁止当前的中断处理程序被其它的中断所打断，也即禁止了中断的嵌套，在中断程序返回时，将会从栈中恢复 EFLAGS 的中断前状态；对于基于陷阱门的中断来说，在切换时的 EFLAGS 的 IT 位并不会清零，基于陷阱门的中断的优先级较低，允许其他中断打断处理。值得注意的是，我们上面说的 EFLAGS 寄存器的 IF 位只会影响处理器是否对硬件中断做出响应，而不会影响 NMI、异常和 int n 形式的软中断。
+
+  <h3><a name="2_protect_mode_interrupt_2">2.2 任务门</a></h3>
+
+  <div align="center">
+    <img src="./pic/idt_2.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;而对于任务门，它的处理不同于上面的流程，我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_11_Task_Switch/index.html#2_theory_2">基于中断的任务切换</a> 中介绍过任务门。当处理器发现中断向量指引的门是一个任务门时，在满足特权级保护要求的条件下，处理器将会执行相应的任务切换操作。任务门的特权级保护要求和中断门/陷阱门类似，这里不再赘述。在当时我们还介绍过：处理器会通过判断 EFLAGS
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在基于任务门引发的任务切换之后，必须关闭中断，在中断处理任务。原因是因为任务是不可重入的，因此我们应该避免因为相同的中断再次发生任务切换到当前的中断处理任务。
+</div>
+
+
+<!--ref-->
+<!--
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+1. golang.org, <a target="_blank" rel="noopener" href="https://golang.org/cmd/go/#hdr-GOPATH_environment_variable">GOPATH environment variable</a>
+</p>
+</div>-->
+
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>X86_ISA_13_INTERRUPT</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

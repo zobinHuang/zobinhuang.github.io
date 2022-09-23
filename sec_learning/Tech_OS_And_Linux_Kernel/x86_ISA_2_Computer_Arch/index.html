@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="学习汇编之前需要理解的计算机组成原理">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_2_Computer_Arch/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_2_Computer_Arch/pic/xxx.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_2_Computer_Arch/pic/mem.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_2_Computer_Arch/pic/disk_arch.jpg">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_2_Computer_Arch/pic/comp_arch.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_2_Computer_Arch/pic/mmio.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_2_Computer_Arch/pic/pmio.png">
+<meta property="article:published_time" content="2022-02-10T14:39:11.150Z">
+<meta property="article:modified_time" content="2021-09-07T12:09:27.000Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_2_Computer_Arch/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>学习汇编之前需要理解的计算机组成原理 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">学习汇编之前需要理解的计算机组成原理
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>X86_ISA_2_COMPUTER_ARCH</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_boder{padding: 10px 10px; font-size: 16px; word-spacing:0px;  border:1px solid black;}
+</style>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：July 19 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=30%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_comp_component"><font color="blue"><b>计算机部件</b></font></a>：介绍了基本的计算机部件原理
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.1 <a href="#1_comp_component_1"><font color="blue">CPU</font></a>：介绍了汇编程序员看到的处理器上的基本资源；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2 <a href="#1_comp_component_2"><font color="blue">RAM</font></a>：介绍了内存的访问原理；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3 <a href="#1_comp_component_3"><font color="blue">BIOS ROM</font></a>：介绍了 BIOS ROM 的功能作用；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.4 <a href="#1_comp_component_4"><font color="blue">外设：HDD 机械硬盘</font></a>：介绍了 HDD 的结构和编址；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.5 <a href="#1_comp_component_5"><font color="blue">外设：SSD 固态硬盘</font></a>：TODO
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_interconnect"><font color="blue"><b>器件互联</b></font></a>：介绍了 CPU 与其它计算机部件的互联；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_address_space"><font color="blue"><b>地址空间</b></font></a>：介绍了 CPU 是如何给其它互联资源编址的：
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.1 <a href="#3_address_space_1"><font color="blue">Memory-mapped I/O</font></a>：介绍了基于内存映射的编址方式；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.2 <a href="#3_address_space_2"><font color="blue">Port-mapped I/O</font></a>：介绍了基于端口映射的编址方式；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 4. <a href="#4_our_model"><font color="blue"><b>本系列博客所使用的 CPU 模型</b></font></a>：介绍了本系列博客在实模式部分使用的 Intel 8086 CPU 的资源情况
+  </div>
+</div>
+
+<!--标题-->
+<h2><a name="1_comp_component">1. 计算机部件</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当我们分析汇编语言的时候，我们实际上做的事情就是分析指令和数据在计算机中的流动。因此，我们必须对计算机底层的组成原理有一个感性的认识。在本小节，我们对底层硬件进行简单的描述，以满足我们分析汇编程序。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们先约定：当我们提到 <b>指令</b> 的时候，我们指的是指导 CPU 进行特定算术/逻辑操作的机器码；当我们提到 <b>数据</b> 的时候，我们指的是用于特定算术/逻辑操作的算数。
+
+  <h3><a name="1_comp_component_1">1.1 CPU</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Firstly, 是我们的主角 CPU。关于微处理器内部的结构，我们在 <a href="/sec_learning/Tech_Computer_Architerture/index.html">数字逻辑设计 & 计算机架构</a> 中有过详细的介绍，这里我们可以简单理解，CPU 中可以分为两个部分：<font color="blue">计算单元</font> 和 <font color="blue">寄存器组</font>。我们所编写的汇编指令在被编译器编译为机器码之后，就能被计算单元所执行。在不同架构的 CPU 中，它们的计算单元认识的指令集是不同的，因此我们必须基于我们的 CPU 架构来编写和分析汇编代码，并且使用相应平台下的编译器将汇编代码转化为机器码，这样才能够使 CPU 正确地运行起来。指令执行的结果，可以被存放在 CPU 中的各个寄存器中。CPU 中的各个寄存器有各种各样的作用，我们在后面的文章将会重点分析它们。
+
+  <h3><a name="1_comp_component_2">1.2 RAM</a></h3>
+  <div align="center">
+    <img src="./pic/mem.png" width=700px>
+  </div>
+
+  <p> 
+  &nbsp;&nbsp;&nbsp;&nbsp;其次是 RAM，也就是内存。内存是一种 <font color="red">按字节寻址</font> 的存储器，我们把一个字节的内存空间称为一个 <font color="blue">内存单元</font>。从汇编程序员的角度出发简单地理解，CPU 为了读写内存单元，它会把要操作的内存单元的地址送上 <font color="blue">地址总线</font>，通过在 <font color="blue">控制总线</font> 上发送对应的控制信号，就能够通过 <font color="blue">数据总线</font> 来收发数据。内存是一种读写速率很快的存储器。因此在计算机系统中，我们都是使用内存来存储指令和数据，CPU 通过读取内存中存储的内容来运行。
+
+  <h3><a name="1_comp_component_3">1.3 BIOS ROM</a></h3>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在系统主板上，有一块 ROM 芯片，存放着一套程序，这套程序有一个令人熟知的名字：<font color="blue">BIOS (Basic Input/Output System)</font>，这套程序包括了：
+
+  <ol>
+    <li>硬件系统的检测和初始化程序</li>
+    <li>外部中断和内部中断的中断例程</li>
+    <li>用于对硬件设备进行 I/O 操作的中断例程</li>
+    <li>其它和硬件系统相关的中断例程</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在以 Intel 8086 为处理器的系统中，ROM 占据着整个内存空间顶端的 64KB，物理地址范围是 0xF0000～0xFFFFF。8086 加电或者复位时，CS=0xFFFF，IP=0x0000，所以，它取的第一条指令位于物理地址
+  0xFFFF0，如果你不熟悉这样的计算，没关系，我们在下一篇文章就会讲解 CPU 计算内存地址的方法，你只要明白的是，CPU 上电后读取的第一条指令，正好位于 ROM 中，那里固化了开机时需要执行的指令。0xFFFF0 处存储的是一条转移指令，如果你不熟悉转移指令，它会通过改变 CS 和 IP 的内容，使处理器从 ROM 中的较低地址处开始取指令执行，这些指令将进行硬件的诊断、检测和初始化等工作。在完成使命后，ROM-BIOS 将读取硬盘主引导扇区(MBR)的内容，将 MBR 加载到内存地址 0x0000:0x7c00 处（也就是物理地址 0x07C00）。MBR 的功能是继续从硬盘的其他部分读取更多的内容加以执行，因此它的内容通常和具体的操作系统有关系。我们下面马上就会介绍 MBR。
+
+  <h3><a name="1_comp_component_4">1.4 外设：HDD 机械硬盘</a></h3>
+
+  <div align="center">
+    <img src="./pic/disk_arch.jpg" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，磁盘实际上由多个 <font color="blue">磁盘面 (platter)</font> 组成。在每个 磁盘面中由从里到外的若干条 <font color="blue">磁道 (track)</font> 组成。根据硬盘的规格不同，磁道数可以从几百到成千上万不等。最外圈的磁道是0号磁道，向圆心增长依次为1磁道, 2磁道, ...。磁盘的数据存放就是从最外圈开始的。每个磁道可以存储数 Kb 的数据。在每条 磁道 中，又可以分为若干个 <font color="blue">扇区 (sector)</font>。现在每个扇区可存储 512 Bytes 数据已经成了业界的约定。我们又把位于不同 磁盘面 的具有相同编号 (i.e. 位置相同) 的 磁道 称为 <font color="blue">柱面 (cylinder)</font>。
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;需要注意的是，磁盘读写数据是按 柱面 进行的，磁头读写数据时首先在同一柱面内从 0 磁头开始进行操作，依次向下在同一柱面的不同盘面(即磁头上)进行操作，只有在同一 柱面 所有的磁头全部读写完毕后磁头才转移到下一 柱面。因为选取磁头只需通过磁盘控制器电子切换即可，而选取柱面则必须通过机械切换。数据的读写是按柱面进行的，而不是按盘面进行，所以把数据存到同一个柱面是很有价值的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于使用 "磁盘面+磁道+扇区" 的定位方法十分麻烦，因此业界推出了 <font color="blue">LBA(Logic Block Address)</font> 的磁盘扇区编址方式：把磁盘上所有的扇区从 0 开始编号。最早的逻辑扇区编址方法是 LBA28，使用 28 个比特来表示逻辑扇区号，从逻辑扇区 0x0000000 到 0xFFFFFFF，共可以表示 `2^28` ＝268435456 个扇区。每个扇区有 512 字节，所以 LBA28 可以管理 128 GB 的硬盘。 硬盘技术发展得非常快，最新的硬盘已经达到几百个吉字节的容量，LBA28 已经落后了。在这 种情况下，业界又共同推出了 LBA48，采用 48 个比特来表示逻辑扇区号。如此一来，就可以管理 131072 TB 的硬盘容量了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在硬盘的众多扇区中，有一个特别的扇区，它位于 0 面 0 道 1 扇区，被称为 <font color="blue">主引导扇区 (MBR)</font>，里面存储了一些指令。当 CPU 开始运行主引导扇区中的指令的时候，CPU 就能够从磁盘中读取出操作系统的代码，所以它相当于起到了一个引导的作用。我们在上面分析 BIOS ROM 的时候已经有过简单的讲解。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在后面会描述 CPU 如何与机械硬盘进行交互。
+
+  <h3><a name="1_comp_component_5">1.5 外设：SSD 固态硬盘</a></h3>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+</div>
+
+<h2><a name="2_interconnect">2. 器件互联</a></h2>
+<div class="div_learning_post">
+
+  <div align="center">
+    <img src="./pic/comp_arch.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上面第一章对计算器部件的阐述，我们在本节讨论这些部件在计算机系统上是如何互联的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上图所示的是传统的计算机部件互联架构。首先，在主板上会有两个重要的部件：<font color="blue">北桥(North Bridge)</font> 和 <font color="blue">南桥(South Bridge)</font>，统称为 <font color="blue">芯片组(Chipset)</font>。北桥主要用于连接 CPU 与 内存，PCIe 设备等高速器件之间的通信，并且也会通过内部总线与南桥通信；南桥主要用于负责与各种较慢速 I/O 接口 (e.g. USB, IDE/STATA) 之间进行通信。对于 CPU 来说，与它直接相连接的是北桥，也就是说，对于 CPU 发起的对其它部件的访问，最终都会由北桥来进行处理。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们现在还没有讨论 CPU 是如何访问各种互联资源的，我们把这一部分放在下一个小节进行分析。
+</div>
+
+<h2><a name="3_address_space">3. 地址空间</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在本小节中我们将讨论 CPU 是如何访问系统资源的，包括了自身寄存器、内存、ROM、以及磁盘等 I/O 设备。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;CPU 访问互联设备资源，本质上是在访问分布在各个地方的存储器，包括系统内存，系统 BIOS ROM，I/O 设备芯片寄存器/板上 RAM 等等。因此，在访问之前，系统需要为这些可以被访问的存储器进行统一编址，这样，CPU 才能够访问到正确的位置。我们按照CPU 对 I/O 设备上可访问资源编址方式的不同，将编址方式分为：<font color="blue">Memory-mapped I/O (MMIO)</font> 和 <font color="blue">Port-mapped I/O (PMIO)</font>。下面进行介绍。
+
+  <h3><a name="3_address_space_1">3.1 Memory-mapped I/O</a></h3>
+
+  <div align="center">
+    <img src="./pic/mmio.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 MMIO 下，如上图所示，系统内存，BIOS ROM，I/O 设备寄存器/RAM 都被映射到了一个统一的内存地址空间上。当 CPU 发起对某一个地址的访问的时候，由于该地址在整个地址空间内唯一确定了一个存储器单元的位置，它就能够在整个互联系统中找到这个存储器进行读写。这个存储器可能在系统内存中，也可能在 BIOS ROM 中，也可能在 I/O 设备上。因此，对于 MMIO 的寻址方式，CPU 只需要使用一套指令，就能够发起对互联系统所有存储器单元的访问，这与我们在下面要看到的 PMIO 的方式有所不同。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;MMIO 是现在大部分互联系统采用的内存编址方式。
+
+  <h3><a name="3_address_space_2">3.2 Port-mapped I/O</a></h3>
+
+  <div align="center">
+    <img src="./pic/pmio.png" width=400px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在早期的 Intel CPU 中，由于只有 20 条地址线，只能支持 `2^20` = 1M Bytes 的系统地址空间，系统内存本来就是紧缺的资源，如果还使用 MMIO 的方式，只会使系统内存部分的地址空间被严重耗尽。因此早期的 Intel CPU 使用了 PMIO 的方式。在 PMIO 方式下，I/O 设备上的寄存器被称作端口，CPU 将这些端口独立出来，在系统内存空间之外独立编址，如上图所示。这样一来，系统内存空间又变为在当时看来比较充裕的 1M Bytes。在这样的设计下，CPU 访问系统内存和访问 I/O 设备存储器使用的就是不同的指令，因为只有区分了指令，CPU 在运行指令的时候才能区分要向哪个地址空间发起读写访问。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在如今的 64 位系统下，我们的地址线早已变成了 64 根，理论上来说能支持 `2^64` = 16384 PB(PebiByte)。我们的地址空间已经变得和太阳一样取之不尽用之不竭了，因此 PMIO 的设计也就慢慢被淘汰了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然而，在汇编语言的学习中，由于我们在很多书中看到的是使用 16-bits 的 Intel 8086 CPU 作为运行汇编语言的处理器，因此在讲述操作 I/O 设备的时候仍然使用的是 PMIO 的方式。只能说，这是为了让初学者更好地理解 CPU 访问外围设备的一种工作方式，因为它较为简单。读者在学习的时候在心里面清楚我们实际中更多使用的是 MMIO 的方式就可以了。
+</div>
+
+<h2><a name="4_our_model">4. 本系列博客所使用的 CPU 模型</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在实模式部分的系列博客中，我们与市面上大部分教材一样，选用 Intel 8086 CPU 作为我们分析的对象。Intel 8086 CPU 是一个 16-bits 的 CPU，这代表了它内部的寄存器都是 16-bits 的，计算单元的单次计算能支持的最大位数也是 16 bits。按理来说它的寻址空间应该也是 16-bits，但是为了支持 `2^20` = 1M Bytes 的内存空间，它有 20 条地址线，我们在后面会分析它是如何生成地址总线上的 20-bits 地址的。对于 I/O 设备的访问，它使用的是 PMIO 的方式。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，由于我们在后面的程序中会经常使用 8086 CPU 在屏幕上输出内容，作为我们验证我们程序运行结果的判断依据，因此在这里我们也介绍一些 8086 CPU 输出内容的原理。8086 CPU 将内存的 0xB8000~ 0xBFFFF 共 32KB 的空间作为显存。这 32KB 可以被分为 8 页，CPU 默认显示第 1 页的内容，也即显示低 4KB 的页中的内容。在这 4KB 中，是一个 80(Width)x25(Height) 的彩色字符输出区域，每个字符占用 2 个字节，1 个字节用于描述显示内容，1 个字节用于描述字符的属性 (颜色，背景颜色等)。也就是说这 4KB = 80 x 25 x 2 Bytes，其中低地址(偶数字节)存放字符的 ASCII 码，高地址(奇数字节)存放字符的属性。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同时，Intel 的 <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%AD%97%E8%8A%82%E5%BA%8F/1457160?fr=aladdin">字节序</a> 是低端字节序(小端)，即低字节在低地址端，高字节在高地址端，如此递归。比如：
+
+  <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;NASM Assemly</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">dword</span> [<span class="number">0x00</span>], <span class="number">0x7c0001ff</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">dword</span> [<span class="number">0x04</span>], <span class="number">0x00409800</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面这两条指令用于向内存中连续的 8 个单元中写入数据，一次写入一个 "双字"(double word)，即 2 字节。写入后，低双字将在低地址端，高双字将在高地址端；低字将在低地址端，高字将在高地址端；低字节将在低地址端，高字节将在高地址端，最终形成：
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th width="20%">地址</th>
+      <th>内容</th>
+    </tr>
+    <tr>
+      <td width="20%">+0x07</td>
+      <td>00</td>
+    </tr>
+    <tr>
+      <td width="20%">+0x06</td>
+      <td>40</td>
+    </tr>
+    <tr>
+      <td width="20%">+0x05</td>
+      <td>98</td>
+    </tr>
+    <tr>
+      <td width="20%">+0x04</td>
+      <td>00</td>
+    </tr>
+    <tr>
+      <td width="20%">+0x03</td>
+      <td>7c</td>
+    </tr>
+    <tr>
+      <td width="20%">+0x02</td>
+      <td>00</td>
+    </tr>
+    <tr>
+      <td width="20%">+0x01</td>
+      <td>01</td>
+    </tr>
+    <tr>
+      <td width="20%">+0x00</td>
+      <td>ff</td>
+    </tr>
+  </table>
+</div>
+
+<!--ref-->
+<!--
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+1. golang.org, <a target="_blank" rel="noopener" href="https://golang.org/cmd/go/#hdr-GOPATH_environment_variable">GOPATH environment variable</a>
+</p>
+</div>-->
+
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>X86_ISA_2_COMPUTER_ARCH</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

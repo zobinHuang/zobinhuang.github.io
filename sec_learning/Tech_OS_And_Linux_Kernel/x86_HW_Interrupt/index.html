@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Linux 中断机制自底向顶理解 (基于 x86 架构平台)">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/code_structure.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/intel_8259.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/dual_intel_8259.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/xeon_apic.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/p6_apic.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/3_wire_apic.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/frontend_backend.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/remote_irr_1.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/remote_irr_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/lapic_struc.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/lvt.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/icr.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/irr_isr.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/eoi.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/tpr.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/ppr.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/local_apic_flow.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/local_apic_id.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/ldr.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/dfr.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/generic_data_structure.jpg">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/pic/xxx.png">
+<meta property="article:published_time" content="2022-08-20T19:04:46.157Z">
+<meta property="article:modified_time" content="2022-08-20T19:04:46.157Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_HW_Interrupt/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>Linux 中断机制自底向顶理解 (基于 x86 架构平台) | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">Linux 中断机制自底向顶理解 (基于 x86 架构平台)
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>X86_HW_INTERRUPT</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body onload="load_page()">
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Aug.18 2022</i></font></h4>
+</div>
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+<br>
+<div class="div_catalogue">
+  <div align="center">
+    <h1> 目录 </h1>
+    <p>
+    <font size="3px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_load_catalogue_alert" id="load_catalogue_alert">正在加载目录...</div>
+  <div class="div_catalogue_container" id="catalogue_container">
+  </div>
+</div><br>
+
+<!-- Start your post here -->
+<h2 class="title">概述</h2>
+<div class="div_learning_post">
+  <h3 class="title">中断的基本分类</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，我们必须对 x86 体系架构下中断的分类有一个基本的分类认知:
+
+  <ul>
+    <li><def>Hardware Interrupt</def>: 我们将有外部硬件设备产生的中断信号称为硬件中断，由于它可以随时发生 (但仍然按照 CPU 时钟周期来产生)，因此也被称为 <def>Asynchronous Interrupt</def>;</li>
+    <li>
+      <def>Software Interrupt</def>: 软件中断由 CPU 执行的指令产生，由于它伴随着 CPU 指令的执行而产生，因此也被称为 <def>Synchronous Interrupt</def>。具体可以分为两种情况:
+      <ol>
+        <li><def>Exception</def>: 当处理器在执行指令的过程中发现异常事件 (e.g. 页表不存在, 除 0 错误等) 的时候被触发，由 CPU 控制单元发出;</li>
+        <li><def>Sysenter</def>: 程序可以通过执行一些指令来产生软件中断 (e.g. x86 平台下的 <code>int</code> 指令)</li>
+      </ol>
+    </li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其中，对于 Exception，Intel 平台下又有如下的分类 <cite>intel_document_volume_3a_c6</cite>:
+
+  <ul>
+    <li>
+      <def>Fault</def>: 该类异常通常可以被纠正，纠正后程序可以继续运行。当 Fault 异常发生时，处理器会记录下产生 Fault 异常的指令的地址 (i.e. 当前 <code>CS</code> 和 <code>EIP</code> 寄存器的值)，作为异常处理程序的返回地址。在运行完异常处理程序后，处理器将返回原先产生 Fault 异常的指令并重新运行;
+    </li>
+    <li>
+      <def>Trap</def>: 该类异常通常是由于处理器运行了 <def>Trapping Instruction</def> 引起的，在运行完异常处理程序后，程序可以被继续运行。值得的注意的是此时异常程序返回后执行的是紧跟在 Trapping Instruction 后面的指令，这与 Fault 异常有所区别;
+    </li>
+    <li>
+      <def>Abort</def>: 该类异常代表着处理器无法精确地获取导致异常的指令的地址，因此产生 Abort 异常后，程序将无法恢复。
+    </li>
+  </ul>
+
+  <noteblock>
+  我们本文阐述的重点是 Linux 如何处理 Hardware Interrupt (以下简称中断)。
+  </noteblock>
+
+  <h3 class="title">Linux 中断子系统</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Linux 中断子系统的设计结构如 <imgref>img_code_structure</imgref> 所示。在硬件层次上，<def>Interrupt Controller (中断控制器)</def> 负责将来自外部设备的中断信号通告给 CPU；CPU 则负责响应中断，运行对应的中断服务程序。不同架构 (e.g. x86, arm64, etc.) 平台有不同的 CPU 和中断控制器实现，Linux 为了实现代码在各种架构平台上的可移植性，在内核中实现了一个 <def>Generic Interrupt Layer (通用中断层)</def>，屏蔽了底层硬件的异构性，向上提供了统一的注册/注销中断回调，屏蔽/恢复中断响应等的接口，这些接口的具体实现将由各个底层平台相关的代码进行实现。得益于通用中断层，厂商在开发设备驱动的时候可以忽略设备所在的底层平台，直接调用 Linux 内核提供的通用中断层 API 即可。
+
+  <div class="img" title="Linux 中断代码层次" label="img_code_structure">
+    <img src="./pic/code_structure.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在本文中，我们将看到通用中断层中相关的数据结构和 API，另外我们还将结合 x86 架构分析底层中断从产生到最终运行对应设备驱动的中断回调的全过程。下面，我们自底向顶，逐渐分析 x86 平台下中断的全流程。
+</div>
+
+<h2 class="title">中断硬件</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;说到中断硬件，我们的主角就是 <def>中断控制器 (Inertrrupt Controller)</def>，它是外部设备向 CPU 发起中断请求的代理人。在 x86 架构下，中断控制器经历了 <def>PIC (Programmable Interrupt Controller)</def> 和 <def>APIC (Advanced Programmable Interrupt Controller)</def> 两个阶段，前者应用于早期单处理器时代，后者应用于如今的多处理器时代。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在启动对上述两种中断控制器架构的分析之前，我们首先比如明确中断控制器具体的功能:
+
+  <noteblock>
+  中断控制器接收来自设备的中断电平信号，将电平信号按照一定的规则转化为 CPU 中断向量 (Interrupt Vector) 后通告给 CPU。
+  </noteblock>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这里 CPU 中断向量，在 x86 架构下实际上指的就是处理器硬件所能识别的硬件中断编号，也即 <def>中断描述符表 (Interrupt Description Table, IDT)</def> 中的编号，我在学习 x86 保护模式汇编的时候写的另一篇文章曾经阐述过 IDT 相关的内容: <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_13_Interrupt/index.html">中断和异常的处理与抢占式多任务</a>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在明确了中断控制器的具体功能后，下面我们对 PIC 和 APIC 中断控制器结构进行分析，其中重点分析 APIC。
+
+  <h3 class="title">PIC</h3>
+  <div class="theorm_prove" style="font-size:12px;">
+  本节内容主要参考自引用文献 <cite>zxw_interrupt_in_linux</cite>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Intel 8259 <cite>wiki_8259</cite> 是历史上最经典的 PIC，由 Intel 在上个世纪 80 年代为 8086 处理器开发，其 28 个引脚分布如下所示:
+
+  <div class="img" title="Intel 8259">
+    <img src="./pic/intel_8259.png" width="200px">
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其中，各个管脚的功能分别是:
+
+  <ul>
+    <li><code>IR0~IR7</code> (Interrupt Request 0~7): 用于连接设备;</li>
+    <li><code>INT</code>: 连接 CPU, 当有中断请求时，拉高该管脚以通知 CPU 中断的到来;</li>
+    <li><code>INTA</code>: 连接 CPU，CPU 通过该管脚应答中断请求，并通知 PIC 提交中断的 vector 到数据线;</li>
+  </ul>
+
+  <div class="img" title="Intel 8259 级联设计">
+    <img src="./pic/dual_intel_8259.png" width="500px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;此外，由于一片 8259 只能连接 8 个设备，对于当时较为先进的 PC 架构来说显得过少，通常会通过 CS (片选) 将两个 8259A 连在一起构成一个可以连接 15 个设备的 PIC。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;正如其名 Programmable Interrupt Controller，8259 是可编程的芯片。<b>ICW</b> (Interrupt Command Word) 寄存器用于初始化 8259 芯片; <b>OCW</b> (Operation Command Word) 寄存器用于控制 8259 芯片。另外，8259 中还有以下三个内部使用的寄存器:
+
+  <ul>
+    <li><b>IRR</b>: Interrupt Request Register，一共 8 bits，对应于 IR0~IR7 八个中断管脚。当某个管脚的中断请求到来后，若该管脚没有被屏蔽，则 <b>IRR</b> 中对应的 bit 被置位，表示当前 PIC 已经接收到设备的中断请求，但是还未提交给 CPU;</li>
+    <li><b>ISR</b>: Interrupt Service Register，一共 8 bits，每个 bit 的意义同上。当 <b>IRR</b> 中的某个中断请求被发送给 CPU 后，ISR 中对应的 bit 即被置位，表示中断已经发送给 CPU，但 CPU 仍未处理完;</li>
+    <li><b>IMR</b>: Interrupt Mask Register，一共 8 bits，每个 bit 的意义同上，用于屏蔽中断。当某个 bit 被置位时，对应的中断管脚将被屏蔽，上面介绍的 <b>IRR</b> 对应的 bit 在中断来临时将不会被置位。</li>
+  </ul> 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;PIC 与我们下面将要介绍的 APIC 不同，每一个管脚都具有优先级，以 0 号管脚优先级最高，管脚号码越小的设备，具有较高的中断优先级。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们上面提到过，中断控制器的功能是把外部设备的中断电平信号，转化为 x86 硬件可以理解的中断向量。通过对 8259 的 <b>ICW</b> 寄存器进行编程，我们可以设定起始的中断向量号。例如我们设置起始的中断向量号为 $16$，则当 <code>IR3</code> 管脚接收到中断请求时，中断控制器输出的中断向量号将为 $16+3=19$。
+
+  <div class="border">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;通过 8259 的 PIC 发起的中断流程一般如下所示:
+
+  <ol>
+    <li>一个或多个 <code>IRx</code> 管脚上产生电平信号，若对应的中断没有被屏蔽，<b>IRR</b> 中相应的 bit 被置位;</li>
+    <li>PIC 拉高 <code>INT</code> 管脚通知 CPU 中断发生;</li>
+    <li>CPU 通过 <code>INTA</code> 管脚应答 PIC，表示中断请求收到;</li>
+    <li>PIC 收到 <code>INTA</code> 应答后，将 <b>IRR</b> 中具有最高优先级的 bit 复位，并置位 <b>ISR</b> 中对应的 bit;</li>
+    <li>CPU 通过 <code>INTA</code> 管脚第二次发出脉冲，PIC 收到后计算最高优先级中断的中断向量值，并将它提交到数据线上;</li>
+    <li>
+      PIC 等待 CPU 写 <code>EOI</code> (End Of Interrupt):
+      <ul>
+        <li>收到 <code>EOI</code> 后，<b>ISR</b> 中最高优先级的 bit 被清零;</li>
+        <li>如果 PIC 处于 AEOI (Auto End Of Interrupt) 模式，在 PIC 收到第二个 <code>INTA</code> 脉冲时，<b>ISR</b> 中最高优先级的 bit 就会被自动清零。</li>
+      </ul>
+    </li>
+  </ol>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;前面提到，PIC 的各个管脚是具有优先级的，当一个中断正被 CPU 处理时，优先级等于或低于该中断的中断被自动屏蔽。一个比当前中断优先级更高的中断会被马上发送给 CPU， 而不管 CPU 是否已经为当前的中断写过 <code>EOI</code>。
+
+  <div class="theorm_prove">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，以上关于优先级的论述，是基于 PIC 默认的 Full Nested 模式说的。这是 PIC 最常用的模式。实际上 PIC 还有优先级轮转 (rotating)、特殊优先级轮转模式。优先级轮转是指 PIC 在服务完一个管脚后将其优先级降低，并升高未服务管脚的优先级，以实现一种类似轮询的模式，这和后面讲到的 LAPIC Arb 机制类似。
+  </div>
+
+  <h3 class="title">APIC</h3>
+  <div class="theorm_prove" style="font-size:12px;">
+  本节内容主要参考自引用文献 <cite>intel_document_volume_3a_c10</cite>, <cite>zxw_interrupt_in_linux</cite>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面介绍的 PIC 中断架构，最大的问题在于它无法应用在 <def>多处理器 (Multi Processors, MP)</def> 平台中。为了实现对 MP 的支持，x86 应用了 APIC 中断架构。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;APIC 由两部分组成，一个称为 <def>Local APIC (LAPIC)</def>，另一个称为 <def>I/O APIC</def>。前者位于 CPU 中，对于 MP 平台来说，每一个 CPU 核心都有一个自己的 LAPIC; 后者通常位于南桥上，像 PIC 一样连接各个产生中断的设备。I/O APIC 负责将接收到的设备中断信号，根据可编程的转发规则，转换为对应的中断向量后，将中断消息发送给部分或者全部处理器核心对应的 Local APIC，由 Local APIC 再触发 CPU 核心对应的中断。
+
+  <div class="multi_img">
+    <div 
+      class="img"
+      title="Intel Xeon 处理器的 APIC 架构"
+      label="img_xeon_apic"
+      source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+    >
+      <img src="./pic/xeon_apic.png" width="380px" />
+    </div>
+    <div 
+      class="img" 
+      title="Intel P6 处理器的 APIC 架构"
+      label="img_p6_apic"
+      source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+    >
+      <img src="./pic/p6_apic.png" width="380px" />
+    </div>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如 <imgref>img_p6_apic</imgref> 所示，在 Intel 的 P6 和 Pentium 系列的 CPU 中，I/O APIC 和 LAPIC 之间，以及 LAPIC 之间通信的连接是单独的 APIC 总线，也即 Intel 编程文档 <cite>intel_document_volume_3a_c10</cite> 中提到的 <def>3-wire APIC Bus</def>；在后来的 Intel Xeon 和 Pentium 4 系列 CPU 中，如 <imgref>img_xeon_apic</imgref> 所示，I/O APIC 和 LAPIC 之间，以及 LAPIC 之间通信的连接不再使用独立的 APIC 总线，而是使用 <def>Front-side Bus (FSB)</def> 进行通信 (p.s. I/O APIC 和 LAPIC 之间的通信需要借助北桥)。
+
+  <div 
+    class="img"
+    title="3-wire APIC 架构"
+    label="img_3_wire_apic"
+    source="https://www.cool3c.com/article/158167"
+  >
+    <img src="./pic/3_wire_apic.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上图更加清晰地展示了老架构所使用的 3-Wire APIC Bus；后来的 Intel 至强处理器，I/O APIC 直接使用 System Bus 发送中断请求，然后通过北桥中的 Bridge 转发给 LAPIC；LAPIC 之间的通信走的同样也是 System Bus。
+
+  <h4 class="title">中断信号、中断消息的区别</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在正式展开对 I/O APIC 和 LAPIC 的分析之前，我们需要再次梳理中断信号、中断消息这两者的区别。  
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<def>中断信号</def> 是电平信号，是由发送中断的 外部设备/处理器核心 在对应的 中断控制器/中断处理结构 的引脚引起的电平变化，以通告中断的产生。常见的中断信号有两种形式：<def>Level (电平) 触发</def> 和 <def>Edge (边沿) 触发</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在收到中断信号后，中断控制器/中断处理结构 需要通过查表等一系列操作，将中断信号转化为在系统总线上传输的消息，也即 <def>中断消息</def>。因此，在下面的阐述中，我们把实现「信号 $\rightarrow$ 消息转换」功能的 中断控制器/中断处理结构 称为 <def>中断处理前端</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有前端当然就有后端。当前端完成中断消息的转换和发送时，中断消息中封装了关于生成的中断的各种信息，系统中需要有相应的后端结构对这些信息进行进一步处理，最后通告 CPU 运行对应位置的中断服务程序，下面的阐述中我们把实现「中断消息处理」的结构称为 <def>中断处理后端</def>。
+
+  <div class="img" title="中断处理前后端架构" label="img_frontend_backend">
+    <img src="./pic/frontend_backend.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如 <imgref>img_frontend_backend</imgref> 所示，下面我们将分析在 APIC 系统中三种类型的中断 —— 外部设备中断、处理器间中断和处理器内部中断，它们的详情如 <tableref>tbl_interrupt_fe_be</tableref> 所示:
+
+  <div 
+    class="table"
+    title="APIC 系统中断三种类型 (大致分类)"
+    label="tbl_interrupt_fe_be"
+  >
+  <table>
+    <tr>
+      <th width="20%" align="center">中断类型</th>
+      <th width="40%" align="center">中断处理前端</th>
+      <th align="center">中断处理后端</th>
+    </tr>
+    <tr>
+      <td align="center">外部设备中断</td>
+      <td align="center">I/O APIC</td>
+      <td align="center">LAPIC 的 <b>ISR</b>, <b>IRR</b>, <b>TPR</b>, <b>PPR</b> 和 <b>EOI</b> 等寄存器组</td>
+    </tr>
+    <tr>
+      <td align="center">处理器间中断</td>
+      <td align="center">LAPIC 的 ICR 寄存器</td>
+      <td align="center">LAPIC 的 <b>ISR</b>, <b>IRR</b>, <b>TPR</b>, <b>PPR</b> 和 <b>EOI</b> 等寄存器组</td>
+    </tr>
+    <tr>
+      <td align="center">处理器内部中断</td>
+      <td align="center">LAPIC 的 LVT 寄存器组</td>
+      <td align="center">LAPIC 的 <b>ISR</b>, <b>IRR</b>, <b>TPR</b>, <b>PPR</b> 和 <b>EOI</b> 等寄存器组</td>
+    </tr>
+  </table>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以看到，APIC 系统的中断处理的前后端就藏在了 I/O APIC 和 LAPIC 两个片子中，下面我们分别分析 I/O APIC 和 LAPIC。我们首先从外部设备中断的处理前端 —— I/O APIC 入手进行分析。
+
+  <h4 class="title">I/O APIC</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;和 PIC 相比，I/O APIC 最大的作用在于中断分发。当 I/O APIC 收到外部设备的中断信号时，它根据它内部的 <def>Programmable Rediection Table (PRT)</def>，它可以格式化出一条中断消息，并发送给某个 CPU 核心下的 LAPIC，由 LAPIC 通知 CPU 进行处理。目前典型的 IOAPIC 具有 24 个中断管脚，每个管脚对应一个 <def>Redirection Table Entry (RTE)</def>，RTE 也即 PRT 的表项。与 PIC 不同的是，I/O APIC 的管脚没有优先级，也即连接在 I/O APIC 管脚上的设备是平等的，但这并不意味着 APIC 系统中没有硬件优先级，设备的中断优先级由它对应的中断向量值所决定，APIC 架构将优先级的控制功能放到了 LAPIC 中实现，我们在下一小节中将会看到。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Intel 发布的第一款 APIC 芯片是 Intel 82489DX，它是一个包含了 I/O APIC 和 LAPIC 的独立的芯片。对于一个老式的双处理器的系统来说，如果使用 82489DX 构建 APIC 架构，则一共需要 3 个 —— 2 个作为 LAPIC，1 个作为 I/O APIC。后来，LAPIC 被做进了处理器中，只有 I/O APIC 需要独立的芯片支持，因此就诞生了后来的 Intel 82093AA 芯片 <cite>inteldoc_82093AA</cite>，它是专用于 I/O APIC 功能的芯片 <cite>ic_evolution</cite>。
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;要理解 I/O APIC 是如何工作的，那么关键就在于 PRT 表。<tableref>tbl_rte_format</tableref> 是从 Intel 82093AA 官方文档 <cite>inteldoc_82093AA</cite> 中查到的关于 PRT 的表项 RTE 的格式说明:
+
+  <div 
+    class="table"
+    title="RTE 格式说明"
+    label="tbl_rte_format"
+  >
+  <table>
+    <tr>
+      <th align="center" width="20%">Bit</th>
+      <th align="center" width="80%">描述</th>
+    </tr>
+    <tr>
+      <td align="center">
+        <code>63:56</code>
+        <br>[8-bits]
+      </td>
+      <td>
+        <p><b>Destination Field</b>，目的字段，R/W (可读写)。根据 <b>Destination Mode</b> 字段 (见下) 的不同，该字段值的意义不同，它有两个意义:
+        <ul>
+          <li><b>Physical Mode</b> (<b>Destination Mode</b> 为 0 时): 其值为 APIC ID，用于标识一个唯一的 APIC;</li>
+          <li><b>Logical Mode</b> (<b>Destination Mode</b> 为 1 时): 其值根据 LAPIC 的不同配置，代表一组 CPU (详见下文 LAPIC 内容);</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <code>55:17</code>
+        <br>[39-bits]
+      </td>
+      <td>
+        <p><b>Reserved</b>，保留未用;
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <code>16</code>
+        <br>[1-bit]
+      </td>
+      <td>
+        <p><b>Interrupt Mask</b>，中断屏蔽位，R/W:
+        <ul>
+          <li>置位时，对应的中断管脚将被屏蔽，此时产生的中断将被忽略；</li>
+          <li>复位时，对应管脚产生的中断将被发送至 LAPIC;</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <code>15</code>
+        <br>[1-bit]
+      </td>
+      <td>
+        <p><b>Trigger</b>，触发模式，R/W，指明该管脚的中断由什么方式触发:
+        <ul>
+          <li>1: Level，电平触发；</li>
+          <li>0: Edge，边沿触发;</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <code>14</code>
+        <br>[1-bit]
+      </td>
+      <td>
+        <p><b>Remote IRR</b>，远程 IRR，RO (只读)。只对 Level 触发的中断有效，当该中断是 Edge 触发时，该值代表的意义位定义。当对应引脚的中断是 Level 触发的中断时，该值的含义如下:
+        <ul>
+          <li>当 LAPIC 接收了该中断时，该 bit 被置位;</li>
+          <li>当 LAPIC 写 <code>EOI</code> 时，该 bit 被复位;</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <code>13</code>
+        <br>[1-bit]
+      </td>
+      <td>
+        <p><b>Interrupt Input Pin Polarity</b> (INTPOL)，远程 IRR，中断管脚的极性，R/W。指定该管脚的有效电平是高电平还是低电平:
+        <ul>
+          <li>0: 高电平;</li>
+          <li>1: 低电平;</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <code>12</code>
+        <br>[1-bit]
+      </td>
+      <td>
+        <p><b>Delivery Status</b>，传送状态，RO:
+        <ul>
+          <li>0: IDEL，当前引脚上没有接收到中断;</li>
+          <li>1: Send Pending，I/O APIC 已经接收到该中断，但是由于某种原因该中断还未发给 LAPIC，其原因例如当前 I/O APIC 没有竞争到总线;</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <code>11</code>
+        <br>[1-bit]
+      </td>
+      <td>
+        <p><b>Destination Mode</b>，目的地模式，R/W:
+        <ul>
+          <li>0: Physical Mode，解释见 <b>Destination Field</b>;</li>
+          <li>0: Logic Mode，解释见 <b>Destination Field</b>;</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <code>10:8</code>
+        <br>[3-bits]
+      </td>
+      <td>
+        <p><b>Delivery Mode</b>，传送模式，R/W。用于指定该中断以何种方式发送给目的 LAPIC，各种方式需要和相应的触发方式配合，可选的模式如下:
+        <ul>
+          <li><b>Fixed</b>: 000b，发送的中断消息使用 <b>Vector</b> 字段 (见下) 所制定的中断向量，发送给 Destination Field 列出的所有 CPU，Level 和 Edge 触发的中断均支持;</li>
+          <li><b>Lowest Priority</b>: 001b，发送的中断消息使用 <b>Vector</b> 字段 (见下) 所制定的中断向量，发送给 Destination Field 列出的所有 CPU 中，优先级最低的 CPU (CPU 的优先级见 LAPIC 相关内容)，Level 和 Edge 触发的中断均支持;</li>
+          <li><b>NMI</b>: 100b，None-Maskable Interrupt，不可屏蔽中断，发送给 Destination Field 列出的所有 CPU，Vector 字段 (见下) 的值将被忽略。NMI 是 Edge 触发的，上面 <b>Trigger Mode</b> 字段中的值对 NMI 无影响，但建议配置成 Edge;</li>
+          <li><b>INIT</b>: 101b，发送给 Destination Field 列出的所有 CPU，LAPIC 收到后执行 INIT 中断，INIT 是 Edge 触发的，上面 <b>Trigger Mode</b> 字段中的值对 INIT 无影响，但建议配置成 Edge;</li>
+          <li><b>ExtINT</b>: 111b，发送给 Destination Field 列出的所有 CPU，CPU 收到该中断后，认为这是一个 PIC 发送的中断请求，并回应 <code>INTA</code> 信号 (该 <code>INTA</code> 脚连接到的是与该管脚相连的 PIC 上，而非 I/O APIC 上)。ExtINT 用于 PIC 接在 APIC 上的情况，详见后面的 Virtual Wire Mode;</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <code>7:0</code>
+        <br>[8-bit]
+      </td>
+      <td>
+        <p><b>Interrupt Vector</b>，中断向量，R/W，指定该引脚产生的中断对应的中断向量，范围从 <code>0x10h</code> (16) 到 <code>0xFEh</code> (254)，x86 架构的前 16 个中断向量被系统预留。
+      </td>
+    </tr>
+  </table>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当 I/O APIC 某个管脚接收到中断信号后，会根据该管脚对应的 RTE，格式化出一条中断消息，发送给某个 (或多个) CPU 的 LAPIC。从上表我们可以看出，该消息包含了一个中断的所有信息。
+
+  <div class="theorm_prove">
+  <h3>🤔 杂谈: Remote IRR 的意义</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这里我们简单讨论一下 <b>Remote IRR</b> 字段的意义，以及为什么它仅对 Level 触发的中断有效。
+
+  <div 
+    class="img"
+    title="Remote IRR 与中断引脚共同驱动 I/O APIC 消息发送单元"
+    label="img_remote_irr_1"
+  >
+    <img src="./pic/remote_irr_1.png" height="100px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>Remote IRR</b> 实际应该叫“Monitor Remote IRR”，用于监控对应中断管脚的状态。如 <imgref>img_remote_irr_1</imgref> 所示，它与 I/O APIC 中断管脚 <code>INTIN#</code> 以异或的逻辑驱动 I/O APIC 的消息发送单元，异或结果为 1 时发送消息。此时，I/O APIC 发送消息分两种：<b>level-assert</b> 和 <b>level-deassert</b>:
+
+  <ul>
+    <li>当 <b>Remote IRR</b> 为 0，<code>INTIN#</code> 为 1 时，发送 <b>level-assert</b> 消息，LAPIC 收到后将 <b>IRR</b> 置位;</li>
+    <li>当 <b>Remote IRR</b> 为 1，<code>INTIN#</code> 为 0 时，发送 <b>level-deassert</b> 消息，LAPIC 收到后将 <b>IRR</b> 复位;</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;关于 LAPIC 的 <b>IRR</b> 寄存器详见下面介绍 LAPIC 部分的内容。
+
+  <div 
+    class="img"
+    title="Remote IRR 保证 Level 触发中断共享时，CPU 能服务所有中断"
+    label="img_remote_irr_2"
+  >
+    <img src="./pic/remote_irr_2.png" height="100px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>Remote IRR</b> 如此设计是为了保证: 在 Level 触发中断共享的情况下，CPU 服务完所有中断。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如 <imgref>img_remote_irr_2</imgref> 所示，举个例子，有两个 PCI 设备 (Devive A 和 Devive B) 共享一个中断管脚 <code>INTIN1</code>，该引脚的中断触发模式为 Level。我们的场景是：Devive A 先把管脚拉至有效电平 (<code>INTIN1</code> 有效电平为高电平），Devive B 在一段时间后也同样动作 (此时 Devive A 仍然在有效电平)。过程分析如下:
+
+  <ol>
+    <li>当 Devive A 拉高引脚电平时，也即 <code>INTIN1</code> 由 0 跳变到 1 时，该引脚对应的 <b>Remote IRR</b> 此时为 0，因此 异或结果为 1，I/O APIC 发送 <b>level-assert</b> 消息通知中断发生，并且 I/O APIC 会置位 <b>Remote IRR</b>;</li>
+    <li>在 LAPIC 接收到消息后，LAPIC 将 <b>IRR</b> 中对应的 bit 置位;</li>
+    <li>当 CPU 处理完 Devive A 的中断后，会发送 <code>EOI</code> 到 I/O APIC。此时 Remote IRR 被复位;</li>
+    <li>由于 Devive B 的中断还没处理，因此引脚 <code>INTIN1</code> 仍然为高电平，这导致 <b>Remote IRR</b> 和 <code>INTIN1</code> 的异或结果又为 1，故又一条 <b>level-assert</b> 中断消息产生;</li>
+    <li>在所有中断处理完后，<code>INTIN1</code> 被复位，在 LAPIC 向 I/O APIC 写 <code>EOI</code> 之前，<b>Remote IRR</b> 仍为 1，这导致 <b>Remote IRR</b> 和 <code>INTIN1</code> 的异或结果又为 1，故发送 <b>level-deassert</b> 消息，表明当前 Level 触发的中断引脚上已经没有中断请求了，LAPIC 复位 <b>IRR</b> 中对应的 bit;</li>
+    <li>在 LAPIC 为 Device B 的中断写 <code>EOI</code> 时 ，<b>Remote IRR</b> 被复位。此时 <b>Remote IRR</b> 和 <code>INTIN 1</code> 均为 0 (低电平)，因此 I/O APIC 不发送任何消息。</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;而对于 Edge 触发的中断，由于中断管脚不会一直处于有效电平，因此也就不需要 <b>Remote IRR</b> 来辅助。
+
+  </div>
+
+  <h4 class="title">Local APIC</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在收到 I/O APIC 的中断消息后，LAPIC 会将该中断交给 CPU 进行处理。和 I/O APIC 相比，LAPIC 具有更多的寄存器以及更加复杂的机制。
+
+  <h5 class="title">LAPIC 可以接受的中断信号/消息</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;除了来自 I/O APIC 到达 LAPIC 的中断消息，实际上，LAPIC 还可以接收 本地<note>中断信号</note> 和来自 其它处理器的<note>中断消息</note>。<imgref>img_lapic_struct</imgref> 给出了 LAPIC 的输入和输出情况。
+
+  <div class="img" title="LAPIC 结构图" label="img_lapic_struct">
+    <img src="./pic/lapic_struc.png" width="100%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;根据 Intel 官方编程手册 <cite>intel_document_volume_3a_c10</cite>，LAPIC 可以接收以下几种类型的中断消息 (p.s. <tableref>tbl_lapic_input_content</tableref> 是对 <tableref>tbl_interrupt_fe_be</tableref> 的详细补充):
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们对 LAPIC 中的各个部件的功能进行分析。
+
+  <div class="table" title="LAPIC 接收到的中断信号/中断消息类型" label="tbl_lapic_input_content">
+  <table>
+    <tr>
+      <th>中断类型</th>
+      <th>描述</th>
+    </tr>
+    <tr>
+      <td align="center" colspan="2"><h3>本地中断源</h3></td>
+    </tr>
+    <tr>
+      <td><b>CPU Core 本地连接的 I/O 设备产生的<note>中断信号</note></b></td>
+      <td>APIC 架构允许 I/O 设备通过和处理器的 <code>LINT[1:0]</code> 引脚相连来产生本地中断信号，也可以在这两个引脚上连接 8259 等中断控制芯片来控制外部设备的中断</td>
+    </tr>
+    <tr>
+      <td><b>APIC 计时器产生的<note>中断信号</note></b></td>
+      <td>本地的 APIC 计时器在计数器到达设置的值后将会触发中断信号</td>
+    </tr>
+    <tr>
+      <td><b>Performance monitoring counter 产生的中断</b></td>
+      <td>Intel P6，奔腾和至强处理器可以被设置为当 performance-monitoring 计数器溢出的时候，向处理器发送中断信号</td>
+    </tr>
+    <tr>
+      <td><b>温度传感器产生的<note>中断信号</note></b></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><b>APIC Internal Error 产生的<note>中断信号</note></b></td>
+      <td>当对 Local APIC 的操作产生错误 (e.g. 访问一个不存在的寄存器) 时产生的中断信号</td>
+    </tr>
+    <tr>
+      <td align="center" colspan="2"><h3>外部中断源</h3></td>
+    </tr>
+    <tr>
+      <td><b>外部连接的 I/O 设备的 <note>中断消息</note></b></td>
+      <td>外部连接的 I/O 设备会把它们产生的中断信号发送给 I/O APIC，后者会把中断信号转换为 <note>中断消息</note>，通过 System Bus/APIC Bus 发送给选定 CPU Core 对应的 Local APIC</td>
+    </tr>
+    <tr>
+      <td><b>Interrupt-processor Interrupts (IPIs) 的 <note>中断消息</note></b></td>
+      <td>Intel 处理器允许 CPU Core 在 System Bus 上将 <note>中断消息</note> 发送给其它 CPU Core(s)</td>
+    </tr>
+  </table>
+  </div>
+
+  <h5 class="title">本地中断<note>处理前端</note>: LVT</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;针对本地 <note>中断信号</note>，LAPIC 使用的是 <b>LVT</b> (Local Vector Table) 进行处理，具体如 <imgref>img_lvt</imgref> 所示。在收到对应的本地中断信号后，LAPIC 会在 LVT 中查询相关的后续动作，包括通告 CPU Core 的中断类型 (e.g. NMI, SMI, Fixed, etc.)，中断向量号等内容，这部分就类似于 I/O APIC 中的 PRT 表的功能。
+
+  <div 
+    class="img"
+    title="Local Vector Table"
+    source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+    label="img_lvt"
+  >
+    <img src="./pic/lvt.png" width="600px" />
+  </div>
+
+  <h5 class="title">处理器间中断<note>处理前端</note>: ICR</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;针对处理器间中断，CPU Core 可以通过向其本地的 <b>ICR</b> (Interrupt Command Register) 写入相应的信息，来实现中断消息的发送。<b>ICR</b> 的具体格式如下所示: 
+
+  <div class="img" title="Local Vector Table" source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html">
+    <img src="./pic/icr.png" width="600px" />
+  </div>
+
+  <h5 class="title"><note>处理后端</note>: IRR 和 ISR 寄存器</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们对 LAPIC 的 <b>IRR</b> 和 <b>ISR</b> 寄存器进行介绍。
+
+  <div 
+    class="img"
+    title="IRR 和 ISR 寄存器"
+    label="img_irr_isr"
+    source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+    <img src="./pic/irr_isr.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<imgref>img_irr_isr</imgref> 展示了 LAPIC 的 <b>IRR</b> 和 <b>ISR</b> 寄存器的格式。与 PIC 中的 <b>IRR</b>、<b>ISR</b> 不同的是，LAPIC 的 <b>IRR</b>、<b>ISR</b> 均为 256-bits 的寄存器，对应 x86 平台上的 256 个中断向量，其中 0~15 为 x86 架构所预留。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>IRR</b> 的功能和 PIC 的 <b>IRR</b> 功能类似，代表 LAPIC 已接收中断，但还未交 CPU 处理。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>ISR</b> 的功能和 PIC 的 <b>ISR</b> 功能类似，代表 CPU 已开始处理中断，但还未完成。与 PIC 有所不同的 是，当 CPU 正在处理某中断时，同类型中断如果发生，相应的 <b>IRR</b> bit 会再次被置位 (p.s. PIC 模式下，同类型的中断被屏蔽)；如果某中断被 pending 在 <b>IRR</b> 中，同类型的中断发生， 则 <b>ISR</b> 中相应的 bit 会被置位。这说明在 APIC 系统中，同一类型中断最多可以被计数两次。超过两次时，不同架构处理不一样。对于 Pentium 系列 CPU 和 P6 架构，中断消息会被 LAPIC 拒绝；对于 Pentium4 和 Xeon 系列，新来的中断消息对应的中断向量会和 <b>IRR</b> 中对应的 bit 重叠。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当然，我们上面讨论的内容都是基于 I/O APIC 中 RTE 表项的 <b>Delivery Mode</b> 为 Fixed 或者 Lowest Priority 时，也即 <b>Vector</b> 字段有效时所作出的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上图还有个 <b>TMR</b> 寄存器，即 Trigger Mode Register，用于表示当前正在处理的中断 (i.e. <b>ISR</b> 中记录的中断) 的触发模式。1 为 Level，0 为 Edge。对于 Level 触发的中断，当中断结束，系统软件写 <code>EOI</code> 时，会被广播到所有 I/O APIC，消息中含有中断的向量值，I/O APIC 收到后检查自己的 PRT 表，把相应 RTE 的 <b>Remote IRR</b> 位清零。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 LAPIC 的 <b>IRR</b>，Intel 给出的 x86 编程手册 <cite>intel_document_volume_3a_c10</cite> 中指出：“当 CPU 准备处理中断时，<b>IRR</b> 中最高优先级的 bit 被清零，<b>ISR</b> 中对应 bit 被置位”。实际上，根据 Multi-Processor Computer System With Interrupt Controllers Providing Remote Reading <cite>us_patent_multi_processor_interrrupt</cite> 一文中指出的 APIC 的实现，只有对于 Edge 触发的中断，<b>ISR</b> 对应 bit 被置位时，<b>IRR</b> 相应 bit 才会被复位。对于 Level 触发的中断，IRR 中的 bit 会被保留到中断结束时，系统软件写 <code>EOI</code>，LAPIC 收到 I/O APIC 发出的 <b>level-deassert</b> 消息后才清零。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这里有一个小细节是，这里说同类型中断发生两次，会同时 Pending 在 <b>ISR</b> 和 <b>IRR</b> 的对应 bit 中。问题是，前面我们介绍的 <b>Remote IRR</b> 的异或逻辑保证了在写 <code>EOI</code> 前，新的 Level 引脚的中断消息并不会被 I/O APIC 发送给 Local APIC。是的，这里要补充一点: 这种 pending 两次的机制，只对 Edge 触发中断有效。
+
+  <h5 class="title"><note>处理后端</note>: EOI 寄存器</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;与 PIC 一样，LAPIC 同样需要系统软件写 <code>EOI</code> 来知会中断处理的完成，不同的是，LAPIC 中的 <b>EOI</b> 是一个 32-bits 寄存器:
+
+  <div 
+    class="img"
+    title="EOI 寄存器"
+    label="img_eoi"
+    source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+    <img src="./pic/eoi.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;系统软件在中断处理完成时，需要对 <b>EOI</b> 寄存器写 0 来通告底层硬件当前中断处理完成。
+
+  <h5 class="title">TPR 和 PPR 寄存器</h5>
+  <label class="title">subsubsubsection_tpr_ppr</label>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Intel 处理器对中断向量进行了优先级的划分。上文说到 Intel 处理器一共支持 256 个中断，也即 8-bits。中断向量的 <code>[7:4]</code> 称为中断的 <def>Interrupt-priority Class</def>，是中断分级的大类; <code>[3:0]</code> 即中断在其 Interrupt-priority Class 中的相对位置，是中断分级的子类。值得注意的是，由于 Intel 把 0~31 号中断划分给 Intel 处理器自用，因此 Interrupt-priority Class 的合法取值范围为 2(<code>0010</code>)~15(<code>1111</code>)，取值越大，优先级越高。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一般来说，我们直接食用的是 Interrupt-priority Class 作为一个中断向量的优先级，因此一个优先级中一共就包含了 16 个中断向量。
+
+  <div 
+    class="img" 
+    label="tpr"
+    title="Task-Priority Register" 
+    source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+    <img src="./pic/tpr.png" width="600px" />
+  </div>
+
+  <div 
+    class="img"
+    label="ppr"
+    title="Processor-Priority Register" 
+    source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+    <img src="./pic/ppr.png" width="600px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Local APIC 中，有两个与中断优先级相关的寄存器 —— <b>TPR</b> (Task-Priority Register) 和 <b>PPR</b> (Processor-Priority Register)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>TPR</b> 用于被操作系统软件设置，其包含的值代表着当前操作系统<note>允许接受</note>的中断向量值的下限，低于该值的中断将被操作系统暂时封锁不予处理。因此 <b>TPR</b> 是一个可写的寄存器。如 <imgref>tpr</imgref> 所示，<b>TPR</b> 寄存器中采用了和中断向量值一样的分级机制，分为 <code>[7:4]</code> 的 Task-Priority Class 和 <code>[3:0]</code> 的 Task-Priority Sub-Class。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>PPR</b> 的值代表着当前处理器<note>允许被中断</note>的中断向量的下限，其是基于 <b>TPR</b> 和 <b>ISRV</b> 的值产生的，其中 <b>ISRV</b> 的值指的是 <b>ISR</b> 中被置位的优先级最高的中断对应的中断向量，<b>PPR</b> 是一个只读寄存器，具体的值产生方法如下:
+
+  <ul>
+    <li>
+      <code>PPR[7:4]</code>: 等于 <code>TPR[7:4]</code> 和 <code>ISRV[7:4]</code> 中更大的那一个;
+    </li>
+    <li>
+      <code>PPR[3:0]</code> 产生规则如下:
+      <ul>
+        <li>如果 <code>TPR[7:4]</code> > <code>ISRV[7:4]</code>，那么 <code>PPR[3:0]</code> = <code>TPR[3:0]</code>;</li>
+        <li>如果 <code>TPR[7:4]</code> < <code>ISRV[7:4]</code>，那么 <code>PPR[3:0]</code> = 0;</li>
+        <li>如果 <code>TPR[7:4]</code> = <code>ISRV[7:4]</code>，那么 <code>PPR[3:0]</code> 视处理器不同而不同;</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;只有当中断向量值代表的优先级大于 <b>TPR</b> 中存储的值时，LAPIC 才有可能会将其交给 CPU 进行处理，否则会屏蔽它们，这里的屏蔽指的是 LAPIC 会接受它们，将他们 pending 到 <b>IRR</b> 中，但不会交给 CPU 进行处理。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;只有当中断向量值代表的优先级大于 <b>PPR</b> 中存储的值时，对应的中断消息才会被提交给 CPU Core 进行中断并且对中断予以处理。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当然，我们上面的说明针对的是 I/O APIC 中 <b>Delivery Mode</b> 字段为 Fixed 或者 Lowest Prority 的 RTE 所对应的中断，也即 <b>Vector</b> 字段有效的中断。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们上面在介绍 I/O APIC 时曾经说过，当 <b>Delivery Mode</b> 字段为 Lowest Prority 时，中断消息会被发送给 <b>Destination Field</b> 中指定的处理器中，优先级最低的一个进行处理，这里的优先级实际上指的就是各个处理器的 LAPIC 的 <b>TRP</b> 的值。我们下面举一个 Pentium4 和 Xeon 系列优先级仲裁的例子，说明谁是 Lowest Priority。假设有 CPU1、CPU2、CPU3 三个 CPU，相应的 <b>TPR</b> 值为：<b>TPR1=5</b>、<b>TPR2=6</b>、<b>TPR3=10</b>，I/O APIC 以 Lowest Priority 模式发送一条中断消息，该中断对应的优先级级别为 $3$，则 CPU1 具有最低优先级，接收该中断。此时，该中断被 Pending 到 <b>IRR</b> 中，但不会交给 CPU 处理，因为其优先级级别低于 <b>TPR</b> 值。
+
+  <h5 class="title">LAPIC 中断处理后端流程</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们对 LAPIC 中的中断处理后端的流程进行归纳。
+
+  <div class="img" title="Local APIC 中断处理流程" label="img_local_apic_be_flow">
+    <img src="./pic/local_apic_flow.png" width="600px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<imgref>img_local_apic_be_flow</imgref> 重点给出了 LAPIC 的中断处理后端部分的流程。实际上，根据架构的不同，它们略微有一些区别:
+
+  <div class="border">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Pentium4、Xeon 系列，在收到 <note>中断消息</note> 时:
+
+  <ol>
+    <li>通过中断消息的 <b>Destination Field</b> 字段，确定该中断是否是发送给自己的;</li>
+    <li>如果该中断的 <b>Delivery Mode</b> 为 NMI、SMI、INIT、ExtINT、SIPI，则直接交由 CPU 处理;</li>
+    <li>如果不为 2 中所列的中断，则置位 <b>IRR</b> 中相应的 bit;</li>
+    <li>当中断被 pending 到 <b>IRR</b> 或 <b>ISR</b> 中后，根据 <b>TPR</b> 和 <b>PPR</b> 寄存器，判断当前最高优先级的中断是否能发送给 CPU 处理;</li>
+    <li>软件写 <code>EOI</code> 通知中断处理完成。如果中断为 Level 触发，该 <code>EOI</code> 会通过总线消息广播到所有 I/O APIC。NMI、SMI、INIT、ExtINT、SIPI 类型中断无需写 <code>EOI</code>。</li>
+  </ol>
+  </div>
+
+  <div class="border">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Pentium 系列和 P6 架构，在收到 <note>中断消息</note> 时:
+
+  <ol>
+    <li>确定该中断是否由自己接收。如果是一个 IPI，且 <b>Delivery Mode</b> 为 <b>Lowest priority</b>，则 LAPIC 与其它 LAPIC 一起仲裁该 IPI 由谁接收;</li>
+    <li>若该中断由自己接收，且类型为 NMI、SMI、INIT、ExtINIT、INIT-deassert、或 MP 协议中的 IPI 中断 (BIPI、FIPI、SIPI)，则直接交由 CPU 处理;</li>
+    <li>如果不为 2 中所列的中断，将中断 pending 到 <b>IRR</b> 或 <b>ISR</b>，若已经有相同的的中断 pending 到 <b>IRR</b> 和 <b>ISR</b> 上，则拒绝该中断消息，并通知 I/O APIC “retry”;</li>
+    <li><note>[同 Pentium4、Xeon]</note> 当中断被 pending 到 <b>IRR</b> 或 <b>ISR</b> 中后，根据 <b>TPR</b> 和 <b>PPR</b> 寄存器，判断当前最高优先级的中断是否能发送给 CPU 处理;</li>
+    <li><note>[同 Pentium4、Xeon]</note> 软件写 <code>EOI</code> 通知中断处理完成。如果中断为 Level 触发，该 <code>EOI</code> 会通过总线消息广播到所有 I/O APIC。NMI、SMI、INIT、ExtINT、SIPI 类型中断无需写 <code>EOI</code>。</li>
+  </ol>
+  </div>
+
+  <h4 class="title">I/O APIC 发出的消息是如何找到 LAPIC 的?</h4>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面两个流程的第一步都是 LAPIC 确定是否由自己接收中断。前面我们提到，I/O APIC RTE 中的 <b>Destination Field</b> 用于指定由哪个 LAPIC 接收，并且分为 <b>Physical</b> 和 <b>Logical</b> 两种模式。对于 LAPIC，两种模式有着不同的意义。
+
+  <h5 class="title">Physical Mode</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在该模式下，RTE 中的 <b>Destination Field</b> 表示的是具体的 LAPIC ID，下面我们对 LAPIC 的 ID 进行讨论。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 LAPIC 来说，系统在 RESET 后，都会分配一个唯一的 ID 用作标识。我们可以通过 <b>LAPIC ID</b> 寄存器得到它。下图所示为其格式：
+
+  <div 
+    class="img" 
+    title="Local APIC ID"
+    label="img_local_apic_id"
+    source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+    <img src="./pic/local_apic_id.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在系统上电初始化的时候，系统会自动地向每一个 LAPIC 分配一个全局唯一的 APIC ID，各个 LAPIC 所被分配的 ID 也被操作系统和 BIOS 用于作为各个处理器核心的 ID。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;系统软件可以在 <b>EAX</b> 寄存器中填入 $1$ 的情况下，运行 <code>CPUID</code> 指令，软件将可以从 <b>EBX</b> 的 <code>[31:24]</code> 中获取到当前运行的处理器核心所对应的 LAPIC 的 ID。对于某些 CPU 来说，其允许软件对 LAPIC 的 ID 进行修改，但是 Intel 的官方手册建议不要这样做。不论怎么修改，运行 <code>CPUID</code> 指令获取的始终是 LAPIC 被系统初始化赋予的 LAPIC ID。
+
+  <div class="theorm_prove">
+  <h3>I/O APIC 的 ID</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;APIC ID 分为 LAPIC ID 和 I/O APIC ID。前者唯一的标识系统中某个 LAPIC，后者唯一标识某个 I/O APIC。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;与 LAPIC ID 在系统上电时被自动分配不同，I/O APIC ID 在系统上电时被统一清零，由操作系统或者 BIOS 负责验证 I/O APIC ID 是否唯一，并且在冲突时进行重新分配。分配的原则视系统中断架构不同而定:
+
+  <ul>
+    <li>对于使用系统总线进行中断消息通告的 Pentium4 和 Xeon 处理器，I/O APIC 之间分配的 ID 不重复即可，I/O APIC 的 ID 可以与 LAPIC 的 ID 相同。原因在于在此种系统中，LAPIC 需要使用 LAPIC ID 参与前端总线竞争，而 I/O APIC 却不用，因为是北桥代理它竞争总线，因此 I/O APIC ID 只用于区分多个 I/O APIC，它和 LAPIC ID 不在一个上下文;</li>
+    <li>对于使用 APIC Bus 的老式处理器，I/O APIC ID 要用于竞争总线，不能和 LAPIC ID 冲突，因此操作系统/BIOS 为 I/O APIC 分配 ID 的原则是从系统中所有 LAPIC ID 后最小的数字开始分配。</li>
+  </ul>
+  </div>
+
+  <h5 class="title">Logical Mode</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在该模式下，中断消息中的 <b>Destination Field</b> 包含的不是 LAPIC ID，而是被称为 <def>MDA (Message Destination Address，消息目的地地址)</def> 的信息。此时，LAPIC 需要两个额外的寄存器来判断自己是否为中断消息的目的地。它们是 <b>LDR</b> 和 <b>DFR</b>。
+
+  <div 
+    class="img" 
+    title="LDR 寄存器格式"
+    label="img_ldr"
+    source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+    <img src="./pic/ldr.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>LDR</b> 的格式如 <imgref>img_ldr</imgref> 所示，<b>LDR</b> 全称是 Logical Destination Register，逻辑目的地寄存器。该寄存器包含一个 8-bits 的逻辑 APIC ID (注意区分，它和 LAPIC ID 不是一个东西)，在 Logical 模式下用于和 MDA 匹配。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>LDR</b> 的格式由 <b>DFR</b> 指定，DFR 如 <imgref>img_dfr</imgref> 所示:
+
+  <div 
+    class="img" 
+    title="DFR 寄存器格式"
+    label="img_dfr"
+    source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+    <img src="./pic/dfr.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>DFR</b>，Destination Format Register，目的地格式寄存器。该寄存器包含一个 4-bits 的 <b>Model</b> 字段，用于指定 <b>LDR</b> 中的 Logical APIC ID 用何种方式与 <b>MDA</b> 匹配。通过这两个寄存器的配合，Logical 模式又被分为了 Flat 与 Cluster 两种模式:
+
+  <ul>
+    <li><b>Flat 模式</b>: <b>DFR</b> 的 <b>Model</b> 值为 <code>1111b</code>，此时，LAPIC 将 <b>MDA</b> 与 <b>LDR</b> 的 Logical APIC ID 做按位与，如结果不为 0 则接收中断。Logical APIC ID 中每个 bit 代表一个 LAPIC，故 8 bits 最多代表 8 个 CPU;</li>
+    <li>
+    <b>Cluster 模式</b>: <b>DFR</b> 的 <b>Model</b> 值为 <code>0000b</code>。Cluster 模式又分为两种模式：Flat Cluster 模式和 Hierarchical Cluster 模式:
+    <ul>
+      <li>
+      <p><b>Flat Cluster 模式</b>: 该模式只支持 P6 架构和 Pentium 系列 CPU，并假定所有 APIC 通过 APIC BUS 进行通信。该模式将 <b>MDA</b> 编码为两个部分，高 4 bits 为簇号，低 4 bits 标识 LAPIC 在该簇内的 ID (每个bit代表一个LAPIC，故一个簇最多有4 个 LAPIC)。与之对应，<b>LDR</b> 的 Logical APIC ID 也被编码成同样两个部分。
+      <p>工作在该模式时，LAPIC 先将 <b>MDA</b> 的高 4 bits 和 Logical APIC ID 的高 4 bits 比 较，以确定自己是否是中断的目的簇。若是，将 <b>MDA</b> 的低 4 bits 与 Logical APIC ID 的低 4 bits 按位与，若值不为 0 则接收中断，否则拒绝。
+      <p>通过这种方法，高 4 bits 的簇号可以表示 15 个簇，低 4 bits 的 ID 可以代表簇内的 4 个 CPU，最多可以支持 60 个 CPU。但由于 APIC BUS 的限制，具体的说是 APIC Arb ID（APIC 仲裁 ID）的限制，该模式最多只支持 15 个 CPU。
+      </li>
+      <li><b>Hierarchical Cluster 模式</b>: 支持 P6 架构和 Pentium 系列，以及 Xeon、Pentium4 系 列。该模式通过为每个簇引入一个 “簇管理器”，将 Flat Cluster 模式中平等的簇构成一个具有等级结构的分级网络，并最多支持 60 个 CPU。</li>
+    </ul>
+    </li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Flat Cluster 模式，我们下面给出一个例子 (此例中，中断为 Fix delivery mode。关于 Lowest Prority 的例子见 <ref>subsubsubsection_tpr_ppr</ref>)。假设有三个 CPU 的 Logical 模式配置为: CPU1 的 <b>LDR</b> 值为 <code>0000 0001b</code>，CPU2 的 <b>LDR</b> 值为 <code>0001 0010b</code>，CPU3 的 <b>LDR</b> 值为 <code>0000 0100b</code>，并且此时 <b>DFR</b> 的 <b>Model</b> 值为 <code>0000b</code>，也即 Flat Cluster 模式，则此时 CPU1、CPU3 为一簇，CPU2 为另一簇。若 I/O APIC 发出一条中断消息，其 <b>Destination Mode</b> 为 1，<b>Destination Field</b> 值为 <code>0000 00001b</code>。三个 LAPIC 收到该消息后，CPU1、CPU3 通过 <b>Destination Field</b> 的高 4 bits 判断出该消息目的地为本簇，再将自身 Logical APIC ID 的低 4 bits 与 <b>Destination Field</b> 低 4 bits 按位与，最终 CPU1 接收该中断消息，CPU2、CPU3 丢弃。
+
+  <h3 class="title">PCI(e) 设备中断</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+</div>
+
+<h2 class="title">通用中断层</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本章我们将对通用中断层的相关数据结构以及接口进行分析。正如我们上面所说，通用中断层屏蔽了底层与架构相关的代码和厂商开发的设备驱动代码之间的联系，向上提供了顶层中断相关接口供厂商设备驱动调用，向下提供了若干与中断控制器相关的函数接口供具体底层平台予以实现。因此，理解通用中断层里面的工作原理，将有助于我们理解 Linux 内核处理中断的整个流程。
+
+  <h3 class="title">相关数据结构</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;通用中断层中的重要数据结构如 <imgref>img_generic_data_structure</imgref> 所示，下面我们分别对它们进行分析。
+
+  <div 
+    class="img" 
+    title="通用中断层的相关数据结构"
+    label="img_generic_data_structure"
+    source="https://zhuanlan.zhihu.com/p/443816231"
+  >
+    <img src="./pic/generic_data_structure.jpg" width="80%" />
+  </div>
+
+</div>
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+
+<!-- 圆圈数字 -->
+<!--
+⓪ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳ ㉑ ㉒ ㉓ ㉔ ㉕ ㉖ ㉗ ㉘ ㉙ ㉚ ㉛ ㉜ ㉝ ㉞ ㉟ ㊱ ㊲ ㊳ ㊴ ㊵ ㊶ ㊷ ㊸ ㊹ ㊺ ㊻ ㊼ ㊽ ㊾ ㊿
+-->
+
+<!-- Sign Block -->
+<!--
+<noteblock>
+A NOTE
+</noteblock>
+
+<queblock>
+A QUESTION
+</queblock>
+-->
+
+<!--图片、引用-->
+<!-- 
+<div class="img" title="img title" label="img_label" source="url">
+  <img src="" height="" />
+</div>
+
+<imaging>img_label</imaging>
+-->
+
+<!--等式、引用-->
+<!-- 
+<div class="equation" label="equation_label">
+</div>
+
+<equation>equation_label</equation>
+-->
+
+<!--定理、引用、证明-->
+<!-- 
+<div class="theorm" label="theorm_label">
+</div>
+
+<theorm>theorm_label</theorm>
+
+<div class="theorm_prove">
+</div>
+-->
+
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--表格-->
+<!--
+<div class="table" title="Table Title" label="table_label">
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+    </tr>
+    <tr>
+      <td>xxx</td>
+      <td>xxx</td>
+      <td>xxx</td>
+    </tr>
+  </table>
+</div>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>X86_HW_INTERRUPT</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

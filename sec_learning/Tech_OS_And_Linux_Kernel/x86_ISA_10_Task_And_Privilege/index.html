@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="任务和特权级别">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/xxx.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/address.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/address_space.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/access_privelege.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/terms.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/check_process.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/call_gate.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/call_gate_principle.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/task_shift.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/stack_terms.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/stack_switch.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/stack_switch_jmp.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/stack_ret_process.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/load_process.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/tcb.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/append_tcb.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/stack.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/stack.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/pic/stack_ret.png">
+<meta property="article:published_time" content="2022-02-10T14:39:11.012Z">
+<meta property="article:modified_time" content="2021-09-07T12:09:25.000Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_10_Task_And_Privilege/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>任务和特权级别 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">任务和特权级别
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>X86_ISA_10_TASK_AND_PRIVILEGE</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_border{
+      margin-bottom: 20px;
+      padding: 10px 10px; 
+      font-size: 16px; 
+      word-spacing:0px;  
+      border:1px solid black;
+    }
+    .div_learning_post_background{
+      background-color:#E3E2E2;
+      padding: 10px 40px; 
+      font-size: 16px;
+      word-spacing:0px;  
+      border-radius: 15px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+    }
+    .div_learning_post_background p{
+      margin: 0px;
+    }
+</style>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Aug.22 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=30%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 0. <a href="#0_preface"><font color="blue"><b>前言</b></font></a>：给阅读本文的读者打了一剂强心剂：不要害怕如此复杂的东西；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_task"><font color="blue"><b>任务</b></font></a>：提供了任务的概念，并且阐述了 LDT, TSS 等段结构，用全局地址空间和局部地址空间的角度重新审视了一个任务；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.1 <a href="#1_task_1"><font color="blue">任务的概念</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2 <a href="#1_task_2"><font color="blue">本文的 Motivation</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.3 <a href="#1_task_3"><font color="blue">LDT (Local Descriptor Table)</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.4 <a href="#1_task_4"><font color="blue">TSS (Task State Segment)</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.5 <a href="#1_task_5"><font color="blue">全局地址空间和局部地址空间</font></a>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_privilege"><font color="blue"><b>特权级保护</b></font></a>：介绍了在一个任务中， 32 位处理器针对代码段、数据段和栈段的复杂的特权级机制；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.1 <a href="#2_privilege_1"><font color="blue">基本规则 与 基本概念</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.1.1 <a href="#2_privilege_1_1"><font color="blue">DPL: 静态描述段特权级</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.1.2 <a href="#2_privilege_1_2"><font color="blue">RPL: 动态描述段特权级</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.1.3 <a href="#2_privilege_1_3"><font color="blue">CPL: 正在运行的代码段的特权级</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.2 <a href="#2_privilege_2"><font color="blue">基本流程</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.3 <a href="#2_privilege_3"><font color="blue">对代码段及其实例的特权级保护</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[重要概念] <a href="#2_privilege_3_1"><font color="blue">描述符中 C 位的作用</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[重要概念] <a href="#2_privilege_3_2"><font color="blue">调用门 (Call-Gate)</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.3.1 <a href="#2_privilege_3_3"><font color="blue">段内转移:不做特权级检查</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.3.2 <a href="#2_privilege_3_4"><font color="blue">非依从段（C=0时）：只允许同级别转移</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.3.3 <a href="#2_privilege_3_5"><font color="blue">依从段（C=1时）：允许低特权级向高或同级转移，但转移后并不改变特权级</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.3.4 <a href="#2_privilege_3_6"><font color="blue">调用门：允许低特权级向高特权级转移，且转移后将改变特权级</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.3.5 <a href="#2_privilege_3_7"><font color="blue">任何时候，都不允许 高特权级代码段实例 向 低特权级代码段实例 转移</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.4 <a href="#2_privilege_4"><font color="blue">数据段及其实例的特权级保护</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.5 <a href="#2_privilege_5"><font color="blue">任务内切换代码段特权级时的栈切换</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.5.1 <a href="#2_privilege_5_1"><font color="blue">回顾上文</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.5.2 <a href="#2_privilege_5_2"><font color="blue">术语约定</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.5.3 <a href="#2_privilege_5_3"><font color="blue">处理器对栈段及其实例的保护</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.5.4 <a href="#2_privilege_5_4"><font color="blue">处理器自动栈段切换</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.5.5 <a href="#2_privilege_5_5"><font color="blue">TSS 中存放的是栈的静态地址</font></a>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_example"><font color="blue"><b>支持特权级保护与基于多任务背景的内核代码</b></font></a>：深刻剖析了一份复杂的 "支持特权级保护与基于多任务背景" 的内核代码；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.1 <a href="#3_example_1"><font color="blue">调用门的安装</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.2 <a href="#3_example_2"><font color="blue">为用户任务创建 TCB</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.2.1 <a href="#3_example_2_1"><font color="blue">任务控制块 (Task Control Block, TCB)</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.2.2 <a href="#3_example_2_2"><font color="blue">为用户任务创建 TCB</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.3 <a href="#3_example_3"><font color="blue">加载用户程序 TCB</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.3.1 <a href="#3_example_3_1"><font color="blue">从栈中获取传入的参数</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.3.2 <a href="#3_example_3_2"><font color="blue">加载用户程序</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.4 <a href="#3_example_4"><font color="blue">安装段描述符到局部描述符表 TCB</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.5 <a href="#3_example_5"><font color="blue">更新用户程序的 "内核实例名称字符串 <-> <b>内核实例代码段</b> 地址" 映射表</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.6 <a href="#3_example_6"><font color="blue">创建 0、1 和 2 特权级的栈</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.7 <a href="#3_example_7"><font color="blue">将 LDT 安装到 GDT 中</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.8 <a href="#3_example_8"><font color="blue">创建任务状态段 TSS</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.8.1 <a href="#3_example_8_1"><font color="blue">TSS 格式</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.8.2 <a href="#3_example_8_2"><font color="blue">创建用户任务 TSS</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.8.3 <a href="#3_example_8_3"><font color="blue">安装 TSS</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.9 <a href="#3_example_9"><font color="blue">返回时清空栈</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.10 <a href="#3_example_10"><font color="blue">运行用户程序</font></a>
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 4. <a href="#4_rpl"><font color="blue"><b>再谈 RPL</b></font></a>：重新分析了设置 RPL 的 Motivation，给出了深刻的原因分析
+
+  </div>
+</div>
+
+<h2><a name="0_preface">0. 前言</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这篇博客中包含了很多的概念和新内容，把它们单独拎出来讨论也不成风景，所以必须合进单独一篇文章中，还请感兴趣读完的读者慢慢深入理解各种概念。
+</div>
+
+
+<h2><a name="1_task">1. 任务</a></h2>
+<div class="div_learning_post">
+  <h3><a name="1_task_1">1.1 任务的概念</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们把记录在磁盘中的指令和数据称为 <font color="blue">程序</font>，把程序正在执行的一个副本称为 <font color="blue">任务</font>。注意！我们在下面将会看见，一个任务在符合访问规则的情况下，可以访问多个、特权级不同的代码段和数据段。不要把任务简单地当作某个代码段的一份实例。
+
+  <h3><a name="1_task_2">1.2 本文的 Motivation</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在之前的文章中一直有在讨论 GDT 和 GDTR。GDT 记录了若干个段描述符，在需要的时候我们可以往 <font color="blue">段基地址寄存器及其描述符高速缓存器</font> 中装入段描述符来实现对相应段的访问。回忆一下我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_9_Simple_Kernel/index.html">引导加载并运行一个简单的内核</a> 中所做的事情，我们把 MBR、内核、用户程序所涉及的段通通注册到了 GDT 中，然后很方便的就可以发起访问。实际上把所有的段描述符都放在同一张表里的行为是很不安全的。我们在之前只介绍了处理器会在 <font color="red">引用一个段</font> 以及 <font color="red">发起对一个段的访问</font> 的时候进行保护检查 (参考 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_8_Protect_Mode/index.html#3_protect_memory_access">保护模式下对访问内存的保护</a>)，但是实际上这样是远远不够的。设想一下，一个用户程序可以随意地向 GDT 中注册新的段描述符，那么它完全可以使用 <font color="blue">别名</font> 机制注册一个针对操作系统内核代码段的新的描述符，但是把它设置为可写的数据段，这样一来，这个恶意攻击程序就很容易得逞了。特别注意的是，我们现在开始已经在关注多任务的情景了。也就是说，对于一个单核处理器来说，虽然它在一个时间点上永远只是在运行一个任务，但是它会通过任务切换来实现宏观的多任务并行运行。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这样一来，为了保障系统的安全，我们就必须先在 Descriptor Table 这一层先把各个用户程序的段描述符和内核的段描述符在物理上先隔离开，然后寻求一种特权机制来实现对各个段的保护。下面我们首先介绍把段描述符分开的方法，在后面的 <a href="#2_privilege">特权级保护</a> 一章中我们将关注特权机制。
+
+  <h3><a name="1_task_3">1.3 LDT (Local Descriptor Table)</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在 32 位处理器上又设立了一个叫作 <font color="blue">局部描述符表 (LDT, Local Descriptor Table)</font>。从名字上可以看出，从现在开始 GDT 用于存放所有用户任务以及操作系统会使用到的段描述符，LDT 用于存放各个任务自己会使用到的描述符。<font color="red">注意！LDT 每个任务都会有一个！</font>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有了 LDT，不难猜到我们就会有 <font color="blue">LDTR (Local Descriptor Table Register)</font>，用于追踪 LDT。但是值得注意的是，LDTR 在 CPU 中只有一个。因此在我们的多任务场景下，当任务被切换的时候，LDTR 也会被更新，用于追踪下一个任务的 LDT。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;LDT 中存储的描述符的格式和 GDT 中存储的描述符的格式是一样的。然而，与 48-bits 的存放 32-bits 的线性基地址和 16-bits 的段界限的 GDTR 寄存器不同，LDTR 与段基址寄存器的格式更为类似，如下所示：
+
+  <table>
+    <tr>
+      <td width="20%"><div align="center">选择器 [16-bits]</div></td>
+      <td colspan="3" width="80%"><div align="center">描述符高速缓存器 [64-bits]</div></td>
+    </tr>
+    <tr>
+      <td width="20%">LDT 选择子</td>
+      <td width="40%">描述符高速缓存器</td>
+      <td width="25%">段界限</td>
+      <td width="15%">段属性</td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在后文中将会看到，我们会把用户任务的 LDT 注册到 GDT 中去。这样一来，当我们需要使用 LDTR 来跟踪一个用户任务的 LDT 时，我们就需要在 LDTR 中填入对应的 LDT 在 GDT 中的选择子。在通过特权级保护检查之后，我们就能够在 LDTR 的描述符高速缓冲器中获取对应 LDT 的位置和属性，然后就能发起访问了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，回忆我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_8_Protect_Mode/index.html#3_protect_memory_access">保护模式下对访问内存的保护</a> 中曾经讨论过的段基址寄存器中存放的段选择子的格式，其低 3 位是功能位，高 13 位是段描述符索引值，因此 LDT 同样只能够存放 `2^13 = 8192` 个段描述符。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有了 GDTR 和 LDTR 帮我们追踪 GDT 和 LDT 之后，有读者会提问：一个任务怎么区分它引用的段的描述符是在 LDT 中还是 GDT 中呢？回忆一下，我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_8_Protect_Mode/index.html#2_load_protection_6">在保护模式中访问内存</a> 已经介绍过：当段选择子的 TI＝0 时，表示访问的是在 GDT 中的描述符；TI＝1 时，表示访问的是在 LDT 中的描述符。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;与 GDT 不同的是，对于 LDT 来说，它的零号槽位是可用的，不像 GDT 那样是一个不可用的全零的描述符。这是因为指向 LDT 的描述符的 TI 位一定为 1，所以不可能有一个全 0 的选择子指向 LDT，所以 LDT 允许零号槽位描述符的存在。
+
+  <h3><a name="1_task_4">1.4 TSS (Task State Segment)</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了支持多任务场景，当用户任务在做切换的时候，我们需要保存任务的状态，以便该任务被调度回来的时候，恢复原先状态。在 32 位处理器下，每个任务都需要在一个额外的内存区域保存相关信息，这段相关信息有一个固定的格式，且被命名为 <font color="blue">任务状态段 (TSS, Task State Segment)</font>，其格式如下所示。
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th colspan="3" width="90%">内容</th>
+      <th width="10%">序号<br>(Byte)</th>
+    </tr>
+    <tr>
+      <td width="45%">I/O 映射基地址</td>
+      <td width="40%">保留</td>
+      <td width="5%">T</td>
+      <td width="10%">100</td>
+    </tr>
+    <tr>
+      <td width="45%">(保留)</td>
+      <td colspan="2" width="45%">LDT 段选择子</td>
+      <td width="10%">96</td>
+    </tr>
+    <tr>
+      <td width="45%">(保留)</td>
+      <td colspan="2" width="45%">GS</td>
+      <td width="10%">92</td>
+    </tr>
+    <tr>
+      <td width="45%">(保留)</td>
+      <td colspan="2" width="45%">FS</td>
+      <td width="10%">88</td>
+    </tr>
+    <tr>
+      <td width="45%">(保留)</td>
+      <td colspan="2" width="45%">DS</td>
+      <td width="10%">84</td>
+    </tr>
+    <tr>
+      <td width="45%">(保留)</td>
+      <td bgcolor="#FFF9D2" colspan="2" width="45%">SS</td>
+      <td width="10%">80</td>
+    </tr>
+    <tr>
+      <td width="45%">(保留)</td>
+      <td colspan="2" width="45%">CS</td>
+      <td width="10%">76</td>
+    </tr>
+    <tr>
+      <td width="45%">(保留)</td>
+      <td colspan="2" width="45%">ES</td>
+      <td width="10%">72</td>
+    </tr>
+    <tr>
+      <td colspan="3" width="90%"><div align="center">EDI</div></td>
+      <td width="10%">68</td>
+    </tr>
+    <tr>
+      <td colspan="3" width="90%"><div align="center">ESI</div></td>
+      <td width="10%">64</td>
+    </tr>
+    <tr>
+      <td colspan="3" width="90%"><div align="center">EBP</div></td>
+      <td width="10%">60</td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFF9D2" colspan="3" width="90%"><div align="center">ESP</div></td>
+      <td width="10%">56</td>
+    </tr>
+    <tr>
+      <td colspan="3" width="90%"><div align="center">EBX</div></td>
+      <td width="10%">52</td>
+    </tr>
+    <tr>
+      <td colspan="3" width="90%"><div align="center">EDX</div></td>
+      <td width="10%">48</td>
+    </tr>
+    <tr>
+      <td colspan="3" width="90%"><div align="center">ECX</div></td>
+      <td width="10%">44</td>
+    </tr>
+    <tr>
+      <td colspan="3" width="90%"><div align="center">EAX</div></td>
+      <td width="10%">40</td>
+    </tr>
+    <tr>
+      <td colspan="3" width="90%"><div align="center">EFLAGS</div></td>
+      <td width="10%">36</td>
+    </tr>
+    <tr>
+      <td colspan="3" width="90%"><div align="center">EIP</div></td>
+      <td width="10%">32</td>
+    </tr>
+    <tr>
+      <td colspan="3" width="90%"><div align="center">CR3 (PDBR)</div></td>
+      <td width="10%">28</td>
+    </tr>
+    <tr>
+      <td width="45%">(保留)</td>
+      <td bgcolor="#FFF9D2" colspan="2" width="45%">SS2</td>
+      <td width="10%">24</td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFF9D2" colspan="3" width="90%"><div align="center">ESP2</div></td>
+      <td width="10%">20</td>
+    </tr>
+    <tr>
+      <td width="45%">(保留)</td>
+      <td bgcolor="#FFF9D2" colspan="2" width="45%">SS1</td>
+      <td width="10%">16</td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFF9D2" colspan="3" width="90%"><div align="center">ESP1</div></td>
+      <td width="10%">12</td>
+    </tr>
+    <tr>
+      <td width="45%">(保留)</td>
+      <td bgcolor="#FFF9D2" colspan="2" width="45%">SS0</td>
+      <td width="10%">8</td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFF9D2" colspan="3" width="90%"><div align="center">ESP0</div></td>
+      <td width="10%">4</td>
+    </tr>
+    <tr>
+      <td width="45%">(保留)</td>
+      <td colspan="2" width="45%">前一个任务的指针 (TSS)</td>
+      <td width="10%">0</td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;32 位处理器提供了一个 <font color="blue">任务寄存器 (TR, Task Register)</font>，用于指向当前任务的 TSS。与 LDT 类似，我们后面将会看到，我们会把各个任务所使用的 TSS 都注册到 GDT 中。同样地，当我们需要使用 TR 来跟踪一个用户任务的 TSS 时，我们就需要在 TR 中填入对应的 TSS 在 GDT 中的选择子，以帮助我们访问 TSS。TR 寄存器的格式同样与各个段基址的格式类似，如下所示：
+
+  <table>
+    <tr>
+      <td width="20%"><div align="center">选择器 [16-bits]</div></td>
+      <td colspan="3" width="80%"><div align="center">描述符高速缓存器 [64-bits]</div></td>
+    </tr>
+    <tr>
+      <td width="20%">TSS 选择子</td>
+      <td width="40%">描述符高速缓存器</td>
+      <td width="25%">段界限</td>
+      <td width="15%">段属性</td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当任务切换发生的时候，处理器会把当前任务的现场信息保存到由 TR 寄存器指向的 TSS 中，然后向 TR 寄存器中代入新任务的 TSS 的选择子，并从新任务的 TSS 中恢复新任务的现场。
+
+  <h3><a name="1_task_5">1.5 全局地址空间和局部地址空间</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在，我们已经把操作系统所使用的段所对应的描述符，以及各个用户程序所使用的段所对应的描述符，在物理上隔绝开来了，是时候重新审视我们的软件结构了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于现在我们把各个用户程序的段描述符表独立出来了，因此现在理论上每个程序最多可以享有 `2^13=8192` 个段，而每个段的段内偏移最大为 `2^32=4GB`，因此现在理论上一个任务能够享有的 <font color="red">最大局部空间</font> 为 `2^13 \times 2^32 = 2^45 = 32TB`。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于全局空间来说，也是一样的道理，理论上一个任务能够享有的 <font color="red">最大全局空间</font> 也为 `2^13 \times 2^32 = 2^45 = 32TB`。不过值得注意的是，这部分全局空间是任务们之间共享的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此，综上所述，每个任务可以访问到的最大总空间理论上为 `32TB+32TB = 64TB`。其中有 32TB 是任务之间共享的。我们可以用下图很形象地概括：
+
+  <div align="center">
+    <img src="./pic/address.png" width=300px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有读者可能会疑惑，这么大的任务空间，内存放得下吗？内存肯定放不下，操作系统只是允许程序的编写者使用该地址空间来编写程序。对于一块物理内存来说，可以被多个任务所使用的多个段所占据。当一个任务需要访问一个段 (i.e. 需要从磁盘把段拷贝到内存中)，但是内存中已经没有空间的时候，此时操作系统就会负责帮忙把一个不怎么用到的段换出到磁盘中，然后把腾出来的空间给该任务想要访问的段，并且同时修改段的描述符，使之指向这段内存空间。当被换出的段需要用到时，就再使用相同的方法。这样一来，我们实际上就为我们的程序提供了本不该有的内存空间，这也就是 <font color="blue">虚拟内存</font> 机制。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到我们上面的图，我们会发现，一个任务能够访问到的内存有两部分，一部分是自己的 (i.e. 黄色区域，使用 LDT 访问)，一部分是所有程序都能访问的公有区域 (i.e. 红色区域，使用 GDT 访问)，我们把这两部分分别称为   <font color="blue">全局地址空间</font> 和 <font color="blue">局部地址空间</font>。
+
+  <div align="center">
+    <img src="./pic/address_space.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;从程序员的角度来看，<font color="red">全局地址空间</font> 中的段包含了操作系统的段，是由操作系统开发人员编写的，但是程序员们可以在一定的条件下调用这些段的代码，或者是获得这些段中的一些数据，从而来获得操作系统提供给上层应用的一些功能；另外，全局地址空间中的一些程序适用于全局性的管理工作的，包括中断处理、空闲内存的查找和分配、回收已终止任务的内存空间、设备访问的排队和调度等工作。这些任务不可能写在哪个局部地址空间的代码段中，只能写在全局地址空间的代码段中，因为它们是公有的一些功能，或者说不专属于某个用户程序的功能。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;反观 <font color="red">局部地址空间</font> 就是用户程序自己发挥的空间，是由程序员自己创建的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;通常，任务会在自己的局部地址空间内运行。当它需要操作系统提供的服务的时候，就会转入全局空间执行。转入的理由上面已经介绍过，这里进行总结：
+
+  <ul>
+    <li>操作系统提供的基础功能是大多数程序都需要的，所以写在公共区域 (i.e. 全局地址空间)；</li>
+    <li>操作系统提供的大多数功能都是与底层硬件打交道的功能，如果交由用户程序来实现则十分不安全。因此这部分逻辑应由操作系统来实现，然后把相应的段描述符留在公共区域，然后让用户程序通过这些来操作底层硬件；</li>
+  </ul>
+</div>
+
+<h2><a name="2_privilege">2. 特权级保护</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上一章中，我们关注了在物理上对段描述符的隔离，同时我们还知道了对于一个任务来说，它既可以访问它自己的地址空间，也可以访问全局的地址空间。在本章中，我们将看到基于描述符隔离，处理器在保护模式下实现的特权级保护机制。
+
+  <div class="div_learning_post_background">
+  <p><font color="red">请注意！下面我们所讨论的东西，包括代码段之间的转移，以及对数据段的访问，都是局限在一个任务内部的。市面上很多教材，以及很多博客都没有强调这一点，读者朋友一定要牢记！</font>
+  </div>
+
+  <h3><a name="2_privilege_1">2.1 基本规则 与 基本概念</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在多任务的背景下，处理器上会运行各种任务。<font color="red">在一个任务中</font>，会访问各种段，包括数据段和代码段。有些数据段/代码段是任务自己定义的，位于局部地址空间中；有些数据段/代码段是操作系统定义的，位于全局地址空间中。显然，它们的重要程度、安全性都是不一样的。所以处理器很有必要给各个代码段和数据段分个三六九等。我们把这种代码段/数据段的等级称为 <font color="blue">特权级 (Privilege)</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如何引入特权机制呢？请看下图：
+
+  <div align="center">
+    <img src="./pic/access_privelege.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;简单来说，我们本质上就是要干如上所示这样一件事情：<font color="red">在一个任务中</font>，<b>高特权级代码段</b>不能向<b>低特权级代码段</b>转移，反之可以；<b>低特权级程序代码段</b>不能访问<b>高特权级数据段</b>，反之可以。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其实现实情况比这个描述会稍微再复杂亿点，可以先这么简单理解。
+
+  <h5><a name="2_privilege_1_1">(1) DPL: 静态描述段特权级</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回忆一下，我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_8_Protect_Mode/index.html#1_gdt_3">段描述符</a> 介绍过段描述符中的 <font color="blue">描述符特权级 (DPL, Description Privilege Level)</font>。这里的 DPL 就是用于<font color="red"><b>静态地</b></font>描述一个段 (i.e. 代码段和数据段) 的特权级，是在段描述符被创建的时候就确定下来的。由于 DPL 有 2 bits，所以 DPL 可以定义为 `2^2=4` 级，数字依次为 0、1、2 和 3。0 级代表特权级最高，3 代表特权级最低。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有了 DPL，我们只需要做出如下规定，就可以成功实现安全需求：
+
+  <ul>
+    <li><b>代码段</b>：只能从低特权级转移到高特权级，表现就是 DPL 数值上只能从大转移到小或相等</li>
+    <li><b>数据段</b>：只能从高特权级访问低特权级，表现就是 DPL 数值上只能从小访问到大或相等</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;但是实际上并没有这么简单，我们下面继续挖掘。
+
+  <h5><a name="2_privilege_1_2">(2) RPL: 动态描述段特权级</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当我们真正引用一个段的时候 (i.e. 装载 CS/DS/SS... 寄存器的时候)，我们会向段基址寄存器中装入段选择子。回忆我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_8_Protect_Mode/index.html#2_load_protection_6">在保护模式中访问内存</a> 中描述的段选择子格式，它的低 2-bits 是 <font color="blue">请求特权级 (RPL, Request Privilege Level)</font>。相对于 DPL 是一个段的静态段特权级，RPL 是某个段被引用的时候，真正被传入段选择子的 <font color="red"><b>动态特权级</b></font>。也就是说，最终被引用的段是以什么特权级被访问的，看的是 RPL。DPL 只是约束 RPL 的范围而已 (i.e. 动态特权级不能超过静态特权级，即在数值上 RPL `\geq` DPL)
+
+  <div align="center">
+    <img src="./pic/terms.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于对 DPL 和 RPL 概念的理解，如上图所示，我们约定一下术语：我们把存在内存中的代码段称为 <font color="blue">代码段</font>，其中又把当前任务正在引用的代码段称为 <font color="blue">当前代码段</font>，任务未来想引用的代码段称为 <font color="blue">目标代码段</font>，<b>代码段</b> 拥有的是 DPL 静态特权级。在这个基础上，我们把一个执行起来的代码段称为 <font color="blue">代码段实例</font>，其中任务当前正在执行的代码段我们称为 <font color="blue">当前代码段实例</font>，任务未来想执行的代码段称为 <font color="blue">目标代码段实例</font>，<b>代码段实例</b> 拥有的是 RPL 动态特权级。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;而对于数据段，同样的道理，我们把存在内存中的数据段称为 <font color="blue">数据段</font>。其中又把当前任务正在引用的数据段称为 <font color="blue">当前数据段</font>，任务未来想引用的数据段称为 <font color="blue">目标数据段</font>，<b>数据段</b> 拥有的是 DPL 静态特权级。在这个基础上，我们把一个任务在访问的数据段称为 <font color="blue">数据段实例</font>，其中任务当前正在访问的数据段我们称为 <font color="blue">当前数据段实例</font>，任务未来想访问的数据段称为 <font color="blue">目标数据段实例</font>，<b>数据段实例</b> 拥有的是 RPL 动态特权级。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;悟性高的读者会发现，当我们称 "xx段" 的时候，我们强调的将是一个数据段/代码段的固有特权级属性 DPL，它是存储在内存中的；当我们称 "xx段实例" 的时候，我们强调的将是一个被运行的代码段/被访问的数据段的动态特权级属性 RPL，它是存储在段基址寄存器中的。这样的命名方式借鉴了面向对象的思想。读者注意！这些词语是我自己创造的，方便于后文的阐述，在别的参考资料中可能有别的称法。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于对这些词语的理解，我们回到 RPL，绝大多数情况下，RPL 值与 DPL 值是相等的。但有些情况下，可能会有不同的设置。比如：
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当定义一个 <b>代码段</b> 为最高特权级 (DPL=0) 时，可以请求它运行在相对更加低级的任意特权级: 0-3，也即 RPL 的值可以动态的选择 0-3。这样做是为了压缩该 <b>代码段</b> 的特权，因为 CPU 接下来将按请求成功的 RPL 特权级运行，而这个 RPL 值越大，在满足特权级条件下，后面能转移或访问的其它段数量就越少。所以，当一个段通过 RPL 请求运行在更低特权级时，目的是为了比这个请求特权级高的段尽量不受本段的影响。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;RPL 更大的作用是在访问 <b>数据段</b> 的时候，可以用来区分是访问发起者是操作系统和还是应用程序发起。我们将在文章的最后：<a href="#4_rpl">再谈 RPL</a> 中具体阐述。
+
+  <h5><a name="2_privilege_1_3">(3) CPL: 正在运行的代码段的特权级</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了方便区分，我们又把我们 <b>当前代码段实例</b> 被请求的时候传入的 <font color="blue">RPL</font> 称作 <font color="blue">当前特权级 (CPL, Current Privilege Level)</font>。可见，<font color="blue">CPL</font> 代表了当前正在运行的任务所拥有的权限。
+
+  <h3><a name="2_privilege_2">2.2 基本流程</a></h3>
+
+  <div align="center">
+    <img src="./pic/check_process.png" width=700px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，<font color="red">在一个任务中</font>，当我们修改一个段基址寄存器的引用内容的时候，首先我们会发起向相应段基址寄存器中存入段选择子的操作，其中包含了我们期望该段以什么样的方式被引用的字段 <font color="blue">RPL</font>，也即 <b>目标代码段实例/数据段实例</b> 的特权级，如上图 (1) 所示。然后，处理器就会进行段引用的安全检查：
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Firstly, 处理器会从 CS 寄存器的低两位中读取 <b>当前代码段实例</b> 的特权级 <font color="blue">CPL</font>，如上图 (2) 所示。同时，处理器会根据我们传入的段选择子从内存中的描述符表中定位到我们想要引用的段的描述符，里面有我们要用于特权合法性验证的 <font color="blue">DPL</font>，对于 <b>代码段</b> 描述符来说，处理器还会捕获描述符 Type 字段中的 <font color="blue">C 位</font> (我们会在下面叙述 C 位的细节)，如上图 (3) 所示。有了 CPL，DPL，(C 位) 和 RPL，处理器就能够进行一些合法性的判断，从而来决定该段是否能被引用成功，如上图 (4) 所示。当安全检查通过之后，即引用成功了，处理器就会真正更新相应的段基址寄存器和描述符高速缓存器，如上图 (5) 所示。读者会发现，整个流程的重点其实是在 (4) 安全检查这一步，因此我们在下面将花大量的篇幅描述 (4) 的具体判断细节。在这里首先需要读者明确的就是：<font color="red">DPL 是目标代码段/数据段的 DPL，RPL 是目标代码段实例/数据段实例的 RPL，CPL 是当前代码段实例的 RPL</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面，我们将分为两部分来对处理器安全检查进行阐述。思考一下，我们可以把内存中的段分为 <b>代码段</b> 和 <b>数据段</b>。<font color="red">在一个任务中</font>，当我们引用一个新的 <b>代码段</b> 的时候 (i.e. 修改 CS 寄存器)，我们本质上是想要在这个任务中实现指令的跳转；当我们引用一个新的 <b>数据段</b> 的时候 (i.e. 修改除 CS 寄存器以外的其它段基址寄存器)，我们本质上是想要在这个任务中实现对目标数据的读取/写入。就上图中的 (4) 而言，处理器对这两者的保护方式是有区别的，我们上面的展示的流程是一个大一统的流程，我们下面将具体就处理器对 <b>代码段及其实例</b> 和 <b>数据段及其实例</b> 的保护进行详细叙述。
+
+  <h3><a name="2_privilege_3">2.3 对代码段及其实例的特权级保护</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在正式介绍处理器对 <b>代码段及其实例</b> 的特权级保护之前，我们需要补充两个前置知识。<font color="red">一般来说，在一个任务中，处理器只允许代码段引用变更发生在两个特权级相同的代码段之间</font>，这也是我们在之前文章的代码中唯一看到过的情况。然而，我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_9_Simple_Kernel/index.html#4_kernel">进入内核程序</a> 中曾经介绍过：对于一个用户程序任务，它自己位于局部地址空间的代码常常会调用操作系统内核提供的位于全局地址空间中的内核例程代码。在引入特权级保护的概念之后，出于安全考虑，用户任务自己的 <b>代码段</b> 应该是低特权级的，内核例程 <b>代码段</b> 应该是高特权级的。如果处理器仍保持仅允许同级跳转的情况，那么用户任务自己的代码调用内核例程代码这一过程将不可能实现。针对这种情况，处理器提供了<font color="red">在一个任务中</font>两种使能 "<b>低特权级代码段</b> 向 <b>高特权级代码段</b> 跳转" 的方法：描述符中的 <font color="blue">C 位</font>，以及<font color="blue">调用门</font>。我们下面首先对这两个概念进行介绍。
+
+  <div class="div_learning_post_border">
+  <div align="center"><h2>重要概念</h2></div>
+  <h5><a name="2_privilege_3_1">(1) 描述符中 C 位的作用</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_8_Protect_Mode/index.html#1_gdt_3">段描述符</a> 中曾经简单介绍过代码段描述符的 Type 字段中 C 位的作用。如果一个 <b>代码段</b> 的 C 位被标识为 0，那么在一个任务中，该 <b>代码段</b> 就只能被同特权级的 <b>代码段实例</b> 引用，这样的 <b>代码段</b> 被称为 <font color="blue">非依从代码段</font>；如果一个 <b>代码段</b> 的 C 位被标识为 1，那么在一个任务中，该 <b>代码段</b> 就可以被特权级比它低的 <b>代码段实例</b> 引用，这样的 <b>代码段</b> 被称为 <font color="blue">依从代码段</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，在一个任务中，如果处理器成功跳转到一个 <b>依从代码段实例</b>，处理器不会改变当前任务的特权级 CPL，而是仍然会运行在引用这个 <b>依从代码段</b> 之前的 <b>代码段实例</b> 的特权级下。因此虽然处理器实现了在任务内的指令跳转，但是实际上并没有提高权限。
+
+  <h5><a name="2_privilege_3_2">(2) 调用门 (Call-Gate)</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在一个任务中，从低特权级到高特权级程序跳转的方式还有另外一种，那就是通过 <font color="blue">调用门 (Call-Gate)</font>，我们下面对它进行分析。
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <td width="4%">长度</td>
+      <td width="48%">16b</td>
+      <td width="3%">1b</td>
+      <td width="6%">2b</td>
+      <td width="3%">1b</td>
+      <td colspan = 4 width="12%">4b</td>
+      <td width="9%">3b</td>
+      <td width="15%">5b</td>
+    </tr>
+    <tr>
+      <td rowspan = 2 width="4%">含义</td>
+      <td rowspan = 2 width="48%">段内偏移量<br>[bit 31 ~ 16]</td>
+      <td rowspan = 2 width="3%">P</td>
+      <td rowspan = 2 width="6%">DPL</td>
+      <td rowspan = 2 width="3%">0</td>
+      <td colspan = 4 width="12%">TYPE</td>
+      <td rowspan = 2 width="9%">0 0 0</td>
+      <td rowspan = 2 width="15%">参数个数</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </table>
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <td width="10%">长度</td>
+      <td width="45%">16b</td>
+      <td width="45%">16b</td>
+    </tr>
+    <tr>
+      <td width="10%">含义</td>
+      <td width="45%">例程所在代码段的选择子</td>
+      <td width="45%">段内偏移量<br>[bit 15 ~ 0]</td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;调用门本质上是一个描述符，一个不同于 代码段/数据段描述符 的描述符。调用门也可以被安装在 GDT 或者 LDT 中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;调用门的格式如上所示。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 P 位，通常应该是 1。当它为 0 时，调用这样的调用门会使处理器产生异常中断。这样的机制可以被用于统计调用门调用的频率。即在中断服务程序中记录被调用的次数，然后把 P 位恢复为 1 返回。思考一下，如果我们不把 P 位恢复为 1，那么在中断服务程序返回后又会触发中断，这样就陷入了死循环，所以我们需要将 P 位恢复为 1。此时细心的读者会思考：如果将 P 位恢复为 1，那么怎么触发下一次中断呢？答案是在调用门指向的 <b>高特权级代码段</b> 中，再把 P 位置为 0，这样一来当这个调用门下一次被调用时，就又会触发中断了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;细心的读者会发现，Type 字段之后的那个 bit 的值为 0。对比我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_8_Protect_Mode/index.html#1_gdt_3">段描述符</a> 中讨论过的普通段描述符的格式，这个 bit 位对应的是 S 位。当 S 位为 0 的时候，处理器就会知道这不是一个普通的代码/数据段，而是一个系统段。对于 Type 字段，当处理器发现一个系统段的 Tpye 字段是 "1100" 时，它就知道它访问的系统段的类型是一个调用门。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 DAL 字段，这里对应的就是调用门自身的特权级，我们在下面描述调用门工作方式的时候，将会详细分析。
+
+  <div class="div_learning_post_background">
+  <div align="center"><h4>这部分推荐读者看完 下面 <a href="#2_privilege_5">2.5 任务内切换代码段特权级时的栈切换</a> 一节再回过头来看</h4></div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于参数个数字段，我们在下面 <a href="#2_privilege_5">任务内切换代码段特权级时的栈切换</a> 中将会看到，当一个任务从低特权级的 <b>当前代码段实例</b> 切换到高特权级的 <b>目标代码段实例</b> 的时候，这个任务所使用的栈也会发生改变。有时候 <b>当前代码段实例</b> 需要向 <b>目标代码段实例</b> 传递一些参数，使用的方式是向 <b>当前代码段实例</b> 正在使用的栈中压入参数，在使用调用门切换到 <b>目标代码段实例</b> 之后，处理器就会<font color="red">自动地</font>从先前低特权级的旧栈中将被压入的参数复制到新的当前使用的栈中，这个自动的复制操作使得栈的切换对于程序员来说是透明的，因此能够使用常规的 "调用前 <font color="blue">push</font> 入参，函数内 <font color="blue">pop</font> 出参" 的方式来传递参数。处理器的这个自动复制行为，对于基于调用门 "升级" 的跳转方法来说，复制的参数的个数就是由调用门中的这个参数字段决定的。我们可以看到它是 5-bits，也就是说，它最多允许传递 `2^5-1=31` 个参数 (0 代表没有参数)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，当使用调用门切换前后的 <b>当前代码段实例</b> 和 <b>目标代码段实例</b> 特权级相同时，就不会发生上述栈切换的行为。使用调用门前后使用的是同一个栈，任务 CPL 也不会发生改变。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，最重要的是，调用门中给出了某个 <b>高特权级代码段</b> 的段选择子，而不像常规 代码段/数据段描述符 那样给出线性地址。以及，调用门还给出了目标例程在 <b>高特权级代码段</b> 中的偏移地址。<b>低特权级代码段实例</b> 通过引用调用门，首先拿到 <b>高特权级代码段</b> 的选择子，如果符合访问规则，处理器就会转而自动发起对 <b>高特权级代码段</b> 的引用，并且使用 目标例程在 <b>高特权级代码段</b> 中的偏移地址进行跳转。因此，当我们在 <font color="blue">直接远调用 call 选择子:段内偏移</font> 或者 <font color="blue">直接远调用 call far [标号]</font> 中的选择子部分填写的是一个调用门的选择子的时候，实际上指令中的 段内偏移 部分是没有意义的。因为我们在调用门中已经给出了 目标例程在 <b>高特权级代码段</b> 中的偏移地址，所以处理器参考的是调用门中的偏移地址信息。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;调用门的访问规则如下图所示：(p.s 读者请不要被下图误导，一个调用门中只会存储一个 <b>高特权级代码段</b> 的段选择子，下图右边部分只是代表该调用门可以指向的高特权级代码段的范围)
+
+  <div align="center">
+    <img src="./pic/call_gate.png" width=700px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;第一道检查针对于访问调用门的 <b>当前代码段实例</b> (i.e. 上图左半部分)，即调用门的入口处，<font color="red">处理器会使用 调用门描述符的 DPL 来限制能够访问调用门的 <b>当前代码段实例</b></font>，有如下限制：
+
+  <div class="div_learning_post_background" align="center">
+  <p>Num(当前代码段实例 CPL) `\leq` Num(调用门 DPL)<br>(<b>当前代码段实例</b> 特权级比 <b>调用门</b> 特权级高或相等)
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;第二道检查针对于要运行的 <b>目的代码段实例</b> (i.e. 上图右半部分)，即调用门的出口处，<font color="red">处理器必须保证任务流不会从 <b>高特权级代码段实例</b> 向 <b>低特权级代码段实例</b> 切换</font>，因此有如下限制：
+
+  <div class="div_learning_post_background" align="center">
+  <p>Num(当前代码段实例 CPL) `\geq` Num(目的代码段实例 RPL)<br>(<b>当前代码段实例</b> 特权级比 <b>目的代码段实例</b> 特权级低或相等)
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;而对于 <b>目的代码段实例</b> 特权级 RPL 和 <b>目的代码段</b> 特权级 DPL，有以下我们熟知的关系：
+
+  <div class="div_learning_post_background" align="center">
+  <p>Num(目的代码段实例特权级 RPL) `\geq` Num(目的代码段特权级 DPL)<br>(<b>目的代码段实例</b> 特权级比 <b>目的代码段</b> 特权级低或相等)
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上面三条内容的约束下，调用门就能帮助 <b>低特权级当前代码段实例</b> 引用 <b>高特权级目标代码段</b>，从而切换到 <b>高特权级目标代码段实例</b>。读者朋友会发现其实重点就是前两条约束：
+
+  <ul>
+    <li><font color="red">第一条约束用于限制能访问调用门的 <b>当前代码段实例</b> 的特权级</font>：如果 <b>目标代码段</b> 不想让处于较低特权级的 <b>当前代码段实例</b> 引用，那么 <b>目标代码段</b> 把它的调用门放置在 <b>当前代码段实例</b> 引用不到的特权级就可以了，本质上是调用门对能够访问自己的 <b>当前代码段实例</b> 的特权级作出限制；</li>
+    <li><font color="red">第二条约束用于在通过了调用门之后，限制能运行起来的 <b>目标代码段实例</b> 的特权级</font>：在通过了调用门检查后，处理器必须限制 <b>当前代码段实例</b> 不能变成低特权级的 <b>目标代码段实例</b>，否则系统安全性将不再有保证，本质上是 <b>当前代码段实例</b> 对能够基于该调用门以运行的 <b>目标代码段实例</b> 的特权级作出限制。</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在理解了调用门的使用规则之后，读者朋友可能会对调用门的使用过程感兴趣，我们下面对此进行阐述，请看下图：
+
+  <div align="center">
+    <img src="./pic/call_gate_principle.png" width=700px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，首先我们会使用 <font color="blue">call (far)/jmp (far)</font> 指令来开始 <b>当前代码段实例</b> 的转移请求，在这里我们假设一路绿灯，所有的跳转规则全部 match。我们在指令的操作数中会给出 <b>调用门的选择符</b> (p.s. <font color="blue">call (far)/jmp (far)</font> 指令按理说同时需要给出偏移值，但是其实这里的偏移值并没有什么意义)。在拿到调用门之后，调用门中保存着 <b>目标代码段的段选择子</b>，以及 <b>目标代码在目标代码段中的段内偏移值</b>。随后我们根据 <b>目标代码段的段选择子</b> 就能拿到 <b>目标代码段描述符</b>，我们在描述符中又能拿到 <b>目标代码段的基地址</b>，我们将 <b>基地址</b> 和 <b>目标代码段内偏移值</b> 相加，就能够获取最终目标代码在内存中的位置。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，由于 <font color="blue">jmp (far)</font> 是单向跳转的，并不会向栈中保存相应的 CS:EIP 当前值，并且处理器决定了它没办法提升任务的 CPL，所以我们只有在 (1) 不需要从 <b>高特权级目标代码段实例</b> 返回 和 (2) 不需要提升任务 CPL 的时候，才会使用 <font color="blue">jmp (far)</font> 指令来引用调用门以实现跳转，一般来说，这种情况比较少，所以我们经常使用的是 <font color="blue">call (far)</font> 指令来跳转。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上面的补充知识之后，下面我们来看一下处理器在进行 <b>代码段实例</b> 切换的各种情形时的保护策略。(p.s. 图中的序号对应着我们在下文分点阐述时使用的序号)
+
+  <div class="div_learning_post_border">
+  <div align="center"><h2>代码段转移保护</h2></div>
+  <div align="center">
+    <img src="./pic/task_shift.png" width=700px>
+  </div>
+
+  <h5><a name="2_privilege_3_3">(1) 段内转移:不做特权级检查</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当 <b>当前代码段实例</b> 调用 <font color="blue">call/jmp</font> 指令进行段内转移时，由于只会对 EIP 寄存器进行修改，因此不会触发特权级检查。
+
+  <h5><a name="2_privilege_3_4">(2) 非依从段（C=0时）：只允许同级别转移</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当 <b>当前代码段实例</b> 调用 <font color="blue">call (far)/jmp (far)</font> 指令，企图引用另一个 C=0 的 <b>目标代码段</b> 来切换到一个对应的 <b>目标代码段实例</b> 时，处理器会检查：
+
+  <div class="div_learning_post_background" align="center">
+  <p>Num(目标代码段特权级 DPL) = Num(当前代码段实例特权级 CPL)<br>Num(目标代码段实例特权级 RPL) = Num(当前代码段实例特权级 CPL)
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;即在跳转到一个非依从段时，处理器会保证跳转的 <b>目的代码段特权级</b> 和 <b>当前代码段实例特权级</b> 相同，并且限制 <b>目标代码段实例特权级</b> 也要和 <font color="blue">当前代码段实例特权级</font> 相同，也即同级跳转。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;具体的例子如上图 (2) 所示，我们可以看到同级之间的跳转是允许的，而不同级之间的跳转时不允许的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，由于在转移的时候 CPL = DPL = RPL，因此在转移成功以后，处理器的 <b>当前代码段实例特权级</b> 不会发生改变。
+
+  <h5><a name="2_privilege_3_5">(3) 依从段（C=1时）：允许低特权级向高或同级转移，但转移后并不改变特权级</a></h5>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当 <b>当前代码段实例</b> 调用 <font color="blue">call (far)/jmp (far)</font> 指令，企图跳转到另一个 C=1 的 <b>目标代码段</b> 来切换到一个对应的 <b>目标代码段实例</b> 时，处理器会检查：
+
+  <div class="div_learning_post_background" align="center">
+  <p>Num(目标代码段特权级 DPL) `\leq` Num(当前代码段实例特权级 CPL)<br>Num(目标代码段实例特权级 RPL) `\leq` Num(当前代码段实例特权级 CPL)
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;即在跳转到一个依从段的时候，与上面跳转到非依从段不同的是， <b>当前代码段实例</b> 此时可以引用 <b>高特权级目标代码段</b> 了，并且可以基于这个 <b>高特权级目标代码段</b> 运行 RPL 比当前 CPL 高的 <b>目标代码段实例</b>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;具体的例子如上图 (2) 所示，我们可以看到同级之间的跳转和不同级之间的跳转都是允许的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，虽然 <b>当前代码段实例</b> 可以跳转到特权级比它高的 <b>依从目标代码段实例</b>，但是跳转之后处理器的运行特权级 CPL 仍然和跳转之前保持一致。也就是说，跳转到一个 <b>高特权级依从目标代码段实例</b> 并不能提高任务所拥有的权限。
+
+  <h5><a name="2_privilege_3_4">(4) 调用门：允许低特权级向高特权级转移，且转移后将改变特权级</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当代码段调用 <font color="blue">call (far)/jmp (far) + 调用门</font> 指令，使用调用门跳转指令的时候，首先处理器会进行第一道检查：
+
+  <div class="div_learning_post_background" align="center">
+  <p>Num(调用门 DPL) `\leq` Num(当前代码段实例特权级 CPL)<br>Num(调用门 DPL) `\geq` Num(目标代码段实例特权级 RPL)
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这道检查正如我们在上文 <a href="#2_privilege_5_add_2">调用门 (Call-Gate)</a> 中描述的那样，这里就不再赘述。在通过这道检查后，处理器会根据指令的不同，进行第二道检查：
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 <font color="blue">call far</font> 指令，必须保证：
+
+  <div class="div_learning_post_background" align="center">
+  <p>Num(目标代码段特权级 DPL) `\leq` Num(当前代码段实例特权级 CPL)
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 <font color="blue">jmp far</font> 指令，必须保证：
+
+  <div class="div_learning_post_background" align="left">
+  <p><b>目标代码段是 非依从段 (C=0) 时</b>：Num(目标代码段特权级 DPL) `\leq` Num(当前代码段实例特权级 CPL)
+  <br><b>目标代码段是 依从段 (C=1) 时</b>：Num(目标代码段特权级 DPL) = Num(当前代码段实例特权级 CPL)
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;再次强调，即使我们使用 <font color="blue">jmp far</font> 成功地基于调用门跳转到了高特权级的 <b>目标代码段实例</b>，任务的 CPL 是不会发生变化的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;总结起来就是，<font color="blue">call far</font> 不会对 <b>目标代码段</b> 是否是依从段作区别对待；而 <font color="blue">jmp far</font> 则要求当 <b>目标代码段</b> 是非依从段时，只能进行同特权级的跳转。
+
+  <h5><a name="2_privilege_3_7">(5) 任何时候，都不允许 高特权级代码段实例 向 低特权级代码段实例 转移</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上图所示的 (5) 中，我们发现从 <b>高特权级代码段实例</b> 向 <b>低特权级代码段实例</b> 的转移是不被允许的，原因是 <b>低特权级代码段</b> 的可靠性比 <b>高特权级代码段</b> 更低，在一个任务中，处理器是不允许出现任务主动降低安全性的操作出现的。
+  </div>
+
+  <h3><a name="2_privilege_4">2.4 数据段及其实例的特权级保护</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 <b>数据段及其实例</b> 的特权级保护，相对于 <b>代码段及其实例</b> 的特权级保护来说，会更加简单一些，原因如下：
+
+  <ul>
+    <li>数据的访问永远只能是单向的：只能是 <b>高特权级代码段实例</b> 访问 <b>低特权级数据段实例</b>，不存在双向一说</li>
+    <li><b>数据段实例</b> 的切换不会影响 CPU 的 CPL 值，其结果就是加载成功/失败</li>
+    <li><b>数据段</b> 没有依从性的说法</li>
+  </ul>
+
+  <div class="div_learning_post_border">
+  <div align="center"><h2>数据段转移保护</h2></div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 <b>数据段</b>，只有两条十分简单的规则：
+
+  <div class="div_learning_post_background" align="center">
+  <p>Num(目标数据段特权级 DPL) `\geq` Num(当前代码段特权级 CPL)
+  <br>Num(目标数据段特权级 DPL) `\leq` Num(目标数据段实例特权级 RPL)
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;即只有特权级相对高的 <b>当前代码段实例</b> 才能够引用一个特权级相对较低的 <b>目标数据段实例</b>，并且 <b>目标数据段实例</b> 的特权级 RPL 必须受限于 <b>目标数据段</b> 的特权级 DPL。
+  </div>
+
+  <h3><a name="2_privilege_5">2.5 任务内切换代码段特权级时的栈切换</a></h3>
+  <h5><a name="2_privilege_5_1">(1) 回顾上文</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在上面分别阐述了在一个任务中，处理器对 <b>代码段及其实例</b> 以及 <b>数据段及其实例</b> 的保护机制。我们现在知道了，在一个任务中，可以从一个 <b>低特权级代码段实例</b> 基于 C 位或者调用门的方式引用 <b>高特权级代码段</b>，在满足规则的情况下成功切换到 <b>高特权级代码段实例</b> 中。同时在一个任务中，<b>高特权级代码段实例</b> 可以引用 <b>低特权级数据段</b> 以对 <b>低特权级数据段实例</b> 发起访问。注意！这些都是发生在一个任务内部的。
+
+  <h5><a name="2_privilege_5_2">(2) 术语约定</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上面这层理解，我们下面将要看到的是在一个任务内部进行 <b>代码段实例</b> 切换的时候，处理器对栈的保护。
+
+  <div align="center">
+    <img src="./pic/stack_terms.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在一个任务中，除了要处理 <b>代码段</b> 和 <b>数据段</b>，我们还得处理 <b>栈段</b>。与 <b>代码段</b> 和 <b>数据段</b> 一样，我们同样先做一些术语的约定，如上图所示：我们把存在内存中的栈段称为 <font color="blue">栈段</font>。其中又把当前任务正在引用的栈段称为 <font color="blue">当前栈段</font>，任务未来想引用的栈段称为 <font color="blue">目标栈段</font>，<b>栈段</b> 拥有的是 DPL 静态特权级。在这个基础上，我们把一个任务在访问的栈段称为 <font color="blue">栈段实例</font>，其中任务当前正在访问的数据段我们称为 <font color="blue">当前栈段实例</font>，任务未来想访问的数据段称为 <font color="blue">目标栈段实例</font>，<b>栈段实例</b> 拥有的是 RPL 动态特权级。
+
+  <h5><a name="2_privilege_5_3">(3) 处理器对栈段及其实例的保护</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;处理器规定，当一个任务在访问 <b>当前栈段实例</b> 的时候 (i.e. 使用 SS 寄存器 + ESP 寄存器访问)，<b>当前代码段实例</b> 的特权级 CPL 和必须和 <b>当前栈段</b> 的特权级 DPL 相同，即：
+
+  <div class="div_learning_post_background" align="center">
+  <p>Num(当前代码段实例特权级 CPL) = Num(目标栈段特权级 DPL)
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;也就是说，工作在 <b>当前代码段实例</b> 特权级 `\N` 下的任务，只能引用特权级同样是 `\N` 的 <b>栈段</b> 作为 <b>当前栈段</b>。换句话说，当一个任务特权级为 `\N` 的 <b>当前代码段实例</b> 切换到特权级为 `\M`(`\M < \N`) 的 <b>目标代码段实例</b> 时，由于该任务的 CPL 发生了改变，因此此时必须使用一个特权级同样为 `\M` 的 <b>栈段</b> 作为任务切换特权级之后的栈空间。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这样一来，为了切换栈，每一个任务除了自己固有的栈之外，还需要额外定义几套栈。比如，对于一个工作在 <b>当前代码段实例</b> 特权级为 3 下的任务，除了任务自己本身使用的 DPL 为 3 的 <b>栈段</b>，还需要额外定义 DPL 为 0, 1, 2 的 <b>栈段</b>，分别供任务 <b>当前代码段实例</b> 特权级切换到 0, 1, 2 时使用，以此类推。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这些额外的 <b>栈段</b>，应该在内核创建任务时由内核程序顺带创建，并且描述符会被放到独属任务的 LDT 中。另外，回忆我们在 <a href="#1_task_4">TSS (Task State Segment)</a> 中描述过的，每一个任务都会有的 TSS 结构，注意在当时我们展示过的 TSS 格式中的黄色部分，这部分会用于当任务 <b>当前代码段实例</b> 的特权级切换时，引发的 "处理器自动 <b>栈段</b> 切换" 使用，下面我们来分析 "处理器自动 <b>栈段</b> 切换" 的过程。
+
+  <h5><a name="2_privilege_5_4">(4) 处理器自动栈段切换</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在一个任务的运行过程中，当前使用的 <b>栈段实例</b> 是由 SS 寄存器和 ESP 寄存器的内容指示的。当任务发生特权级切换时，处理器固件的自动栈切换流程如下。注意！我们这里仅讨论基于调用门的特权级切换的情况。
+
+  <div class="div_learning_post_background">
+  <div align="center"><h3><font color="red">[重要!]</font>当任务从低特权级控制转移到高特权级时</h3></div>
+
+  <div align="center">
+    <img src="./pic/stack_switch.png" width=100%>
+  </div>
+
+  <ol>
+    <li>用户任务程序通过指令 <font color="blue">call far + 调用门选择子</font> 的方式，尝试引用一个调用门，以尝试引用 <b>目标代码段</b></li>
+    <li>处理器首先发现引用的对象是一个调用门，触发调用门特权级检查，必须满足调用门的引用条件。当满足引用条件后，此时说明可以执行跳转。</li>
+    <li>使用 <b>目标代码段实例</b> 运行的特权级 (i.e. RPL) 到当前任务的 TSS 中选择一个栈，读取出 <b>新栈段</b> 的段选择子和栈指针，并用该段选择子从 GDT 中读取栈段描述符</li>
+    <li>检查 <b>栈段</b> 描述符的特权级和类型是否合法</li>
+    <li>临时保存当前栈段寄存器 SS 和栈指针 ESP 的内容</li>
+    <li>把新的 <b>栈段</b> 选择子和栈指针存入 SS 和 ESP 中，切换到新栈</li>
+    <li>把 3 中临时保存的 SS 和 ESP 值压入当前栈中，如上边右图所示</li>
+    <li>依据调用门描述符 "参数个数" 字段的指示，从旧栈中将所有参数都复制到新栈中。如果参数个数为 0，则不复制参数</li>
+    <li>将当前 CS 和 EIP 的内容压入新栈 (p.s. 通过调用门实施的转移一定是远转移，所以要压入 CS 和 EIP)</li>
+    <li>从调用门中依次将 <b>目标代码段</b> 选择子 和 段内偏移传送到 CS 和 EIP 寄存器中，开始执行被调用过程</li>
+  </ol>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注意！如果我们使用的是 <font color="blue">jmp far</font> 指令来触发调用门，我们的程序将不会发生特权级的切换，自然也就不会发生栈的切换，因此控制转移前后使用的是同一个栈，切换前后栈的变化如下所示：
+  </div>
+
+  <br>
+
+  <div class="div_learning_post_background">
+  <div align="center"><h3><font color="red">[重要!]</font>当任务从高特权级控制返回到低特权级时</h3></div>
+  <div align="center">
+    <img src="./pic/stack_switch_jmp.png" width=500px>
+  </div>
+
+  <div align="center">
+    <img src="./pic/stack_ret_process.png" width=500px>
+  </div>
+
+  <ol>
+    <li>从当前栈中弹出保存的 CS 和 EIP 的内容，根据 CS 中的 RPL 字段决定在返回过程中需不需要改变特权级别</li>
+    <li>如果远返回指令是带操作数的 (p.s. 我们将在下面 <a href="#3_example_9">返回时清空栈</a> 中介绍带操作数的 <font color="blue">ret/retf</font> 指令)，那么应该将操作数的值和 ESP 的当前值相加，以跳过栈中的参数部分 (i.e. 把参数部分舍弃)，最后的结果应该是栈顶指针指向栈中的 ESP 压栈值 (参考上图)。注意！远返回指令所带的操作数应该等于 “调用门参数个数 x 参数长度”</li>
+    <li>如果返回过程需要改变特权级别，则从栈中将 SS 和 ESP 的压栈值 pop 到 SS 和 ESP 寄存器中，以切换到原先调用者的栈</li>
+    <li>如果远返回指令是带操作数的，则在完成栈切换之后同样需要跳过调用者压入的参数，即执行：将操作数的值和 ESP 的当前值相加</li>
+    <li>如果返回过程需要改变特权级别，处理器还会检查 DS、ES、FS、GS 寄存器的内容，它们存储的选择子所对应的段描述符但凡有一个 DPL 高于调用者的特权级 (返回后的新的 CPL)，那么处理器将把数值 0 传送到该寄存器</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这里可以稍微唠叨以下最后一点。我们必须明确，<font color="red">特权级检查是在将选择子填入段基址寄存器的时候进行的，而不是在实际访问内存的时候进行的</font>。即：
+
+  <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;NASM Assembly</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">ds</span>, <span class="built_in">ax</span>          <span class="comment">;进行特权级检查</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">edx</span>, [<span class="number">0x2000</span>]   <span class="comment">;不进行特权级检查</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;假设我们特权级为 3 的用户任务成功地调用了 0 特权级的内核例程，内核例程通常会将 DS 寄存器设置为可以用于访问 <b>内核数据段</b> 的选择子。按理来说，当内核例程返回时，应该会把 DS 寄存器恢复为调用之前的情况。如果它没有做，那么处理器也不会干涉。由于在实际访问内存的时候并不会做特权级检查，那么当从高特权级控制返回到低特权级时，低特权级程序使用 DS 寄存器来访问高特权级段则变为可能。明显地，处理器应该避免这样的行为。因此，处于保护考虑，在发生从高特权级控制返回到低特权级时，处理器会对各个段基址寄存器中选择子对应的描述符重新做一次检查，并且剔除不合法的值。
+  </div>
+
+  <h5><a name="2_privilege_5_5">(5) TSS 中存放的是栈的静态地址</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这里补充一个很重要的点：TSS 中保存的相应特权级的 <b>栈段</b> 选择子 SSx 和栈顶指针 ESPx，都是静态的。什么意思呢？这些值在 TSS 被创建的时候填入之后，就不会发生改变了，处理器也不会去修改这些值。举个例子，一个任务通过调用门进入 0 特权级的代码段是，会切换到 0 特权级的栈。在返回时，并不会把 0 特权级的栈指针的内容更新到 TSS 中的 ESP0 中去。也就是说，对于这个任务来说，下一次再次切换到 0 特权级的代码段时，由于还是使用 TSS 中的 ESP0 来执行堆栈跳转，它面对的是一个全新的 0 特权级堆栈，并不会使用上一次使用堆栈的残留的栈顶指针。这点需要特别注意。
+</div>
+
+<h2><a name="3_example">3. 支持特权级保护与基于多任务背景的内核代码</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成上述理论知识的讨论之后，在本章中我们将结合实际的代码来理解特权级保护的具体实施。基于我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_9_Simple_Kernel/index.html">引导加载并运行一个简单的内核</a> 中展示的代码示例，我们对内核部分的源码做了修改，MBR 和 用户程序的代码并没有改动。值得一提的是，在上一篇文章中我们的用户程序任务运行的特权级是 0 级，而在本文中的用户程序是运行在 3 级特权级下，所以我们需要在内核代码中加入与特权级相关的内容，具体的代码可以位于 <a href="./kernel.html">内核源代码</a> 中，因为它太长了，所以我单独列出。
+
+  <div align="center">
+    <img src="./pic/load_process.png" width=100%>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们下面将要面对的是一个复杂庞大的内核程序，这个内核程序的功能是加载并运行一个用户任务。为什么复杂？因为它参杂了两个维度的内容：<font color="blue">特权级保护</font> 和 <font color="blue">多任务</font>。关于前者的理论知识，我们在上文已经花了大量的笔墨进行学习；关于后者，我们在本文展示的代码中，会尝试基于多任务的背景假设 (i.e. 使用基于多任务的内存数据结构)，去创建一个任务。但是，我们不会去创建多个任务。关于多个任务的创建、运行和轮转，我们将在后面的文章再讨论。因此，本节相当于在把 <font color="blue">特权级保护</font> 和 <font color="blue">多任务</font> 这两个维度交织起来之前的一个过渡。读者在阅读下面的内容的时候，如果心中没有把这两个维度进行区分，可能会觉得比较吃力。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了避免读者的迷惑，我绘制了上面所示的 <b>操作系统特权级多任务运行图</b>。可以清楚的看见，我们把上述的两个维度进行了区分。对于 <font color="blue">特权级</font> 维度 (i.e. 纵向)，我们看到我们有 GDT 和 LDT 的区分，这就导致了在一个用户任务看来，内存空间有着全局地址空间和局部地址空间的区分，并且用户任务如果要引用全局地址空间中的内核代码，必须走调用门；对于 <font color="blue">多任务</font> 维度 (i.e. 横向)，我们会看到在一个内核任务上可以支持多个任务的运行，我们在下文将会介绍相关数据结构，但是再次强调，我们本文只会创建一个任务。我们在下面的内容中，我们叙述的就是 <font color="red">内核程序是怎么一步一步构建起能让一个用户任务在多任务背景下运行起来的环境</font>，注意上图有带序号的左半部分，我们在下面阐述的时候，将按照上面序号所标识的流程顺序来进行分析。(p.s. 下文简称上图带序号的左半部分为 “流程图”)
+
+  <h3><a name="3_example_1">3.1 调用门的安装</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Line 771 的位置是整份程序的入口位置。我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_9_Simple_Kernel/index.html">引导加载并运行一个简单的内核</a> 的内核数据段中设置了一个映射表，表项内容是 "内核实例名称字符串 <-> <b>内核实例代码段</b> 地址" 的映射关系；当内核在加载用户任务的时候，会向 <b>用户程序代码段</b> 头部的格式相同的一张查找表中填入对应名称的 <b>内核实例代码段</b> 地址，从而使能 <b>用户程序代码段实例</b> 引用 <b>内核代码段</b> 中的例程。在本文中，我们的用户程序任务由于被降级为 3 特权级，这样一来，即使我们在加载用户程序的时候在 <b>用户程序代码段</b> 头部给出了 <b>例程代码段</b> 的地址，用户程序是不能够直接使用 <font color="blue">call far</font> 指令执行跳转操作的。因此，我们必须借助我们上文理论部分讨论过的内容 —— 调用门：即向 <b>用户程序代码段</b> 头部中的查找表填入调用门的地址。这样一来，当用户程序使用 <font color="blue">call far</font> 指令调用相关例程时，实际上引用的是调用门。调用门在实施我们上文叙述过的安全检查之后，就能够真正引用 <b>目标例程代码段</b> 了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了能够让 <b>用户程序代码段实例</b> 引用调用门，我们在内核的初始化阶段必须先安装调用门，安装的意思指的是把 <b>内核数据段</b> 中 "内核实例名称字符串 <-> <b>内核实例代码段</b> 地址" 查找表中的 <b>内核例程代码段</b> 地址替换为相应的调用门。对于这些调用门本身，它们将指向对应的 <b>内核例程代码段</b> 并且处在正确的特权级 (i.e. 调用门 DPL) 上。<font color="blue">这部分对应了 "流程图" 中的 (1)</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在 Line 808~822 的位置实施了调用门的安装，如果读者有兴趣，"内核实例名称字符串 <-> <b>内核实例代码段</b> 地址" 查找表的格式可以在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_9_Simple_Kernel/index.html#4_kernel_5">重定位用户程序符号表</a> 中找到。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们把安装调用门的过程分为两部分：(1) 生成调用门 (2) 安装调用门。细心的读者会注意到，我们使用循环分别完成了查找表中各条表项的调用门安装。我们在 Line 817 的地方调用了 make_gate_descriptor 过程来进行 (1)，在 Line 818 的地方调用了 set_up_gdt_descriptor 过程来进行 (2)。我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_9_Simple_Kernel/index.html#4_kernel_3_3">创建段描述符</a> 中已经介绍过了 set_up_gdt_descriptor 过程，因此这里不再赘述。我们下面简单来看下 make_gate_descriptor 过程。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在进入这个过程之前，Line 812~814 进行了过程参数的传递：eax 寄存器存储了目标代码在 <b>目标例程代码段</b> 中的偏移地址；bx 寄存器存储了 <b>目标例程代码段</b> 的段基地址；cx 寄存器存储了调用门本身的描述符配置信息，包括 P 位、调用门特权级 DAL 以及参数个数，注意到参数个数的值为 0，这是因为我们使用的是寄存器进行传参，而不是使用堆栈。make_gate_descriptor 过程是在 Line 327 定义的。make_gate_descriptor 中的逻辑就是简单的组合出了调用门的格式，这里不详述。在 Line 819，我们把 set_up_gdt_descriptor 过程返回的段选择子 (i.e. 此时就是调用门的选择子) 回填到原先 "内核实例名称字符串 <-> <b>内核实例代码段</b> 地址" 查找表 的对应的表项中。注意！回忆我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_9_Simple_Kernel/index.html#4_kernel_3_3">创建段描述符</a> 中已经介绍过的 set_up_gdt_descriptor 过程，在 set_up_gdt_descriptor 过程返回这个选择子中，RPL 的字段暂时为 0。我们在后面将调用门选择子安装到 <b>用户程序头部段</b> 时，将会对这个 RPL 进行重新修改，读者可以暂时不用疑虑。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在循环结束之后，我们在 Line 825~826 的地方对第一个调用门 (i.e. put_string 打印例程序) 的功能进行了测试：我们使用调用门调用了相关的内核例程。注意到，此时我们是平级跳转，即 <b>当前代码段</b> 和 <b>目标代码段</b> 都是在全局地址空间中的特权级为 0 的 <b>代码段</b>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;而在 Line 828~829 我们使用了没有调用门的方式调用了内核中的例程。即使不通过调用门，特权检查也是照常进行的，而且更为严格。把控制从较低的特权级转移到较高的特权级，通过调用门尚有可能，但是直接控制转移则在任何时候都是不允许的。当然，这里是从 0 特权级的 <b>当前代码段</b> 跳转到同样是 0 特权级的 <b>目标代码段</b>，因此是能够通过特权级检查的。
+
+  <h3><a name="3_example_2">3.2 为用户任务创建 TCB</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成调用门的安装之后，我们就可以开始加载和重定位用户程序了。与我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_9_Simple_Kernel/index.html">引导加载并运行一个简单的内核</a> 中所做不同的是，我们现在对于一个用户任务的加载准备，并不是简简单单的更新用户任务代码段的 "内核实例名称字符串 <-> <b>内核实例代码段</b> 地址" 查找表就可以了。由于 <font color="blue">多任务</font> 维度的引入，并且我们现在对于一个任务，在内存中有各种各样的结构：LDT、各个特权级下使用的栈空间、TSS、任务状态等等。可见内核对于一个任务的加载，将变得十分复杂。因此，我们在下面首先介绍用于记录与一个任务相关的各种信息的数据结构。
+
+  <h5><a name="3_example_2_1">(1) 任务控制块 (Task Control Block, TCB)</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于内核来说，为了更好的规整记录由内核创建的各个任务的各种信息 (e.g. LDT 位置、各个特权级下使用的栈空间、TSS 位置、任务状态)，<b>内核代码段实例</b> 在加载/卸载任务的时候，在 <b>内核数据段实例</b> 中使用了一种叫做 <font color="blue">任务控制块 (Task Control Block, TCB)</font> 的数据结构。注意！TCB 是为了内核方便管理各个任务所衍生出来的概念，并不是处理器的要求。一个 TCB 将存储一个任务的相关信息，多个 TCP 在 <b>内核数据段</b> 中将形成链表。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于单个 <font color="blue">任务控制块</font> 来说，它的结构如下所示：
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th width=20%><div align="center">起始偏移量</div></th>
+      <th width=80%><div align="center">含义</div></th>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x44</div></td>
+      <td width=80%  bgcolor="#fbfbfb"><div align="center">头部选择子 (16-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x40</div></td>
+      <td width=80% bgcolor="#fffcb8"><div align="center">2 特权级栈的初始 ESP (32-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x3E</div></td>
+      <td width=80% bgcolor="#fffcb8"><div align="center">2 特权级栈选择子 (16-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x3A</div></td>
+      <td width=80% bgcolor="#fffcb8"><div align="center">2 特权级栈基地址 (32-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x36</div></td>
+      <td width=80% bgcolor="#fffcb8"><div align="center">2 特权级栈以 4KB 为单位的长度 (32-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x32</div></td>
+      <td width=80% bgcolor="#fffcb8"><div align="center">1 特权级栈的初始 ESP (32-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x30</div></td>
+      <td width=80% bgcolor="#fffcb8"><div align="center">1 特权级栈选择子 (16-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x2C</div></td>
+      <td width=80% bgcolor="#fffcb8"><div align="center">1 特权级栈基地址 (32-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x28</div></td>
+      <td width=80% bgcolor="#fffcb8"><div align="center">1 特权级栈以 4KB 为单位的长度 (32-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x24</div></td>
+      <td width=80% bgcolor="#fffcb8"><div align="center">0 特权级栈的初始 ESP (32-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x22</div></td>
+      <td width=80% bgcolor="#fffcb8"><div align="center">0 特权级栈选择子 (16-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x1E</div></td>
+      <td width=80% bgcolor="#fffcb8"><div align="center">0 特权级栈基地址 (32-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x1A</div></td>
+      <td width=80% bgcolor="#fffcb8"><div align="center">0 特权级栈以 4KB 为单位的长度 (32-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x18</div></td>
+      <td width=80% bgcolor="#e9e9ff"><div align="center">TSS 选择子 (16-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x14</div></td>
+      <td width=80% bgcolor="#e9e9ff"><div align="center">TSS 基地址 (32-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x12</div></td>
+      <td width=80% bgcolor="#e9e9ff"><div align="center">TSS 界限值 (16-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x10</div></td>
+      <td width=80% bgcolor="#ffdada"><div align="center">LDT 选择子 (16-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x0C</div></td>
+      <td width=80% bgcolor="#ffdada"><div align="center">LDT 基地址 (32-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x0A</div></td>
+      <td width=80% bgcolor="#ffdada"><div align="center">LDT 当前界限值 (16-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x06</div></td>
+      <td width=80% bgcolor="#fbfbfb"><div align="center">程序加载地址 (32-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x04</div></td>
+      <td width=80% bgcolor="#fbfbfb"><div align="center">任务状态 (16-bits)</div></td>
+    </tr>
+    <tr>
+      <td width=20%><div align="center">0x00</div></td>
+      <td width=80% bgcolor="#fbfbfb"><div align="center">下一个 TCB 基址 (32-bits)</div></td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以看到，一个 TCB 一共占据 70 (0X46) 个字节，其中记录了与一个任务息息相关的LDT 位置、各个特权级下使用的栈空间、TSS 位置、任务状态等等信息。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于处理器会轮转着运行多个任务，所以在内存中将会存放着多个 TCB，这些 TCB 将被组织成为链表的形式，被内核代码管理。如下所示。注意到在 TCB 中最开始的 16-bits 是一个地址信息，实际上就是高级语言中的指针，存放着下一张 TCB 表的地址。如此循环，直到最后一张 TCB 表，最后的 TCB 的指针值将为 0。在这张链表的头部，将是一个存放在 <b>内核数据段</b> 的链表头部指针，长度为 16-bits。每当内核代码需要访问这个 TCB 链表的时候，就会从这个头部指针所存储的地址出发，对 TCB 链表进行遍历。注意到当该头部指针的值为 0 时，说明当前没有任务被创建。
+
+  <div align="center">
+    <img src="./pic/tcb.png" width=600px>
+  </div>
+
+  <h5><a name="3_example_2_2">(2) 为用户任务创建 TCB</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在理解了 TCB 的构造之后，让我们回到我们的内核代码。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Line 832~834 的地方，我们为我们的任务创建了 TCB 并把它追加到 TCB 链的结尾处 (p.s. 追加之前 TCB 链是空链)。我们首先调用了我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_9_Simple_Kernel/index.html#4_kernel_3_2">动态分配内存</a> 中分析过的 allocate_memory 过程为我们在内存中分配了 70 (0x46) 字节的空间，这里不再赘述。然后我们又调用了 append_to_tcb_link 过程来在 TCB 链表结尾处追加一个新的 TCB。<font color="blue">这部分对应了 "流程图" 中的 (2)</font>。我们下面对该方法进行分析：
+
+  <div align="center">
+    <img src="./pic/append_tcb.png" width=400px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;append_to_tcb_link 过程是在 Line 731~768 定义的，它的执行逻辑如上所示。简单来说就是：如果 TCB 链为空，那么就直接在链表头部 append 之前我们分配好的 TCB 空间；如果 TCB 链不为空，则循环寻址，直到找到最后一个 TCB，然后在这个 TCB 后面 append 之前我们分配好的 TCB 空间。值得注意的是，我们对链表头部和 TCB 的寻址方式是不一样的。由于 <b>内核代码段实例</b> 需要经常访问这个链表头部，因此我们把它放在 <b>内核数据段</b> 中的一个固定位置，因此我们对它寻址使用的是基于 <b>内核数据段基地址</b> 加上偏移的方式进行寻址的，所以我们在 Line 738~739 将 DS 寄存器对准了 <b>内核代码段</b>。而对于各个 TCB 来说，TCB 的空间是动态分配得到的，因此不是一个固定的地址，所以我们只能采用线性地址的方式进行访问，所以我们在 Line 740~741 的位置把 ES 寄存器对准了整个线性地址空间，方便我们后面直接使用某个具体的线性地址定位到某个 TCB。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Line 743，我们把我们刚创建的 TCB 的指针域清零，因为它肯定是链上的最后一个 TCB。在 Line 746~748，我们对链头部值进行了判断，因为如果它的值等于 0，那么说明链上是没有 TCB 的，我们只要把我们刚创建的 TCB append 在它后面就好了。因此如果是空链的话，我们就会直接跳转到 .notcb 标号处。如果不是空链的话，在 Line 751~754，我们会先把链上我们还没访问的下一个 TCB 的地址放到 EDX 中 (Line 751)，然后用这个地址再把这个 TCB 中的指针域提取到 EAX 寄存器中 (Line 752)，然后对这个指针域进行判断，如果非 0，则继续循环，直到找到指针域为 0 的 TCB。找到之后就把我们刚创建的 TCB apeend 上去 (Line 756~757)。
+
+  <h3><a name="3_example_3">3.3 加载用户程序</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当用户程序被读入内存，并且处于运行或者等待运行的状态的时候，就可以将它视为一个任务。一个任务有自己的 <b>代码段</b> 和 <b>数据段</b> (包括 <b>栈段</b>)。这些段必须通过描述符来引用，而这些描述符则一般存放在独属于用户任务自己的 LDT 中。上一节，我们为我们即将到来的用户程序创建好了 TCB。在本节，我们将看到 <b>内核代码段实例</b> 加载用户程序的过程。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先来到内核代码的 Line 836~837，与刚刚我们在处理 TCB 时使用的寄存器传参方式不同的是，此时我们为了在 Line 839 调用 load_relocate_program 过程，我们使用的传参方式是基于栈的传参，实际上基于栈的传参是比较标准的过程调用传参方法，因为首先寄存器的个数和大小有限，其次我们在过程中也都经常需要使用这些寄存器。可以看到我们在 Line 836~837 的位置把用户程序所在扇区以及我们刚刚创建的 TCB 的线性地址压入了栈中，然后我们调用了 load_relocate_program 方法。注意！传参使用的这个栈是内核的栈，是在 MBR 中就帮我们创建好的，是一个 DPL=0 的 <b>栈段</b>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;多补充一句，细心的读者会回想起我们在 <a href="#2_privilege_3_2">调用门 (Call-Gate)</a> 中介绍过的栈切换的故事。由于在这里我们的 <b>当前代码段实例</b> 和 <b>目标代码段实例</b> 的特权级是相同的，因此不会引发栈切换，这里再次点一下。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;来到我们的 load_relocate_program 方法，它是在 Line 460~728 被创建的，它非常的长，我们将在本节和后面的几个小节中对它的工作进行解释和分析。简单来说，它干了几件事情：
+
+  <ol>
+    <li>为用户任务创建了 LDT，并且把用户任务中的段注册进了 LDT 中</li>
+    <li>将 LDT 的相关信息放到了 TCB 中</li>
+    <li>把 LDT 的描述符注册到了 GDT 中</li>
+    <li>把用户任务 <b>头部段</b> 的 "内核实例名称字符串 <-> 内核实例代码段 地址" 映射表中的表项进行了替换，换成了我们上面安装好的调用门</li>
+    <li>创建了用于任务内不同特权级使用的栈空间</li>
+    <li>创建了任务状态段 TSS</li>
+    <li>把 TSS 的描述符注册到了 GDT 中</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们下面将进行具体的分析。
+
+  <h5><a name="3_example_3_1">(1) 从栈中获取传入的参数</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Line 464，我们调用了 pushad 指令，将 EAX, ECX, EDX, EBX, ESP, EBP, ESI, EDI 寄存器的值依次压入了栈中，并且在 Line 466~467 的位置把 DS 和 ES 寄存器的内容也压入了栈中。注意，我们此时压入数据的 <b>栈段实例</b> 和我们上面传参使用的 <b>栈段实例</b> 是同一个栈段实例，因为我们现在所处的 load_relocate_program 过程也是位于 <b>内核代码段</b> 中的，注意到我们在 Line 839 调用 load_relocate_program 过程的时候实际上是一个段内近转移，并且细心的读者将会注意到 load_relocate_program 过程最后在 Line 728 返回的时候使用的是 <font color="blue">ret</font> 指令。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到我们的话题上来，当我们压栈完成之后，此时 <b>内核栈段实例</b> 的情况如下所示：
+
+  <div align="center">
+    <img src="./pic/stack.png" width=400px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以看见，由于我们在进入 load_relocate_program 过程之后的压栈操作，导致了我们原先传入 load_relocate_program 的参数被 "冲" 到了后面去了。为了能够拿到这些参数，我们必须使用 EBP 寄存器。回忆我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_3_How_CPU_Execute/index.html#3_mem_reg_2_3">以 "栈" 的形式访问内存</a> 中对 16 位处理器下 BP 寄存器的介绍，在 32 位处理器下也是一样的道理，我们可以使用 EBP 寄存器来遍历栈中的数据，并且我们可以使用 "mov eax, [ebp]" 的指令格式，我们发现我们无需指明段超越前缀 "ss:"，因为当我们使用 EBP 寄存器的时候，默认使用的段基址就是基于 SS 寄存器的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有读者会疑惑：为什么不先把我们想要的参数取出来再压栈呢？其实很简单：把参数拿出来的话也得暂时先放在某个寄存器中，而我们在使用寄存器之前必须做现场保护，因此只能采用上面这种方法。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到代码，当我们执行完 Line 469 的栈顶指针传递之后，我们观察栈中的情况，SS:EBP 指向的是我们压入的 ES 寄存器的值，SS:EBP+4 指向的是我们压入的 DS 寄存器的值，SS:EBP+8 开始的位置指向的是 我们使用 “pushad” 指令压入的一系列寄存器的值，来看 SS:EBP+40 的位置，由于如上文所述，我们调用 load_relocate_program 实际上是一个段内近转移，所以我们仅在栈中压入了 EIP 的值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;来到 SS:EBP+44 和 SS:EBP+48 的位置，这两个地方就是我们想要拿到的参数。我们下面将会多次访问这两个位置。
+
+  <h5><a name="3_example_3_2">(2) 加载用户程序</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们拿到了用户程序所在的扇区，也拿到了我们能用的一块 TCB，现在我们要做三件事情：
+
+  <ol>
+    <li>为任务分配一块用于存放 LDT 的内存</li>
+    <li>将 LDT 的大小和起始线性地址登记在 TCB 中</li>
+    <li>分配内存并将用户程序拷贝到内存中，并且把它的大小和起始线性地址登记到 TCB 中</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">这部分对应了 "流程图" 中的 (3) 和 (4)</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;来看我们的程序，在 Line 477~480 的地方，我们为我们的任务创建了一个大小为 160 字节的 LDT (i.e. 这个任务最多能够分配 20 个描述符)。这里值得注意的是，我们在 Line 480 向 TCB 中登记 LDT 的初始段界限的时候，登记的是 0xFFFF，这是因为我们每次在向 LDT 中安装新的描述符的时候，首先会将 LDT 段界限值加 1 来获取下一个可用的内存单元。所以当 LDT 还没有描述符的时候，段界限值就应该为 0xFFFF。在 Line 483~488 的地方，我们把用户程序所在的第一个扇区读取到了内存的临时缓冲区 core_buf 中，于是我们就可以从用户程序的头部拿到长度信息。在 Line 491~499，我们将用户程序的大小转化为 512-Bytes 对齐的形式，然后调用内核 allocate_memory 例程来为我们分配相应大小的内存。分配完成后，我们在 Line 500 的地方把用户程序的起始线性地址登记到了 TCB 中。在 Line 502~515 的地方，我们使用了一个循环把用户程序读到了我们分配好的内存中。
+
+  <h3><a name="3_example_4">3.4 安装段描述符到局部描述符表</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在加载完用户程序之后，此时我们就准备向 LDT 中添加我们用户程序的各个段描述符了 (i.e. 我们已经在上面 <a href="#3_example_3_2">加载用户程序</a> 中为我们的任务创建好 LDT 并登记在 TCB 中了)。<font color="blue">这部分对应了 "流程图" 中的 (5)</font>。注意到在 Line 474 的地方我们把 TCB 的基地址记录在了 ESI 寄存器中，于是我们在 Line 517 的地方就可以使用 ESI 寄存器加上 0x06 的偏移量从 TCB 中拿到程序的加载基地址，放到 EDI 寄存器中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Line 519~532 的地方，我们为我们程序的头部段安装了段描述符。注意到我们把头部段的线性起始地址放到了 EAX 寄存器中，把段界限放到了 EBX 寄存器中，把段的属性放入到 ECX 寄存器中，可以发现我们把这个段设置为一个<font color="red">字节粒度的</font>、<font color="red">段特权级为 3</font> 的 <font color="red">可读写数据段</font>。我们把这三个信息作为调用 make_seg_descriptor 过程传入的参数，我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_9_Simple_Kernel/index.html#4_kernel_3_3">创建段描述符</a> 中已经详述锅这个过程，这里不再赘述。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 make_seg_descriptor 过程返回后，我们将在 EDX 和 EAX 中拿到组装好的段描述符，我们又在 Line 528 的地方调用了 fill_descriptor_in_ldt 过程，来帮助我们安装段描述符到 LDT 中。细心的读者会发现，fill_descriptor_in_ldt 过程除了需要 EDX 和 EAX 中存储的段描述符外，在 Line 527 的地方我们还向 EBX 寄存器中村入了 TCB 的基地址，因为在 fill_descriptor_in_ldt 过程中，它需要从 TCB 中获取 LDT 的基地址和当前大小。在成功安装描述符后，它还需要更新 LDT 的当前大小值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;fill_descriptor_in_ldt 过程是在 Line 417~457 的地方定义的。我们在 Line 429~433 的地方拿到了位于 TCB 中的 LDT 的基地址和段界限，这里有一个小细节：由于 TCB 中的 TSS 界限值是 16-bits 的，所以我们必须使用 CX 寄存器来操作它，以满足 <font color="red">16-bits 循环进位</font> 的特性。然后我们在 Line 435~436 的地方把我们刚建好的段描述符安装到 LDT 中。在 Line 438~441 中，我们重新计算了 LDT 的界限值，并更新到 TCB 中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;至此，fill_descriptor_in_ldt 过程的主要任务已经完成。还记得 fill_descriptor_in_ldt 过程的返回值将是我们刚刚安装好的段描述符的选择子，以供后续 load_relocate_program 过程可以将其更新到 <b>用户程序头部段</b> 以及 TCB 中，以供 <b>用户程序代码段实例</b> 引用这些段。因此，在退出 fill_descriptor_in_ldt 过程之前，我们还必须返回一个段选择子。我们在 Line 443~450 的地方合成了这个选择子：Line 443~446 的地方生成了我们刚刚在 LDT 中安装的描述符的索引，Line 448~450 的地方设置了 TI 位为 1，并且暂时令 RPL 为 0，我们在 fill_descriptor_in_ldt 返回后，将在主程序中重新设置这个 RPL 值。在完成所有的工作之后，fill_descriptor_in_ldt 过程就返回了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到 load_relocate_program 过程，在 Line 530~532，我们看到我们重新把 RPL 的值设置为了 3，然后我们把这个 <b>用户头部段</b> 对应的选择子更新到了 TCB 和 <b>用户程序头部段</b> 中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Line 534~572 行，我们使用和上述一样的方法，构建了用户程序的代码段、数据段和栈段的描述符，并将它们安装到 LDT 中。方法是一样的，这些 <b>段</b> 的特权级 DPL 都为 3，我们在选择子中填入的使得这些 <b>段</b> 被访问时形成的 <b>段实例</b> 的特权级 RPL 也为 3。这里不再一一赘述。
+
+  <h3><a name="3_example_5">3.5 更新用户程序的 "内核实例名称字符串 <-> <b>内核实例代码段</b> 地址" 映射表</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成对用户程序段描述符的安装后，我们的下一步工作就是完成对 <b>用户程序头部段</b> 中的  "内核实例名称字符串 <-> <b>内核实例代码段</b> 地址" 映射表表项的替换。还记得我们在 <a href="#3_example_1">调用门的安装</a> 中，在 <b>内核数据段</b> 中的 "内核实例名称字符串 <-> <b>内核实例代码段</b> 地址" 映射表中安装了调用门，现在我们的工作就是把用户所用到的 <b>内核代码段</b> 例程的调用门拷贝到 <b>用户程序头部段</b> 的映射表中进行替换。<font color="blue">这部分对应了 "流程图" 中的 (6)</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了访问 <b>用户程序头部段</b>，我们可以使用我们刚刚安装好的描述符。但是由于我们刚刚安装的描述符是安装在 LDT 中的，而我们并没有设置 LDTR，所以我们暂时无法直接使用选择子访问到描述符，这和我们在上一篇文章中的 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_9_Simple_Kernel/index.html#4_kernel_5">重定位用户程序符号表</a> 一节中看到的方法是不一样的。因此，我们只能使用基于全局线性地址定位的方法，来拿到描述符，这也是在下面我们将会看到的做法。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到 load_relocate_program 过程，在 Line 575~576，正如我们上面所述，为了使用全局地址空间来访问 LDT 中的描述符，我们在 ES 寄存器中传入了全局地址空间的选择子，以访问全局地址空间。另外，在 Line 578~579，我们向 DS 寄存器中传入了 <b>内核数据段</b> 的选择子，使得我们能够访问内核的 "内核实例名称字符串 <-> <b>内核实例代码段</b> 地址" 映射表。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Line 583 位置，由于映射表的条目数在 <b>用户程序头部段</b> 中位于偏移地址 0x24 的位置，所以我们使用如代码所示的基于全局线性空间的方法拿到了条目数。同理，映射表起始于<b>用户程序头部段</b> 中位于偏移地址 0x28 的位置，所以我们在 Line 584 的地方移动了 EDI 寄存器的值，从而开启下面的替换工作。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;替换的流程我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_9_Simple_Kernel/index.html#4_kernel_5">重定位用户程序符号表</a> 一节中已经具体阐述过了。在本文展示的代码中，区别无非就在于：在之前，我们替换到 <b>用户程序头部段</b> 中的是 <b>内核代码段</b> 选择子以及相应内核例程在 <b>内核代码段</b> 中的偏移地址；而在本文中，我们替换过去的将是调用门的选择子以及一个没有用的偏移地址。由于大部分逻辑是相同的，因此下面我们将只抽出重点进行分析。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回忆我们在上文 <a href="#3_example_1">调用门的安装</a> 中提到过的，此时位于内核映射表中的调用门选择子的 RPL 字段为 0。明显地，我们希望的是，当 <b>用户程序代码段实例</b> 引用调用门选择子的时候，RPL 应该相应地为 3，而不该为 0。因此，我们不能直接向 <b>用户程序头部段</b> 拷贝这些调用门选择子，而是应该拷贝修改过 RPL 字段的选择子。可以看到，在 Line 602，我们就是在干这样一件事情。
+
+  <h3><a name="3_example_6">3.6 创建 0、1 和 2 特权级的栈</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回忆我们在 <a href="#2_privilege_3_2">调用门 (Call-Gate)</a> 中介绍过的栈切换的故事，当 <b>用户程序代码段实例</b> 通过调用门引用 <b>内核代码段</b> 中的例程以切换到 <b>内核代码段实例</b> 的时候，由于特权级发生了切换，因此所使用的 <b>栈段实例</b> 也要发生切换。因此，当此时我们在为特权级为 3 的用户任务的启动做准备的时候，我们需要为用户任务可能发生的栈切换作出准备，所以我们需要预先创建可以让用户任务工作在 0、1 和 2 特权级下的栈空间。<font color="blue">这部分对应了 "流程图" 中的 (7)</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;细心的读者会回想起来，我们在 <a href="#2_privilege_5_3">处理器对栈段及其实例的保护</a> 中讨论过的，一个任务所使用的各个栈的情况是记录在每个人物都有的 TSS 结构中的。然而此时，我们还没有创建 TSS 结构。更加细心的读者会发现，回顾 <a href="3_example_2_1">任务控制块 (Task Control Block, TCB)</a> 中展示的 TCB 的结构，我们会看到黄色部分同样用于记录各个特权级下使用的栈的信息。因此，在本节，我们分配的栈的信息将先暂时记录在 TCB 下。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们将以 0 特权级 <b>栈段</b> 的申请和登记过程作为例子来阐述。来到 Line 618，我们首先用我们熟悉的地址拿到了 TCB 的基地址。在 Line 623~624，我们把我们申请的堆栈大小 (i.e. 4KB) 登记到了 TCB 中，注意到我们在 Line 624 右移 12 位的原因是因为 TCB 中登记的堆栈大小是以 4KB (i.e. `2^12`) 位单位的，所以相当于我们这里在做一个单位转换。在 Line 625 的位置，我们调用了 allocate_memory 过程帮助我们分配空间，我们在 EAX 寄存器中将获得 allocate_memory 过程返回的基地址。由于 <b>栈段</b> 是向下增长的，所以我们要获得 <b>栈段</b> 真正的基地址必须使用 “基地址 + 堆栈长度” 的方式来获得，这是我们在 Line 626 所做的事情。在 Line 627，我们把 <b>栈段</b> 的基地址信息记录到了 TCB 中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成 0 特权级 <b>栈段</b> 的空间分配和 TCB 登记之后，我们需要为这个 <b>栈段</b> 创建一个段描述符，这样用户程序才能引用它。来到 Line 628~630 我们使用 make_seg_descriptor 过程为我们的 <b>栈段</b> 合成了段描述符，值得注意的是我们在这里 <b>栈段</b> 特权级 DPL 填写的是 0。之后，我们又调用了 fill_descriptor_in_ldt 方法，将我们刚刚合成的 <b>栈段</b> 描述符填写到用户任务的 LDT 中，fill_descriptor_in_ldt 方法将为我们返回一个可以用于基于该 LDT 描述符访问 <b>目标栈段</b> 的段选择子，我们在 Line 634 的地方将这个选择子登记到 TCB 中，然后 Line 635 在 TCB 中把该栈的初始栈顶指针值填写为 0。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Line 638~669，我们使用了相同的方法处理了 1、2 特权级的 <b>栈段</b>。唯一的不同就是，在合成段描述符时，我们填入的 <b>栈段</b> 特权级 DPL 是不一样的 (i.e. Line 646 & 663)；在向 TCB 中填入选择子时，我们又将 fill_descriptor_in_ldt 过程返回的选择子中的 RPL 值修正为相应的请求特权级 (i.e. Line 650 & 667)，值得注意。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后，各个特权级下的 <b>栈段</b> 的创建和装载工作就完成了。
+
+  <h3><a name="3_example_7">3.7 将 LDT 安装到 GDT 中</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在，让我们来重新审视 LDT 和 GDT。说到底，它们也是位于内存中的段。对于 GDT 来说，不论我们的处理器上创建了多少个任务，GDT 只有一个。因此，我们只要在 MBR 中创建好 GDT，并且让 GDTR 对准它，后面就可以一直使用它了。因此，虽然 GDT 是一个段，但是我们不需要使用段描述符来对它发起访问，因为它有一个独属的寄存器在跟踪它。任何时刻，每个任务都能使用 GDTR 访问到 GDT，利用 GDT 中存储的描述符，在满足特权级要求的情况下，这个任务将能访问全局地址空间中的内容 (i.e. <b>代码段</b>、<b>数据段</b> 和 <b>栈段</b>)。而对于 LDT 来说，它是有多份的，各个任务都有自己的 LDT，而 CPU 的 LDTR 只有一个，因此 LDTR 只能跟踪当前处理器正在运行的用户任务。可想而知，此时其它的 LDT 只能暂时存储在某个位置，等待下一次任务被 “唤醒” 的时候被 LDTR 跟踪。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在这种背景下，处理器规定，为了跟踪各个 LDT，我们需要在 GDT 中安装针对每个 LDT 的描述符 (p.s. 听好，是 LDT 自己的描述符)。当要使用这些 LDT 时，可以使用各个 LDT 描述符的选择子来访问 GDT，然后将获取到的 LDT 描述符装载到 LDTR，然后就能够发起对在该 LDT 中存储的描述符所对应的段的访问。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回忆我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_8_Protect_Mode/index.html#1_gdt_3">段描述符</a> 中讲到的，当段描述符中的 S 位为 0 时，代表这个描述符对应的段是一个 <font color="blue">系统段</font>。细心的读者会回忆起我们在 <a href="#2_privilege_3_2">调用门 (Call-Gate)</a> 中讲过的，<font color="blue">门</font> 就是一种 <font color="blue">系统段</font>，并且 <font color="blue">门</font> 比较特殊，它本质上就是一个 <font color="blue">段描述符</font>。因此作为 <font color="blue">门</font> 的其中一种的 <font color="blue">调用门</font>，它是 <font color="blue">系统段</font>，它本质上也是一个 <font color="blue">段描述符</font>，它的 Type 字段的值为 "1100"。处理器在看到 Type 为 “1100” 的 <font color="blue">系统段</font> 的时候，就知道它访问的是一个 <font color="blue">调用门</font> 了。同样的，GDT 和 LDT 也是 <font color="blue">系统段</font>。正如上文所说，GDT 虽然是一个段，但是它不需要段描述符。而对于 LDT 来说，作为一个 <font color="blue">系统段</font>，它的描述符格式如下所示：
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <td width="4%">长度</td>
+      <td width="24%">8b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="12%">4b</td>
+      <td width="3%">1b</td>
+      <td width="3%">2b</td>
+      <td width="3%">1b</td>
+      <td colspan="4" width="12%">4b</td>
+      <td width="24%">8b</td>
+    </tr>
+    <tr>
+      <td rowspan="2" width="4%">含义</td>
+      <td rowspan="2" width="24%">段基地址<br>[bit 31 ~ 24]</td>
+      <td rowspan="2" width="3%">G</td>
+      <td width="3%">D</td>
+      <td width="3%">L</td>
+      <td rowspan="2" width="3%">AVL</td>
+      <td rowspan="2" width="12%">段界限<br>[bit 19 ~ 16]</td>
+      <td rowspan="2" width="3%">P</td>
+      <td rowspan="2" width="3%">DPL</td>
+      <td width="3%">S</td>
+      <td colspan="4" width="12%">TYPE</td>
+      <td rowspan="2" width="24%">段基地址<br>[bit 23 ~ 16]</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </table>
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <td width="10%">长度</td>
+      <td width="45%">16b</td>
+      <td width="45%">16b</td>
+    </tr>
+    <tr>
+      <td width="10%">含义</td>
+      <td width="45%">段基地址<br>[bit 15 ~ 0]</td>
+      <td width="45%">段内界限<br>[bit 15 ~ 0]</td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;LDT 本身作为一种特殊的段，最大的大小是 64KB。在 LDT 的描述符中，段基地址指示了 LDT 在内存中的起始位置；段界限指示了 LDT 的范围；G 位指示了段界限的单位是 字节 还是 4KB；AVL 位和 P 位的含义和普通段描述符相同；S 位固定为 0，以指示这是一个系统段；Type 字段固定为 0010，以指示这是一个 LDT 系统段。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以使用 <font color="blue">ltr + LDT 描述符选择子</font> 的指令，来向 LDTR 寄存器中传入一个 LDT 描述符选择子。处理器会检查这个选择子对应的在 GDT 中的描述符是否是一个 LDT 的描述符，如果是的话，将会把对应的 LDT 描述符加载到 LDTR 的描述符高速缓存器中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;好了，现在回到我们的代码，下面，我们将分析我们把当前我们正在创建的任务对应的 LDT 注册到 GDT 中的过程。<font color="blue">这部分对应了 "流程图" 中的 (8)</font>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这部分代码比较少，是在 Line 672~677 定义的。在 Line 672~674 的地方，我们在 EAX 寄存器中装入了当前任务的 LDT 的线性起始地址；EBX 中闯入了 LDT 的段界限；ECX 中装入了 LDT 描述符的其它属性，注意到我们在向 GDT 中注册 LDT 所使用的段特权级 DPL 为 0。在设置好参数之后，我们调用了 make_seg_descriptor 帮助我们组装好 LDT 的描述符，然后又调用了 set_up_gdt_descriptor 过程帮我们安装描述符。set_up_gdt_descriptor 过程将把 LDT 描述符在 GDT 中的选择子返回到 CX 寄存器中。在 Line 677 的地方我们把这个选择子填写到了 TCB 中。
+
+  <h3><a name="3_example_8">3.8 创建任务状态段 TSS</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;到这里，我们参考一下 “流程图”，为了支持 “多任务” 和 "特权级"，对于当前我们正在创建的任务，大部分的内存段都已经创建和初始化完成，唯一剩下的就是任务状态段 TSS。在本节，我们将完成它的创建和初始化。<font color="blue">这部分对应了 "流程图" 中的 (9)</font>。
+
+  <h5><a name="3_example_8_1">(1) TSS 格式</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回忆我们在 <a href="#1_task_4">TSS (Task State Segment)</a> 中讨论过的 TSS 的结构。我们在这里对它的内容作进一步的分析，读者朋友可以切换到上文对照 TSS 格式表。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TSS 偏移 0 处是 <font color="blue">前一个任务的 TSS 描述符选择子</font>。这里首先需要明确一个概念：TSS 也是一种系统段，在 GDT 中也需要有描述符，自然也就有选择子。其次，为什么说是前一个任务呢？因为当系统中有多个任务同时存在时，可以从一个任务切换到另一个任务执行，此时称任务是 <font color="blue">嵌套</font>的。被嵌套的任务用这个指针指向前一个任务，即嵌套它的那个任务，当控制返回前一个任务时，处理器需要这个指针来识别前一个任务。创建 TSS 时，它可以为 0。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;SS0, SS1, SS2 分别是 0, 1, 2 特权级的栈段选择子。ESP0, ESP1, ESP2 分别是 0, 1, 2 特权级栈的栈顶指针。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;CR3 与分页有关，我们将在后面的文章进行讲述。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;再往后，就是各个处理器寄存器值的快照。处理器在做任务切换的时候，会把处理器的状态保存在这个区域中，以便将来恢复现场。当一个任务第一次获得执行时，处理器会从这个区域中加载初始执行环境，并从 CS:EIP 处开始执行任务的第一条指令。在此之后的任务运行期间，该区域的内容由处理器的固件进行修改。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;LDT 段选择子就是当前任务所使用的 LDT 在 GDT 中的描述符的选择子。该信息由处理器在任务切换时使用，在任务运行期间保持不变。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;T 位用于软件调试。在多任务的环境中，如果 T 位是 1，那么切换到该任务时，将引发一次调试异常中断。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;关于 "I/O映射基地址" 这个字单元，我们省略不关心。
+
+  <h5><a name="3_example_8_2">(2) 创建用户任务 TSS</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到我们的代码，来看 Line 680~684，我们为我们正在创建的用户任务分配了一个 104-Bytes 的内存空间用于存放 TSS，并且将 TSS 的段界限和基地址信息记录到了 TCB 中。在 Line 687~713 的代码中，我们向 TSS 中填入了各个初始化信息：在 Line 687 我们把 前一个任务的 TSS 描述符选择子 填写为 0，因为这个时候我们不考虑任务嵌套的情况出现；在 Line 689~705 我们把先前记录在 TCB 中的 <b>栈段</b> 选择子和初始 ESP 登记到 TSS 中；在 Line 713 中我们把软件调试位设置为 0。
+
+  <h5><a name="3_example_8_3">(3) 安装 TSS</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;和局部描述符表 LDT 一样，TSS 也是一种系统段，我们同样需要将 TSS 本身的描述符安装在 GDT 中。这样做一方面是为了对 TSS 进行特权级检查；另一方面是为了任务切换：<font color="red">当我们使用 call far / jmp far 指令的操作数是 TSS 描述符的选择子时，处理器将会执行任务切换操作。</font>关于任务切换相关的内容，我们将在后面的文章中进行介绍。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如下所示，是 TSS 描述符的格式：
+
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <td width="4%">长度</td>
+      <td width="24%">8b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="3%">1b</td>
+      <td width="12%">4b</td>
+      <td width="3%">1b</td>
+      <td width="3%">2b</td>
+      <td width="3%">1b</td>
+      <td colspan="4" width="12%">4b</td>
+      <td width="24%">8b</td>
+    </tr>
+    <tr>
+      <td rowspan="2" width="4%">含义</td>
+      <td rowspan="2" width="24%">段基地址<br>[bit 31 ~ 24]</td>
+      <td rowspan="2" width="3%">G</td>
+      <td width="3%">D</td>
+      <td width="3%">L</td>
+      <td rowspan="2" width="3%">AVL</td>
+      <td rowspan="2" width="12%">段界限<br>[bit 19 ~ 16]</td>
+      <td rowspan="2" width="3%">P</td>
+      <td rowspan="2" width="3%">DPL</td>
+      <td width="3%">S</td>
+      <td colspan="4" width="12%">TYPE</td>
+      <td rowspan="2" width="24%">段基地址<br>[bit 23 ~ 16]</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>B</td>
+      <td>0</td>
+    </tr>
+  </table>
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <td width="10%">长度</td>
+      <td width="45%">16b</td>
+      <td width="45%">16b</td>
+    </tr>
+    <tr>
+      <td width="10%">含义</td>
+      <td width="45%">段基地址<br>[bit 15 ~ 0]</td>
+      <td width="45%">段内界限<br>[bit 15 ~ 0]</td>
+    </tr>
+  </table>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于这个系统段描述符，有一个值得一提的地方：如上所示，TSS 描述符中的 Type 字段是 “10B1”，这个 B 位是 "Busy" 位的意思。在任务刚刚创建，还没有被运行的时候，Type 字段应该为 “1001”，即 B 位为 0，表示任务不忙；当任务开始执行的时候，或者处于挂起状态 (临时被中断执行)，处理器固件会自动地把 B 位设置为 1。设置 B 位的原因是：任务是不可以 <font color="blue">重入</font> 的，也即在多任务环境中，如果一个任务是当前处理器正在运行的任务，它可以切换到其他任务，但不能从自己切换到自己。在 TSS 描述符中设置 B 位，并且由处理器固件进行管理，可以防止这种情况的发生。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以使用 <font color="blue">ltr + TSS 描述符选择子</font> 的指令，来向 TR 寄存器中传入一个 TSS 描述符选择子。处理器会检查这个选择子对应的在 GDT 中的描述符是否是一个 TSS 的描述符，如果是的话，将会把对应的 TSS 描述符加载到 TR 描述符高速缓存器中。并且在这个过程中，处理器还会在 GDT 中将该 TSS 描述符中的 B 位置为 "1"，以表明该 TSS 所对应的任务正在被运行 (或处于挂起状态)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到我们的代码，我们在 Line 716~718 设置了创建 TSS 的描述符需要的参数：向 EAX 中装入了 TSS 的起始线性地址；向 EBX 中装入了 TSS 的段界限；向 ECX 中装入了 TSS 的属性，可以看到我们创建的是一个 DPL 为 0 的，字节粒度的 TSS 描述符。随后，我们调用 make_seg_descriptor 过程合成了 TSS 的描述符，然后又调用了 set_up_gdt_descriptor 过程向 GDT 中装入了该描述符，最后，我们将 TSS 的选择子填入到 TCB 中。
+
+  <h3><a name="3_example_9">3.9 返回时清空栈</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;至此，我们长长的 load_relocate_program 方法终于结束了。在本小节中，我们将来看看它的返回过程。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回忆我们在 <a href="#3_example_3">加载用户程序</a> 中调用 load_relocate_program 过程的时候，我们使用了基于栈的方式传递了参数。在进入了 load_relocate_program 过程后，我们又进行了现场保护，对各个寄存器的值进行了压栈。为了方便，我把当时的栈的情况 (i.e. 也是当前我们要执行返回之前的栈的情况) 重新在下面第一张图片中展示：
+
+  <div class="div_concurrent_img">
+    <img src="./pic/stack.png" width=400px>
+    <img src="./pic/stack_ret.png" width=400px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;来看我们的代码，在 Line 723~726 的地方我们将调用 load_relocate_program 前的现场进行了还原，还原后栈的情况如上面第二张图所示。重点在于 Line 728：首先，我们调用 load_relocate_program 是一个近调用，因此我们使用了 ret 进行返回；其次，我们在调用 load_relocate_program 过程时，向栈中压入了 8 字节的参数，我们在这里使用 "ret 8" 的方式来进行返回，意思是把这 8 个字节的参数信息进行丢弃，直接把栈顶指针指向在向 load_relocate_program 压参之前的位置 (i.e. <font color="blue">使栈平衡</font>)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">ref/retf</font> 返回指令允许我们后接一个 16 位立即数，来实现栈平衡。
+
+  <h3><a name="3_example_10">3.10 运行用户程序</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到最开始我们说的：虽然本文演示了基于特权级和多任务背景下的用户任务加载过程，但是自始自终我们只创建了一个任务，我们在本文中不会演示多任务切换的内容，因为那是另一个很长的故事。因此，在费了这么大力气搭建起了我们用户任务的运行环境后，为了启动我们的用户任务，我们必须使用一种投机取巧的方法。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;观察我们现在的状态，我们现在仍然处在内核初始化程序中 (i.e. 注意！此时我们所处的不是一个任务)。我们现在所处的特权级是 0，使用的栈是 0 特权级的栈，我们刚才花费大力气创建的用户任务是在特权级为 3 下的。我们下面要做的事情是：假装我们现在所处的位置是用户使用调用门到达的地方。在回忆我们在 <a href="#2_privilege_5_4">处理器自动栈段切换</a> 中提到过的 "任务从高特权级控制返回到低特权级" 的过程，我们下面将：
+
+  <ol>
+    <li>首先对 TR 和 LDTR 寄存器做一些手脚，让处理器以为我们现在正处于用户任务中</li>
+    <li>对我们现在正在使用的 0 特权级的栈做一些手脚，并且再最后使用返回指令 <font color="blue">retf</font>，欺骗处理器触发 <b>自动栈切换</b> 和 <b>控制跳转</b> 的操作，让它以为我们现在的行为是：从 "被用户任务调用的高特权级内核例程" 返回到 "用户程序" 中去</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这个过程虽然有点别扭，但是有趣，读者可以把这部分当作对上面一些内容的复习。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;来到我们的代码，在 Line 847~848，我们装载了 LDTR 和 TR 寄存器。在 Line 854~858，我们向我们当前使用的 0 特权级栈中压入了用户任务特权级为 3 的 <b>栈段</b> 选择子、栈顶指针、<b>代码段</b> 选择子 以及 EIP，这些都是为了在为 "欺骗" 处理器做 <b>自动栈切换</b> 和 <b>控制跳转</b> 做准备。最后我们一声令下，调用了 <font color="blue">retf</font> 指令，处理器就傻乎乎地以为我们真的是在内核例程中返回，自动执行了我们在 <a href="#2_privilege_5_4">处理器自动栈段切换</a> 中描述的行为，跳到用户程序去了。
+</div>
+
+<h2><a name="4_rpl">4. 再谈 RPL</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后，我们补充关于 RPL 设置的 Motivation。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;思考这样一个例子：一个特权级为 3 的用户任务，通过一个调用门，尝试调用特权级为 0 的内核例程，来读取磁盘数据，并写入用户任务自己的 <b>用户数据段</b> 中。此时用户任务会通过压栈的方式，把 <b>用户数据段</b> 在 LDT 中的选择子作为参数压入到自己特权级为 3 的栈中，注意到因为是用户程序发起的访问，所以这个选择子的 RPL 值与 CPL 值一样，也为 3。之后，借助处理器的 <b>自动栈切换</b> 操作，把这个选择子参数传递到 0 特权级的内核例程中。切换完成后，CPL = 0。磁盘读取完成后，内核例程在向 <b>用户数据段</b> 写入时，发现从用户程序传入的选择子 RPL = 3 < CPL = 0，且该选择子 RPL = 3 = <b>用户数据段</b> DPL，因此能够正常地在内核例程中引用这个<b>用户数据段</b>，从而进行写入操作，一切都很美好。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;直到有一天，用户程序不老实了，它把传入的选择子改成了指向内核数据段描述符的选择子 (p.s. 假设用户通过某种手段知道了这个选择子)，并且它把该选择子中的 RPL 字段填写为 0。这样一来，当内核例程在进行检查的时候，会发现用户程序传入的选择子 RPL = 0 = CPL = 0，且该选择子 RPL = 0 = <b>内核数据段</b> DPL，同样通过了特权级检查。坏事了！用户程序能够操作 <b>内核数据段</b> 了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;处理器对于这种情况根本无能为力。为了避免这种情况，处理器和操作系统做了约定：在内核例程开始使用用户程序传入的段选择子对 <b>目标段</b> 发起访问之前，必须检查这个段选择子和调用内核例程的用户程序的特权级是否匹配。此时，内核例程必须获取用户程序原先的特权级，它获取的途径是从 0 特权级的栈中获取 CS 寄存器的压栈值。回忆我们在 <a href="#2_privilege_5_4">处理器自动栈段切换</a> 中讨论的 "任务从低特权级控制转移到高特权级时" 的压栈操作，它会把原先用户任务的 CS 寄存器值保存起来，方便返回的时候使用。因此，我们能够从这个地方获取调用内核例程的用户程序的特权级。处理器提供了 <font color="blue">aprl 目的选择子, 源选择子</font> 指令来应付这种情况。在我们的例子中，我们会把 <font color="blue">目的选择子</font> 填写为我们要检查的用户程序传进来的数据段选择子，把 <font color="blue">源选择子</font> 填写为我们从 0 特权级栈中获取的 CS 寄存器压栈值。这样，这条指令将会检查两者的 RPL 字段是否一致。如果出现不一致的情况，将会使用 <font color="blue">源选择子</font> 的 RPL 值来修改 <font color="blue">目的选择子</font> 中的 RPL 值，以修正用户程序本应该提出的 RPL。这样一来，在我们的第二个例子中，最终用户程序给出的指向 <b>内核数据段</b> 的 RPL 值将被修改为 3。明显地，处理器发现用户程序居然想要用 RPL=3 的选择子来访问 DPL=0 的 <b>内核数据段</b>，当然会不同意了。这样一来，我们就保护了 <b>内核数据段</b>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以发现，单纯引入 RPL 并不能解决 "处理器无法分辨选择子提供者" 的问题。解决这个问题的前提是，操作系统保证：提供选择子的程序必须提供合法的选择子。
+</div> 
+
+<!--ref-->
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+<ol>
+<li>知乎, <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/143002272">计算机自制操作系统（三一）：恍然大悟特权级</a></p>
+</div>
+
+</li>
+</ol>
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>X86_ISA_10_TASK_AND_PRIVILEGE</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

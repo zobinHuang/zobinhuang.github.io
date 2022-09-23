@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Linux 驱动收包流程">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/pic/intel_nic.jpg">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/pic/recv_desp_ring_buffer.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/pic/recv_desp_ring_buffer_official.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/pic/legacy_recv_descriptor.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/pic/advanced_recv_descriptor_read.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/pic/xxx.png">
+<meta property="article:published_time" content="2022-09-18T13:41:05.357Z">
+<meta property="article:modified_time" content="2022-09-18T13:41:05.357Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>Linux 驱动收包流程 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">Linux 驱动收包流程
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>LINUX_KERNEL_NETWORK_PACKET_DRIVER_RECV</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body onload="load_page()">
+
+<!-- 导入 mermaid -->
+<script src="script/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true});</script>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Aug.21 2022</i></font></h4>
+</div>
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+<br>
+<div class="div_catalogue">
+  <div align="center">
+    <h1> 目录 </h1>
+    <p>
+    <font size="3px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_load_catalogue_alert" id="load_catalogue_alert">正在加载目录...</div>
+  <div class="div_catalogue_container" id="catalogue_container">
+  </div>
+</div><br>
+
+<noteblock>
+本文主要参考自 <cite>zhihu_ovs_datapath_1</cite>, <cite>monitoring_recv</cite>, <cite>monitoring_illustrating</cite>, <cite>layer_2_receving</cite>，感谢前人的文章。随着内核版本的更新，这些文章展示的源码可能略有过时。本文基于 Linux 内核 5.12.19 版本进行阐述。
+</noteblock>
+
+<!-- Start your post here -->
+<h2 class="title">网卡驱动部分收包流程</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+
+  <flowchart class="mermaid" title="Linux 驱动收包基本流程" label="fc_overview">
+  flowchart LR
+    %% 节点定义
+    nic[网卡]
+      style nic fill:#8fc,stroke:#333,stroke-width:4px
+    packet_memory[数据包 DMA 存储区域]
+      style packet_memory fill:#8fc,stroke:#333,stroke-width:4px
+    rx_ring_memory[Rx 描述符环形缓冲区]
+      style rx_ring_memory fill:#8fc,stroke:#333,stroke-width:4px
+    vector_callback[系统中断向量回调函数]
+    driver_callback[网卡驱动中断回调函数]
+    softirq[软中断 Kernel Thread]
+    driver_polling[网卡驱动 NAPI Polling 函数]
+    gro[GRO]
+    stack[内核协议栈]
+    %%
+    %% 拓扑
+    nic -. DMA .-> packet_memory
+    nic -. DMA .-> rx_ring_memory
+    nic -- MSI, MSI-X 或 INTx 中断 --> vector_callback
+    vector_callback --> driver_callback
+    driver_callback -. 调度软中断 .-> softirq
+    rx_ring_memory -.-> driver_polling
+    packet_memory -.-> driver_polling
+    softirq ---> driver_polling
+    driver_polling -. <code>sk_buff</code> .-> gro
+    gro ---> stack
+  </flowchart>
+
+</div>
+
+<h2 class="title">关键数据结构</h2>
+<div class="div_learning_post">
+  <h3 class="title">环形缓冲区描述符</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+
+  <h3 class="title">环形缓冲区</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+
+  <h3 class="title"><code>net_dev</code></h3>
+  <desp class="title">网络设备实例</desp>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;网络设备实例
+
+  <h3 class="title"><code>softnet</code></h3>
+  <desp class="title">Per-CPU 收包队列</desp>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Per-CPU 收包队列
+
+  <h3 class="title"><code>sk_buff</code></h3>
+  <desp class="title">用于存储一个完整的数据包</desp>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;用于存储一个完整的数据包
+
+  <h3 class="title"><code>napi</code></h3>
+  <desp class="title">用于实现轮询收包的实例</desp>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;用于实现轮询收包的实例
+
+
+</div>
+
+<h2 class="title">Intel I350 Ethernet Controller 网卡收包驱动程序分析</h2>
+<div class="div_learning_post">
+  <div class="img" title="Intel 82599ES 10-Gigabit SFI/SFP+ 网卡" source="https://www.technologycentre.com.au/products/intel-10gbps-e10g42btda-copper-server-adatper-1319846">
+    <img src="./pic/intel_nic.jpg" width="400px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们分析的网卡是搭载了 Intel 82599ES 以太网控制器的 10-Gigabit SFI/SFP+ 网卡，通过运行 <code>lspci -v</code> 命令，结果如下所示，我们可以发现它所使用的驱动是 <code>ixgbe</code>，从 Intel 官方的 Intel® Ethernet Controller Products 27.6 Release Notes <cite>intel_ethernet_product</cite> 也能查到其使用的驱动的相关信息，因此下面我们就以 <code>ixgbe</code> 驱动为例展开分析。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">  04:00.0 Ethernet controller: Intel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection (rev 01)</span><br><span class="line">        Subsystem: Intel Corporation Ethernet Server Adapter X520-2</span><br><span class="line">        Physical Slot: 2</span><br><span class="line">        Flags: bus master, fast devsel, latency 0, IRQ 46, NUMA node 0</span><br><span class="line">        Memory at d0a80000 (64-bit, non-prefetchable) [size=512K]</span><br><span class="line">        I/O ports at 3020 [size=32]</span><br><span class="line">        Memory at d0b10000 (64-bit, non-prefetchable) [size=16K]</span><br><span class="line">        Expansion ROM at d0a00000 [disabled] [size=512K]</span><br><span class="line">        Capabilities: &lt;access denied&gt;</span><br><span class="line">        Kernel driver <span class="keyword">in</span> use: ixgbe</span><br><span class="line">        Kernel modules: ixgbe</span><br><span class="line"></span><br><span class="line">04:00.1 Ethernet controller: Intel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection (rev 01)</span><br><span class="line">        Subsystem: Intel Corporation Ethernet Server Adapter X520-2</span><br><span class="line">        Physical Slot: 2</span><br><span class="line">        Flags: bus master, fast devsel, latency 0, IRQ 162, NUMA node 0</span><br><span class="line">        Memory at d0980000 (64-bit, non-prefetchable) [size=512K]</span><br><span class="line">        I/O ports at 3000 [size=32]</span><br><span class="line">        Memory at d0b00000 (64-bit, non-prefetchable) [size=16K]</span><br><span class="line">        Expansion ROM at d0900000 [disabled] [size=512K]</span><br><span class="line">        Capabilities: &lt;access denied&gt;</span><br><span class="line">        Kernel driver <span class="keyword">in</span> use: ixgbe</span><br><span class="line">        Kernel modules: ixgbe</span><br></pre></td></tr></table></figure>
+  <noteblock>
+  Intel 82599 系列以太网控制器的 Datasheet 点击查看: <a href="./files/82599_datasheet.pdf">Intel® 82599 10 GbE Controller Datasheet</a>
+  </noteblock>
+
+  <h3 class="title">网卡收包</h3>
+
+  <flowchart class="mermaid" title="Intel 82599 网卡收包流程">
+  flowchart LR
+    %% 节点定义
+    wire[Wire]
+    %%
+    subgraph NIC
+      port[Port]
+      fi[Filter]
+      assign{DMA Queue Assignment}
+      fifo_1[[FIFO]]
+      fifo_2[[FIFO]]
+      fifo_3[[FIFO]]
+    end
+    subgraph Memory
+      ring_1((Descriptor Ring Buffer))
+      ring_2((Descriptor Ring Buffer))
+      ring_3((Descriptor Ring Buffer))
+      buffer_1[Buffer]
+      buffer_2[Buffer]
+      buffer_3[Buffer]
+    end
+    %%
+    %% 拓扑
+    wire ---> port
+    port ---> fi
+    fi ---> assign
+    assign ---> fifo_1
+    assign ---> fifo_2
+    assign ---> fifo_3
+    fifo_1 -. 写入 Descriptor .-> ring_1
+    fifo_1 -. 写入数据帧 .-> buffer_1
+    fifo_2 -. 写入 Descriptor .-> ring_2
+    fifo_2 -. 写入数据帧 .-> buffer_2
+    fifo_3 -. 写入 Descriptor .-> ring_3
+    fifo_3 -. 写入数据帧 .-> buffer_3
+  </flowchart>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO: 描述一下大致流程。
+
+  <h4 class="title">网卡上的硬件处理</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO: 网卡的部分卸载功能。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO: On-NIC 队列是怎么回事?
+
+  <h4 class="title">写入主机内存</h4>
+  <h3 class="paragraph">接收描述符环形缓冲区</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完成网卡硬件部分的数据帧处理后，网卡会将数据帧使用 PCIe DMA 的方式异步传输到主机内存中，同时网卡会向位于主机内存中的 <def>接收描述符环形缓冲区</def>(Receive Descriptor Ring Buffer，下面简称 Ring Buffer) 写入一个接收描述符 (下面简称 Descriptor)，里面包含了接收到的数据帧的相关信息。一个 Descriptor 对应了一个接收到的网络数据帧。
+
+  <div 
+    class="img"
+    title="Intel 82599 接收描述符缓冲区示意图"
+    label="img_ring_buffer"
+  >
+    <img src="./pic/recv_desp_ring_buffer.png" width="600px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以看出来，Ring Buffer 就是网卡和主机 CPU 之间实现异步的数据交换的一段内存。Ring Buffer 是在主机探测到网卡设备，调用网卡驱动初始化的时候，由网卡驱动进行分配的。Intel 82599 网卡所维护的 Ring Buffer 的形式如 <imgref>img_ring_buffer</imgref> 所示，在网卡上有若干个寄存器的值用于记录 Ring Buffer 的相关信息，这些寄存器由网卡和主机之间共同维护，它们分别是:
+
+  <ol>
+    <li><code>RDBA</code>: 这个寄存器存放了 Ring Buffer 在主机内存中的起始物理地址;</li>
+    <li><code>RDLEN</code>: 这个寄存器存放了 Ring Buffer 在主机内存中的长度，以字节为单位;</li>
+    <li><code>RDH</code>: 这个寄存器存放了网卡第一个可以写入的 Descriptor 在 Ring Buffer 中距离 <code>RDBA</code> 的偏移量，以字节为单位;</li>
+    <li><code>RDT</code>: 这个寄存器存放了主机第一个可以读取的 Descriptor (i.e. 网卡最后一个可用的 Descriptor 之后的一个 Descriptor) 在 Ring Buffer 中距离 <code>RDBA</code> 的偏移量，以字节为单位;</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;通过维护这四个简单的寄存器，网卡和主机之间就能够实现多个 Descriptors 的异步传输。<code>RDBA</code> 和 <code>RDLEN</code> 寄存器是在网卡驱动分配完 Ring Buffer 的空间之后被初始化的。而当网卡完成 Descriptor 的写入后，则会自动地递推 <code>RDH</code> 寄存器的值至下一个可写入的 Descriptor 的起始位置; 同样地，当主机完成 Descriptor 的写入后，则会自动地递推 <code>RDT</code> 寄存器的值至下一个可读取的 Descriptor 的起始位置。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Intel 82599 Ethernet Controller 官方文档用 <imgref>img_ring_buffer_offical</imgref> 描述了 Ring Buffer 的工作方式:
+
+  <div
+    class="img"
+    title="Intel 82599 接收描述符缓冲区示意图"
+    label="img_ring_buffer_offical"
+    source="./files/82599_datasheet.pdf"
+  >
+    <img src="./pic/recv_desp_ring_buffer_official.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在来看 Ring Buffer 存储的 Descriptor 的格式。Descriptor 中记录了网卡通过 PCIe DMA 向主机内存中写入的数据帧的基本信息。对于 Intel 82599 网卡来说，其支持两种格式的 Descriptor，即 <def>Legacy Receive Descriptor Format (传统格式)</def> 和 <def>Advanced Receive Descriptor Format (高级格式)</def>。两种格式的 Descriptor 所占用的内存大小是一样的 (目前为16字节)，只是对这块内存使用有所不同。对于两种不同格式的 Descriptor，可以在网卡驱动初始化的时候进行配置，通过设置网卡的 <code>SRRCTL</code> 寄存器的 <code>DRSCTYPE</code> 域进而选择使用某种格式的 Descriptor。
+
+  <h3 class="paragraph">Legacy Descriptor 格式</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;82599 网卡 Legacy Descriptor 的格式如 <imgref>img_recv_desp</imgref> 所示:
+
+  <div 
+    class="img"
+    title="Intel 82599ES 网卡 Legacy Descriptor 格式"
+    label="img_recv_desp"
+    source="./files/82599_datasheet.pdf"
+  >
+    <img src="./pic/legacy_recv_descriptor.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Legacy Descriptor 中最重要的字段就是低 8-Bytes 的 <code>Buffer Address[63:0]</code>，该字段存储的是网卡通过 PCIe DMA 将当前数据帧存储到主机内存中的 <note>物理地址</note>; 高 8-Bytes 存放的是网卡对数据帧进行预处理得到的一些信息，如数据帧长度，VLAN　Tag 以及校验和信息等。正如我们上面看到的，对于一些比较固定的功能，比如数据帧相关校验和计算，VLAN 头的解析等功能都可以卸载到网卡，由网卡来操作，这样可以加速报文的处理。
+
+  <h3 class="paragraph">Advanced Descriptor 格式</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;相比于 Legacy Descriptor，Advanced Descriptor 可以用来支持更多的功能特性，如分离数据帧有效负载和数据帧头等。Advanced Descriptor 由于需要支持更多的功能特性，所以分为了 <def>读格式 (Read Format)</def>和 <def>回写格式 (Write-back Format)</def>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;先来看下 Advanced Descriptor 中 Read Format 的定义，如 <imgref>img_legacy_recv_desp_read</imgref> 所示:
+
+  <div 
+    class="img"
+    title="Intel 82599ES 网卡 Advanced Descriptor Read Format 格式"
+    label="img_legacy_recv_desp_read"
+    source="./files/82599_datasheet.pdf"
+  >
+    <img src="./pic/advanced_recv_descriptor_read.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Advanced Descriptor (Read Format) 低 8-Bytes 的存储的是网卡通过 PCIe DMA 将数据帧中封装的 Packet Payload 存储到主机内存中的起始地址；高 8-Bytes 存放的是  
+</div>
+
+<h2 class="title">GRO</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;参考 <cite>kk_blog_gro</cite>
+</div>
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+
+<!-- 圆圈数字 -->
+<!--
+⓪ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳ ㉑ ㉒ ㉓ ㉔ ㉕ ㉖ ㉗ ㉘ ㉙ ㉚ ㉛ ㉜ ㉝ ㉞ ㉟ ㊱ ㊲ ㊳ ㊴ ㊵ ㊶ ㊷ ㊸ ㊹ ㊺ ㊻ ㊼ ㊽ ㊾ ㊿
+-->
+
+<!-- Flow Chart -->
+<!--
+Format see: https://mermaid-js.github.io/mermaid/#/flowchart
+-->
+<!-- <flowchart class="mermaid">
+ Mermaid Flow Chart Code
+</flowchart> -->
+
+<!-- Sign Block -->
+<!--
+<noteblock>
+A NOTE
+</noteblock>
+
+<queblock>
+A QUESTION
+</queblock>
+-->
+
+<!--图片、引用-->
+<!-- 
+<div class="img" title="img title" label="img_label" source="url">
+  <img src="" height="" />
+</div>
+
+<imaging>img_label</imaging>
+-->
+
+<!--等式、引用-->
+<!-- 
+<div class="equation" label="equation_label">
+</div>
+
+<equation>equation_label</equation>
+-->
+
+<!--定理、引用、证明-->
+<!-- 
+<div class="theorm" label="theorm_label">
+</div>
+
+<theorm>theorm_label</theorm>
+
+<div class="theorm_prove">
+</div>
+-->
+
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--表格-->
+<!--
+<div class="table" title="Table Title" label="table_label">
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+    </tr>
+    <tr>
+      <td>xxx</td>
+      <td>xxx</td>
+      <td>xxx</td>
+    </tr>
+  </table>
+</div>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>LINUX_KERNEL_NETWORK_PACKET_DRIVER_RECV</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

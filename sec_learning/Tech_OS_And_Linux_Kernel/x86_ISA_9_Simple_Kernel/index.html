@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:type" content="website">
+<meta property="og:title" content="引导加载并运行一个简单的内核">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_9_Simple_Kernel/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_9_Simple_Kernel/pic/xxx.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_9_Simple_Kernel/pic/process.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_9_Simple_Kernel/pic/kernel.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_9_Simple_Kernel/pic/gdt_before_protection.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_9_Simple_Kernel/pic/gdt_after_protection.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_9_Simple_Kernel/pic/salt.png">
+<meta property="article:published_time" content="2022-02-10T14:39:10.831Z">
+<meta property="article:modified_time" content="2021-11-28T14:36:17.717Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_9_Simple_Kernel/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>引导加载并运行一个简单的内核 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">引导加载并运行一个简单的内核
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>X86_ISA_9_SIMPLE_KERNEL</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<style>
+    img{margin-left: 20px; margin-right: 20px;}
+    #table th{text-align:center;}
+    #table td{text-align:center;}
+    p{margin-left: 15px; margin-right: 15px;}
+    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
+    @media(max-width: 768px) {
+      .div_concurrent_img{flex-direction: column;}
+    }
+    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
+    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
+    .div_learning_post{font-size: 16px; word-spacing:0px;}
+    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
+    .div_learning_post_boder{
+      background-color:#E3E2E2;
+      padding: 10px 10px; 
+      font-size: 16px;
+      word-spacing:0px;  
+      border-radius: 15px;
+      padding: 8px;
+      margin-bottom: 5px;
+    }
+    .div_learning_post_boder p{
+      margin: 0px;
+    }
+</style>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body>
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Aug.15 2021</i></font></h4>
+</div>
+
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div>
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=30%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+
+<br>
+
+<div class="div_catalogue">
+  <div align="center">
+    <h2> 目录 </h2>
+    <p>
+    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_learning_post_boder">
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_preface"><font color="blue"><b>动手写一个简单的内核</b></font></a>：介绍了本文的内容；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_kernel_head"><font color="blue"><b>内核程序头部和程序结构</b></font></a>：介绍了内核程序的头部，以及内部程序是如何组成的，方便我们后面讨论 MBR；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_mbr"><font color="blue"><b>MBR</b></font></a>：探讨了 MBR 是如何将内核程序拷贝到内存并引导过去的；
+    <p>
+    &nbsp;&nbsp;&nbsp;&nbsp;Section 4. <a href="#4_kernel"><font color="blue"><b>进入内核程序</b></font></a>：探讨了一个简单内核程序的细节，包括如何引导一个用户程序；
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.1 <a href="#4_kernel_1"><font color="blue">初始化工作</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.2 <a href="#4_kernel_2"><font color="blue">用户程序本身</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.3 <a href="#4_kernel_3"><font color="blue">加载用户程序</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.3.1 <a href="#4_kernel_3_1"><font color="blue">读取第一个扇区</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.3.2 <a href="#4_kernel_3_2"><font color="blue">动态分配内存</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.3.3 <a href="#4_kernel_3_3"><font color="blue">创建段描述符</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.4 <a href="#4_kernel_4"><font color="blue">加载用户程序堆栈段</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.5 <a href="#4_kernel_5"><font color="blue">重定位用户程序符号表</font></a>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.6 <a href="#4_kernel_6"><font color="blue">执行用户程序</font></a>
+  </div>
+</div>
+
+<!--标题-->
+<h2><a name="1_preface">1. 动手写一个简单的内核</a></h2>
+<div class="div_learning_post">
+
+  <div align="center">
+    <img src="./pic/process.png" width=700px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在进入保护模式之后，我们现在开始的文章将关注在保护模式下的程序将如何工作。我们在本文中将看到一个简单的内核是如何被 MBR 引导并开始运行的，并且内核是如何引导用户程序并运行的。流程如上所示。
+</div>
+
+<h2><a name="2_kernel_head">2. 内核程序头部和程序结构</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于我们在 MBR 中将引导内核程序，为此我们先来大致分析一下内核程序的头部信息以及大致结构，我们在 <a href="4_kernel">进入内核程序</a> 中将对内核程序细节进行讲解。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们把内核代码分为以下四个部分：
+
+  <div align="center">
+    <img src="./pic/kernel.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">内核头部</font> 用于记录各个段的汇编位置，这些统计数据用于告诉初始化代码如何加载内核。其源码如下所示：
+
+  <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;NASM Assembly</span></span><br><span class="line"><span class="comment">;常量部分 </span></span><br><span class="line">core_code_seg_sel     <span class="built_in">equ</span>  <span class="number">0x38</span>    <span class="comment">;内核代码段选择子</span></span><br><span class="line">core_data_seg_sel     <span class="built_in">equ</span>  <span class="number">0x30</span>    <span class="comment">;内核数据段选择子 </span></span><br><span class="line">sys_routine_seg_sel   <span class="built_in">equ</span>  <span class="number">0x28</span>    <span class="comment">;系统公共例程代码段的选择子 </span></span><br><span class="line">video_ram_seg_sel     <span class="built_in">equ</span>  <span class="number">0x20</span>    <span class="comment">;视频显示缓冲区的段选择子</span></span><br><span class="line">core_stack_seg_sel    <span class="built_in">equ</span>  <span class="number">0x18</span>    <span class="comment">;内核堆栈段选择子</span></span><br><span class="line">mem_0_4_gb_seg_sel    <span class="built_in">equ</span>  <span class="number">0x08</span>    <span class="comment">;整个0-4GB内存的段的选择子</span></span><br><span class="line"></span><br><span class="line"><span class="comment">;内核头部，用于加载核心程序 </span></span><br><span class="line">core_length     <span class="built_in">dd</span> core_end                  <span class="comment">;核心程序总长度#00</span></span><br><span class="line">sys_routine_seg <span class="built_in">dd</span> <span class="meta">section</span><span class="number">.</span>sys_routine<span class="number">.</span>start <span class="comment">;系统公用例程段位置#04</span></span><br><span class="line">core_data_seg   <span class="built_in">dd</span> <span class="meta">section</span><span class="number">.</span>core_data<span class="number">.</span>start   <span class="comment">;核心数据段位置#08</span></span><br><span class="line">core_code_seg   <span class="built_in">dd</span> <span class="meta">section</span><span class="number">.</span>core_code<span class="number">.</span>start   <span class="comment">;核心代码段位置#0c</span></span><br><span class="line">core_entry      <span class="built_in">dd</span> start                     <span class="comment">;核心代码段入口点#10</span></span><br><span class="line">                <span class="built_in">dw</span> core_code_seg_sel    </span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">内核例程段</font> 用于提供各种用途和功能的子过程以简化代码的编写。这些例程既可以用于内核，也供用户程序调用。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">内核代码段</font> 用于分配内存，读取和加载用户程序，控制用户程序的执行。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">内核数据段</font> 提供了一段可读写的内存空间，供内核自己使用。
+</div>
+
+<h2><a name="3_mbr">3. MBR</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_8_Protect_Mode/index.html#2_load_protection">实例：进入保护模式</a> 中已经详细地分析了 MBR 是如何一步一步走进保护模式的，我们在这里直接展示 MBR 部分的代码。由于代码过长，所以请链接到页面：<a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_9_Simple_Kernel/mbr.html">MBR 源代码</a>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;参考 Line 13-37 的代码，可以注意到我们的 GDT <font color="red">在进入保护模式之前</font> 被设置的情况是这样的：
+
+  <div align="center">
+    <img src="./pic/gdt_before_protection.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Line 53 往后，我们就正式进入了保护模式下的 MBR。下面我们将把内核的程序读入到内存中。我们在 Line 54~59 设置完数据段和堆栈段的段基地址寄存器后，我们在 Line 62 的地方把我们要读的扇区的逻辑序号写入了 edi 寄存器中，然后在 Line 64 调用了 core_start_sector 方法，来从磁盘中读取了一个扇区。读入内核的第一个扇区的原因是为了分析内核头部中包含的关于内核代码长度、程序入口等的信息。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在 Line 68~76 计算得到了内核代码所占有的磁盘大小。除法的商被放在了 eax 寄存器中，余数放在了 edx 寄存器中。注意到此时我们已经读入了一个扇区了，如果内核代码占用的大小刚好能被 512 Bytes 整除，也即余数为零，也即 edx 为 0 (i.e. Line 74)，那么此时 eax 中的商就正好是内核代码的扇区总数，我们就必须扣除我们刚才已经读过的一个扇区继续往下读，因此有了 Line 76 对 eax 的自减操作；而如果内核代码占用的大小不能被 512 Bytes 整除，也即余数不为零，也即 edx 不为 0 (i.e. Line 74)，那么此时 eax 中的商就是内核代码的扇区总数 - 1，因此我们无需扣除我们刚才已经读过的扇区，直接向下执行即可。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;拿到扇区的总数之后，我们就能知道需要循环多少次才能将整个内核代码读到内存中，因此我们在 Line 77~88 的位置将内核代码全部读取到内存中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在读取完内核代码之后，我们需要在 GDT 中为我们内核代码的各个段建立段描述符，这是我们在 Line 90~124 做的事情。建立完成后，GDT 如下所示。之后我们在 Line 126~128 更新了 GDTR，然后在 Line 130 使用一个远跳转，将处理器的控制权交给了内核。
+
+  <div align="center">
+    <img src="./pic/gdt_after_protection.png" width=500px>
+  </div>
+</div>
+
+<h2><a name="4_kernel">4. 进入内核程序</a></h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，我把内核的代码链接在了 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_9_Simple_Kernel/kernel.html">简单内核源代码</a> 中 (因为它太长了)。读者还请链接查看。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在进入内核后，我们首先来到的是 Line 527 的内核代码段中的程序起点处，注意到这个起点我们已经在内核代码头部中指定了，因此 MBR 能够跳转到这个位置来。
+
+  <h3><a name="4_kernel_1">4.1 初始化工作</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在 Line 527~528 设置了 DS 寄存器，使其指向了我们在 MBR 中设置好的内核代码段。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后在 Line 534~553 的地方，我们打印出了我们的 CPU 信息，使用的是 cpuid 指令。由于 CPU 更新换代的速度很快，新的功能叠加迭代的也很快，因此对于上层软件来说，必须提供一种让它们知道自己是运行在哪个硬件平台上的方法，这就是 cpuid 的功能。
+
+  <h3><a name="4_kernel_2">4.2 用户程序本身</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了加载用户程序，和 MBR 加载内核代码的原理一样，我们首先得知道用户程序的格式。我们把用户程序的代码链接在了 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_9_Simple_Kernel/user_app.html">用户程序源代码</a> 中。可以看到，同样的，我们在用户程序的代码中同样定义了一个程序头部，使得内核代码能够根据这个头部来获得有关于这份用户程序的信息。
+
+  <div class="div_learning_post_boder">
+    <ul>
+      <li>偏移量为 0x04 处的双字是头部的长度，以字节为单位;</li>
+      <li>偏移量为 0x08 处的双字是为堆栈保留的，和早先的做法不同，内核不要求用户程序提供堆栈空间，而改由内核动态分配，以减轻用户程序编写的负担。当内核分配了堆栈空间后，会把堆栈段的选择子填写到这里，用户程序开始执行时，可以从这里取得该选择子以初始化自己的堆栈；</li>
+      <li>偏移量为0x0c处的双字是要求分配的堆栈大小，即，用户程序编写者建议的堆栈大小，以4KB为单位。如果是1，就是希望分配4KB的堆栈空间；如果是2，就是希望分配8KB的堆栈空间，依此类推；</li>
+      <li>偏移量为 0x10 处的双字，是用户程序入口点的32位偏移地址</li>
+      <li>偏移量为 0x14 处的双字，是用户程序代码段的起始汇编地址</li>
+      <li>偏移量为 0x18 处的双字，是用户程序代码段的长度，以字节为单位</li>
+      <li>偏移量为 0x1c 处的双字，是用户程序数据段的起始汇编地址，当内核完成用户程序的加载和重定位后，将把该段的选择子回填到这里</li>
+      <li>偏移量为 0x20 处的双字，是用户程序数据段的长度，以字节为单位</li>
+    </ul>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了简化用户程序，通常来说操作系统会提供一些例程 (i.e. API, 或者称为系统调用) 来给用户程序调用使用，用户程序使用 call 命令就能够调用这些函数。然而，call 命令是需要传入地址的，用户程序如何知道操作系统例程的地址在哪呢？
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本文看到的代码的解决思路是：在用户程序中留出一段空间，在这段空间中用户程序预留出一段空间，并且把自己想要调用的操作系统例程的名称写入这部分空间中。内核在加载用户程序的时候，会来检查这段空间，并且把对应例程的调用地址填入这段空间中，这样一来用户程序就能够 call 到这些例程了。我们看到在 用户程序 的 Line 22~32 的地方就是预留出了这样一段空间。在这段空间中，每一个表项都是 256 Bytes，暂时存储的是用到的例程的名称，之后这些表项都会被内核替换为相应的地址。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在 <a href="#4_kernel_5">重定位用户程序符号表</a> 中将看到具体的细节。
+
+  <h3><a name="4_kernel_3">4.3 加载用户程序</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;内核的主要任务就是加载和执行用户程序。代码中把负责加载和重定位用户程序的程序逻辑封装在了 load_relocate_program 过程中。我们在调用这个过程的时候，使用 esi 寄存器传入了要调用的用户程序所在的逻辑扇区号。load_relocate_program 在返回的时候，会把指向用户头部段的选择子返回到 ax 寄存器中。
+
+  <h5><a name="4_kernel_3_1">4.3.1 读取第一个扇区</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们现在来分析 load_relocate_program 过程，它的起始位置位于 Line 383。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们在 Line 395~400 的位置将用户程序的第一个扇区读取到了内核数据段中。然后我们在 Line 403~408 的代码中使用了和 MBR 代码类似的逻辑，判断用户程序究竟占用了多少个扇区(i.e. 是否能被 512 Bytes 整除)。不同的是，我们没有使用跳转指令来进行执行。我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_7_Intel_32_CPU_And_IA_32/index.html#3_modern_cpu_5">分支预测</a> 中曾经介绍过，跳转指令将会清空流水线，并且即使有了分支预测，也是会存在预测错误的情况，因此使用跳转指令的代价通常比较大。在这里，我们使用的是 <font color="blue">条件传送指令</font> cmovnz。指令 “cmovnz eax,ebx” 的效果就是，如果标志位寄存器中的 Z 位不为 0 ，则就会把 ebx 的值赋给 eax 中。我们下面解释一下 Line 403~408 的功能。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在读取完用户程序的第一个扇区之后，我们就能拿到用户程序的占用的字节数，我们把这个数放到了 eax 寄存器中 (i.e. Line 403)。然后我们拷贝这个数字到 ebx，然后把 ebx 进行 512 Bytes 对齐 (i.e. 将低 9 位重置为 0)，然后再向 ebx 中增加了 512 Bytes，相当于将不满 512 Bytes 的部分补齐到了 512 字节。然后，为了避免占用字节数刚好就是 512 Bytes 的倍数，我们在 Line 407 中又对 eax 中的值进行判断，如果程序的大小不是 512 的倍数，则执行完 Line 407 的代码之后，EFLAGS 寄存器中的 Z 位将会为 1，那么我们在 Line 408 的 cmovnz 指令处就会把 ebx 的值赋予给 eax，即相当于把 eax 补满到 512 Bytes 的倍数，反之。
+
+  <h5><a name="4_kernel_3_2">4.3.2 动态分配内存</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;理解并执行了上面的程序行为后，我们在 Line 411 的地方调用了 allocate_memory 过程来为我们的用户程序分配内存空间，这个过程使用 ecx 传入想要分配的内存单元数，然后将分配的内存空间的起始物理地址放在 ecx 中返回。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;allocate_memory 的内存分配策略非常简单。在 Line 331 处，我们在内核数据段中声明了标号 ram_alloc，并初始化为一个双字 0x00100000，这就是可用于分配的初始内存地址。很显然，这个位置正好在 1MB 之外。每次请求分配内存时， allocate_memory 过程仅简单地返回该内存单元的值，作为所分配内存的起始地址。同时，将这个值加上所分配的长度，作为下次分配的起始地址写回该内存单元。这是我们在 Line 235~243 中实现的逻辑。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注意到我们在 Line 245~250 中把用于下次分配的起始地址进行了 32-bits 对齐，这是因为 32 位的计算机系统下 32-bits 对齐的内存访问速度最快，于是我们使用了和我们在内核中加载用户代码时遇到的扇区数目处理手段一样的方法来处理对齐操作。这一段就不再赘述原理。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到 load_relocate_program 过程，在分配完内存空间之后，我们在 Line 419~426 的地方循环的把整个用户程序读入到内存空间中，这个过程同样类似于我们在 MBR 中把内核代码读进内存的过程，就不再赘述。
+
+  <h5><a name="4_kernel_3_3">4.3.3 创建段描述符</a></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在拷贝完用户程序之后，我们就需要在 GDT 中为我们的用户程序的头部段、代码段、数据段和堆栈段分别创建段描述符。我们用到了两个过程：make_seg_descriptor (Line 308) 和 set_up_gdt_descriptor (Line 263)，这两个过程是在内核的公共例程段被定义的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;以代码段为例，观察 Line 439~443，我们把用户程序代码起始位置放在了 eax 寄存器中，把段界限放在了 ebx 寄存器中，把代码段描述符放在了 ecx 寄存器中，然后 call 了 make_seg_descriptor 帮我们合成 32 位处理器复杂的段描述符格式，放置于 edx:eax 中。接着我们又 call 了 set_up_gdt_descriptor 方法为我们装载段描述符，这个过程的返回值是存放在 cx 寄存器中的段选择子，对应了我们刚装入的程序段。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;观察 set_up_gdt_descriptor 源代码 (从 Line 259 开始)，首先我们需要从 GDTR 获取当前 GDT 的信息，我们在 Line 272 的位置使用 sgdt 命令把 GDTR 的内容保存到了指定的内存位置，然后在 Line 277～279 通过拿到的 GDT 段界限和起始线性地址算出了新描述符的起始线性地址。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注意到在 Line 277 我们使用到的是 <font color="blue">movzx</font>，即 <font color="red">带零扩展的传送 (Move with Zero-Extend)</font>，这条指令针对的是目的操作数大小和源操作数大小不一的情况。回忆一下，GDT 的段界限是一个 16-bits 的数，我们在 Line 277 把这个两字节的数读取进了一个 32-bits 的寄存器，因此我们需要将它的高位用 0 补齐到 32 位。有读者会问：为什么非得读取到 32-bits 寄存器中的，原因是因为后面我们将要拿这个数和段基地址相加得出 GDT 新描述符可以存放的新线性地址。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同样的道理，当我们在 Line 278 想要通过将 GDT 段界限数值加 1 的方法来算出新描述符在 GDT 中的偏移地址的时候，由于 GDT 段界限是一个 16-bits 的数，只是被我们故意装入了一个 32-bits 寄存器中，因此在做计算的时候，保险起见还是只对低 16 位进行计算操作，以满足 <font color="blue">16-bits 循环进位</font> 的特性。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在计算完成后，我们在 Line 281~282 的位置把新的段描述符装入了 GDT 中，然后在 Line 284~286 的位置更新了 GDTR 中的 GDT 段界限信息。然后在 Line 288~293 中我们算出了我们刚刚更新到 GDT 中的描述符的序号，并且左移了 3 位形成段选择子的正确格式，作为该方法的返回值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到 load_relocate_program 方法，还是以代码段为例 (Line 439~466)，在我们上面详细叙述的 set_up_gdt_descriptor 方法返回后，我们在 Line 466 的位置把代码段选择子写会到了用户程序中，以便我们的用户程序在保护模式下能够正确地访问它自己的代码段。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于用户程序头部段、代码段和数据段，都是一样的安装过程。唯一不同的是堆栈段，用户程序的堆栈段是由内核提供的，而不是用户程序自带的，因此我们下面来关注一下用户程序堆栈段的安装过程。
+
+  <h3><a name="4_kernel_4">4.4 加载用户程序堆栈段</a></h3>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在 <a href="#4_kernel_2">用户程序本身</a> 中曾经介绍过，用户程序头部中偏移量为 0x0c 处的双字是要求分配的堆栈大小。因此我们在 Line 459 中首先会去读取这个以 4KB 为单位的堆栈大小。接着，由于堆栈段是向下增长的，我们使用下面的算法计算得到堆栈段界限：
+
+  <div class="div_learning_post_boder" align="center">
+  <p>堆栈段界限 = 0xFFFFF - 堆栈段大小
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;读者会问，为什么是这么算的。我们推算一下，回忆一下我们在 <a href="/sec_learning/Tech_OS_And_Linux_Kernel/Assembly_8_Protect_Mode/index.html#3_protect_memory_access_2">地址转换时的保护</a> 中描述过的内容。对于单位为 4KB 的段界限，我们会有下面的计算公式：
+
+  <div class="div_learning_post_boder" align="center">
+  <p>实际堆栈段界限 = 堆栈段界限 `\times` 0x1000 + 0xFFF
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此代入我们计算的堆栈段界限可以得到：
+
+  <div class="div_learning_post_boder" align="center">
+  <p>实际堆栈段界限 = (0xFFFFF - 堆栈段大小) `\times` 0x1000 + 0xFFF
+  <br>= 0xFFFFF000 - 堆栈段大小`\times`0x1000 + 0xFFF
+  <br>= 0xFFFFFFFF - 堆栈段大小`\times`0x1000
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此，我们在 Line 459~461 的地方使用上面第一个公式以计算向下增长的堆栈段界限。然后我们在 Line 462~465 计算出了实际要分配的内存空间，然后又调用了我们在上面已经分析过的 allocate_memory 过程帮我们分配内存，这里不再赘述。值得注意的是，和为数据段/代码段分配内存不同，由于堆栈段向下增长，allocate_memory 方法的返回值应该被解释为一个堆栈段的高端地址而不是低端地址，因此必须在这个堆栈段高端地址上加上堆栈段长度，才能真正得到堆栈段的起始地址 (i.e. 堆栈段的低端地址)，我们在 Line 466 中就是在做这样一件事情。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;事情都完成以后，我们在 Line 468~469 call 了两个我们熟悉的函数帮我们制作和安装段描述符，然后在 Line 470 把堆栈段选择子写回到了程序中。 
+
+  <h3><a name="4_kernel_5">4.5 重定位用户程序符号表</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在 <a href="#4_kernel_2">用户程序本身</a> 曾经介绍过，我们在用户程序中预留出了一段空间，用于告诉内核程序用到的内核例程，以及让内核回写例程地址使用。在本节中，我们将关注内核具体操作的细节。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回归本质，内核此时要做的事情就是比较用户例程表和内核例程表，然后把用户对应的表项替换为具体的地址，如下所示。注意到在内核的的表项中，低 256 Bytes 和用户程序表项一样，是例程的名称字符串，高 6 Bytes 存储的是 4 Bytes 的段内偏移地址和 2 Bytes 的段选择子。
+
+  <div align="center">
+    <img src="./pic/salt.png" width=500px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面是内核例程表的例子 (Line 355~338)：
+
+  <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;NASM Assembly</span></span><br><span class="line">salt_1          <span class="built_in">db</span>  <span class="string">&#x27;@PrintString&#x27;</span></span><br><span class="line">            <span class="built_in">times</span> <span class="number">256</span>-($-salt_1) <span class="built_in">db</span> <span class="number">0</span></span><br><span class="line">                <span class="built_in">dd</span>  put_string</span><br><span class="line">                <span class="built_in">dw</span>  sys_routine_seg_sel</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面是用户例程表的例子 (Line 25~26)：
+
+  <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;NASM Assembly</span></span><br><span class="line">PrintString       <span class="built_in">db</span>  <span class="string">&#x27;@PrintString&#x27;</span></span><br><span class="line">                <span class="built_in">times</span> <span class="number">256</span>-($-PrintString) <span class="built_in">db</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们回到内核 load_relocate_program 方法代码，来关注一下内核是如何实现替换例程的。在 Line 480~511 中，代码中的思路就是两层循环，在外层循环中，把用户程序用到的例程一个一个拿出来；在内层循环中，对一个用户程序用到的例程进行检索与替换，这里不做细节分析。
+
+  <h3><a name="4_kernel_6">4.6 执行用户程序</a></h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 load_relocate_program 方法的最后，Line 513 的位置，我们把装载好的用户程序头部段的选择子放到了 ax 寄存器中。然后就回到了主程序中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到主程序，我们来到 Line 571 的地方，这里保存了主程序的堆栈指针，然后在 Line 575 就跳转到了用户程序执行。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注意到我们在用户程序中，我们在程序结束的时候调用的是 TerminateProgram 例程 (Line 76)，这个例程对应的是在内核程序中的 return_point 的位置 (Line 578)，如果读者去仔细研究了上文介绍的例程替换过程就会知道。在 return_point 的代码里，我们恢复了内核自己的数据段、代码段。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;至此，我们的程序就结束了。
+</div>
+
+<!--ref-->
+<!--
+<h2>附录：参考源</h2>
+<div class="div_learning_post">
+<p>
+
+1. golang.org, <a target="_blank" rel="noopener" href="https://golang.org/cmd/go/#hdr-GOPATH_environment_variable">GOPATH environment variable</a>
+</p>
+</div>-->
+
+</body>
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>X86_ISA_9_SIMPLE_KERNEL</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

@@ -32,9 +32,11 @@
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/gd.gif">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/gradient.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/gradient_2.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/lr_exp.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/lwg.png">
 <meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Algorithm/ML_2_Linear_Regression_And_Gradient_Descent/pic/xxx.png">
-<meta property="article:published_time" content="2022-06-15T17:58:03.308Z">
-<meta property="article:modified_time" content="2022-06-15T17:58:03.308Z">
+<meta property="article:published_time" content="2022-09-15T08:16:11.338Z">
+<meta property="article:modified_time" content="2022-09-15T08:16:11.338Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -254,7 +256,7 @@
 <body onload="load_page()">
 
 <div align="center" class="div_indicate_source">
-  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Apr.4 2022</i></font></h4>
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Sept.15 2022</i></font></h4>
 </div>
 <div class="div_licence">
   <br>
@@ -278,18 +280,17 @@
 </div><br>
 
 <!-- Start your post here -->
-<h2 class="title">Linear Regression</h2>
+<h2 class="title">ML 范式: Supervised Learning</h2>
 <div class="div_learning_post">
-  <h3 class="title">Supervised Learning</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Linear Regression (LR) 是 Supervised Learning 的一种简单情况。首先我们回顾一下 Supervised Learning 的基本流程:
+  &nbsp;&nbsp;&nbsp;&nbsp;本文要重点介绍的 <def>线性回归 (Linear Regression)</def> 是属于 Supervised Learning 的一种学习算法，而学习算法只是整个 Machine Learning 流程中的一环。本节首先我们回顾一下 Supervised Learning 的基本流程:
 
-  <div class="img" title="监督学习">
-    <img src="./pic/sl.png" width=600px>
+  <div class="img" title="监督学习" label="supervised_learning">
+    <img src="./pic/sl.png" width=80%>
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们给出一个 <def>Training Set</def>，里面包含了 $m$ 条 <def>Samples</def> $(X,Y)=[(X^{(0)},Y^{(0)}),...,(X^{(m-1)},Y^{(m-1)})]$，每一条 Sample $(X^{(i)},Y^{(i)})$  中都有对应的 <def>Features</def> $X^{(i)}$ 以及其对应的 <def>Label</def> $Y^{(i)}$。注意到 $X^{(i)}$ 是 $n$ 维的，即 
+  &nbsp;&nbsp;&nbsp;&nbsp;如 <imgref>supervised_learning</imgref> 所示，首先我们来看 <def>训练 (Training)</def> 过程。我们首先给出一个 <def>训练集 (Training Set)</def>，里面包含了 $m$ 条 <def>样本 (Samples)</def> $(X,Y)=[(X^{(0)},Y^{(0)}),...,(X^{(m-1)},Y^{(m-1)})]$，每一条 Sample $(X^{(i)},Y^{(i)})$  中都有对应的 <def>特征 (Features)</def> $X^{(i)}$ 以及其对应的 <def>标签 (Label)</def> $Y^{(i)}$。注意到 $X^{(i)}$ 是 $n$ 维的，即 
 
   <div class="equation">
   $X^{(i)}=[x_{0}^{(i)},x_{1}^{(i)},...,x_{n-1}^{(i)}]$
@@ -303,15 +304,23 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，对于 LR 问题来说，$l=1$，也即每一个 Sample 的 Label 都是一个连续的数值。
+  &nbsp;&nbsp;&nbsp;&nbsp;这些 Samples 将作为 <def>学习算法 (Learning Algorithm)</def> 的输入。后者首先定义了一个带参数 $\Theta$ 的 <def>假设 (Hypothesis)</def> $h(X_{\text{h}};\Theta)$，Hypothesis 的本质是一个计算过程，用于根据输入的特征 $X_{\text{h}}$ 输出预测值。由于 Hypothesis 携带参数，并且做 Supervised Learning 的 Training 的目标就是基于 Training Set 学习这些参数，因此我们还需要为 Hypothesis 定义一个 <def>损失函数 (Loss Function)</def>，Loss Function 的目标是将 Hypothesis 输出的预测值和 Training Set 中给出的 Label 进行比较，并且量化地给出两者的差异，以用于后续参数优化，我们把这种差异称为 <def>损失值 (Loss)</def>。Loss Function 和 Hypothesis 就组成了我们常说的机器学习 <def>模型 (Model)</def>。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;这些 Samples 将作为 <def>Learning Algorithm</def> 的输入，后者需要输出一个 <def>Hypothesis</def> $h(X;\Theta)$，注意到 $h$ 带有 <def>Parameters</def> $\Theta$，其任务是对新的输入向量 $X^{(n ew)}$ 输出一个预测值 $Y^{(n ew)}$。
+  &nbsp;&nbsp;&nbsp;&nbsp;有了 Model 和 Training Set，Supervised Learning  的 Training 过程就是把 Training Set 中的 Samples 输入到 Model 中，首先计算出 Loss，接着我们就需要一个 <def>参数求解器 (Parameter Solver)</def>，后者基于最优化算法的思想，基于 Loss 计算出 Hypothesis 中各个参数的更新值。在完成参数的更新后，我们就得到了一个 <def>训练好的模型 (Trained Model)</def>，此时 Traning 流程就结束了。
 
-  <h3 class="title">Linear Regression</h3>
-  <h4 class="title">$h$ 的形式</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;基于上述流程，我们首先关心的问题是 $h$ 的形式。在 LR 问题下，我们可以把 $h$ 表示如下:
+  &nbsp;&nbsp;&nbsp;&nbsp;在 <def>推理 (Inference)</def> 流程中，Trained Model 就可以用于对新的输入特征 $X^{(n ew)}$ 输出一个预测值 $Y^{(n ew)}$。
+</div>
+
+<h2 class="title">学习算法: 线性回归 (Linear Regression)</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成对 Supervised Learning 流程的理解后，本节我们将进入我们第一个 Learining Algorithm —— <def>线性回归 (Linear Regression)</def> 的学习。
+
+  <h3 class="title">Hypothesis 的形式</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述流程，我们首先关心的问题是 Linear Regression 的 Hypothesis $h(X_{\text{h}};\Theta)$ 的形式。Linear Regression 的 Hypothesis 定义如下:
 
   <div class="equation">
     $\hat{Y}^{(i)} = h(X^{(i)};\Theta) = \theta_{b} + \sum_{j=0}^{n-1}\theta_jx_j^{(i)}$
@@ -333,22 +342,19 @@
   </div>
   </div>
 
-  <h4 class="title">如何选取参数 $\theta$</h3>
+  <h3 class="title">Loss Function 的形式</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在有了 $h(X;\Theta)$ 的形式之后，我们接下来关心的问题就是如何选取 $\Theta$，这也是 Leanring Algorithm 本质上在干的事情。
+  &nbsp;&nbsp;&nbsp;&nbsp;在有了 $h(X_{\text{h}};\Theta)$ 的形式之后，我们接下来关心的问题就是 Loss Function 该如何定义。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;直觉告诉我们，$h(X;\Theta)$ 所应用的参数 $\Theta$，应该使得 $\forall X^{(i)}\in X$，$h(X^{(i)};\Theta) \approx Y^{(i)}$，也即 $h(X;\Theta)$ 输出的结果应该尽可能得和 Training Set 中各个 Sample 的 Label 接近。
+  &nbsp;&nbsp;&nbsp;&nbsp;直觉告诉我们，$h(X_{\text{h}};\Theta)$ 所应用的参数 $\Theta$，应该使得 $\forall X^{(i)}\in X$，$h(X^{(i)};\Theta) \approx Y^{(i)}$，也即 $h(X_{\text{h}};\Theta)$ 输出的结果应该尽可能得和 Training Set 中各个 Sample 的 Label 接近。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;基于这个直觉，我们定义一个简单的 <def>Lost Function</def>:
+  &nbsp;&nbsp;&nbsp;&nbsp;基于这个直觉，我们定义一个简单的 Loss Function:
 
   <div class="equation">
   $\mathcal{J}(\Theta) = \sum_{i=0}^{m-1}(h(X^{(i)};\Theta)-Y^{(i)})^2$
   </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，在上面这个式子中，$\Theta$ 是自变量，而 Training Set 中的各个 Sample $(X^{(i)},Y^{(i)})$ 则是参数，$\mathcal{J}(\Theta)$ 是因变量。这与我们上面讨论的 <equation>equ_lr_model</equation> 中 $X$, $Y$ 和 $\Theta$ 的关系有所不同。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;为了后面计算方便，我们在前面加上系数:
@@ -358,19 +364,108 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;因此，Learning Algorithm 的工作是：找到使得 $\mathcal{J}(\Theta)$ 最小的 $\Theta$ 值，也即:
+  &nbsp;&nbsp;&nbsp;&nbsp;有了 Loss Function 之后，接下来 Parameter Solver 的工作就是：找到使得 $\mathcal{J}(\Theta)$ 最小的 $\Theta$ 值，也即:
 
   <div class="equation" label="equ_goal">
-  $\Theta=$ argmin$[\mathcal{J}(\Theta)]$
+  $\Theta^{\text{*}}=$ argmin$[\mathcal{J}(\Theta)]$
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在明确 Learning Algorithm 的任务后，我们在 <ref>gd</ref> 一节中将看到我们是如何实现上面这个目标的。
+  &nbsp;&nbsp;&nbsp;&nbsp;稍后我们在 <ref>gd</ref> 和 <ref>ne</ref> 中将 Parameter Solver 是如何实现上面这个目标的。
+
+  <h3 class="title">从最大似然的角度来解释 Loss Function 的定义</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上文中，我们定义了 <equation>equ_loss_define</equation> 的基于平方差的 Loss Function，在本节中我们从概率的角度将说明为什么将 Lost Function 定义为平方差是合理的，并且我们将从最大似然的角度出发，分析我们上文定义 Linear Regression 这个 Loss Function 的过程的本质 (内在思路)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，我们先把 Hypothesis 的输入特征 $X^{(i)}_{\text{h}}$ 和这份输入特征对应的标签 $Y^{(i)}_{\text{h}}$ 视为随机变量，这点很重要，有了随机变量的假设，我们就可以对这两者进行概率分布的假设。为什么要进行概率分布的假设呢？因为我们本节将从最大似然的角度来解释 Loss Function 的定义，Loss Function 基于 Hypothesis 而定义，因此我们需要首先对 Hypothesis 的概率特性进行表示。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在让我们开始，首先我们可以认为 $X^{(i)}_{\text{h}}$ 和 $Y^{(i)}_{\text{h}}$ 存在如下关系：
+
+  <div class="equation">
+  $Y^{(i)}_{\text{h}}=\Theta^TX^{(i)}_{\text{h}}+\epsilon^{(i)}$
+  </div> 
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其中 $\epsilon^{(i)}$ 是误差项，是一个随机变量，描述的是对于一份输入特征 $X^{(i)}_{\text{h}}$ 的 Hypothesis 输出结果 $\Theta^TX^{(i)}_{\text{h}}$ 与对应的标签 $Y^{(i)}_{\text{h}}$ 之间的误差，其本质是无法被模型描述的特征与标签之间的关系 (Unmodel Effects)。我们进一步假设 $\epsilon^{(i)}$ 是 <def>Independently and Identically Distributed</def> (i.e. IID, 独立同分布) 的，并且我们假设并且服从的是均值为 $0$，方差为 $\sigma^2$ 的正态分布，$\epsilon^{(i)} \sim N(0,\sigma^2)$，也即:
+
+  <div class="equation">
+  $p(\epsilon^{(i)})=\frac{1}{\sqrt{2\pi}\sigma} \cdot \exp(-\frac{(\epsilon^{(i)})^2}{2\sigma^2})$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这样一来，我们可以得到，在基于给定参数 $\Theta$ 和已知输入特征 $X^{(i)}_{\text{h}}$ 的条件下，输入特征 $X^{(i)}_{\text{h}}$ 对应的标签 $Y^{(i)}$ 是一个服从正态分布的随机变量，其以 $\sigma^2$ 为方差在 $\Theta^TX^{(i)}_{\text{h}}$ 附近波动，也即满足如下关系:
+
+  <div class="equation", label="eq_y_x_distribution">
+  $p(Y_{\text{h}}^{(i)}|X_{\text{h}}^{(i)};\Theta) = \frac{1}{\sqrt{2\pi}\sigma} \cdot \exp(-\frac{(Y_{\text{h}}^{(i)}-\Theta^TX_{\text{h}}^{(i)})^2}{2\sigma^2})$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;写作概率表达式，即:
+
+  <div class="equation">
+  $(Y_{\text{h}}^{(i)}|X_{\text{h}}^{(i)};\Theta) \sim N(\Theta^TX_{\text{h}}^{(i)},\sigma^2)$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;$(Y_{\text{h}}^{(i)}|X_{\text{h}}^{(i)};\Theta)$ 读作 “基于参数 $\Theta$，在给定随机变量 $X_{\text{h}}^{(i)}$ (i.e. 特征) 的条件下，随机变量 $Y_{\text{h}}^{(i)}$ (i.e. 标签) 的分布”。值得注意的是，这里我们使用的是分号 '$;$' 来分隔参数项 $\Theta$，而不是使用逗号 '$,$' 写作 $p(Y^{(i)}|X^{(i)},\Theta)$，因为后者会造成参数 $\Theta$ 是随机变量的歧义。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;好了，现在让我们重新思考我们做 Training 的初衷: 给定一个 Training Set $(X,Y)$，我们的目的是 <def>估计</def> 一组参数 $\Theta$，使得模型基于 Training Set 中各条 Sample 的 Features 的预测结果 $\Theta^TX^{(i)}$ 更加接近 Training Set 提供的 Label，也即 $Y^{(i)}$。也就是说， $\Theta$ 是一个我们希望调整的量，而来自数据集的 $X^{(i)}$ 和 $Y^{(i)}$ 对于我们来说是定量。实际上，$X^{(i)}$ 和 $Y^{(i)}$ 可以视为针对随机变量 $X_{\text{h}}^{(i)}$ 和 $Y_{\text{h}}^{(i)}$ 所做的实验结果，而随机变量 $X_{\text{h}}^{(i)}$ 和 $Y_{\text{h}}^{(i)}$ 的分布我们是已经知晓是 <equation>eq_y_x_distribution</equation> 了。按照 <def>最大似然估计 (Maximum Likelyhood Estimation)</def> 的思路，对参数 $\Theta$ 的估计，就是找出一种参数取值 $\Theta^{\text{*}}$，使得基于 <equation>eq_y_x_distribution</equation> 的随机变量 $X_{\text{h}}^{(i)}$ 和 $Y_{\text{h}}^{(i)}$ 的分布，出现实验结果 $X^{(i)}$ 和 $Y^{(i)}$ 的可能性最大。如果考虑多个 Samples，那么对参数 $\Theta$ 的估计，就是找出一种参数取值 $\Theta^{\text{*}}$，使得基于 <equation>eq_y_x_distribution</equation> 的随机变量 $X_{\text{h}}$ 和 $Y_{\text{h}}$ 的分布，出现实验结果 $X$ 和 $Y$ 的可能性最大，也即:
+
+  <div class="equation" label="eq_parameter">
+  $\Theta^{\text{*}} = \text{argmax}[p(Y_{\text{h}}=Y|X_{\text{h}}=X;\Theta)]$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;此时，我们的讨论对象已经从 <equation>eq_y_x_distribution</equation> 的随机变量 $X_{\text{h}}^{(i)}$ 和 $Y_{\text{h}}^{(i)}$，变为了 <equation>eq_parameter</equation> 的参数 $\Theta$，此时在各次实验结果中的随机变量 $X_{\text{h}}^{(i)}$ 和 $Y_{\text{h}}^{(i)}$ 已经取为定值，而 $\Theta$ 是一个变量值。在讨论随机变量时，我们使用的是概率分布的概念；而在讨论参数变量时，在数学上的相关概念是 <def>Likelyhood (似然函数)</def>，在我们的问题中，我们可以把参数 $\Theta$ 的似然函数 $\mathcal{L}(\Theta)$ 定义如下:
+
+  <div class="equation" label="likelyhood">
+  $\mathcal{L}(\Theta) = p(Y_{\text{h}}=Y|X_{\text{h}}=X;\Theta)$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<equation>eq_parameter</equation> 所代表的优化问题，使用似然函数进行解释，就是找到一种参数取值 $\Theta^{\text{*}}$，使得似然函数 $\mathcal{L}(\Theta)$ 取值最大，也即:
+
+  <div class="equation" label="eq_likelyhood_opt">
+  $\Theta^{\text{*}} = \text{argmax}[\mathcal{L}(\Theta)]$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了求解 <equation>eq_likelyhood_opt</equation>，我们需要得到 $\mathcal{L}(\Theta)$ 的表达式，我们把 <equation>likelyhood</equation> 进一步展开可得:
+
+  <div class="equation" label="likelyhood_expend">
+  \begin{aligned}
+  \mathcal{L}(\Theta) &= p(Y_{\text{h}}=Y|X_{\text{h}}=X;\Theta) \\ \\
+  & (由于我们对 \epsilon 有 \text{i.i.d} 的假设，因此原式可以展开为如下形式) \\ \\
+  &= \prod_{i=0}^{m-1} p(Y^{(i)}_{\text{h}}=Y^{(i)}|X^{(i)}_{\text{h}}=X^{(i)};\Theta) \\ \\
+  &= \prod_{i=0}^{m-1} \frac{1}{\sqrt{2\pi}\sigma} \cdot \exp(-\frac{(Y^{(i)}-\Theta^TX^{(i)})^2}{2\sigma^2})
+  \end{aligned}
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在，基于 <equation>likelyhood_expend</equation>，我们的目标是完成对 <equation>eq_likelyhood_opt</equation> 的求解。我们能想到的最直接的办法就是用 <equation>likelyhood_expend</equation> 对参数 $\Theta$ 求导，然而由于 <equation>likelyhood_expend</equation> 中出现了累乘，求导并不是特别方便，所以我们使用对数将其转化为累加的形式，也即 <def>对数似然值 (Log Likelyhood)</def>，用符号表示为 $\mathcal{l}(\Theta)$，具体如下所示:
+
+  <div class="equation" label="log_likelyhood">
+  \begin{aligned}
+  \mathcal{l}(\Theta) &= \log \mathcal{L}(\Theta) \\
+  &= \log \prod_{i=0}^{m-1} \frac{1}{\sqrt{2\pi}\sigma} \cdot \exp(-\frac{(Y^{(i)}-\Theta^TX^{(i)})^2}{2\sigma^2}) \\
+  &= \sum_{i=0}^{m-1}\left\{ \log \frac{1}{\sqrt{2\pi}\sigma} + \log \exp(-\frac{(Y^{(i)}-\Theta^TX^{(i)})^2}{2\sigma^2}) \right\} \\
+  &= m \cdot \log \frac{1}{\sqrt{2\pi}\sigma} - \frac{\sum_{i=0}^{m-1}(Y^{(i)}-\Theta^TX^{(i)})^2}{2\sigma^2} 
+  \end{aligned}
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;化简到这里，我们发现，要使 $\mathcal{l}(\Theta)$ 最大，实际上就是使得 $\sum_{i=0}^{m-1}(Y^{(i)}-\Theta^TX^{(i)})^2$ 最小，而这正是我们在 <equation>equ_loss_define</equation> 中看到的 Linear Regression 问题的 Loss Function 定义，因此我们仅需要把 <equation>equ_loss_define</equation> 作为 Parameter Solver 的优化目标即可。
 </div>
 
-<h2 class="title">Batch/Stochastic Gradient Descent</h2>
+<h2 class="title">求解器: Batch/Stochastic Gradient Descent</h2>
 <div class="div_learning_post">
   <label class="title">gd</label>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本节我们将关心我们如何通过 <def>梯度下降 (Gradient Descent)</def> 来求解 <equation>equ_goal</equation> 代表的 Loss Function 优化目标。
+
   <h3 class="title">Batch Gradient Descent</h3>
 
   <h4 class="title">初步思路</h4>
@@ -381,12 +476,6 @@
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;一个初步的思路是，我们首先随机选定一组参数 $\Theta$，比如 $\Theta={\theta_0=0,\theta_1=0,...,\theta_{n-1}=0}$，然后我们不断改变 $\Theta$ 来降低 $\mathcal{J}(\theta)$ 的值。这个思路在输入向量是二维的时候，可以采用如上所示的图来表示。
-
-  <div class="theorm_prove">
-  <div align="center"><h4>为什么不联立方程求出 $\mathcal{J}(\theta)$ 的最小值点?</h4></div>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;TODO
-  </div>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;既然我们采用了逐步下降的办法，我们就需要使用到数学工具 —— 梯度。下面我们对相关数学知识进行回顾。
@@ -479,7 +568,7 @@
   \begin{aligned}
   \frac{\partial \mathcal{J}(\Theta)}{\partial \theta_j} &= \frac{\partial}{\partial \theta_j}{\frac{1}{2}\sum_{i=0}^{m-1}(h(X^{(i)};\Theta)-Y^{(i)})^2} \\ \\
   &= [h(X^{(0)};\Theta)-Y^{(0)}] \cdot \frac{\partial}{\partial \theta_j}[h(X^{(0)};\Theta)-Y^{(0)}] + ... \\ \\
-  & (注意到 LR 问题中，Y^{(i)} 实际上是一个标量，即 Y^{(i)}=y^{(i)}，因此) \\ \\
+  & (注意到 \text{Linear Regression} 问题中，Y^{(i)} 实际上是一个标量，即 Y^{(i)}=y^{(i)}，因此) \\ \\
   &= [\theta_0x_0^{(0)}+...\theta_nx_n^{(0)}-y^{(0)}] \cdot \frac{\partial}{\partial \theta_j}[\theta_0x_0^{(0)}+...\theta_nx_n^{(0)}-y^{(0)}]+... \\ \\
   &= [\theta_0x_0^{(0)}+...\theta_nx_n^{(0)}-y^{(0)}] \cdot x_j^{(0)} + ... \\ \\
   &= \sum_{i=0}^{m-1}[\theta_0x_0^{(i)}+...\theta_nx_n^{(i)}-y^{(i)}] \cdot x_j^{(i)}
@@ -553,10 +642,12 @@
   &nbsp;&nbsp;&nbsp;&nbsp;我们把修改过的算法称为 <def>Stochastic Gradient Descent</def> (SGD, 随机梯度下降)。
 </div>
 
-<h2 class="title">Normal Equation</h2>
+
+<h2 class="title">求解器: Normal Equation</h2>
 <div class="div_learning_post">
+<label class="title">ne</label>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于 LR 问题，除了采用其它 Learning Algorithm 都会使用的梯度下降算法以外，我们还可以使用矩阵方法来实现一步完成对 <equation>equ_goal</equation> 的求解。
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Linear Regression 问题，除了采用常见的梯度下降算法以外，我们还可以使用矩阵方法来实现一步完成对 <equation>equ_goal</equation> 的求解。
 
   <h3 class="title">Notation</h3>
   <p>
@@ -668,6 +759,44 @@
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;基于这个式子，我们就可以直接得出最优的参数 $\Theta$，而不用使用迭代的方法来逐渐逼近最优解。
+</div>
+
+<h2 class="title">学习算法: Locally Weighted Regression</h2>
+<div class="div_learning_post">
+
+  <div class="img" title="线性回归">
+    <img src="./pic/lr_exp.png" width=400px>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上文我们介绍了 Linear Regression 算法，我们基于 Linear Regression 可以在 Training Set 上拟合出来一条直线，用于对新数据进行预测，如上图所示。但是倘若我们的样本空间中的数据并不能很好地使用一条直线来进行拟合的话，我们使用 Linear Regression 算法进行预测的结果将是十分糟糕的。本小节介绍一种针对 Linear Regression 算法进行优化的方法，Namely <def>Locally Weighted Regression</def> (LWR, 局部加权回归)。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;LWR 的基本思路是: 对新数据 $X^{(\text{new})}$ 进行预测时，首先在 Training Set 中找到与 $X^{(\text{new})}$ 更加接近的 Samples，基于这些 Samples 使用 Linear Regression 算出来一组参数 $\Theta^{(s)}$，然后使用 $\Theta^{(s)}$ 完成对 $X^{(\text{new})}$ 的预测。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述思路，我们修改我们的 Lost Function 如下所示:
+
+  <div class="equation">
+  $\mathcal{J}(\Theta) = \frac{1}{2} \cdot \sum\limits_{i=0}^{m-1}$ <note><b>$w^{(i)}$</b></note> $(h(X^{(i)};\Theta)-Y^{(i)})^2$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其中的 $w^{(i)}$ 定义如下:
+
+  <div class="equation" label="equ_omega_define">
+  `w^{(i)} = exp(-\frac{[X^{(i)}-X^{(\text{new})}]^2}{2\tau^2})`
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;$w^{(i)}$ 的含义是：对于 Training Set 中的各条 Samples $(X^{(i)},Y^{(i)})$，距离 $X^{(\text{new})}$ 越近的 Sample 的权值 $w^{(i)}$ 将更接近于 1，距离 $X^{(\text{new})}$ 越远的 Sample 的权值 $w^{(i)}$ 将更接近于 $0$。这样一来，Training Set 中的各条 Samples 对最终训练出来的参数的影响就有区别了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，<equation>equ_omega_define</equation> 中的 $\tau$ 是一个 <def>Hyperparameter</def>，用于控制权值函数的 "胖瘦" 情况，如下图所示:
+
+  <div class="img" title="超参用于控制影响范围">
+    <img src="./pic/lwg.png" width=400px>
+  </div>
 </div>
 
 <div class="div_ref" id="ref_container"></div>

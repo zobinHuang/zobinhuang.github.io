@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zobinhuang.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:type" content="website">
+<meta property="og:title" content="源码解析：DGL 创建图拓扑的流程">
+<meta property="og:url" content="http://www.zobinhuang.com:10082/sec_learning/Tech_System_And_Network/GNN_DGL_Topo_Construction/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_System_And_Network/GNN_DGL_Topo_Construction/pic/codeflow_param.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_System_And_Network/GNN_DGL_Topo_Construction/pic/codeflow_dll.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_System_And_Network/GNN_DGL_Topo_Construction/pic/hete_graph.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_System_And_Network/GNN_DGL_Topo_Construction/pic/codeflow_param.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_System_And_Network/GNN_DGL_Topo_Construction/pic/codeflow_heterograph.png">
+<meta property="og:image" content="http://www.zobinhuang.com:10082/sec_learning/Tech_System_And_Network/GNN_DGL_Topo_Construction/pic/xxx.png">
+<meta property="article:published_time" content="2022-09-03T16:08:20.576Z">
+<meta property="article:modified_time" content="2022-09-03T16:08:20.576Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+
+<link rel="canonical" href="http://www.zobinhuang.com:10082/sec_learning/Tech_System_And_Network/GNN_DGL_Topo_Construction/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>源码解析：DGL 创建图拓扑的流程 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-关于我">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于我</a>
+
+  </li>
+        <li class="menu-item menu-item-知识库">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
+
+  </li>
+        <li class="menu-item menu-item-进度">
+
+    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+
+  </li>
+        <li class="menu-item menu-item-独立音乐人">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="cn">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">源码解析：DGL 创建图拓扑的流程
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_System_And_Network/">TECH_SYSTEM_AND_NETWORK</a></li>
+          <li>GNN_DGL_TOPO_CONSTRUCTION</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body onload="load_page()">
+
+<div align="center" class="div_indicate_source">
+  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：June 22 2022</i></font></h4>
+</div>
+<div class="div_licence">
+  <br>
+  <div align="center">
+      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
+  </p>
+</div>
+<br>
+<div class="div_catalogue">
+  <div align="center">
+    <h1> 目录 </h1>
+    <p>
+    <font size="3px">有特定需要的内容直接跳转到相关章节查看即可。</font>
+  </div>
+  <div class="div_load_catalogue_alert" id="load_catalogue_alert">正在加载目录...</div>
+  <div class="div_catalogue_container" id="catalogue_container">
+  </div>
+</div><br>
+
+<!-- Start your post here -->
+<h2 class="title">前言</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本文中我们将对 DGL Runtime 创建和维护图拓扑的流程进行分析，我另外的文章 <a href="/sec_learning/Algorithm/GNN_DGL_Topo_Storage/index.html">源码解析：DGL 图拓扑存储</a> 介绍了图拓扑在 DGL 中的存储细节，建议作为前置文章进行阅读。
+</div>
+
+<h2 class="title">创建同构图拓扑</h2>
+<div class="div_learning_post">
+  <h3 class="title">顶层 API</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;DGL 使用一个唯一的整数来表示一个节点，称为点 ID，并用对应的两个端点 ID 表示一条边。同时，DGL 也会根据边被添加的顺序，给每条边分配一个唯一的整数编号，称为边 ID。节点和边的 ID 都是从 $0$ 开始构建的。在 DGL 的图里，所有的边都是有方向的，即边 $(u,v)$ 表示它是从节点 $u$ 指向节点 $v$ 的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们首先考虑同构图这种比较简单的情况。DGL 中使用 <code>DGLGraph</code> 来代表一个同构图，创建一个 <code>DGLGraph</code> 对象的一种方法是使用 <code>dgl.graph</code> 函数。它接受一个边的集合作为输入。
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> dgl</span><br><span class="line"><span class="keyword">import</span> torch <span class="keyword">as</span> th</span><br><span class="line"></span><br><span class="line"><span class="comment"># 边 0-&gt;1, 0-&gt;2, 0-&gt;3, 1-&gt;3</span></span><br><span class="line">u, v = th.tensor([<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>]), th.tensor([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">g = dgl.graph((u, v))</span><br><span class="line">print(g) <span class="comment"># 图中节点的数量是 DGL 通过给定的图的边列表中最大的点ID推断所得出的</span></span><br><span class="line">Graph(num_nodes=<span class="number">4</span>, num_edges=<span class="number">4</span>,</span><br><span class="line">      ndata_schemes=&#123;&#125;</span><br><span class="line">      edata_schemes=&#123;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取节点的 ID</span></span><br><span class="line">print(g.nodes())</span><br><span class="line"><span class="comment"># tensor([0, 1, 2, 3])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取边的对应端点</span></span><br><span class="line">print(g.edges())</span><br><span class="line"><span class="comment"># (tensor([0, 0, 0, 1]), tensor([1, 2, 3, 3]))</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取边的对应端点和边 ID</span></span><br><span class="line">print(g.edges(form=<span class="string">&#x27;all&#x27;</span>))</span><br><span class="line"><span class="comment"># (tensor([0, 0, 0, 1]), tensor([1, 2, 3, 3]), tensor([0, 1, 2, 3]))</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果具有最大 ID 的节点没有边，在创建图的时候，用户需要明确地指明节点的数量。</span></span><br><span class="line">g = dgl.graph((u, v), num_nodes=<span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+  <h3 class="title">Python 侧对用户传入参数进行处理</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们对 <code>dgl.graph</code> 这个 API 背后的代码细节进行分析。DGL 初始化一个图的 Code Flow 如下所示。
+
+  <div class="img" title="处理用户侧传入参数的代码流程" label="codeflow_param">
+    <img src="./pic/codeflow_param.png" width="90%"/>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在上面的代码的 Line 6 中 调用的用于创建图对象的 <code>dgl.graph</code> 函数是在 <code>dgl/convert.py</code> <cite>dglsrc_convert_py</cite> 下定义的 (p.s. 这个文件定义了若干 API，用于将其它形式的图拓扑数据转化为 DGL 图对象)。在上面的代码中，我们向 <code>dgl.graph</code> 函数中传入了由两个 <code>torch.tensor</code> 组成的 tuple 代表了 COO 形式的图拓扑存储方法。<code>dgl.graph</code> 的代码定义摘抄如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">graph</span>(<span class="params">data,</span></span></span><br><span class="line"><span class="function"><span class="params">        ntype=<span class="literal">None</span>, etype=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        *,</span></span></span><br><span class="line"><span class="function"><span class="params">        num_nodes=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        idtype=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        device=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        row_sorted=<span class="literal">False</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        col_sorted=<span class="literal">False</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        **deprecated_kwargs</span>):</span></span><br><span class="line"></span><br><span class="line">  (sparse_fmt, arrays), urange, vrange = utils.graphdata2tensors(data, idtype)</span><br><span class="line">  <span class="keyword">if</span> num_nodes <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:  <span class="comment"># override the number of nodes</span></span><br><span class="line">      <span class="keyword">if</span> num_nodes &lt; <span class="built_in">max</span>(urange, vrange):</span><br><span class="line">          <span class="keyword">raise</span> DGLError(<span class="string">&#x27;The num_nodes argument must be larger than the max ID in the data,&#x27;</span></span><br><span class="line">                         <span class="string">&#x27; but got &#123;&#125; and &#123;&#125;.&#x27;</span>.<span class="built_in">format</span>(num_nodes, <span class="built_in">max</span>(urange, vrange) - <span class="number">1</span>))</span><br><span class="line">      urange, vrange = num_nodes, num_nodes</span><br><span class="line"></span><br><span class="line">  g = create_from_edges(sparse_fmt, arrays, <span class="string">&#x27;_N&#x27;</span>, <span class="string">&#x27;_E&#x27;</span>, <span class="string">&#x27;_N&#x27;</span>, urange, vrange,</span><br><span class="line">                        row_sorted=row_sorted, col_sorted=col_sorted)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> g.to(device)</span><br></pre></td></tr></table></figure>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 COO/CSR 格式的稀疏矩阵存储格式，我们在上一篇文章中有所提及，这里不再赘述。
+
+  <noteblock>
+  DGL 推荐使用一个 <note>一维</note> 的整型张量（如，PyTorch 的 <code>Tensor</code> 类，TensorFlow 的 <code>Tensor</code> 类或 MXNet 的 <code>ndarray</code> 类）来保存稀疏矩阵的存储内容。
+  </noteblock>
+
+  <h4 class="title">对输入参数进行整理</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，传入 <code>dgl.graph</code> 的 tuple 类型的参数 <code>data</code> 可以接受以下几种常见格式:
+
+  <ul>
+    <li><code>("coo", torch.tensor, torch.tensor)</code>: 显式指明 COO 的拓扑表示方法，并通过两个 <code>torch.tensor</code> 对象传入拓扑信息;</li>
+    <li><code>("csr", torch.tensor, torch.tensor, torch.tensor)</code>: 显式指明 CSR 的拓扑表示方法，并通过三个 <code>torch.tensor</code> 对象传入拓扑信息;</li>
+    <li><code>("csc", torch.tensor, torch.tensor, torch.tensor)</code>: 显式指明 CSC 的拓扑表示方法，并通过三个 <code>torch.tensor</code> 对象传入拓扑信息;</li>
+    <li><code>(torch.tensor, torch.tensor)</code>: 不指明使用的稀疏矩阵存储方法，会被 DGL 一概当作 COO 格式处理;</li>
+    <li><code>("coo", list, list)</code>: 显式指明使用的稀疏矩阵存储方法，并且通过两个 Python List 传入拓扑信息</li>
+    <li><code>(list, list)</code>: 不指明使用的稀疏矩阵存储方法，会被 DGL 一概当作 COO 格式处理;</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当然，上面举的例子中我们默认使用的 backend 是 PyTorch，DGL 也支持使用 Tensorflow 和 MXNet 作为 backend。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，DGL 还支持基于 <code>networkx</code> 和 <code>scipy</code> 等第三方库的数据作为 <code>dgl.graph</code> 函数的 <code>data</code> 参数。为了应对 <code>data</code> 不同的信息格式，上面的代码在 Line 11 调用了 <code>utils.graphdata2tensors</code> 函数 (i.e. <imgref>codeflow_param</imgref> 中 ①) 对输入的 tuple 进行统一处理，该函数最终返回了以下 4 个信息:
+
+  <ul>
+    <li><code>sparse_fmt</code>: 字符串，代表稀疏矩阵存储格式，可取值有: <code>"coo"</code>, <code>"csc"</code>, <code>"csr"</code>；</li>
+    <li><code>arrays</code>: <code>(torch.tensor, torch.tensor)</code> 的 tuple，代表了在对应的稀疏矩阵存储格式下的图拓扑信息；</li>
+    <li><code>urange</code>: 源节点的个数；</li>
+    <li><code>vrange</code>: 目的节点的个数</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这里使用的 <code>utils.graphdata2tensors</code> 函数是在 <code>dgl/utils/data.py</code> <cite>dglsrc_utils_data_py</cite> 中定义的，代码细节摘抄如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line"></span><br><span class="line">SparseAdjTuple = namedtuple(<span class="string">&#x27;SparseAdjTuple&#x27;</span>, [<span class="string">&#x27;format&#x27;</span>, <span class="string">&#x27;arrays&#x27;</span>])</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">graphdata2tensors</span>(<span class="params">data, idtype=<span class="literal">None</span>, bipartite=<span class="literal">False</span>, **kwargs</span>):</span></span><br><span class="line">  <span class="comment"># 如果 data是一个元组，</span></span><br><span class="line">  <span class="comment"># 那么将 data 元组转化为 (&#x27;coo&#x27;, (row, col)) 或 (&#x27;csr&#x27;, (indptr, indices, eids)) 等形式的 SparseAdjTuple 数据</span></span><br><span class="line">  <span class="keyword">if</span> <span class="built_in">isinstance</span>(data, <span class="built_in">tuple</span>):</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(data[<span class="number">0</span>], <span class="built_in">str</span>):</span><br><span class="line">          <span class="comment"># (row, col) format, convert to (&#x27;coo&#x27;, (row, col))</span></span><br><span class="line">          data = (<span class="string">&#x27;coo&#x27;</span>, data)</span><br><span class="line">      data = SparseAdjTuple(*data)</span><br><span class="line">  </span><br><span class="line">  <span class="comment"># 如果没有传入 idType，并且传入的 tuple 的两个元素不是 tensor 时，强行设置 idtype 为 int64。</span></span><br><span class="line">  <span class="comment"># 否则，在后面的代码中我们会看到：</span></span><br><span class="line">  <span class="comment"># [1] 要么使用传入的 idType;</span></span><br><span class="line">  <span class="comment"># [2] 要么传入的 idType 为空，直接从传入的 tensor tuple 中推理出 idtype</span></span><br><span class="line">  <span class="keyword">if</span> idtype <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">and</span> \</span><br><span class="line">          <span class="keyword">not</span> (<span class="built_in">isinstance</span>(data, SparseAdjTuple) <span class="keyword">and</span> F.is_tensor(data.arrays[<span class="number">0</span>])):</span><br><span class="line">      <span class="comment"># preferred default idtype is int64</span></span><br><span class="line">      <span class="comment"># if data is tensor and idtype is None, infer the idtype from tensor</span></span><br><span class="line">      idtype = F.int64</span><br><span class="line"></span><br><span class="line">  <span class="comment"># 检查 idtype 是否为 None, int32, int64 中的一种</span></span><br><span class="line">  checks.check_valid_idtype(idtype)</span><br><span class="line"></span><br><span class="line">  <span class="comment"># 如果传入的 tutle 的两个元素不是 tensor 时，将 Iterable 的对象转化为 tensor</span></span><br><span class="line">  <span class="comment"># (Iterable, Iterable) type data, convert it to (Tensor, Tensor)</span></span><br><span class="line">  <span class="keyword">if</span> <span class="built_in">isinstance</span>(data, SparseAdjTuple) <span class="keyword">and</span> (<span class="keyword">not</span> <span class="built_in">all</span>(F.is_tensor(a) <span class="keyword">for</span> a <span class="keyword">in</span> data.arrays)):</span><br><span class="line">      <span class="keyword">if</span> <span class="built_in">len</span>(data.arrays[<span class="number">0</span>]) == <span class="number">0</span>:</span><br><span class="line">          <span class="comment"># 如果发现 Iterable 的对象是一个空表，那么我们在将其转化为 tensor 的时候需要强行指定 tensor 的类型</span></span><br><span class="line">          data = SparseAdjTuple(data.<span class="built_in">format</span>, <span class="built_in">tuple</span>(F.tensor(a, idtype) <span class="keyword">for</span> a <span class="keyword">in</span> data.arrays))</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          <span class="comment"># 如果 Iterable 的对象不为空表，那我们保持它原本的类型就行</span></span><br><span class="line">          <span class="comment"># convert the iterable to tensor and keep its native data type so we can check</span></span><br><span class="line">          <span class="comment"># its validity later</span></span><br><span class="line">          data = SparseAdjTuple(data.<span class="built_in">format</span>, <span class="built_in">tuple</span>(F.tensor(a) <span class="keyword">for</span> a <span class="keyword">in</span> data.arrays))</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> <span class="built_in">isinstance</span>(data, SparseAdjTuple):</span><br><span class="line">      <span class="comment"># 如果传入的 idType 不为空，那么将我们创建的 tensor 设置为传入的 idType 指定的类型</span></span><br><span class="line">      <span class="keyword">if</span> idtype <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">          data = SparseAdjTuple(data.<span class="built_in">format</span>, <span class="built_in">tuple</span>(F.astype(a, idtype) <span class="keyword">for</span> a <span class="keyword">in</span> data.arrays))</span><br><span class="line"></span><br><span class="line">      <span class="comment"># 推断图中的源节点和目的节点的数目</span></span><br><span class="line">      num_src, num_dst = infer_num_nodes(data, bipartite=bipartite)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> data, num_src, num_dst</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上所述，<code>graphdata2tensors</code> 的功能是将多种支持的图拓扑数据输入格式，统一为 DGL 底层运行的 Backend (i.e. PyTorch, Tensorflow 和 MXNet) 的 Tensor 类型数据。<code>graphdata2tensors</code> 的 <code>data</code> 输入参数存在很多种可能性，因此程序对各种可能性进行了处理。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，如果传入的 <code>data</code> 是一个 tuple，那么在 Line 6~12 处程序将其转化为了规范化的形如 <code>('coo', (row, col))</code> 或者 <code>('csr', (indptr, indices, eids))</code> 的格式。这里的 <code>row</code> 和 <code>col</code> 数据可能本身传入的就是 Backend 的 Tensor 类型数据，也可能是 Python 原生的 Iterable 对象 (e.g. <code>list</code>)，我们后面需要进行判断和处理。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在进入判断和处理之前，还有一个值得注意的是，在上面代码的 Line 3 中，程序首先借助 Python 官方的 <code>collections</code> 模块 <cite>python_collection_container</cite>，调用其中的 <code>namedtuple</code> 工厂函数，创建了一个元组子类 <code>SparseAdjTuple</code>; 在 Line 12 当我们将这个子类应用于 <code>graphdata2tensors</code> 的输入参数 <code>data</code> 的时候，我们在后续就可以通过 <code>data.format</code> 和 <code>arrays</code> 的方式来访问 <code>data</code> 中的内容。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，在下面的讨论中，我们对于传入的 <code>data</code> 不是一个 tuple 的情况不予以讨论，这种情况下，传入的参数一般是基于 <code>networkx</code> 和 <code>scipy</code> 等第三方库的数据，涉及到第三方库数据像 Backend Tensor 的转化，我们不进行研究。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;来到 Line 18~22 处的代码，这里程序处理的是传入的 <code>idtype</code> —— 也即图拓扑数据中，节点的 Index 的类型。分为两种情况:
+
+  <ul>
+    <li>当发现传入的 <code>idtype</code> 为空，并且传入的 <code>data</code> 中的 <code>row</code> 和 <code>col</code> 不为 Backend 对应的 Tensor 类型的时候，此时程序就需要手动指定 <code>idtype</code>。程序默认使用的是所使用 Backend 所规定的 <code>int64</code> 类型;</li>
+    <li>如果发现虽然传入的 <code>idtype</code> 为空，但是传入的 <code>data</code> 中的 <code>row</code> 和 <code>col</code> 是Backend 对应的 Tensor 类型的时候，此时程序则不着急指定 <code>idtype</code> 类型，因为后续可以直接从 Tensor 中提取出对应的类型。</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;此时来到 Line 29~37 处，此时代码完成了从 Python 原生 Iterable 对象 (e.g. <code>list</code>) 到 Backend Tensor 类型的转化。到了 Line 39~42，代码又强制转化了一下 Tensor 的类型，可能是为了防止用户传入的 Tensor 的数据类型和 <code>idtype</code> 声明的数据类型不匹配的情况。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;到了 Line 45，程序调用了 <code>infer_num_nodes</code> 函数对图中包含的源节点和目的节点的数量进行了判断。 <code>infer_num_nodes</code> 函数是在同个文件下定义的，具体如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">infer_num_nodes</span>(<span class="params">data, bipartite=<span class="literal">False</span></span>):</span></span><br><span class="line">  <span class="string">&quot;&quot;&quot;Function for inferring the number of nodes.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  Parameters</span></span><br><span class="line"><span class="string">  ----------</span></span><br><span class="line"><span class="string">  data : graph data</span></span><br><span class="line"><span class="string">      Supported types are:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">      * SparseTuple ``(sparse_fmt, arrays)`` where ``arrays`` can be either ``(src, dst)`` or</span></span><br><span class="line"><span class="string">        ``(indptr, indices, data)``.</span></span><br><span class="line"><span class="string">      * SciPy matrix.</span></span><br><span class="line"><span class="string">      * NetworkX graph.</span></span><br><span class="line"><span class="string">  bipartite : bool, optional</span></span><br><span class="line"><span class="string">      Whether infer number of nodes of a bipartite graph --</span></span><br><span class="line"><span class="string">      num_src and num_dst can be different.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  Returns</span></span><br><span class="line"><span class="string">  -------</span></span><br><span class="line"><span class="string">  num_src : int</span></span><br><span class="line"><span class="string">      Number of source nodes.</span></span><br><span class="line"><span class="string">  num_dst : int</span></span><br><span class="line"><span class="string">      Number of destination nodes.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  or</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  None</span></span><br><span class="line"><span class="string">      If the inference failed.</span></span><br><span class="line"><span class="string">  &quot;&quot;&quot;</span></span><br><span class="line">  <span class="keyword">if</span> <span class="built_in">isinstance</span>(data, <span class="built_in">tuple</span>) <span class="keyword">and</span> <span class="built_in">len</span>(data) == <span class="number">2</span>:</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(data[<span class="number">0</span>], <span class="built_in">str</span>):</span><br><span class="line">          <span class="keyword">raise</span> TypeError(<span class="string">&#x27;Expected sparse format as a str, but got %s&#x27;</span> % <span class="built_in">type</span>(data[<span class="number">0</span>]))</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> data[<span class="number">0</span>] == <span class="string">&#x27;coo&#x27;</span>:</span><br><span class="line">          <span class="comment"># (&#x27;coo&#x27;, (src, dst)) format</span></span><br><span class="line">          u, v = data[<span class="number">1</span>]</span><br><span class="line">          nsrc = F.as_scalar(F.<span class="built_in">max</span>(u, dim=<span class="number">0</span>)) + <span class="number">1</span> <span class="keyword">if</span> <span class="built_in">len</span>(u) &gt; <span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">          ndst = F.as_scalar(F.<span class="built_in">max</span>(v, dim=<span class="number">0</span>)) + <span class="number">1</span> <span class="keyword">if</span> <span class="built_in">len</span>(v) &gt; <span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">      <span class="keyword">elif</span> data[<span class="number">0</span>] == <span class="string">&#x27;csr&#x27;</span>:</span><br><span class="line">          <span class="comment"># (&#x27;csr&#x27;, (indptr, indices, eids)) format</span></span><br><span class="line">          indptr, indices, _ = data[<span class="number">1</span>]</span><br><span class="line">          nsrc = F.shape(indptr)[<span class="number">0</span>] - <span class="number">1</span></span><br><span class="line">          ndst = F.as_scalar(F.<span class="built_in">max</span>(indices, dim=<span class="number">0</span>)) + <span class="number">1</span> <span class="keyword">if</span> <span class="built_in">len</span>(indices) &gt; <span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">      <span class="keyword">elif</span> data[<span class="number">0</span>] == <span class="string">&#x27;csc&#x27;</span>:</span><br><span class="line">          <span class="comment"># (&#x27;csc&#x27;, (indptr, indices, eids)) format</span></span><br><span class="line">          indptr, indices, _ = data[<span class="number">1</span>]</span><br><span class="line">          ndst = F.shape(indptr)[<span class="number">0</span>] - <span class="number">1</span></span><br><span class="line">          nsrc = F.as_scalar(F.<span class="built_in">max</span>(indices, dim=<span class="number">0</span>)) + <span class="number">1</span> <span class="keyword">if</span> <span class="built_in">len</span>(indices) &gt; <span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          <span class="keyword">raise</span> ValueError(<span class="string">&#x27;unknown format %s&#x27;</span> % data[<span class="number">0</span>])</span><br><span class="line">  <span class="keyword">elif</span> <span class="built_in">isinstance</span>(data, sp.sparse.spmatrix):</span><br><span class="line">      nsrc, ndst = data.shape[<span class="number">0</span>], data.shape[<span class="number">1</span>]</span><br><span class="line">  <span class="keyword">elif</span> <span class="built_in">isinstance</span>(data, nx.Graph):</span><br><span class="line">      <span class="keyword">if</span> data.number_of_nodes() == <span class="number">0</span>:</span><br><span class="line">          nsrc = ndst = <span class="number">0</span></span><br><span class="line">      <span class="keyword">elif</span> <span class="keyword">not</span> bipartite:</span><br><span class="line">          nsrc = ndst = data.number_of_nodes()</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          nsrc = <span class="built_in">len</span>(&#123;n <span class="keyword">for</span> n, d <span class="keyword">in</span> data.nodes(data=<span class="literal">True</span>) <span class="keyword">if</span> d[<span class="string">&#x27;bipartite&#x27;</span>] == <span class="number">0</span>&#125;)</span><br><span class="line">          ndst = data.number_of_nodes() - nsrc</span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">not</span> bipartite:</span><br><span class="line">      nsrc = ndst = <span class="built_in">max</span>(nsrc, ndst)</span><br><span class="line">  <span class="keyword">return</span> nsrc, ndst</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们重点关心上面的代码中是如何推断出各种稀疏矩阵存储格式下，源节点和目的节点的个数的:
+
+  <ul>
+    <li><b>COO</b> (Line 33~37): 源节点的数目取自 <code>row</code> 的最大值; 目的节点的数目取自 <code>col</code> 的最大值;</li>
+    <li><b>CSR</b> (Line 39~42): 源节点的数目取自 <code>indptr</code> 的长度; 目的节点的数目取自 <code>indices</code> 的最大值;</li>
+    <li><b>CSC</b> (Line 44~47): 源节点的数目取自 <code>indptr</code> 的长度; 目的节点的数目取自 <code>indices</code> 的最大值;</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，源节点和目的节点的数量并不代表图中的点的数量，因为图中可能有孤立点。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到 <code>graphdata2tensors</code> 函数，在获得源节点和目的节点的数量后，函数将转化好的 Tensor 一并打包，进行返回 (i.e. <imgref>codeflow_param</imgref> 中 ②)。
+
+  <h4 class="title">处理节点数量</h4>
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">graph</span>(<span class="params">data,</span></span></span><br><span class="line"><span class="function"><span class="params">      ntype=<span class="literal">None</span>, etype=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">      *,</span></span></span><br><span class="line"><span class="function"><span class="params">      num_nodes=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">      idtype=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">      device=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">      row_sorted=<span class="literal">False</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">      col_sorted=<span class="literal">False</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">      **deprecated_kwargs</span>):</span></span><br><span class="line">  (sparse_fmt, arrays), urange, vrange = utils.graphdata2tensors(data, idtype)</span><br><span class="line">  <span class="keyword">if</span> num_nodes <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:  <span class="comment"># override the number of nodes</span></span><br><span class="line">      <span class="keyword">if</span> num_nodes &lt; <span class="built_in">max</span>(urange, vrange):</span><br><span class="line">          <span class="keyword">raise</span> DGLError(<span class="string">&#x27;The num_nodes argument must be larger than the max ID in the data,&#x27;</span></span><br><span class="line">                        <span class="string">&#x27; but got &#123;&#125; and &#123;&#125;.&#x27;</span>.<span class="built_in">format</span>(num_nodes, <span class="built_in">max</span>(urange, vrange) - <span class="number">1</span>))</span><br><span class="line">      urange, vrange = num_nodes, num_nodes</span><br><span class="line">  <span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到 <code>dgl.graph</code> 函数，我们上面讨论的 <code>graphdata2tensors</code> 函数返回了稀疏矩阵格式、Tensors，以及源节点和目的节点。返回后程序的第一件事就是对源节点和目的节点的范围进行重新调整，如上 Line 11~15 所示。我们上面提到过，源节点和目的节点的数量并不代表图中的点的数量，因为图中可能有孤立点，因此上述程序对源节点和目的节点的数量进行了调整。
+
+  <h4 class="title">创建 <code>DGLHeteroGraph</code> 实例</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;继续 <code>dgl.graph</code> 函数，完成节点数量的调整后，其在 Line 18 处其调用了位于同一个文件 <code>dgl/convert.py</code> <cite>dglsrc_convert_py</cite> 下定义的 <code>dgl.create_from_edges</code> 函数 (i.e. <imgref>codeflow_param</imgref> 中 ②)，基于已知的关于图拓扑的信息，创建出一个 <code>DGLHeteroGraph</code> 实例，该函数的代码细节如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_from_edges</span>(<span class="params">sparse_fmt, arrays,</span></span></span><br><span class="line"><span class="function"><span class="params">                    utype, etype, vtype,</span></span></span><br><span class="line"><span class="function"><span class="params">                    urange, vrange,</span></span></span><br><span class="line"><span class="function"><span class="params">                    row_sorted=<span class="literal">False</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                    col_sorted=<span class="literal">False</span></span>):</span></span><br><span class="line">  <span class="keyword">if</span> utype == vtype:</span><br><span class="line">      num_ntypes = <span class="number">1</span></span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">      num_ntypes = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> sparse_fmt == <span class="string">&#x27;coo&#x27;</span>:</span><br><span class="line">      u, v = arrays</span><br><span class="line">      hgidx = heterograph_index.create_unitgraph_from_coo(</span><br><span class="line">          num_ntypes, urange, vrange, u, v, [<span class="string">&#x27;coo&#x27;</span>, <span class="string">&#x27;csr&#x27;</span>, <span class="string">&#x27;csc&#x27;</span>],</span><br><span class="line">          row_sorted, col_sorted)</span><br><span class="line">  <span class="keyword">else</span>:   <span class="comment"># &#x27;csr&#x27; or &#x27;csc&#x27;</span></span><br><span class="line">      indptr, indices, eids = arrays</span><br><span class="line">      hgidx = heterograph_index.create_unitgraph_from_csr(</span><br><span class="line">          num_ntypes, urange, vrange, indptr, indices, eids, [<span class="string">&#x27;coo&#x27;</span>, <span class="string">&#x27;csr&#x27;</span>, <span class="string">&#x27;csc&#x27;</span>],</span><br><span class="line">          sparse_fmt == <span class="string">&#x27;csc&#x27;</span>)</span><br><span class="line">  <span class="keyword">if</span> utype == vtype:</span><br><span class="line">      <span class="keyword">return</span> DGLHeteroGraph(hgidx, [utype], [etype])</span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">      <span class="keyword">return</span> DGLHeteroGraph(hgidx, [utype, vtype], [etype])</span><br></pre></td></tr></table></figure>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Line 6-9 中，函数首先对传入的 <code>utype</code> (源节点类型) 和 <code>vtype</code> (目的节点类型) 进行一致性判断，从而得出图中节点种类数 <code>num_ntypes</code>。在一个 Unit Graph 中，要么点的种类有两种 (i.e., 有向图)，要么点的种类有一种 (i.e., 无向图)，因此这里的 <code>num_ntypes</code> 的取值范围为 1 或者 2。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在这里调用的 <code>DGLGraph</code> API，在调用 <code>create_from_edges</code> 的时候，传入的 <code>utype</code> 和 <code>vtype</code> 是相同的值 <code>_N</code>，因此 <code>num_ntypes</code> 的取值为 1。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后，在 Line 11-20 中，基于稀疏矩阵存储格式的不同，分别调用了 <code>create_unitgraph_from_coo</code> 或者 <code>create_unitgraph_from_csr</code> 函数 (i.e. <imgref>codeflow_param</imgref> 中 ③)，这两个函数是在 <code>dgl/heterograph_index.py</code> <cite>dglsrc_heterograph_index_py</cite> 中定义的。以前者为例，我们来看其详细定义:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_unitgraph_from_coo</span>(<span class="params">num_ntypes, num_src, num_dst, row, col,</span></span></span><br><span class="line"><span class="function"><span class="params">                            formats, row_sorted=<span class="literal">False</span>, col_sorted=<span class="literal">False</span></span>):</span></span><br><span class="line">  <span class="string">&quot;&quot;&quot;Create a unitgraph graph index from COO format</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  Parameters</span></span><br><span class="line"><span class="string">  ----------</span></span><br><span class="line"><span class="string">  num_ntypes : int</span></span><br><span class="line"><span class="string">      Number of node types (must be 1 or 2).</span></span><br><span class="line"><span class="string">  num_src : int</span></span><br><span class="line"><span class="string">      Number of nodes in the src type.</span></span><br><span class="line"><span class="string">  num_dst : int</span></span><br><span class="line"><span class="string">      Number of nodes in the dst type.</span></span><br><span class="line"><span class="string">  row : utils.Index</span></span><br><span class="line"><span class="string">      Row index.</span></span><br><span class="line"><span class="string">  col : utils.Index</span></span><br><span class="line"><span class="string">      Col index.</span></span><br><span class="line"><span class="string">  formats : list of str.</span></span><br><span class="line"><span class="string">      Restrict the storage formats allowed for the unit graph.</span></span><br><span class="line"><span class="string">  row_sorted : bool, optional</span></span><br><span class="line"><span class="string">      Whether or not the rows of the COO are in ascending order.</span></span><br><span class="line"><span class="string">  col_sorted : bool, optional</span></span><br><span class="line"><span class="string">      Whether or not the columns of the COO are in ascending order within</span></span><br><span class="line"><span class="string">      each row. This only has an effect when ``row_sorted`` is True.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  Returns</span></span><br><span class="line"><span class="string">  -------</span></span><br><span class="line"><span class="string">  HeteroGraphIndex</span></span><br><span class="line"><span class="string">  &quot;&quot;&quot;</span></span><br><span class="line">  <span class="keyword">if</span> <span class="built_in">isinstance</span>(formats, <span class="built_in">str</span>):</span><br><span class="line">      formats = [formats]</span><br><span class="line">  <span class="keyword">return</span> _CAPI_DGLHeteroCreateUnitGraphFromCOO(</span><br><span class="line">      <span class="built_in">int</span>(num_ntypes), <span class="built_in">int</span>(num_src), <span class="built_in">int</span>(num_dst),</span><br><span class="line">      F.to_dgl_nd(row), F.to_dgl_nd(col),</span><br><span class="line">      formats, row_sorted, col_sorted)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;函数 <code>create_unitgraph_from_coo</code> 的传入参数的含义如下所示:
+
+  <ul>
+    <li><code>num_ntypes</code>: Unit Graph 上点的种类数 (i.e. 1 或 2)；</li>
+    <li><code>num_src</code>: 源节点的数量；</li>
+    <li><code>num_dst</code>: 目的节点的数量；</li>
+    <li><code>row</code>: 以 COO 形式存储的 Row Index；</li>
+    <li><code>col</code>: 以 COO 形式存储的 Column Index；</li>
+    <li><code>formats</code>: 一个列表，限制了底层 Unit Graph 存储时使用的矩阵存储形式 (i.e., COO, CSR 和 CSC)。用户传入的 <code>row</code> 和 <code>col</code> 拓扑信息是使用 COO 形式指定的，但是 DGL 在底层转换为 Unit Graph 存储的时候，可以使用其他的格式；</li>
+    <li><code>row_sorted</code>: 布尔变量，标识 <code>row</code> 是否进行了排序；</li>
+    <li><code>col_sorted</code>: 布尔变量，标识 <code>col</code> 是否进行了排序；</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;从 <code>create_unitgraph_from_coo</code> 的代码可以发现，<code>create_unitgraph_from_coo</code> 函数实际上调用了动态链接库中的 <code>_CAPI_DGLHeteroCreateUnitGraphFromCOO</code> 函数。在 <a href="/sec_learning/Algorithm/GNN_DGL_Python_Cpp_Calling/index.html">源码解析：借鉴 TVM 的 Python 和 C++ 的调用机制</a> 一文中我们分析过 DGL 是如何基于 TVM 的 FFI 机制实现 Python 运行时对动态链接库中封装的 API 的调用，我们在这里不再过多赘述。简单来说就是在当前我们分析的 <code>create_unitgraph_from_coo</code> 函数所在的 <code>dgl/heterograph_index.py</code> <cite>dglsrc_heterograph_index_py</cite> 文件中，有以下代码:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ._ffi.function <span class="keyword">import</span> _init_api</span><br><span class="line"></span><br><span class="line"><span class="comment"># ......</span></span><br><span class="line"></span><br><span class="line">_init_api(<span class="string">&quot;dgl.heterograph_index&quot;</span>)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>_init_api</code> 的调用使得当前模块拥有了所有的以 <code>dgl.heterograph_index</code> 为前缀的动态链接库中的 API，其中就包括了我们在这里调用的 <code>_CAPI_DGLHeteroCreateUnitGraphFromCOO</code>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，值得注意的是，<code>create_unitgraph_from_coo</code> 在调用 <code>_CAPI_DGLHeteroCreateUnitGraphFromCOO</code> 的时候，对于第 4 和第 5 个参数，它使用了我们在 <a href="/sec_learning/Algorithm/GNN_DGL_Memory_Management/index.html">源码解析：DGL 的内存管理方法</a> 中介绍的 <code>F.to_dgl_nd</code> API 实现了 PyTorch Tensor 到 DGL <code>NDArray</code> 的转化。
+
+  <h3 class="title">动态链接库侧 Runtime 创建图拓扑实例</h3>
+
+  <div class="img" title="创建和维护图拓扑的代码流程" label="codeflow_dll">
+    <img src="./pic/codeflow_dll.png" width="90%"/>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在让我们来看动态链接库中关于 <code>_CAPI_DGLHeteroCreateUnitGraphFromCOO</code> 这个函数的定义，这个函数是在 <code>src/graph/heterograph_capi.cc</code> <cite>dglsrc_src_graph_heterograph_capi_cc</cite> 中被定义的，如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">DGL_REGISTER_GLOBAL(<span class="string">&quot;heterograph_index._CAPI_DGLHeteroCreateUnitGraphFromCOO&quot;</span>)</span><br><span class="line">.set_body([] (DGLArgs args, DGLRetValue* rv) &#123;</span><br><span class="line">    <span class="keyword">int64_t</span> nvtypes = args[<span class="number">0</span>];        <span class="comment">// 节点种类数</span></span><br><span class="line">    <span class="keyword">int64_t</span> num_src = args[<span class="number">1</span>];        <span class="comment">// 源节点个数</span></span><br><span class="line">    <span class="keyword">int64_t</span> num_dst = args[<span class="number">2</span>];        <span class="comment">// 目的节点个数</span></span><br><span class="line">    IdArray row = args[<span class="number">3</span>];            <span class="comment">// Row Index</span></span><br><span class="line">    IdArray col = args[<span class="number">4</span>];            <span class="comment">// Col Index</span></span><br><span class="line">    List&lt;Value&gt; formats = args[<span class="number">5</span>];    <span class="comment">// Unit Graph 的可用存储格式列表</span></span><br><span class="line">    <span class="keyword">bool</span> row_sorted = args[<span class="number">6</span>];</span><br><span class="line">    <span class="keyword">bool</span> col_sorted = args[<span class="number">7</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取代表 Unit Graph 底层存储形式的 code</span></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;SparseFormat&gt; formats_vec;</span><br><span class="line">    <span class="keyword">for</span> (Value val : formats) &#123;</span><br><span class="line">      <span class="built_in">std</span>::<span class="built_in">string</span> fmt = val-&gt;data;</span><br><span class="line">      formats_vec.push_back(ParseSparseFormat(fmt));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">auto</span> code = SparseFormatsToCode(formats_vec);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在底层创建 Unit Graph</span></span><br><span class="line">    <span class="keyword">auto</span> hgptr = CreateFromCOO(nvtypes, num_src, num_dst, row, col,</span><br><span class="line">        row_sorted, col_sorted, code);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回底层 Unit Graph 的指针</span></span><br><span class="line">    *rv = HeteroGraphRef(hgptr);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上面的代码中，<code>_CAPI_DGLHeteroCreateUnitGraphFromCOO</code> 首先对传入的 Unit Graph 的存储格式列表进行了整理，然后生成了指定存储格式的 <code>code</code> 变量。接着在 Line 21 调用了在 <code>rc/graph/creators.cc</code> <cite>dglsrc_src_graph_creators_cc</cite> 中定义的函数 <code>CreateFromCOO</code> (i.e. <imgref>codeflow_dll</imgref> 中 ①)，该函数的定义如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HeteroGraphPtr <span class="title">CreateFromCOO</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">int64_t</span> num_vtypes, <span class="keyword">int64_t</span> num_src, <span class="keyword">int64_t</span> num_dst,</span></span></span><br><span class="line"><span class="function"><span class="params">    IdArray row, IdArray col,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">bool</span> row_sorted, <span class="keyword">bool</span> col_sorted, <span class="keyword">dgl_format_code_t</span> formats)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">auto</span> unit_g = UnitGraph::CreateFromCOO(</span><br><span class="line">      num_vtypes, num_src, num_dst, row, col, row_sorted, col_sorted, formats);</span><br><span class="line">  <span class="keyword">return</span> HeteroGraphPtr(<span class="keyword">new</span> HeteroGraph(unit_g-&gt;meta_graph(), &#123;unit_g&#125;));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以发现，<code>CreateFromCOO</code> 实际上调用了 <code>UnitCOO</code> 类的 <code>CreateFromCOO</code> 方法 (i.e. <imgref>codeflow_dll</imgref> 中 ②)，该方法在 <code>dgl/src/graph/unit_graph.cc</code> <cite>dglsrc_src_graph_unit_graph_cc</cite> 中进行了定义，如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HeteroGraphPtr <span class="title">UnitGraph::CreateFromCOO</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">int64_t</span> num_vtypes, <span class="keyword">int64_t</span> num_src, <span class="keyword">int64_t</span> num_dst,</span></span></span><br><span class="line"><span class="function"><span class="params">    IdArray row, IdArray col,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">bool</span> row_sorted, <span class="keyword">bool</span> col_sorted,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">dgl_format_code_t</span> formats)</span> </span>&#123;</span><br><span class="line">  CHECK(num_vtypes == <span class="number">1</span> || num_vtypes == <span class="number">2</span>);</span><br><span class="line">  <span class="keyword">if</span> (num_vtypes == <span class="number">1</span>)</span><br><span class="line">    CHECK_EQ(num_src, num_dst);</span><br><span class="line">  <span class="keyword">auto</span> mg = CreateUnitGraphMetaGraph(num_vtypes);</span><br><span class="line">  <span class="function">COOPtr <span class="title">coo</span><span class="params">(<span class="keyword">new</span> COO(mg, num_src, num_dst, row, col,</span></span></span><br><span class="line"><span class="function"><span class="params">      row_sorted, col_sorted))</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> HeteroGraphPtr(</span><br><span class="line">      <span class="keyword">new</span> UnitGraph(mg, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, coo, formats));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">HeteroGraphPtr <span class="title">UnitGraph::CreateFromCOO</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">int64_t</span> num_vtypes, <span class="keyword">const</span> aten::COOMatrix&amp; mat,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">dgl_format_code_t</span> formats)</span> </span>&#123;</span><br><span class="line">  CHECK(num_vtypes == <span class="number">1</span> || num_vtypes == <span class="number">2</span>);</span><br><span class="line">  <span class="keyword">if</span> (num_vtypes == <span class="number">1</span>)</span><br><span class="line">    CHECK_EQ(mat.num_rows, mat.num_cols);</span><br><span class="line">  <span class="keyword">auto</span> mg = CreateUnitGraphMetaGraph(num_vtypes);</span><br><span class="line">  <span class="function">COOPtr <span class="title">coo</span><span class="params">(<span class="keyword">new</span> COO(mg, mat))</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> HeteroGraphPtr(</span><br><span class="line">    <span class="keyword">new</span> UnitGraph(mg, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, coo, formats));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在确认 <code>num_vtypes</code>、<code>num_src</code> 和 <code>num_dst</code> 三者的数值关系无误后，Line 9 调用了 <code>CreateUnitGraphMetaGraph</code> 函数 (i.e. <imgref>codeflow_dll</imgref> 中 ③)，以基于图中点的种类数 <code>num_vtypes</code> 创建当前 Unit Graph 的 MetaGraph。回顾我们在 <ref>metagraph</ref> 中提到的，对于 Unit Graph 来说，其 Meta Graph 的形式只有两种情况。下面让我们来看 <code>CreateUnitGraphMetaGraph</code> 的具体定义，它位于 <code>src/graph/unit_graph.cc</code> <cite>dglsrc_src_graph_unit_graph_cc</cite> 中。
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> GraphPtr <span class="title">CreateUnitGraphMetaGraph</span><span class="params">(<span class="keyword">int</span> num_vtypes)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> GraphPtr mg1 = CreateUnitGraphMetaGraph1();</span><br><span class="line">  <span class="keyword">static</span> GraphPtr mg2 = CreateUnitGraphMetaGraph2();</span><br><span class="line">  <span class="keyword">if</span> (num_vtypes == <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> mg1;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span> (num_vtypes == <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">return</span> mg2;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    LOG(FATAL) &lt;&lt; <span class="string">&quot;Invalid number of vertex types. Must be 1 or 2.&quot;</span>;</span><br><span class="line">  <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// create metagraph of one node type</span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> GraphPtr <span class="title">CreateUnitGraphMetaGraph1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="comment">// a self-loop edge 0-&gt;0</span></span><br><span class="line">  <span class="function"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int64_t</span>&gt; <span class="title">row_vec</span><span class="params">(<span class="number">1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">  <span class="function"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int64_t</span>&gt; <span class="title">col_vec</span><span class="params">(<span class="number">1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">  IdArray row = aten::VecToIdArray(row_vec);</span><br><span class="line">  IdArray col = aten::VecToIdArray(col_vec);</span><br><span class="line">  GraphPtr g = ImmutableGraph::CreateFromCOO(<span class="number">1</span>, row, col);</span><br><span class="line">  <span class="keyword">return</span> g;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// create metagraph of two node types</span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> GraphPtr <span class="title">CreateUnitGraphMetaGraph2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="comment">// an edge 0-&gt;1</span></span><br><span class="line">  <span class="function"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int64_t</span>&gt; <span class="title">row_vec</span><span class="params">(<span class="number">1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">  <span class="function"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int64_t</span>&gt; <span class="title">col_vec</span><span class="params">(<span class="number">1</span>, <span class="number">1</span>)</span></span>;</span><br><span class="line">  IdArray row = aten::VecToIdArray(row_vec);</span><br><span class="line">  IdArray col = aten::VecToIdArray(col_vec);</span><br><span class="line">  GraphPtr g = ImmutableGraph::CreateFromCOO(<span class="number">2</span>, row, col);</span><br><span class="line">  <span class="keyword">return</span> g;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以发现，<code>CreateUnitGraphMetaGraph</code> 根据 <code>num_vtypes</code> 为 1 或 2 的情况，分别调用 <code>CreateUnitGraphMetaGraph1</code> 或 <code>CreateUnitGraphMetaGraph2</code>，以分别创建带有 1 个或 2 个点的 Meta Graph，Meta Graph 是使用基于 COO 格式的 <code>ImmutableGraph</code> 表示的。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外值得注意的是，在上面代码的 Line 2~3 中，我们可以发现 <code>CreateUnitGraphMetaGraph</code> 是以 <code>static</code> 的方式创建这两种情况的 Meta Graph，然后根据 <code>num_vtypes</code> 的值返回对应的 Meta Graph 实例。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到 <code>UnitGraph::CreateFromCOO</code> 函数 (i.e. <imgref>codeflow_dll</imgref> 中 ④)，在获得 Meta Graph 后，在 Line 10 (Line 24) 基于该 Meta Graph 创建了一个 <code>UnitGraph::COO</code> 类，函数最后在 Line 13~14 (Line 26~27) 基于 Meta Graph 和新创建的 <code>UnitGraph::COO</code> 类，创建了 <code>UnitGraph</code> 类，并返回。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成 <code>UnitGraph</code> 的创建后，<code>CreateFromCOO</code> 基于此创建了 <code>HeteroGraph</code> 实例 (i.e. <imgref>codeflow_dll</imgref> 中 ⑤)，并返回。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最终，最外层的函数 <code>_CAPI_DGLHeteroCreateUnitGraphFromCOO</code> 在拿到 <code>HeteroGraph</code> 实例后 (i.e. <imgref>codeflow_dll</imgref> 中 ⑥)，将该实例作为该 C++ API 的返回值进行返回。
+
+  <div class="img" title="创建的图拓扑的表示形式">
+    <img src="./pic/hete_graph.png" width="400px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;总结来说，在动态链接库 Runtime 侧创建的图拓扑表示形式可以总结为上图。
+
+  <h3 class="title">Python 侧后续处理</h3>
+
+  <div class="img" title="处理用户侧传入参数的代码流程" label="codeflow_param_2">
+    <img src="./pic/codeflow_param.png" width="90%"/>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 Runtime 中完成图拓扑的创建后，让我们回到 Python 侧程序。为了查看方便，上图 <imgref>codeflow_param_2</imgref> 是 <imgref>codeflow_param</imgref> 的一份拷贝。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;DGL 在 Python 侧使用 <code>HeteroGraphIndex</code> 对 Runtime 侧返回的 <code>HeteroGraph</code> 进行封装，这个类是在 <code>python/dgl/heterograph_index.py</code><cite>dglsrc_heterograph_index_py</cite> 中定义的。这个类中对 Runtime 侧的 <code>HeteroGraph</code> 类的部分公有成员函数进行了封装。
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_from_edges</span>(<span class="params">sparse_fmt, arrays,</span></span></span><br><span class="line"><span class="function"><span class="params">                      utype, etype, vtype,</span></span></span><br><span class="line"><span class="function"><span class="params">                      urange, vrange,</span></span></span><br><span class="line"><span class="function"><span class="params">                      row_sorted=<span class="literal">False</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                      col_sorted=<span class="literal">False</span></span>):</span></span><br><span class="line">    <span class="keyword">if</span> utype == vtype:</span><br><span class="line">        num_ntypes = <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        num_ntypes = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> sparse_fmt == <span class="string">&#x27;coo&#x27;</span>:</span><br><span class="line">        u, v = arrays</span><br><span class="line">        hgidx = heterograph_index.create_unitgraph_from_coo(</span><br><span class="line">            num_ntypes, urange, vrange, u, v, [<span class="string">&#x27;coo&#x27;</span>, <span class="string">&#x27;csr&#x27;</span>, <span class="string">&#x27;csc&#x27;</span>],</span><br><span class="line">            row_sorted, col_sorted)</span><br><span class="line">    <span class="keyword">else</span>:   <span class="comment"># &#x27;csr&#x27; or &#x27;csc&#x27;</span></span><br><span class="line">        indptr, indices, eids = arrays</span><br><span class="line">        hgidx = heterograph_index.create_unitgraph_from_csr(</span><br><span class="line">            num_ntypes, urange, vrange, indptr, indices, eids, [<span class="string">&#x27;coo&#x27;</span>, <span class="string">&#x27;csr&#x27;</span>, <span class="string">&#x27;csc&#x27;</span>],</span><br><span class="line">            sparse_fmt == <span class="string">&#x27;csc&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> utype == vtype:</span><br><span class="line">        <span class="keyword">return</span> DGLHeteroGraph(hgidx, [utype], [etype])</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> DGLHeteroGraph(hgidx, [utype, vtype], [etype])</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到 <code>create_from_edges</code> 函数 (i.e. <imgref>codeflow_param_2</imgref> 中 ④)，如上代码所示，在将来自动态链接库 Runtime 侧的异构图实例封装为 <code>HeteroGraphIndex</code> 后，基于此实例化了一个 <code>DGLHeteroGraph</code> 类，<code>DGLHeteroGraph</code> 类的成员变量 <code>_graph</code> 用于存储该 <code>HeteroGraphIndex</code>。
+</div>
+
+<h2 class="title">创建异构图</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面我们分析了创建同构图的流程，下面我们对创建异构图的流程进行分析。DGL 使用 <code>dgl.heterograph</code> API 构建一个异构图。如下所示，该 API 传入的参数是一个字典，字典的 Key 值代表了一个 Unit Graph 所对应的关系，也即 <code>(Source Type, Edge Type, Destination Type)</code>；字典的 Value 值代表了该 Unit Graph 的拓扑。
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> dgl</span><br><span class="line"><span class="keyword">import</span> torch <span class="keyword">as</span> th</span><br><span class="line"></span><br><span class="line">graph_data = &#123;</span><br><span class="line">    (<span class="string">&#x27;drug&#x27;</span>, <span class="string">&#x27;interacts&#x27;</span>, <span class="string">&#x27;drug&#x27;</span>): (th.tensor([<span class="number">0</span>, <span class="number">1</span>]), th.tensor([<span class="number">1</span>, <span class="number">2</span>])),</span><br><span class="line">    (<span class="string">&#x27;drug&#x27;</span>, <span class="string">&#x27;interacts&#x27;</span>, <span class="string">&#x27;gene&#x27;</span>): (th.tensor([<span class="number">0</span>, <span class="number">1</span>]), th.tensor([<span class="number">2</span>, <span class="number">3</span>])),</span><br><span class="line">    (<span class="string">&#x27;drug&#x27;</span>, <span class="string">&#x27;treats&#x27;</span>, <span class="string">&#x27;disease&#x27;</span>): (th.tensor([<span class="number">1</span>]), th.tensor([<span class="number">2</span>]))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">g = dgl.heterograph(graph_data)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们将对异构图的创建流程进行分析，<imgref>codeflow_hetero</imgref> 展示了代码流程。
+
+  <div class="img" title="异构图创建流程" label="codeflow_hetero">
+    <img src="./pic/codeflow_heterograph.png" width="90%"/>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>dgl.heterograph</code> 是在 <code>python/dgl/convert.py</code><cite>dglsrc_convert_py</cite> 中定义的，定义如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">heterograph</span>(<span class="params">data_dict,</span></span></span><br><span class="line"><span class="function"><span class="params">                num_nodes_dict=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                idtype=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                device=<span class="literal">None</span></span>):</span></span><br><span class="line">    <span class="comment"># Convert all data to node tensors first</span></span><br><span class="line">    node_tensor_dict = &#123;&#125;</span><br><span class="line">    need_infer = num_nodes_dict <span class="keyword">is</span> <span class="literal">None</span></span><br><span class="line">    <span class="keyword">if</span> num_nodes_dict <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        num_nodes_dict = defaultdict(<span class="built_in">int</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 整理用户输入的各个字典</span></span><br><span class="line">    <span class="keyword">for</span> (sty, ety, dty), data <span class="keyword">in</span> data_dict.items():</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(data, spmatrix):</span><br><span class="line">            <span class="keyword">raise</span> DGLError(<span class="string">&quot;dgl.heterograph no longer supports graph construction from a SciPy &quot;</span></span><br><span class="line">                          <span class="string">&quot;sparse matrix, use dgl.from_scipy instead.&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(data, nx.Graph):</span><br><span class="line">            <span class="keyword">raise</span> DGLError(<span class="string">&quot;dgl.heterograph no longer supports graph construction from a NetworkX &quot;</span></span><br><span class="line">                          <span class="string">&quot;graph, use dgl.from_networkx instead.&quot;</span>)</span><br><span class="line">        is_bipartite = (sty != dty)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 调用 graphdata2tensors 获得对应 Unit Graph 的信息</span></span><br><span class="line">        (sparse_fmt, arrays), urange, vrange = utils.graphdata2tensors(</span><br><span class="line">            data, idtype, bipartite=is_bipartite)</span><br><span class="line">        node_tensor_dict[(sty, ety, dty)] = (sparse_fmt, arrays)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 获取以各个类型为源/目的节点的数量信息</span></span><br><span class="line">        <span class="keyword">if</span> need_infer:</span><br><span class="line">            num_nodes_dict[sty] = <span class="built_in">max</span>(num_nodes_dict[sty], urange)</span><br><span class="line">            num_nodes_dict[dty] = <span class="built_in">max</span>(num_nodes_dict[dty], vrange)</span><br><span class="line">        <span class="keyword">else</span>:  <span class="comment"># sanity check</span></span><br><span class="line">            <span class="keyword">if</span> num_nodes_dict[sty] &lt; urange:</span><br><span class="line">                <span class="keyword">raise</span> DGLError(<span class="string">&#x27;The given number of nodes of node type &#123;&#125; must be larger than&#x27;</span></span><br><span class="line">                              <span class="string">&#x27; the max ID in the data, but got &#123;&#125; and &#123;&#125;.&#x27;</span>.<span class="built_in">format</span>(</span><br><span class="line">                                  sty, num_nodes_dict[sty], urange - <span class="number">1</span>))</span><br><span class="line">            <span class="keyword">if</span> num_nodes_dict[dty] &lt; vrange:</span><br><span class="line">                <span class="keyword">raise</span> DGLError(<span class="string">&#x27;The given number of nodes of node type &#123;&#125; must be larger than&#x27;</span></span><br><span class="line">                              <span class="string">&#x27; the max ID in the data, but got &#123;&#125; and &#123;&#125;.&#x27;</span>.<span class="built_in">format</span>(</span><br><span class="line">                                  dty, num_nodes_dict[dty], vrange - <span class="number">1</span>))</span><br><span class="line">    <span class="comment"># Create the graph</span></span><br><span class="line">    metagraph, ntypes, etypes, relations = heterograph_index.create_metagraph_index(</span><br><span class="line">        num_nodes_dict.keys(), node_tensor_dict.keys())</span><br><span class="line">    num_nodes_per_type = utils.toindex([num_nodes_dict[ntype] <span class="keyword">for</span> ntype <span class="keyword">in</span> ntypes], <span class="string">&quot;int64&quot;</span>)</span><br><span class="line">    rel_graphs = []</span><br><span class="line">    <span class="keyword">for</span> srctype, etype, dsttype <span class="keyword">in</span> relations:</span><br><span class="line">        sparse_fmt, arrays = node_tensor_dict[(srctype, etype, dsttype)]</span><br><span class="line">        g = create_from_edges(sparse_fmt, arrays, srctype, etype, dsttype,</span><br><span class="line">                              num_nodes_dict[srctype], num_nodes_dict[dsttype])</span><br><span class="line">        rel_graphs.append(g)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># create graph index</span></span><br><span class="line">    hgidx = heterograph_index.create_heterograph_from_relations(</span><br><span class="line">        metagraph, [rgrh._graph <span class="keyword">for</span> rgrh <span class="keyword">in</span> rel_graphs], num_nodes_per_type)</span><br><span class="line">    retg = DGLHeteroGraph(hgidx, ntypes, etypes)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> retg.to(device)</span><br></pre></td></tr></table></figure>
+  <h3 class="title">整理用户输入数据</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;针对字典中的各个 Unit Graph，函数首先调用了 <code>utils.graphdata2tensors</code> 函数来整理各个 Unit Graph 的信息 (<imgref>codeflow_hetero</imgref> 中 ①)，以获取拓扑表示的格式，以及对应的拓扑，该函数我们在上面进行了介绍，这里不再赘述。被处理好的各个 Unit Graph 的信息，被放入字典 <code>node_tensor_dict</code> 和 <code>num_nodes_dict</code> 中，它们的功能和格式分别如下:
+
+  <div class="table" title="两个字典的功能">
+  <table>
+    <tr>
+      <th align="center">字典</th>
+      <th align="center">形式</th>
+      <th align="center">功能</th>
+    </tr>
+    <tr>
+      <td><code>node_tensor_dict</code></td>
+      <td><code>&#123;(sty,ety,dty): (sparse_fmt, arrays)&#125;</code></td>
+      <td>记录每一个 Unit Graph 的拓扑信息</td>
+    </tr>
+    <tr>
+      <td><code>num_nodes_dict</code></td>
+      <td><code>&#123;ty: number&#125;</code></td>
+      <td>记录每一种类型的节点的数量</td>
+    </tr>
+  </table>
+  </div>
+
+  <h3 class="title">创建 Meta Graph</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成对输入字典的整理后，基于 <code>node_tensor_dict</code> 和 <code>num_nodes_dict</code> 两个字典，进一步调用了在 <code>python/dgl/heterograph_index.py</code><cite>dglsrc_heterograph_index_py</cite> 中定义的 <code>create_metagraph_index</code> 函数 (<imgref>codeflow_hetero</imgref> 中 ②)，用于创建当前异构图的 Meta Graph。具体定义如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_metagraph_index</span>(<span class="params">ntypes, canonical_etypes</span>):</span></span><br><span class="line">  ntypes = <span class="built_in">list</span>(<span class="built_in">sorted</span>(ntypes))</span><br><span class="line">  relations = <span class="built_in">list</span>(<span class="built_in">sorted</span>(canonical_etypes))</span><br><span class="line">  ntype_dict = &#123;ntype: i <span class="keyword">for</span> i, ntype <span class="keyword">in</span> <span class="built_in">enumerate</span>(ntypes)&#125;</span><br><span class="line">  meta_edges_src = []</span><br><span class="line">  meta_edges_dst = []</span><br><span class="line">  etypes = []</span><br><span class="line">  <span class="keyword">for</span> srctype, etype, dsttype <span class="keyword">in</span> relations:</span><br><span class="line">      meta_edges_src.append(ntype_dict[srctype])</span><br><span class="line">      meta_edges_dst.append(ntype_dict[dsttype])</span><br><span class="line">      etypes.append(etype)</span><br><span class="line">  <span class="comment"># metagraph is DGLGraph, currently still using int64 as index dtype</span></span><br><span class="line">  metagraph = from_coo(<span class="built_in">len</span>(ntypes), meta_edges_src, meta_edges_dst, <span class="literal">True</span>)</span><br><span class="line">  <span class="keyword">return</span> metagraph, ntypes, etypes, relations</span><br></pre></td></tr></table></figure>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>create_metagraph_index</code> 首先对节点的类型进行了排序，存储在 <code>ntypes</code> 中，以及对点之间的关系进行了排序，存储在 <code>relation</code> 中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;接着，<code>create_metagraph_index</code> 对传入的节点类型 <code>ntypes</code> 以及所有的边类型 <code>canonical_etypes</code> 进行处理: 在 Line 4 先将节点类型转化为具体的数字 index，然后在 Line 5~11 使用转化好的数字 index 来记录所有的边类型。并把各种类型的边类型记录在 <code>etypes</code> 中。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;随后，<code>create_metagraph_index</code> 在 Line 13 调用了在 <code>python/dgl/graph_index</code> <cite>dglsrc_python_dgl_graph_index_py</cite> 中定义的函数 <code>from_coo</code> (<imgref>codeflow_hetero</imgref> 中 ③)，该函数定义如下:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">from_coo</span>(<span class="params">num_nodes, src, dst, readonly</span>):</span></span><br><span class="line">  src = utils.toindex(src)</span><br><span class="line">  dst = utils.toindex(dst)</span><br><span class="line">  <span class="keyword">if</span> readonly:</span><br><span class="line">      gidx = _CAPI_DGLGraphCreate(</span><br><span class="line">          src.todgltensor(),</span><br><span class="line">          dst.todgltensor(),</span><br><span class="line">          <span class="built_in">int</span>(num_nodes),</span><br><span class="line">          readonly)</span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">      gidx = _CAPI_DGLGraphCreateMutable()</span><br><span class="line">      gidx.add_nodes(num_nodes)</span><br><span class="line">      gidx.add_edges(src, dst)</span><br><span class="line">  <span class="keyword">return</span> gidx</span><br></pre></td></tr></table></figure>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可见，<code>from_coo</code> 通过调用动态链接库里的 API，在 Runtime 中维护了一个当前异构图对应的 Meta Graph 的 <code>ImmutableGraph</code> 实例。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在完成 Meta Graph 的创建后，<code>create_metagraph_index</code>将 Meta Graph，以及 <code>ntypes</code>, <code>etypes</code> 和 <code>relations</code> 等内容进行返回 (<imgref>codeflow_hetero</imgref> 中 ④)。
+
+  <h3 class="title">为每种关系创建 Unit Graph</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完成 Meta Graph 的创建后，函数接下来的任务是为每一种关系创建 Unit Graph。针对在 <code>relation</code> 中存储的异构图中的每一种关系，函数调用了我们熟悉的 <code>create_from_edges</code> 函数 (<imgref>codeflow_hetero</imgref> 中 ⑤)，以在 Runtime 中维护各个 Unit Graph 的 <code>HeteroGraph</code> 实例，并将这些实例存储在 <code>rel_graphs</code> 列表中。
+
+  <h3 class="title">创建异构图拓扑</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;获取存储着所有 Unit Graph 实例的 <code>rel_graphs</code> 后，结合上面创建的 Meta Graph 实例，函数调用了 <code>create_heterograph_from_relations</code> 函数 (<imgref>codeflow_hetero</imgref> 中 ⑥)，以创建异构图实例。这个函数是在 <code>python/dgl/heterograph_index.py</code><cite>dglsrc_heterograph_index_py</cite> 中被定义的，定义如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_heterograph_from_relations</span>(<span class="params">metagraph, rel_graphs, num_nodes_per_type</span>):</span></span><br><span class="line">    <span class="keyword">if</span> num_nodes_per_type <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">return</span> _CAPI_DGLHeteroCreateHeteroGraph(metagraph, rel_graphs)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> _CAPI_DGLHeteroCreateHeteroGraphWithNumNodes(</span><br><span class="line">            metagraph, rel_graphs, num_nodes_per_type.todgltensor())</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以看到其实际上调用了动态链接库侧的函数 <code>_CAPI_DGLHeteroCreateHeteroGraphWithNumNodes</code>，后者是在 <code>src/graph/heterograph_capi.cc</code><cite>dglsrc_src_graph_heterograph_capi_cc</cite> 中定义的，如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">DGL_REGISTER_GLOBAL(<span class="string">&quot;heterograph_index._CAPI_DGLHeteroCreateHeteroGraphWithNumNodes&quot;</span>)</span><br><span class="line">.set_body([] (DGLArgs args, DGLRetValue* rv) &#123;</span><br><span class="line">    GraphRef meta_graph = args[<span class="number">0</span>];</span><br><span class="line">    List&lt;HeteroGraphRef&gt; rel_graphs = args[<span class="number">1</span>];</span><br><span class="line">    IdArray num_nodes_per_type = args[<span class="number">2</span>];</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;HeteroGraphPtr&gt; rel_ptrs;</span><br><span class="line">    rel_ptrs.reserve(rel_graphs.size());</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; ref : rel_graphs) &#123;</span><br><span class="line">      rel_ptrs.push_back(ref.sptr());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">auto</span> hgptr = CreateHeteroGraph(</span><br><span class="line">        meta_graph.sptr(), rel_ptrs, num_nodes_per_type.ToVector&lt;<span class="keyword">int64_t</span>&gt;());</span><br><span class="line">    *rv = HeteroGraphRef(hgptr);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;后者首先创建了一个用于存储 <code>HeteroGraphPtr</code> 的 STL <code>vector</code> 容器，然后将传入的所有 Unit Graph 的指针都存储该容器中，接着调用了 <code>CreateHeteroGraph</code> 用于创建 <code>HeteroGraph</code> 实例。函数 <code>CreateHeteroGraph</code> 是在 <code>src/graph/creators.cc</code><cite>dglsrc_src_graph_creators_cc</cite> 中被定义的，如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HeteroGraphPtr <span class="title">CreateHeteroGraph</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    GraphPtr meta_graph,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;HeteroGraphPtr&gt;&amp; rel_graphs,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int64_t</span>&gt;&amp; num_nodes_per_type)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> HeteroGraphPtr(<span class="keyword">new</span> HeteroGraph(meta_graph, rel_graphs, num_nodes_per_type));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们对上面涉及的 <code>HetroGraph</code> 的构造函数进行回顾 (在 <code>src/graph/heterograph.cc</code><cite>dglsrc_src_graph_heterograph_cc</cite> 中被定义)：
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">HeteroGraph::HeteroGraph(</span><br><span class="line">    GraphPtr meta_graph,</span><br><span class="line">    <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;HeteroGraphPtr&gt;&amp; rel_graphs,</span><br><span class="line">    <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int64_t</span>&gt;&amp; num_nodes_per_type) : BaseHeteroGraph(meta_graph) &#123;</span><br><span class="line">  <span class="keyword">if</span> (num_nodes_per_type.size() == <span class="number">0</span>)</span><br><span class="line">    num_verts_per_type_ = InferNumVerticesPerType(meta_graph, rel_graphs);</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    num_verts_per_type_ = num_nodes_per_type;</span><br><span class="line">  HeteroGraphSanityCheck(meta_graph, rel_graphs);</span><br><span class="line">  relation_graphs_ = CastToUnitGraphs(rel_graphs);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;完成异构图 <code>HetroGraph</code> 实例的创建后，动态链接库侧 Runtime API 将该实例的指针进行返回，至此完成异构图实例在动态链接库 Runtime 中的创建。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回到 Python 侧，基于返回的 <code>HetroGraph</code> 实例指针，和同构图一样，Python 侧初始化了一个 <code>DGLHeteroGraph</code> 实例，至此完成异构图的创建过程 (<imgref>codeflow_hetero</imgref> 中 ⑦)。
+</div>
+
+<h2 class="title">节点和边的特征</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>DGLGraph</code> 对象的节点和边可具有多个用户定义的、可命名的特征，以储存图的节点和边的属性。通过 <code>ndata</code> 和 <code>edata</code> 接口可访问这些特征。实例代码如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> dgl</span><br><span class="line"><span class="keyword">import</span> torch <span class="keyword">as</span> th</span><br><span class="line">g = dgl.graph(([<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">5</span>], [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>])) <span class="comment"># 6个节点，4条边</span></span><br><span class="line"></span><br><span class="line">print(g)</span><br><span class="line"><span class="comment"># Graph(num_nodes=6, num_edges=4,</span></span><br><span class="line"><span class="comment">#       ndata_schemes=&#123;&#125;</span></span><br><span class="line"><span class="comment">#       edata_schemes=&#123;&#125;)</span></span><br><span class="line"></span><br><span class="line">g.ndata[<span class="string">&#x27;x&#x27;</span>] = th.ones(g.num_nodes(), <span class="number">3</span>)               <span class="comment"># 长度为3的节点特征</span></span><br><span class="line">g.edata[<span class="string">&#x27;x&#x27;</span>] = th.ones(g.num_edges(), dtype=th.int32)  <span class="comment"># 标量整型特征</span></span><br><span class="line"></span><br><span class="line">print(g)</span><br><span class="line"><span class="comment"># Graph(num_nodes=6, num_edges=4,</span></span><br><span class="line"><span class="comment">#       ndata_schemes=&#123;&#x27;x&#x27; : Scheme(shape=(3,), dtype=torch.float32)&#125;</span></span><br><span class="line"><span class="comment">#       edata_schemes=&#123;&#x27;x&#x27; : Scheme(shape=(,), dtype=torch.int32)&#125;)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不同名称的特征可以具有不同形状</span></span><br><span class="line">g.ndata[<span class="string">&#x27;y&#x27;</span>] = th.randn(g.num_nodes(), <span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取节点1的特征</span></span><br><span class="line">print(g.ndata[<span class="string">&#x27;x&#x27;</span>][<span class="number">1</span>])                  </span><br><span class="line"><span class="comment"># tensor([1., 1., 1.])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取边0和3的特征</span></span><br><span class="line">print(g.edata[<span class="string">&#x27;x&#x27;</span>][th.tensor([<span class="number">0</span>, <span class="number">3</span>])])  </span><br><span class="line"><span class="comment"># tensor([1, 1], dtype=torch.int32)</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;关于 <code>ndata</code> 和 <code>edata</code> 接口，它们有如下特征:
+
+  <ul>
+    <li>仅允许使用数值类型 (如单精度浮点型、双精度浮点型和整型) 的特征，这些特征可以是标量、向量或多维张量;</li>
+    <li>每个节点特征具有唯一名称，每个边特征也具有唯一名称。节点和边的特征可以具有相同的名称;</li>
+    <li>通过张量分配创建特征时，DGL 会将特征赋给图中的每个节点和每条边。该张量的第一维必须与图中节点或边的数量一致，不能将特征赋给图中节点或边的子集;</li>
+    <li>相同名称的特征必须具有相同的维度和数据类型;</li>
+    <li>特征张量使用 "行优先" 的原则，即每个行切片储存 $1$ 个节点或 $1$ 条边的特征</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，对于加权图，用户可以将权重储存为一个边特征，例子如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 边 0-&gt;1, 0-&gt;2, 0-&gt;3, 1-&gt;3</span></span><br><span class="line">edges = th.tensor([<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>]), th.tensor([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>])</span><br><span class="line">weights = th.tensor([<span class="number">0.1</span>, <span class="number">0.6</span>, <span class="number">0.9</span>, <span class="number">0.7</span>])  <span class="comment"># 每条边的权重</span></span><br><span class="line">g = dgl.graph(edges)</span><br><span class="line">g.edata[<span class="string">&#x27;w&#x27;</span>] = weights  <span class="comment"># 将其命名为 &#x27;w&#x27;</span></span><br><span class="line"></span><br><span class="line">print(g)</span><br><span class="line"><span class="comment"># Graph(num_nodes=4, num_edges=4,</span></span><br><span class="line"><span class="comment">#       ndata_schemes=&#123;&#125;</span></span><br><span class="line"><span class="comment">#       edata_schemes=&#123;&#x27;w&#x27; : Scheme(shape=(,), dtype=torch.float32)&#125;)</span></span><br></pre></td></tr></table></figure>
+</div>
+
+<h2 class="title">异构图</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;相比同构图，异构图里可以有不同类型的节点和边。这些不同类型的节点和边具有独立的 ID 空间和特征。在 DGL 中，一个异构图由一系列子图构成，<note>一个子图对应一种关系</note>。每个关系由一个字符串三元组定义 <code>(源节点类型, 边类型, 目标节点类型)</code>。由于这里的关系定义消除了边类型的歧义，DGL 称它们为 canonical edge types。
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> dgl</span><br><span class="line"><span class="keyword">import</span> torch <span class="keyword">as</span> th</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create a heterograph with 3 node types and 3 edges types.</span></span><br><span class="line">graph_data = &#123;</span><br><span class="line">  (<span class="string">&#x27;drug&#x27;</span>, <span class="string">&#x27;interacts&#x27;</span>, <span class="string">&#x27;drug&#x27;</span>): (th.tensor([<span class="number">0</span>, <span class="number">1</span>]), th.tensor([<span class="number">1</span>, <span class="number">2</span>])),</span><br><span class="line">  (<span class="string">&#x27;drug&#x27;</span>, <span class="string">&#x27;interacts&#x27;</span>, <span class="string">&#x27;gene&#x27;</span>): (th.tensor([<span class="number">0</span>, <span class="number">1</span>]), th.tensor([<span class="number">2</span>, <span class="number">3</span>])),</span><br><span class="line">  (<span class="string">&#x27;drug&#x27;</span>, <span class="string">&#x27;treats&#x27;</span>, <span class="string">&#x27;disease&#x27;</span>): (th.tensor([<span class="number">1</span>]), th.tensor([<span class="number">2</span>]))</span><br><span class="line">&#125;</span><br><span class="line">g = dgl.heterograph(graph_data)</span><br><span class="line"></span><br><span class="line">print(g.ntypes)</span><br><span class="line"><span class="comment"># [&#x27;disease&#x27;, &#x27;drug&#x27;, &#x27;gene&#x27;]</span></span><br><span class="line"></span><br><span class="line">print(g.etypes)</span><br><span class="line"><span class="comment"># [&#x27;interacts&#x27;, &#x27;interacts&#x27;, &#x27;treats&#x27;]</span></span><br><span class="line"></span><br><span class="line">print(g.canonical_etypes)</span><br><span class="line"><span class="comment"># [(&#x27;drug&#x27;, &#x27;interacts&#x27;, &#x27;drug&#x27;),</span></span><br><span class="line"><span class="comment"># (&#x27;drug&#x27;, &#x27;interacts&#x27;, &#x27;gene&#x27;),</span></span><br><span class="line"><span class="comment"># (&#x27;drug&#x27;, &#x27;treats&#x27;, &#x27;disease&#x27;)]</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这么看来，同构图和二分图只是一种特殊的异构图，它们只包括一种关系。
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一个同构图</span></span><br><span class="line">dgl.heterograph(&#123;(<span class="string">&#x27;node_type&#x27;</span>, <span class="string">&#x27;edge_type&#x27;</span>, <span class="string">&#x27;node_type&#x27;</span>): (u, v)&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 一个二分图</span></span><br><span class="line">dgl.heterograph(&#123;(<span class="string">&#x27;source_type&#x27;</span>, <span class="string">&#x27;edge_type&#x27;</span>, <span class="string">&#x27;destination_type&#x27;</span>): (u, v)&#125;)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;与异构图相关联的 metagraph 就是图的模式。它指定节点集和节点之间的边的类型约束。 metagraph 中的一个节点 $u$ 对应于相关异构图中的一个节点类型。metagraph 中的边 $(u,v)$ 表示在相关异构图中存在从 $u$ 型节点到 $v$ 型节点的边。
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">print(g)</span><br><span class="line"><span class="comment"># Graph(num_nodes=&#123;&#x27;disease&#x27;: 3, &#x27;drug&#x27;: 3, &#x27;gene&#x27;: 4&#125;,</span></span><br><span class="line"><span class="comment">#       num_edges=&#123;(&#x27;drug&#x27;, &#x27;interacts&#x27;, &#x27;drug&#x27;): 2,</span></span><br><span class="line"><span class="comment">#                 (&#x27;drug&#x27;, &#x27;interacts&#x27;, &#x27;gene&#x27;): 2,</span></span><br><span class="line"><span class="comment">#                 (&#x27;drug&#x27;, &#x27;treats&#x27;, &#x27;disease&#x27;): 1&#125;,</span></span><br><span class="line"><span class="comment">#       metagraph=[(&#x27;drug&#x27;, &#x27;drug&#x27;, &#x27;interacts&#x27;),</span></span><br><span class="line"><span class="comment">#                 (&#x27;drug&#x27;, &#x27;gene&#x27;, &#x27;interacts&#x27;),</span></span><br><span class="line"><span class="comment">#                 (&#x27;drug&#x27;, &#x27;disease&#x27;, &#x27;treats&#x27;)])</span></span><br><span class="line"></span><br><span class="line">print(g.metagraph().edges())</span><br><span class="line"><span class="comment"># OutMultiEdgeDataView([(&#x27;drug&#x27;, &#x27;drug&#x27;), (&#x27;drug&#x27;, &#x27;gene&#x27;), (&#x27;drug&#x27;, &#x27;disease&#x27;)])</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当引入多种节点和边类型后，用户在调用 DGLGraph API 以获取特定类型的信息时，需要指定具体的节点和边类型。此外，不同类型的节点和边具有单独的 ID。
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取图中所有节点的数量</span></span><br><span class="line">print(g.num_nodes())</span><br><span class="line"><span class="comment"># 10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取drug节点的数量</span></span><br><span class="line">print(g.num_nodes(<span class="string">&#x27;drug&#x27;</span>))</span><br><span class="line"><span class="comment"># 3</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不同类型的节点有单独的ID。因此，没有指定节点类型就没有明确的返回值。</span></span><br><span class="line">print(g.nodes())</span><br><span class="line"><span class="comment"># DGLError: Node type name must be specified if there are more than one node types.</span></span><br><span class="line"></span><br><span class="line">print(g.nodes(<span class="string">&#x27;drug&#x27;</span>))</span><br><span class="line"><span class="comment"># tensor([0, 1, 2])</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了设置/获取特定节点和边类型的特征，DGL 提供了两种新类型的语法:
+
+  <ul>
+    <li>获取特定点类型的特征: <code>g.nodes[‘node_type’].data[‘feat_name’]</code></li>
+    <li>获取特定边类型的特征: <code>g.edges[‘edge_type’].data[‘feat_name’]</code></li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;示例代码如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置/获取&quot;drug&quot;类型的节点的&quot;hv&quot;特征</span></span><br><span class="line">g.nodes[<span class="string">&#x27;drug&#x27;</span>].data[<span class="string">&#x27;hv&#x27;</span>] = th.ones(<span class="number">3</span>, <span class="number">1</span>)</span><br><span class="line">print(g.nodes[<span class="string">&#x27;drug&#x27;</span>].data[<span class="string">&#x27;hv&#x27;</span>])</span><br><span class="line"><span class="comment"># tensor([[1.],</span></span><br><span class="line"><span class="comment">#         [1.],</span></span><br><span class="line"><span class="comment">#         [1.]])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置/获取&quot;treats&quot;类型的边的&quot;he&quot;特征</span></span><br><span class="line">g.edges[<span class="string">&#x27;treats&#x27;</span>].data[<span class="string">&#x27;he&#x27;</span>] = th.zeros(<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">print(g.edges[<span class="string">&#x27;treats&#x27;</span>].data[<span class="string">&#x27;he&#x27;</span>])</span><br><span class="line"><span class="comment"># tensor([[0.]])</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果图里只有一种节点或边类型，则不需要指定节点或边的类型。
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">g = dgl.heterograph(&#123;</span><br><span class="line">  (<span class="string">&#x27;drug&#x27;</span>, <span class="string">&#x27;interacts&#x27;</span>, <span class="string">&#x27;drug&#x27;</span>): (th.tensor([<span class="number">0</span>, <span class="number">1</span>]), th.tensor([<span class="number">1</span>, <span class="number">2</span>])),</span><br><span class="line">  (<span class="string">&#x27;drug&#x27;</span>, <span class="string">&#x27;is similar&#x27;</span>, <span class="string">&#x27;drug&#x27;</span>): (th.tensor([<span class="number">0</span>, <span class="number">1</span>]), th.tensor([<span class="number">2</span>, <span class="number">3</span>]))</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">print(g.nodes())</span><br><span class="line"><span class="comment"># tensor([0, 1, 2, 3])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置/获取单一类型的节点或边特征，不必使用新的语法</span></span><br><span class="line">g.ndata[<span class="string">&#x27;hv&#x27;</span>] = th.ones(<span class="number">4</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+</div>
+
+<h2 class="title">在 GPU 上使用 DGLGraph</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;用户可以通过在构造图的过程中传入两个 GPU 张量来创建 GPU 上的 <code>DGLGraph</code>。另一种方法是使用 <code>to</code> API 将 <code>DGLGraph</code> 复制到 GPU，这会将图结构和特征数据都拷贝到指定的设备。
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> dgl</span><br><span class="line"><span class="keyword">import</span> torch <span class="keyword">as</span> th</span><br><span class="line">u, v = th.tensor([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]), th.tensor([<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line">g = dgl.graph((u, v))</span><br><span class="line">g.ndata[<span class="string">&#x27;x&#x27;</span>] = th.randn(<span class="number">5</span>, <span class="number">3</span>)   <span class="comment"># 原始特征在CPU上</span></span><br><span class="line"></span><br><span class="line">print(g.device)</span><br><span class="line"><span class="comment"># device(type=&#x27;cpu&#x27;)</span></span><br><span class="line"></span><br><span class="line">cuda_g = g.to(<span class="string">&#x27;cuda:0&#x27;</span>)         <span class="comment"># 接受来自后端框架的任何设备对象</span></span><br><span class="line">print(cuda_g.device)</span><br><span class="line"><span class="comment"># device(type=&#x27;cuda&#x27;, index=0)</span></span><br><span class="line"></span><br><span class="line">print(cuda_g.ndata[<span class="string">&#x27;x&#x27;</span>].device) <span class="comment"># 特征数据也拷贝到了GPU上</span></span><br><span class="line">device(<span class="built_in">type</span>=<span class="string">&#x27;cuda&#x27;</span>, index=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 由GPU张量构造的图也在GPU上</span></span><br><span class="line">u, v = u.to(<span class="string">&#x27;cuda:0&#x27;</span>), v.to(<span class="string">&#x27;cuda:0&#x27;</span>)</span><br><span class="line">g = dgl.graph((u, v))</span><br><span class="line">print(g.device)</span><br><span class="line"><span class="comment"># device(type=&#x27;cuda&#x27;, index=0)</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;任何涉及在 GPU 上存储的图的操作都是在 GPU 上运行的。因此，这要求所有张量参数都已经放在GPU上，其结果(图或张量)也将在 GPU 上。此外，在 GPU 上存储的图只接受 GPU 上的特征数据。
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">print(cuda_g.in_degrees())</span><br><span class="line"><span class="comment"># tensor([0, 0, 1, 1, 1], device=&#x27;cuda:0&#x27;)</span></span><br><span class="line"></span><br><span class="line">print(cuda_g.in_edges([<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]))                         <span class="comment"># 可以接受非张量类型的参数</span></span><br><span class="line">(tensor([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>], device=<span class="string">&#x27;cuda:0&#x27;</span>), tensor([<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], device=<span class="string">&#x27;cuda:0&#x27;</span>))</span><br><span class="line"></span><br><span class="line">print(cuda_g.in_edges(th.tensor([<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]).to(<span class="string">&#x27;cuda:0&#x27;</span>))) <span class="comment"># 张量类型的参数必须在GPU上</span></span><br><span class="line">(tensor([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>], device=<span class="string">&#x27;cuda:0&#x27;</span>), tensor([<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], device=<span class="string">&#x27;cuda:0&#x27;</span>))</span><br><span class="line"></span><br><span class="line">print(cuda_g.ndata[<span class="string">&#x27;h&#x27;</span>] = th.randn(<span class="number">5</span>, <span class="number">4</span>))                 <span class="comment"># ERROR! 特征也必须在GPU上！</span></span><br><span class="line"><span class="comment"># DGLError: Cannot assign node feature &quot;h&quot; on device cpu to a graph on device</span></span><br><span class="line"><span class="comment"># cuda:0. Call DGLGraph.to() to copy the graph to the same device.</span></span><br></pre></td></tr></table></figure>
+</div>
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+
+<!-- 圆圈数字 -->
+<!--
+⓪ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳ ㉑ ㉒ ㉓ ㉔ ㉕ ㉖ ㉗ ㉘ ㉙ ㉚ ㉛ ㉜ ㉝ ㉞ ㉟ ㊱ ㊲ ㊳ ㊴ ㊵ ㊶ ㊷ ㊸ ㊹ ㊺ ㊻ ㊼ ㊽ ㊾ ㊿
+-->
+
+<!--图片、引用-->
+<!-- 
+<div class="img" title="img title" label="img_label">
+  <img src="" height="" />
+</div>
+
+<imaging>img_label</imaging>
+-->
+
+<!--等式、引用-->
+<!-- 
+<div class="equation" label="equation_label">
+</div>
+
+<equation>equation_label</equation>
+-->
+
+<!--定理、引用、证明-->
+<!-- 
+<div class="theorm" label="theorm_label">
+</div>
+
+<theorm>theorm_label</theorm>
+
+<div class="theorm_prove">
+</div>
+-->
+
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--表格-->
+<!--
+<table border="1" align="center" bgcolor="#FFFFFF">
+  <caption>表格</caption>
+  <tr>
+    <th>A</th>
+    <th>B</th>
+    <th>C</th>
+  </tr>
+  <tr>
+    <td>xxx</td>
+    <td>xxx</td>
+    <td>xxx</td>
+  </tr>
+</table>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_System_And_Network/">TECH_SYSTEM_AND_NETWORK</a></li>
+          <li>GNN_DGL_TOPO_CONSTRUCTION</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-guitar"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
+      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
