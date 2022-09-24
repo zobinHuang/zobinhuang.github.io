@@ -2,21 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/PyTorch_Dataloader/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Python_Multiprocessing/index.html</loc>
     
-    <lastmod>2022-09-23</lastmod>
+    <lastmod>2022-09-24</lastmod>
     
   </url>
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Python_Multiprocessing/ref.json</loc>
     
-    <lastmod>2022-09-23</lastmod>
+    <lastmod>2022-09-24</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Python_Multiprocessing/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/PyTorch_Dataloader/index.html</loc>
     
     <lastmod>2022-09-23</lastmod>
     
@@ -2601,7 +2601,7 @@
 
   <url>
     <loc>https://zobinhuang.github.io/</loc>
-    <lastmod>2022-09-23</lastmod>
+    <lastmod>2022-09-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
