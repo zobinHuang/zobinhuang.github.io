@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cn">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -12,21 +12,21 @@
 
 <link rel="stylesheet" href="/css/main.css">
 
-<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Exo 2:300,300italic,400,400italic,700,700italic|Caveat:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"zobinhuang.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"hide","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#FF4136","save":"manual"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"zobinhuang.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:type" content="website">
-<meta property="og:title" content="PyTorch Dataset &amp; DataLoader 源码分析">
+<meta property="og:title" content="PyTorch 数据加载源码分析">
 <meta property="og:url" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/PyTorch_Dataloader/index.html">
 <meta property="og:site_name" content="Zobin">
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
-<meta property="og:locale">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/PyTorch_Dataloader/pic/workflow.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/PyTorch_Dataloader/pic/cooperate.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/PyTorch_Dataloader/pic/map_style.png">
@@ -37,8 +37,8 @@
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/PyTorch_Dataloader/pic/collate.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/PyTorch_Dataloader/pic/single_process.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/PyTorch_Dataloader/pic/xxx.png">
-<meta property="article:published_time" content="2022-09-27T08:53:36.646Z">
-<meta property="article:modified_time" content="2022-09-27T08:53:36.646Z">
+<meta property="article:published_time" content="2022-09-27T14:18:20.540Z">
+<meta property="article:modified_time" content="2022-09-27T14:18:20.540Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -57,11 +57,11 @@
     sidebar: "",
     isHome : false,
     isPost : false,
-    lang   : 'cn'
+    lang   : 'en'
   };
 </script>
 
-  <title>PyTorch Dataset & DataLoader 源码分析 | Zobin
+  <title>PyTorch 数据加载源码分析 | Zobin
 </title>
   
 
@@ -117,7 +117,7 @@
       <h1 class="site-title">Zobin</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
-      <p class="site-subtitle" itemprop="description">Loves Tech & Tea</p>
+      <p class="site-subtitle" itemprop="description">Lovin' Tech with Tea</p>
   </div>
 
   <div class="site-nav-right">
@@ -131,29 +131,24 @@
 
 <nav class="site-nav">
   <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-主页">
+        <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
-
-  </li>
-        <li class="menu-item menu-item-关于我">
-
-    <a href="/sec_about/" rel="section"><i class="fa fa-address-card fa-fw"></i>关于我</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
-        <li class="menu-item menu-item-知识库">
+        <li class="menu-item menu-item-about-me-(关于我)">
 
-    <a href="/sec_learning/" rel="section"><i class="fa fa-book-open fa-fw"></i>知识库</a>
-
-  </li>
-        <li class="menu-item menu-item-进度">
-
-    <a href="/sec_schedule/" rel="section"><i class="fa fa-calendar-alt fa-fw"></i>进度</a>
+    <a href="/sec_about/" rel="section"><i class="fa fa-user fa-fw"></i>About Me (关于我)</a>
 
   </li>
-        <li class="menu-item menu-item-独立音乐人">
+        <li class="menu-item menu-item-library-(知识库)">
 
-    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>独立音乐人</a>
+    <a href="/sec_learning" rel="section"><i class="fa fa-duotone fa-book fa-fw"></i>Library (知识库)</a>
+
+  </li>
+        <li class="menu-item menu-item-music-(独立音乐人)">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>Music (独立音乐人)</a>
 
   </li>
   </ul>
@@ -166,8 +161,11 @@
     </header>
 
     
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
   <div class="reading-progress-bar"></div>
-  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 
     <main class="main">
@@ -183,10 +181,10 @@
     
     
     
-    <div class="post-block" lang="cn">
+    <div class="post-block" lang="en">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">PyTorch Dataset & DataLoader 源码分析
+<h1 class="post-title" itemprop="name headline">PyTorch 数据加载源码分析
 </h1>
 
 <div class="post-meta">
@@ -268,15 +266,15 @@
 <h2 class="title">基本概念</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在本文中，我们将对 <code>torch.utils.data</code> 模块中的 $\text{Dataset}$，$\text{BatchSampler}$ 和 $\text{DataLoader}$ 三个用于 PyTorch 框架数据加载的关键实体进行分析。
+  &nbsp;&nbsp;&nbsp;&nbsp;在本文中，我们将对 <code>torch.utils.data</code> 模块中的 <b>Dataset</b>，<b>BatchSampler</b> 和 <b>DataLoader</b> 三个用于 PyTorch 框架数据加载的关键实体进行分析。
 
   <h3 class="title">Python 中的迭代</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;理解 Python 中与迭代相关的概念，是理解 <code>torch.utils.data</code> 模块中的 $\text{Dataset}$，$\text{Sampler}$ 和 $\text{DataLoader}$ 三个实体的关键，因此如果读者朋友对 Python 中与迭代相关的概念尚不熟悉，建议先对我的另一篇文章 <a href="/sec_learning/Tech_Program/Python_Iteration/index.html">Python 中的迭代</a> 进行阅读。
+  &nbsp;&nbsp;&nbsp;&nbsp;理解 Python 中与迭代相关的概念，是理解 <code>torch.utils.data</code> 模块中的 <b>Dataset</b>，<b>Sampler</b> 和 <b>DataLoader</b> 三个实体的关键，因此如果读者朋友对 Python 中与迭代相关的概念尚不熟悉，建议先对我的另一篇文章 <a href="/sec_learning/Tech_Program/Python_Iteration/index.html">Python 中的迭代</a> 进行阅读。
 
   <h3 class="title">Python 中的多进程</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们在后面介绍 $\text{DataLoader}$ 实体的相关内容的时候将会涉及到如何基于 Python 的多进程机制加速数据加载的过程，因此需要读者对 Python 的多进程机制有一定的了解。如果您对此不是特别熟悉，建议先对我的另一篇文章 <a href="/sec_learning/Tech_Program/Python_Multiprocessing/index.html">Python 的多进程</a> 进行阅读。
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在后面介绍 <b>DataLoader</b> 实体的相关内容的时候将会涉及到如何基于 Python 的多进程机制加速数据加载的过程，因此需要读者对 Python 的多进程机制有一定的了解。如果您对此不是特别熟悉，建议先对我的另一篇文章 <a href="/sec_learning/Tech_Program/Python_Multiprocessing/index.html">Python 的多进程</a> 进行阅读。
 
   <h3 class="title">数据加载</h3>
   <label class="title">dataloading</label>
@@ -288,19 +286,19 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<imgref>img_dataloading</imgref> 展示了 Dataloading 在整个训练过程中所处的位置。首先，我们的数据集被存放在磁盘中，<def>$\text{Dataset}$</def> 实体用于将 Dataset 从磁盘中读取到 Host Memory 中，并且提供了用于访问 Dataset 中各条 Sample 的 Feature 和 Label 的方法 (i.e. 对于 Map-style Dataset 来说提供了 <code>__getitem__(self)</code> 魔法方法; Iterable-style Dataset 则提供了 <code>__iter__(self)</code> 魔法方法)。在训练过程中，会有多轮 Epoches，每一轮 Epoch 会有多轮 Iterations，每一轮 Iteration 一个 Mini-batch 送入模型进行前向传播、损失值计算、参数梯度计算和参数更新，在每一轮 Epoch 中会完成一次对训练集 (Mini-batches) 的遍历。为了更好的实现对 Mini-batches 的遍历的编程抽象，<def>$\text{DataLoader}$</def> 实体应该提供一种 <def>Iterable (可迭代)</def> 的方法，使得我们在每轮 Epoch 中可以基于 Python <code>for mini-batch in DataLoader</code> 的范式完成对 Mini-batches 的遍历。
+  &nbsp;&nbsp;&nbsp;&nbsp;<imgref>img_dataloading</imgref> 展示了 Dataloading 在整个训练过程中所处的位置。首先，我们的数据集被存放在磁盘中，<def><b>Dataset</b></def> 实体用于将 Dataset 从磁盘中读取到 Host Memory 中，并且提供了用于访问 Dataset 中各条 Sample 的 Feature 和 Label 的方法 (i.e. 对于 Map-style Dataset 来说提供了 <code>__getitem__(self)</code> 魔法方法; Iterable-style Dataset 则提供了 <code>__iter__(self)</code> 魔法方法)。在训练过程中，会有多轮 Epoches，每一轮 Epoch 会有多轮 Iterations，每一轮 Iteration 一个 Mini-batch 送入模型进行前向传播、损失值计算、参数梯度计算和参数更新，在每一轮 Epoch 中会完成一次对训练集 (Mini-batches) 的遍历。为了更好的实现对 Mini-batches 的遍历的编程抽象，<def><b>DataLoader</b></def> 实体应该提供一种 <def>Iterable (可迭代)</def> 的方法，使得我们在每轮 Epoch 中可以基于 Python <code>for mini-batch in DataLoader</code> 的范式完成对 Mini-batches 的遍历。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;$\text{DataLoader}$ 在为某轮 Epoch 生成 Mini-batches 的过程中，是按照什么规则生成 Mini-batches 的呢？可以是按顺序在 $\text{Dataset}$ 中进行采样，也可以是按照随机的规则进行采样，生成 Mini-batches 的采样规则就是由 <def>$\text{BatchSampler}$</def> 实体予以实现的。具体来说，$\text{BatchSampler}$ 实体基于一定的采样规则，把采样生成的 Samples 的索引返回给 $\text{DataLoader}$，最后由 $\text{DataLoader}$ 中的 <def>$\text{Fetcher}$</def> 实体完成从 $\text{Dataset}$ 中提取序号对应的 Samples 下的特征和标签数据，以最终完成 Mini-batches 的生成。另外，我们把一次迭代生成一条 Sample 的索引的采样器称为 <def>$\text{Sampler}$</def> 实体，生成多条 Samples 的索引的采样器则称为 $\text{BatchSampler}$，我们后面会看到，PyTorch 中使用 $\text{Sampler}$ 实体来设置采样的规则 (e.g. 顺序采样，随机采样，etc.)，然后再基于 $\text{Sampler}$ 结合 Batch Size 等设置生成 $\text{BatchSampler}$ 实体。
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>DataLoader</b> 在为某轮 Epoch 生成 Mini-batches 的过程中，是按照什么规则生成 Mini-batches 的呢？可以是按顺序在 <b>Dataset</b> 中进行采样，也可以是按照随机的规则进行采样，生成 Mini-batches 的采样规则就是由 <def><b>BatchSampler</b></def> 实体予以实现的。具体来说，<b>BatchSampler</b> 实体基于一定的采样规则，把采样生成的 Samples 的索引返回给 <b>DataLoader</b>，最后由 <b>DataLoader</b> 中的 <def><b>Fetcher</b></def> 实体完成从 <b>Dataset</b> 中提取序号对应的 Samples 下的特征和标签数据，以最终完成 Mini-batches 的生成。另外，我们把一次迭代生成一条 Sample 的索引的采样器称为 <def><b>Sampler</b></def> 实体，生成多条 Samples 的索引的采样器则称为 <b>BatchSampler</b>，我们后面会看到，PyTorch 中使用 <b>Sampler</b> 实体来设置采样的规则 (e.g. 顺序采样，随机采样，etc.)，然后再基于 <b>Sampler</b> 结合 Batch Size 等设置生成 <b>BatchSampler</b> 实体。
 
-  <div class="theorm_prove">
+  <div class="background">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;综上，$\text{Dataset}$，$\text{BatchSampler}$ 和 $\text{DataLoader}$ 可以总结为:
+  &nbsp;&nbsp;&nbsp;&nbsp;综上，<b>Dataset</b>，<b>BatchSampler</b> 和 <b>DataLoader</b> 可以总结为:
 
   <ul>
-    <li><def>$\text{Dataset}$</def>: 将原始存储在磁盘中的数据集读取到内存中并封装为 Python 对应的对象，并且暴露提取接口;</li>
-    <li><def>$\text{BatchSampler}$</def>: 在每次迭代时输出当前 Iteration 所使用的 Samples 的索引;</li>
-    <li><def>$\text{Dataloader}$</def>: 基于设置好的 $\text{Dataset}$ 和 $\text{BatchSampler}$ 实体，在每次迭代时，$\text{Dataloader}$ 将首先迭代 $\text{BatchSampler}$ 实体以获得当前 Iteration 使用的 Samples 的索引，然后调用其 $\text{Fetcher}$ 实体完成对应 Samples 的特征和标签数据的组装，最后进行输出。</li>
+    <li><def><b>Dataset</b></def>: 将原始存储在磁盘中的数据集读取到内存中并封装为 Python 对应的对象，并且暴露提取接口;</li>
+    <li><def><b>BatchSampler</b></def>: 在每次迭代时输出当前 Iteration 所使用的 Samples 的索引;</li>
+    <li><def><b>DataLoader</b></def>: 基于设置好的 <b>Dataset</b> 和 <b>BatchSampler</b> 实体，在每次迭代时，<b>DataLoader</b> 将首先迭代 <b>BatchSampler</b> 实体以获得当前 Iteration 使用的 Samples 的索引，然后调用其 <b>Fetcher</b> 实体完成对应 Samples 的特征和标签数据的组装，最后进行输出。</li>
   </ul>
 
   <div class="img" title="DataLoader, Sampler 和 Dataset 三者关系图">
@@ -315,7 +313,7 @@
 <h2 class="title">Dataset 功能性介绍</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;$\text{Dataset}$ 实体负责对来源于磁盘的 Raw Dataset 进行封装，将其封装成 Python 可识别的数据结构。<code>torch.utils.data</code> 模块提供了多种形式的 $\text{Dataset}$ 实体抽象，并且分别提供了对应的接口类完成对这些类型的数据集的抽象，用户需要实现接口类中的相应接口，以完成对自定义数据集的封装。我们下面对这些数据集抽象分别进行分析。
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>Dataset</b> 实体负责对来源于磁盘的 Raw Dataset 进行封装，将其封装成 Python 可识别的数据结构。<code>torch.utils.data</code> 模块提供了多种形式的 <b>Dataset</b> 实体抽象，并且分别提供了对应的接口类完成对这些类型的数据集的抽象，用户需要实现接口类中的相应接口，以完成对自定义数据集的封装。我们下面对这些数据集抽象分别进行分析。
 
   <div class="multi_img">
     <div class="img" title="Map-style Dataset" label="map_style_ds">
@@ -371,27 +369,27 @@
 <h2 class="title">BatchSampler 功能性介绍</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;现在我们定义好了 $\text{Dataset}$ 实体抽象，已经拥有了一些接口可以获取 $\text{Dataset}$ 中各条 Samples。在训练的各轮 Epoches 中，我们需要在每轮 Iteration 中从 $\text{Dataset}$ 中读取单条 Sample (或多条 Samples 以形成 Mini-batch) 对模型进行训练，那么应该按照什么顺序来读取 $\text{Dataset}$ 中的内容以形成这些 Mini-batches 呢？这也就是我们本节要讨论的 $\text{BatchSampler}$ 实体抽象的工作。
+  &nbsp;&nbsp;&nbsp;&nbsp;现在我们定义好了 <b>Dataset</b> 实体抽象，已经拥有了一些接口可以获取 <b>Dataset</b> 中各条 Samples。在训练的各轮 Epoches 中，我们需要在每轮 Iteration 中从 <b>Dataset</b> 中读取单条 Sample (或多条 Samples 以形成 Mini-batch) 对模型进行训练，那么应该按照什么顺序来读取 <b>Dataset</b> 中的内容以形成这些 Mini-batches 呢？这也就是我们本节要讨论的 <b>BatchSampler</b> 实体抽象的工作。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于 Map-style Dataset 来说，如 <imgref>map_style_ds</imgref> 所示，每一条 Sample 都会有一个索引，$\text{BatchSampler}$ 的功能就是在每轮 Epoch 的每轮 Iteration 中输出参与训练的 Samples 的 索引。
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Map-style Dataset 来说，如 <imgref>map_style_ds</imgref> 所示，每一条 Sample 都会有一个索引，<b>BatchSampler</b> 的功能就是在每轮 Epoch 的每轮 Iteration 中输出参与训练的 Samples 的 索引。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;而对于 Iteration-style Dataset 来说，如 <imgref>iter_style_ds</imgref> 所示，每一条 Sample 并不会有索引。正如我们上面所述，Iteration-style Dataset 需要基于 Iterator 的方法来完成对数据集中的 Samples 的访问，因此对 Iteration-style Dataset 中 Samples 的遍历顺序完全由其 Iterator 定义的 <code>__next__(self)</code> 魔法方法定义的访问顺序决定，因此本节讨论的 $\text{BatchSampler}$ 实体并不对 Iteration-style Dataset 有效，因此<note>我们默认本章剩余篇幅讨论的都是 Map-style Dataset</note>。
+  &nbsp;&nbsp;&nbsp;&nbsp;而对于 Iteration-style Dataset 来说，如 <imgref>iter_style_ds</imgref> 所示，每一条 Sample 并不会有索引。正如我们上面所述，Iteration-style Dataset 需要基于 Iterator 的方法来完成对数据集中的 Samples 的访问，因此对 Iteration-style Dataset 中 Samples 的遍历顺序完全由其 Iterator 定义的 <code>__next__(self)</code> 魔法方法定义的访问顺序决定，因此本节讨论的 <b>BatchSampler</b> 实体并不对 Iteration-style Dataset 有效，因此<note>我们默认本章剩余篇幅讨论的都是 Map-style Dataset</note>。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;回顾我们在 <ref>dataloading</ref> 中描述的，$\text{Sampler}$ 实体每次迭代输出一条 Sample 的索引，而 $\text{BatchSampler}$ 实体每次迭代则输出多条 Samples 的索引。在 PyTorch 的实现中，通常实现定义出 $\text{Sampler}$ 实体，以确定采样规则 (e.g. 随机采样，顺序采样，etc.)，然后再基于定义好的 $\text{Sampler}$ 实体结合 Batch Size 等设置生成 $\text{BatchSampler}$ 实体。
+  &nbsp;&nbsp;&nbsp;&nbsp;回顾我们在 <ref>dataloading</ref> 中描述的，<b>Sampler</b> 实体每次迭代输出一条 Sample 的索引，而 <b>BatchSampler</b> 实体每次迭代则输出多条 Samples 的索引。在 PyTorch 的实现中，通常实现定义出 <b>Sampler</b> 实体，以确定采样规则 (e.g. 随机采样，顺序采样，etc.)，然后再基于定义好的 <b>Sampler</b> 实体结合 Batch Size 等设置生成 <b>BatchSampler</b> 实体。
 
   <h3 class="title">Sampler 实体</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们下面首先来看 $\text{Sampler}$ 实体的视线。在 <code>torch.utils.data</code> 模块中，<code>Sampler</code> 类定义了 $\text{Sampler}$ 实体所应该拥有的接口，定义如下所示:
+  &nbsp;&nbsp;&nbsp;&nbsp;我们下面首先来看 <b>Sampler</b> 实体的视线。在 <code>torch.utils.data</code> 模块中，<code>Sampler</code> 类定义了 <b>Sampler</b> 实体所应该拥有的接口，定义如下所示:
 
   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sampler</span>(<span class="params">Generic[T_co]</span>):</span></span><br><span class="line">  <span class="string">r&quot;&quot;&quot;Base class for all Samplers.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  Every Sampler subclass has to provide an :meth:`__iter__` method, providing a</span></span><br><span class="line"><span class="string">  way to iterate over indices of dataset elements, and a :meth:`__len__` method</span></span><br><span class="line"><span class="string">  that returns the length of the returned iterators.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  .. note:: The :meth:`__len__` method isn&#x27;t strictly required by</span></span><br><span class="line"><span class="string">            :class:`~torch.utils.data.DataLoader`, but is expected in any</span></span><br><span class="line"><span class="string">            calculation involving the length of a :class:`~torch.utils.data.DataLoader`.</span></span><br><span class="line"><span class="string">  &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, data_source: Optional[Sized]</span>) -&gt; <span class="keyword">None</span>:</span></span><br><span class="line">      <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span>(<span class="params">self</span>) -&gt; Iterator[T_co]:</span></span><br><span class="line">      <span class="keyword">raise</span> NotImplementedError</span><br></pre></td></tr></table></figure>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;从上面的代码和注释中可以看到，$\text{Sampler}$ 实体需要定义 <code>__iter__(self)</code> 魔法方法，以可以通过 <code>iter()</code> 的方法来获得 $\text{Sampler}$ 的 Iterator，对 Iterator 进行的每次迭代可以得到的采样得到的单条 Sample 的序号。
+  &nbsp;&nbsp;&nbsp;&nbsp;从上面的代码和注释中可以看到，<b>Sampler</b> 实体需要定义 <code>__iter__(self)</code> 魔法方法，以可以通过 <code>iter()</code> 的方法来获得 <b>Sampler</b> 的 Iterator，对 Iterator 进行的每次迭代可以得到的采样得到的单条 Sample 的序号。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;基于 <code>Sampler</code> 接口类，<code>torch.utils.data</code> 模块中提供了多种内置的 $\text{Sampler}$ 实现，下面我们展示了其中的 <code>RandomSampler</code> 的相关定义。
+  &nbsp;&nbsp;&nbsp;&nbsp;基于 <code>Sampler</code> 接口类，<code>torch.utils.data</code> 模块中提供了多种内置的 <b>Sampler</b> 实现，下面我们展示了其中的 <code>RandomSampler</code> 的相关定义。
 
   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomSampler</span>(<span class="params">Sampler[<span class="built_in">int</span>]</span>):</span></span><br><span class="line">  <span class="string">r&quot;&quot;&quot;Samples elements randomly. If without replacement, then sample from a shuffled dataset.</span></span><br><span class="line"><span class="string">  If with replacement, then user can specify :attr:`num_samples` to draw.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  Args:</span></span><br><span class="line"><span class="string">      data_source (Dataset): dataset to sample from</span></span><br><span class="line"><span class="string">      replacement (bool): samples are drawn on-demand with replacement if ``True``, default=``False``</span></span><br><span class="line"><span class="string">      num_samples (int): number of samples to draw, default=`len(dataset)`.</span></span><br><span class="line"><span class="string">      generator (Generator): Generator used in sampling.</span></span><br><span class="line"><span class="string">  &quot;&quot;&quot;</span></span><br><span class="line">  data_source: Sized</span><br><span class="line">  replacement: <span class="built_in">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, data_source: Sized, replacement: <span class="built_in">bool</span> = <span class="literal">False</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">               num_samples: Optional[<span class="built_in">int</span>] = <span class="literal">None</span>, generator=<span class="literal">None</span></span>) -&gt; <span class="keyword">None</span>:</span></span><br><span class="line">      self.data_source = data_source</span><br><span class="line">      self.replacement = replacement</span><br><span class="line">      self._num_samples = num_samples</span><br><span class="line">      self.generator = generator</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(self.replacement, <span class="built_in">bool</span>):</span><br><span class="line">          <span class="keyword">raise</span> TypeError(<span class="string">&quot;replacement should be a boolean value, but got &quot;</span></span><br><span class="line">                          <span class="string">&quot;replacement=&#123;&#125;&quot;</span>.<span class="built_in">format</span>(self.replacement))</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(self.num_samples, <span class="built_in">int</span>) <span class="keyword">or</span> self.num_samples &lt;= <span class="number">0</span>:</span><br><span class="line">          <span class="keyword">raise</span> ValueError(<span class="string">&quot;num_samples should be a positive integer &quot;</span></span><br><span class="line">                           <span class="string">&quot;value, but got num_samples=&#123;&#125;&quot;</span>.<span class="built_in">format</span>(self.num_samples))</span><br><span class="line"></span><br><span class="line"><span class="meta">  @property</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">num_samples</span>(<span class="params">self</span>) -&gt; int:</span></span><br><span class="line">      <span class="comment"># dataset size might change at runtime</span></span><br><span class="line">      <span class="keyword">if</span> self._num_samples <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">          <span class="keyword">return</span> <span class="built_in">len</span>(self.data_source)</span><br><span class="line">      <span class="keyword">return</span> self._num_samples</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span>(<span class="params">self</span>) -&gt; Iterator[int]:</span></span><br><span class="line">      n = <span class="built_in">len</span>(self.data_source)</span><br><span class="line">      <span class="keyword">if</span> self.generator <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">          seed = <span class="built_in">int</span>(torch.empty((), dtype=torch.int64).random_().item())</span><br><span class="line">          generator = torch.Generator()</span><br><span class="line">          generator.manual_seed(seed)</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          generator = self.generator</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> self.replacement:</span><br><span class="line">          <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(self.num_samples // <span class="number">32</span>):</span><br><span class="line">              <span class="keyword">yield</span> <span class="keyword">from</span> torch.randint(high=n, size=(<span class="number">32</span>,), dtype=torch.int64, generator=generator).tolist()</span><br><span class="line">          <span class="keyword">yield</span> <span class="keyword">from</span> torch.randint(high=n, size=(self.num_samples % <span class="number">32</span>,), dtype=torch.int64, generator=generator).tolist()</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(self.num_samples // n):</span><br><span class="line">              <span class="keyword">yield</span> <span class="keyword">from</span> torch.randperm(n, generator=generator).tolist()</span><br><span class="line">          <span class="keyword">yield</span> <span class="keyword">from</span> torch.randperm(n, generator=generator).tolist()[:self.num_samples % n]</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__len__</span>(<span class="params">self</span>) -&gt; int:</span></span><br><span class="line">      <span class="keyword">return</span> self.num_samples</span><br></pre></td></tr></table></figure>
   <p>
@@ -399,14 +397,14 @@
 
   <h3 class="title">BatchSampler 实体</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在 <code>torch.utils.data</code> 模块中，<code>BatchSampler</code> 类实现了 $\text{BatchSampler}$ 实体所应该拥有的接口，定义如下所示:
+  &nbsp;&nbsp;&nbsp;&nbsp;在 <code>torch.utils.data</code> 模块中，<code>BatchSampler</code> 类实现了 <b>BatchSampler</b> 实体所应该拥有的接口，定义如下所示:
 
   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BatchSampler</span>(<span class="params">Sampler[List[<span class="built_in">int</span>]]</span>):</span></span><br><span class="line">    <span class="string">r&quot;&quot;&quot;Wraps another sampler to yield a mini-batch of indices.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        sampler (Sampler or Iterable): Base sampler. Can be any iterable object</span></span><br><span class="line"><span class="string">        batch_size (int): Size of mini-batch.</span></span><br><span class="line"><span class="string">        drop_last (bool): If ``True``, the sampler will drop the last batch if</span></span><br><span class="line"><span class="string">            its size would be less than ``batch_size``</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Example:</span></span><br><span class="line"><span class="string">        &gt;&gt;&gt; list(BatchSampler(SequentialSampler(range(10)), batch_size=3, drop_last=False))</span></span><br><span class="line"><span class="string">        [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]</span></span><br><span class="line"><span class="string">        &gt;&gt;&gt; list(BatchSampler(SequentialSampler(range(10)), batch_size=3, drop_last=True))</span></span><br><span class="line"><span class="string">        [[0, 1, 2], [3, 4, 5], [6, 7, 8]]</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, sampler: Union[Sampler[<span class="built_in">int</span>], Iterable[<span class="built_in">int</span>]], batch_size: <span class="built_in">int</span>, drop_last: <span class="built_in">bool</span></span>) -&gt; <span class="keyword">None</span>:</span></span><br><span class="line">        <span class="comment"># Since collections.abc.Iterable does not check for `__getitem__`, which</span></span><br><span class="line">        <span class="comment"># is one way for an object to be an iterable, we don&#x27;t do an `isinstance`</span></span><br><span class="line">        <span class="comment"># check here.</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(batch_size, <span class="built_in">int</span>) <span class="keyword">or</span> <span class="built_in">isinstance</span>(batch_size, <span class="built_in">bool</span>) <span class="keyword">or</span> \</span><br><span class="line">                batch_size &lt;= <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">&quot;batch_size should be a positive integer value, &quot;</span></span><br><span class="line">                            <span class="string">&quot;but got batch_size=&#123;&#125;&quot;</span>.<span class="built_in">format</span>(batch_size))</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(drop_last, <span class="built_in">bool</span>):</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">&quot;drop_last should be a boolean value, but got &quot;</span></span><br><span class="line">                            <span class="string">&quot;drop_last=&#123;&#125;&quot;</span>.<span class="built_in">format</span>(drop_last))</span><br><span class="line">        self.sampler = sampler</span><br><span class="line">        self.batch_size = batch_size</span><br><span class="line">        self.drop_last = drop_last</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span>(<span class="params">self</span>) -&gt; Iterator[List[int]]:</span></span><br><span class="line">        <span class="comment"># Implemented based on the benchmarking in https://github.com/pytorch/pytorch/pull/76951</span></span><br><span class="line">        <span class="keyword">if</span> self.drop_last:</span><br><span class="line">            sampler_iter = <span class="built_in">iter</span>(self.sampler)</span><br><span class="line">            <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">                <span class="keyword">try</span>:</span><br><span class="line">                    batch = [<span class="built_in">next</span>(sampler_iter) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(self.batch_size)]</span><br><span class="line">                    <span class="keyword">yield</span> batch</span><br><span class="line">                <span class="keyword">except</span> StopIteration:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            batch = [<span class="number">0</span>] * self.batch_size</span><br><span class="line">            idx_in_batch = <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span> idx <span class="keyword">in</span> self.sampler:</span><br><span class="line">                batch[idx_in_batch] = idx</span><br><span class="line">                idx_in_batch += <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> idx_in_batch == self.batch_size:</span><br><span class="line">                    <span class="keyword">yield</span> batch</span><br><span class="line">                    idx_in_batch = <span class="number">0</span></span><br><span class="line">                    batch = [<span class="number">0</span>] * self.batch_size</span><br><span class="line">            <span class="keyword">if</span> idx_in_batch &gt; <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">yield</span> batch[:idx_in_batch]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span>(<span class="params">self</span>) -&gt; int:</span></span><br><span class="line">        <span class="comment"># Can only be called if self.sampler has __len__ implemented</span></span><br><span class="line">        <span class="comment"># We cannot enforce this condition, so we turn off typechecking for the</span></span><br><span class="line">        <span class="comment"># implementation below.</span></span><br><span class="line">        <span class="comment"># Somewhat related: see NOTE [ Lack of Default `__len__` in Python Abstract Base Classes ]</span></span><br><span class="line">        <span class="keyword">if</span> self.drop_last:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">len</span>(self.sampler) // self.batch_size  <span class="comment"># type: ignore[arg-type]</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> (<span class="built_in">len</span>(self.sampler) + self.batch_size - <span class="number">1</span>) // self.batch_size  <span class="comment"># type: ignore[arg-type]</span></span><br></pre></td></tr></table></figure>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;从上面的代码中可以看到，<code>BatchSampler</code> 定义了三个初始化参数:
 
   <ul>
-    <li><code>sampler</code>: 当前创建的 <code>BatchSampler</code> 基于的 $\text{Sampler}$，用于确定采样的具体规则;</li>
+    <li><code>sampler</code>: 当前创建的 <code>BatchSampler</code> 基于的 <b>Sampler</b>，用于确定采样的具体规则;</li>
     <li><code>batch_size</code>: 每一次对 <code>BatchSampler</code> 进行迭代 (i.e. 每一轮 Iteration) 时，<code>BatchSampler</code> 要输出的 Samples 的索引的数目;</li>
     <li><code>drop_last</code>: 布尔变量，指示是否丢弃最后一个规模达不到 <code>batch_size</code> 的 Mini-batch;</li>
   </ul>
@@ -415,7 +413,7 @@
 <h2 class="title">DataLoader 功能性介绍</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;铺垫完了 $\text{Dataset}$ 和 $\text{BatchSampler}$ 两个实体后，现在我们来到了数据加载流程的核心 —— $\text{DataLoader}$。<code>torch.utils.data</code> 提供的 <code>DataLoader</code> 是 PyTorch 加载数据的核心，其支持 Map-style 和 Iterable-style 的 $\text{Dataset}$ 的数据加载，支持单进程/多进程数据加载，还可以设置 loading order, batch size, pin memory 等加载参数的设置，可以认为是数据加载流程的统一入口。
+  &nbsp;&nbsp;&nbsp;&nbsp;铺垫完了 <b>Dataset</b> 和 <b>BatchSampler</b> 两个实体后，现在我们来到了数据加载流程的核心 —— <b>DataLoader</b>。<code>torch.utils.data</code> 提供的 <code>DataLoader</code> 是 PyTorch 加载数据的核心，其支持 Map-style 和 Iterable-style 的 <b>Dataset</b> 的数据加载，支持单进程/多进程数据加载，还可以设置 loading order, batch size, pin memory 等加载参数的设置，可以认为是数据加载流程的统一入口。
 
   <h3 class="title">DataLoader 接口</h3>
   <p>
@@ -435,7 +433,7 @@
     </tr>
     <tr>
       <td><code>dataset</code></td>
-      <td>要加载的 $\text{Dataset}$ 实体</td>
+      <td>要加载的 <b>Dataset</b> 实体</td>
       <td></td>
       <td><code>Dataset</code></td>
     </tr>
@@ -453,13 +451,13 @@
     </tr>
     <tr>
       <td><code>sampler</code></td>
-      <td>用户指定的 $\text{Sampler}$ 实体，定义从 <note>Map-style</note> Dataset 中提取样本的策略，每一次 <code>yield</code> <note>一条</note> Sample 的索引。如果指定了 <code>sampler</code>, 则上述 <code>shuffle</code> 参数必须为 <code>False</code>，否则会和 <code>RandomSampler</code> 互斥</td>
+      <td>用户指定的 <b>Sampler</b> 实体，定义从 <note>Map-style</note> Dataset 中提取样本的策略，每一次 <code>yield</code> <note>一条</note> Sample 的索引。如果指定了 <code>sampler</code>, 则上述 <code>shuffle</code> 参数必须为 <code>False</code>，否则会和 <code>RandomSampler</code> 互斥</td>
       <td><code>None</code></td>
       <td><code>Sampler</code>, <code>Iterable</code></td>
     </tr>
     <tr>
       <td><code>batch_sampler</code></td>
-      <td>用户指定的 $\text{BatchSampler}$ 实体，定义从 <note>Map-style</note> Dataset 中提取样本的策略，每一次 <code>yield</code> <note>多条</note> Samples 的索引</td>
+      <td>用户指定的 <b>BatchSampler</b> 实体，定义从 <note>Map-style</note> Dataset 中提取样本的策略，每一次 <code>yield</code> <note>多条</note> Samples 的索引</td>
       <td><code>None</code></td>
       <td><code>Sampler</code>, <code>Iterable</code></td>
     </tr>
@@ -507,7 +505,7 @@
     </tr>
     <tr>
       <td><code>persistent_workers</code></td>
-      <td>如果为 <code>True</code>，则 <code>Dataloader</code> 将不会终止 Worker 进程，直到对 $\text{Dataset}$ 的迭代完成</td>
+      <td>如果为 <code>True</code>，则 <code>Dataloader</code> 将不会终止 Worker 进程，直到对 <b>Dataset</b> 的迭代完成</td>
       <td><code>False</code></td>
       <td><code>bool</code></td>
     </tr>
@@ -520,24 +518,24 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<code>DataLoader</code> 非常方便地为用户提供了 <def>自动化批处理 (Automatic Batching)</def> 的功能，通过指定我们上面看到的相关接口中的参数，用户可以自定义出他们想要的 $\text{DataLoader}$ 实体，然后在训练主进程中通过迭代的方式获取每轮 Iteration 指定规模和指定顺序的 Samples。我们可以把自动化批处理的设置氛围两个部分: ① 设置 BatchSampler; 以及 ② 设置基于 Sampled Indices 合成 Mini-batch 的方法，我们下面分别进行介绍。
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>DataLoader</code> 非常方便地为用户提供了 <def>自动化批处理 (Automatic Batching)</def> 的功能，通过指定我们上面看到的相关接口中的参数，用户可以自定义出他们想要的 <b>DataLoader</b> 实体，然后在训练主进程中通过迭代的方式获取每轮 Iteration 指定规模和指定顺序的 Samples。我们可以把自动化批处理的设置氛围两个部分: ① 设置 BatchSampler; 以及 ② 设置基于 Sampled Indices 合成 Mini-batch 的方法，我们下面分别进行介绍。
 
   <h4 class="paragraph">设置 BatchSampler</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;基于 SGD 的训练思路，通常在一轮 Iteration 中会使用多个 Samples 组成的 Mini-batch 进行训练，而通常不会只有一条 Sample 参与训练，<code>DataLoader</code> 提供了相关的参数进行 $\text{BatchSampler}$ 相关的设置:
+  &nbsp;&nbsp;&nbsp;&nbsp;基于 SGD 的训练思路，通常在一轮 Iteration 中会使用多个 Samples 组成的 Mini-batch 进行训练，而通常不会只有一条 Sample 参与训练，<code>DataLoader</code> 提供了相关的参数进行 <b>BatchSampler</b> 相关的设置:
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于 Map-style Dataset 和 Iterable-style Dataset 来说，当 <code>batch_size</code> (默认为 $1$) 不为 <code>None</code> 时，生成的 $\text{DataLoader}$ 在每一次被迭代时将 <code>yield</code> 出一批 Samples，而不只是一个单独的 Sample，该参数与 <code>drop_last</code> 和 <code>shuffle</code> 参数配合，将决定每一轮 Iteration 所使用的 Samples 的顺序和数目。
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Map-style Dataset 和 Iterable-style Dataset 来说，当 <code>batch_size</code> (默认为 $1$) 不为 <code>None</code> 时，生成的 <b>DataLoader</b> 在每一次被迭代时将 <code>yield</code> 出一批 Samples，而不只是一个单独的 Sample，该参数与 <code>drop_last</code> 和 <code>shuffle</code> 参数配合，将决定每一轮 Iteration 所使用的 Samples 的顺序和数目。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在 <code>DataLoader</code> 的构造函数中，相关代码会基于 <code>batch_size</code> 和 <code>drop_last</code> 参数，结合用户指定的 $\text{Sampler}$ 实体构造出对应的 $\text{BatchSampler}$ 实体。那么 $\text{Sampler}$ 实体是如何被指定的呢？对于 Map-style Dataset 来说，可以通过两种方式被指定: 一种是通过 <code>sampler</code> 参数显式指定 $\text{Sampler}$，一种是通过 <code>shuffle</code> 参数，当它为 <code>True</code> 时使用 <code>RandomSampler</code>; 而对于 Iterable-style Dataset 来说，$\text{Sampler}$ 实体并无意义，为了实现代码的兼容性，<code>DataLoader</code> 的构造函数会使用专门针对于 <code>Iterable-style Dataset</code> 提供的 Dummy Infinite Sampler <code>_InfiniteConstantSampler</code> 以充当 $\text{Sampler}$ 实体，该 $\text{Sampler}$ 可以无限地被迭代，其实质上是调用了 Iterable-style Dataset 的 <code>__iter__(self)</code> 魔法方法。
+  &nbsp;&nbsp;&nbsp;&nbsp;在 <code>DataLoader</code> 的构造函数中，相关代码会基于 <code>batch_size</code> 和 <code>drop_last</code> 参数，结合用户指定的 <b>Sampler</b> 实体构造出对应的 <b>BatchSampler</b> 实体。那么 <b>Sampler</b> 实体是如何被指定的呢？对于 Map-style Dataset 来说，可以通过两种方式被指定: 一种是通过 <code>sampler</code> 参数显式指定 <b>Sampler</b>，一种是通过 <code>shuffle</code> 参数，当它为 <code>True</code> 时使用 <code>RandomSampler</code>; 而对于 Iterable-style Dataset 来说，<b>Sampler</b> 实体并无意义，为了实现代码的兼容性，<code>DataLoader</code> 的构造函数会使用专门针对于 <code>Iterable-style Dataset</code> 提供的 Dummy Infinite Sampler <code>_InfiniteConstantSampler</code> 以充当 <b>Sampler</b> 实体，该 <b>Sampler</b> 可以无限地被迭代，其实质上是调用了 Iterable-style Dataset 的 <code>__iter__(self)</code> 魔法方法。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;单独对于 Map-style Dataset 来说，用户还可以使用 <code>batch_sampler</code> 参数来直接设置 Mini-batch 的 $\text{BatchSampler}$。
+  &nbsp;&nbsp;&nbsp;&nbsp;单独对于 Map-style Dataset 来说，用户还可以使用 <code>batch_sampler</code> 参数来直接设置 Mini-batch 的 <b>BatchSampler</b>。
 
   <h4 class="paragraph">设置基于 Sampled Indices 合成 Mini-batch 的方法</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在基于指定的 $\text{BatchSampler}$ 实体 <code>yield</code> 出一批某轮 Iteration 使用的 Samples 的 Indices 后，接下来就需要由 <code>collate_fn</code> 参数指定的 <def>Collate Function (整理函数)</def> 基于指定的 Indices 对应的 Samples 数据合成最终的 Mini-batch。
+  &nbsp;&nbsp;&nbsp;&nbsp;在基于指定的 <b>BatchSampler</b> 实体 <code>yield</code> 出一批某轮 Iteration 使用的 Samples 的 Indices 后，接下来就需要由 <code>collate_fn</code> 参数指定的 <def>Collate Function (整理函数)</def> 基于指定的 Indices 对应的 Samples 数据合成最终的 Mini-batch。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;对于 Map-style Dataset 来说，Collate Function 流程可以抽象如下:
@@ -556,7 +554,7 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;当用户想用 $\text{Dataset}$ 的代码手动处理 Batch，或每轮 Iteration 仅基于单条 Sample 进行训练时，可将 <code>batch_size</code> 和 <code>batch_sampler</code> 两个参数同时设为 <code>None</code>, 此时 <code>DataLoader</code> 将关闭自动批处理，对 <code>DataLoader</code> 的迭代将使得其通过 $\text{Sampler}$ 实体获得单条 Sample 的索引，然后将该索引对应的 Sample 数据交给 <code>collate_fn</code> 处理，以获得最终的 <code>DataLoader</code> 输出。
+  &nbsp;&nbsp;&nbsp;&nbsp;当用户想用 <b>Dataset</b> 的代码手动处理 Batch，或每轮 Iteration 仅基于单条 Sample 进行训练时，可将 <code>batch_size</code> 和 <code>batch_sampler</code> 两个参数同时设为 <code>None</code>, 此时 <code>DataLoader</code> 将关闭自动批处理，对 <code>DataLoader</code> 的迭代将使得其通过 <b>Sampler</b> 实体获得单条 Sample 的索引，然后将该索引对应的 Sample 数据交给 <code>collate_fn</code> 处理，以获得最终的 <code>DataLoader</code> 输出。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;对于 Map-style Dataset 来说，Collate Function 流程可以抽象如下:
@@ -569,7 +567,7 @@
   <h3 class="title">Collate Function</h3>
   <label class="title">collate</label>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;上面说到，Collate Function 的输入是从 $\text{Dataset}$ 实体中获取的 Sample(s) 的数据，其输出就是对 <code>DataLoader</code> 迭代所获得的输出，在开启/关闭自动批处理时，它的运行逻辑稍有不同。
+  &nbsp;&nbsp;&nbsp;&nbsp;上面说到，Collate Function 的输入是从 <b>Dataset</b> 实体中获取的 Sample(s) 的数据，其输出就是对 <code>DataLoader</code> 迭代所获得的输出，在开启/关闭自动批处理时，它的运行逻辑稍有不同。
 
   <h4 class="paragraph">关闭自动批处理时的情况</h4>
 
@@ -607,7 +605,7 @@
   &nbsp;&nbsp;&nbsp;&nbsp;<code>torch.utils.data</code> 模块提供了 <code>get_work_info</code> 函数用于在各个 Worker 进程中获取各个进程相关的信息，包括 Worker 的 ID，Dataset 的 Replica，以及 Initial Seed 等，在主进程而不是 Worker 进程中调用 <code>get_work_info</code> 函数将返回 <code>None</code>。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于 Map-style 的 Dataset 来说，主进程将会利用 $\text{Sampler}$ ($\text{Batch Sampler}$) 实体生成 Indices，然后将生成的 Indices 发送给各个 Worker 进程，也即「选择 Sample」这件事情是在主进程完成的，而「根据选择结果加载数据」这件事情是在各个 Worker 进程中完成的。
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Map-style 的 Dataset 来说，主进程将会利用 <b>Sampler</b> (<b>BatchSampler</b>) 实体生成 Indices，然后将生成的 Indices 发送给各个 Worker 进程，也即「选择 Sample」这件事情是在主进程完成的，而「根据选择结果加载数据」这件事情是在各个 Worker 进程中完成的。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;对于 Iterable-style 的 Dataset 来说，主进程中将不会进行生成 Indices 的操作，在各个 Worker 进程中会有一份 Dataset 的 Replica，各个 Worker 进程可以基于 <code>get_work_info</code> 函数获得的信息，对各份 Replica 进行不同的操作。
@@ -668,7 +666,7 @@
 
   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_SingleProcessDataLoaderIter</span>(<span class="params">_BaseDataLoaderIter</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, loader</span>):</span></span><br><span class="line">        <span class="built_in">super</span>(_SingleProcessDataLoaderIter, self).__init__(loader)</span><br><span class="line">        <span class="keyword">assert</span> self._timeout == <span class="number">0</span></span><br><span class="line">        <span class="keyword">assert</span> self._num_workers == <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        self._dataset_fetcher = _DatasetKind.create_fetcher(</span><br><span class="line">            self._dataset_kind, self._dataset, self._auto_collation, self._collate_fn, self._drop_last)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_next_data</span>(<span class="params">self</span>):</span></span><br><span class="line">        index = self._next_index()  <span class="comment"># may raise StopIteration</span></span><br><span class="line">        data = self._dataset_fetcher.fetch(index)  <span class="comment"># may raise StopIteration</span></span><br><span class="line">        <span class="keyword">if</span> self._pin_memory:</span><br><span class="line">            data = _utils.pin_memory.pin_memory(data, self._pin_memory_device)</span><br><span class="line">        <span class="keyword">return</span> data</span><br></pre></td></tr></table></figure>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;首先从 <code>_SingleProcessDataLoaderIter</code> 的初始化参数可以看到，其在父类 <code>_BaseDataLoaderIter</code> 的基础上定义了 <code>_dataset_fetcher</code>, 并传入 <code>_dataset</code>, <code>_auto_collation</code>, <code>_collate_fn</code> 等参数，该类用于根据指定的 Indices 来 Fetch 对应的 Samples，事实上就是我们前文提到过的 $\text{Fetcher}$ 实体，我们在后面会对其源码进行分析。
+  &nbsp;&nbsp;&nbsp;&nbsp;首先从 <code>_SingleProcessDataLoaderIter</code> 的初始化参数可以看到，其在父类 <code>_BaseDataLoaderIter</code> 的基础上定义了 <code>_dataset_fetcher</code>, 并传入 <code>_dataset</code>, <code>_auto_collation</code>, <code>_collate_fn</code> 等参数，该类用于根据指定的 Indices 来 Fetch 对应的 Samples，事实上就是我们前文提到过的 <b>Fetcher</b> 实体，我们在后面会对其源码进行分析。
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;其次可以看见 <code>_SingleProcessDataLoaderIter</code> 实现了具体的 <code>_next_data()</code> 方法，其需要 <code>next_index()</code> 来获取要 Fetch 的 Samples 的 Indices，并将 Indices 传入 <code>_dataset_fetcher</code> 中以获取对应样本。
@@ -697,10 +695,10 @@
     <li>父类 <code>_BaseDataLoaderIter</code> 的 <code>__next__</code> 方法实际上调用了 <code>_next_data</code> 方法来实现迭代逻辑，而后者留给子类实现;</li>
     <li>
       <code>_SingleProcessDataLoaderIter</code> 的 <code>_next_data</code> 方法过程可以分为三步:
-      <div class="theorm_prove">
+      <div class="background">
       <ol>
-        <li>调用 <code>_SingleProcessDataLoaderIter</code> 定义的 <code>next_index()</code> 从 $\text{BatchSampler}$ ($\text{Sampler}$) 实体中获取 Sampled Indices (Index);</li>
-        <li>基于 Sampled Indices (Index)，调用 $\text{Fetcher}$ 实体从 $\text{Dataset}$ 中获取并处理对应 Samples 的数据；</li>
+        <li>调用 <code>_SingleProcessDataLoaderIter</code> 定义的 <code>next_index()</code> 从 <b>BatchSampler</b> (<b>Sampler</b>) 实体中获取 Sampled Indices (Index);</li>
+        <li>基于 Sampled Indices (Index)，调用 <b>Fetcher</b> 实体从 <b>Dataset</b> 中获取并处理对应 Samples 的数据；</li>
         <li>将处理后的 Sample(s) 数据转移至 Pinned Memory (如果 <code>pin_memory==True</code>);</li>
       </ol>
       </div>
@@ -722,22 +720,22 @@
 
   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_DatasetKind</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">  Map = <span class="number">0</span></span><br><span class="line">  Iterable = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">  @staticmethod</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">create_fetcher</span>(<span class="params">kind, dataset, auto_collation, collate_fn, drop_last</span>):</span></span><br><span class="line">      <span class="keyword">if</span> kind == _DatasetKind.Map:</span><br><span class="line">          <span class="keyword">return</span> _utils.fetch._MapDatasetFetcher(dataset, auto_collation, collate_fn, drop_last)</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          <span class="keyword">return</span> _utils.fetch._IterableDatasetFetcher(dataset, auto_collation, collate_fn, drop_last)</span><br></pre></td></tr></table></figure>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;现在来看 Samples 加载的部分，也即 $\text{Fetcher}$ 实体。在 <code>_SingleProcessDataLoaderIter</code> 的构造函数中可以看到其调用了 <code>_DatasetKind.create_fetcher</code> 创建了 $\text{Fetcher}$ 实体，相关代码如上所示。根据数据集类型的不同，该函数会创建出 <code>_MapDatasetFetcher</code> 类型或者 <code>_IterableDatasetFetcher</code> 类型的 $\text{Fetcher}$ 实体，分别对应 Map-style 或者 Iterable-style 的数据集。
+  &nbsp;&nbsp;&nbsp;&nbsp;现在来看 Samples 加载的部分，也即 <b>Fetcher</b> 实体。在 <code>_SingleProcessDataLoaderIter</code> 的构造函数中可以看到其调用了 <code>_DatasetKind.create_fetcher</code> 创建了 <b>Fetcher</b> 实体，相关代码如上所示。根据数据集类型的不同，该函数会创建出 <code>_MapDatasetFetcher</code> 类型或者 <code>_IterableDatasetFetcher</code> 类型的 <b>Fetcher</b> 实体，分别对应 Map-style 或者 Iterable-style 的数据集。
 
   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_MapDatasetFetcher</span>(<span class="params">_BaseDatasetFetcher</span>):</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, dataset, auto_collation, collate_fn, drop_last</span>):</span></span><br><span class="line">      <span class="built_in">super</span>(_MapDatasetFetcher, self).__init__(dataset, auto_collation, collate_fn, drop_last)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">fetch</span>(<span class="params">self, possibly_batched_index</span>):</span></span><br><span class="line">      <span class="keyword">if</span> self.auto_collation:</span><br><span class="line">          data = [self.dataset[idx] <span class="keyword">for</span> idx <span class="keyword">in</span> possibly_batched_index]</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          data = self.dataset[possibly_batched_index]</span><br><span class="line">      <span class="keyword">return</span> self.collate_fn(data)</span><br></pre></td></tr></table></figure>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于 <code>_MapDatasetFetcher</code> 类型 $\text{Fetcher}$ 来说，如上所示，其定义的 <code>fetch()</code> 函数直接输入 Indices，作为 Map 的 Key，获得对应的样本，然后将获取的样本交给 <code>collate_fn</code> 指定的 Collate Function 进行输出前的整理。
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 <code>_MapDatasetFetcher</code> 类型 <b>Fetcher</b> 来说，如上所示，其定义的 <code>fetch()</code> 函数直接输入 Indices，作为 Map 的 Key，获得对应的样本，然后将获取的样本交给 <code>collate_fn</code> 指定的 Collate Function 进行输出前的整理。
 
   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_IterableDatasetFetcher</span>(<span class="params">_BaseDatasetFetcher</span>):</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, dataset, auto_collation, collate_fn, drop_last</span>):</span></span><br><span class="line">      <span class="built_in">super</span>(_IterableDatasetFetcher, self).__init__(dataset, auto_collation, collate_fn, drop_last)</span><br><span class="line">      self.dataset_iter = <span class="built_in">iter</span>(dataset)</span><br><span class="line">      self.ended = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">fetch</span>(<span class="params">self, possibly_batched_index</span>):</span></span><br><span class="line">      <span class="keyword">if</span> self.ended:</span><br><span class="line">          <span class="keyword">raise</span> StopIteration</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> self.auto_collation:</span><br><span class="line">          data = []</span><br><span class="line">          <span class="keyword">for</span> _ <span class="keyword">in</span> possibly_batched_index:</span><br><span class="line">              <span class="keyword">try</span>:</span><br><span class="line">                  data.append(<span class="built_in">next</span>(self.dataset_iter))</span><br><span class="line">              <span class="keyword">except</span> StopIteration:</span><br><span class="line">                  self.ended = <span class="literal">True</span></span><br><span class="line">                  <span class="keyword">break</span></span><br><span class="line">          <span class="keyword">if</span> <span class="built_in">len</span>(data) == <span class="number">0</span> <span class="keyword">or</span> (self.drop_last <span class="keyword">and</span> <span class="built_in">len</span>(data) &lt; <span class="built_in">len</span>(possibly_batched_index)):</span><br><span class="line">              <span class="keyword">raise</span> StopIteration</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          data = <span class="built_in">next</span>(self.dataset_iter)</span><br><span class="line">      <span class="keyword">return</span> self.collate_fn(data)</span><br></pre></td></tr></table></figure>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于 <code>_IterableDatasetFetcher</code> 类型 $\text{Fetcher}$ 来说，如上所示，其在构造函数内设置了对应 Dataset 初始的迭代器，在 <code>fetch()</code> 方法内利用该迭代器获取元素，输入 <code>fetch()</code> 的 Indices 其实已经没有多大作用了。
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 <code>_IterableDatasetFetcher</code> 类型 <b>Fetcher</b> 来说，如上所示，其在构造函数内设置了对应 Dataset 初始的迭代器，在 <code>fetch()</code> 方法内利用该迭代器获取元素，输入 <code>fetch()</code> 的 Indices 其实已经没有多大作用了。
 
   <h4 class="paragraph">转移至 Pinned Memory</h3>
 
   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_SingleProcessDataLoaderIter</span>(<span class="params">_BaseDataLoaderIter</span>):</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, loader</span>):</span></span><br><span class="line">      <span class="built_in">super</span>(_SingleProcessDataLoaderIter, self).__init__(loader)</span><br><span class="line">      <span class="keyword">assert</span> self._timeout == <span class="number">0</span></span><br><span class="line">      <span class="keyword">assert</span> self._num_workers == <span class="number">0</span></span><br><span class="line"></span><br><span class="line">      self._dataset_fetcher = _DatasetKind.create_fetcher(</span><br><span class="line">          self._dataset_kind, self._dataset, self._auto_collation, self._collate_fn, self._drop_last)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">_next_data</span>(<span class="params">self</span>):</span></span><br><span class="line">      index = self._next_index()  <span class="comment"># may raise StopIteration</span></span><br><span class="line">      data = self._dataset_fetcher.fetch(index)  <span class="comment"># may raise StopIteration</span></span><br><span class="line">      <span class="keyword">if</span> self._pin_memory:</span><br><span class="line">          data = _utils.pin_memory.pin_memory(data, self._pin_memory_device)</span><br><span class="line">      <span class="keyword">return</span> data</span><br></pre></td></tr></table></figure>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;从上面 <code>_SingleProcessDataLoaderIter</code> 的 <code>_next_data</code> 方法中可以看见，在 $\text{Fetcher}$ 实体完成 Sample(s) 的加载和处理后，最后一步就是根据用户是否指定将 Tensor 数据转移至 Pinned Memory，调用 PyTorch 官方提供的 <code>_utils.pin_memory.pin_memory</code> 方法进行 Pinned Memory 的转移，这个函数我们在 <ref>pinned_memory</ref> 中进行了说明。
+  &nbsp;&nbsp;&nbsp;&nbsp;从上面 <code>_SingleProcessDataLoaderIter</code> 的 <code>_next_data</code> 方法中可以看见，在 <b>Fetcher</b> 实体完成 Sample(s) 的加载和处理后，最后一步就是根据用户是否指定将 Tensor 数据转移至 Pinned Memory，调用 PyTorch 官方提供的 <code>_utils.pin_memory.pin_memory</code> 方法进行 Pinned Memory 的转移，这个函数我们在 <ref>pinned_memory</ref> 中进行了说明。
 
   <h3 class="title">多进程数据加载</h3>
   <p>
@@ -909,7 +907,6 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 
           </div>
           
-    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -962,32 +959,14 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
-      src="/images/avatar.png">
+      src="/images/avatar_2.png">
   <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
   <div class="site-description" itemprop="description">System Engineer</div>
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://www.weibo.com/u/2861056530" title="Weibo → https:&#x2F;&#x2F;www.weibo.com&#x2F;u&#x2F;2861056530" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://twitter.com/HwangZobin" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;HwangZobin" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
-      </span>
-  </div>
 
 
 
       </div>
-        <div class="back-to-top motion-element">
-          <i class="fa fa-arrow-up"></i>
-          <span>0%</span>
-        </div>
 
     </div>
   </aside>
@@ -1002,18 +981,18 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
         
 
         
-  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备2021044371号 </a>
-  </div>
 
 <div class="copyright">
   
-  &copy; 2017 – 
+  &copy; 
   <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
-    <i class="fa fa-guitar"></i>
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
 </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
 
         
 
@@ -1043,37 +1022,10 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 
 <script src="/js/next-boot.js"></script>
 
-<script src="/js/bookmark.js"></script>
-
 
 
 
   
-  <script>
-    (function(){
-      var canonicalURL, curProtocol;
-      //Get the <link> tag
-      var x=document.getElementsByTagName("link");
-		//Find the last canonical URL
-		if(x.length > 0){
-			for (i=0;i<x.length;i++){
-				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
-					canonicalURL=x[i].href;
-				}
-			}
-		}
-    //Get protocol
-	    if (!canonicalURL){
-	    	curProtocol = window.location.protocol.split(':')[0];
-	    }
-	    else{
-	    	curProtocol = canonicalURL.split(':')[0];
-	    }
-      //Get current URL if the canonical URL does not exist
-	    if (!canonicalURL) canonicalURL = window.location.href;
-	    //Assign script content. Replace current URL with the canonical URL
-      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
-  </script>
 
 
 
@@ -1092,37 +1044,6 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
   
 
   
-
-  
-
-
-<script>
-NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
-  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
-    var GUEST = ['nick', 'mail', 'link'];
-    var guest = 'nick,mail,link';
-    guest = guest.split(',').filter(item => {
-      return GUEST.includes(item);
-    });
-    new Valine({
-      el         : '#valine-comments',
-      verify     : false,
-      notify     : false,
-      appId      : 'y8LMT8RtOsi4JsbYHtNm2J7U-gzGzoHsz',
-      appKey     : 'Q0cSe4rR8Iwr0Gs60rwWBsYa',
-      placeholder: "Just go go",
-      avatar     : 'mm',
-      meta       : guest,
-      pageSize   : '10' || 10,
-      visitor    : false,
-      lang       : '' || 'zh-cn',
-      path       : location.pathname,
-      recordIP   : false,
-      serverURLs : ''
-    });
-  }, window.Valine);
-});
-</script>
 
 </body>
 </html>

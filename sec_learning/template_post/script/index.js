@@ -141,13 +141,21 @@ async function _load_metadata(){
         block_content_ul.append(copyright_li)
         // ---- link
         let link_li = document.createElement('li')
-        let link_entry_title = document.createElement('entry_title')
-        link_entry_title.innerHTML = '本文链接: '
-        if(meta_entries.link !== '')
-            link_li.innerHTML = `${meta_entries.link}`
-        else
-            link_li.innerHTML = `${window.location.href}`
-        link_li.insertBefore(link_entry_title,link_li.firstChild)
+        // let link_entry_title = document.createElement('entry_title')
+        // let link_br = document.createElement('br')
+        // let link_content = document.createElement('a')
+        // link_entry_title.innerHTML = '本文链接: '
+        if(meta_entries.link !== ''){
+            link_li.innerHTML = `本文链接: ${meta_entries.link}`
+            // link_content.setAttribute('href', `${meta_entries.link}`)
+        } else {
+            link_li.innerHTML = `本文链接: ${window.location.href}`
+            // link_content.setAttribute('href', `${window.location.href}`)
+        }
+        // link_li.insertBefore(link_entry_title,link_li.firstChild)
+        // link_li.append(link_entry_title)
+        // link_li.append(link_br)
+        // link_li.append(link_content)
         block_content_ul.append(link_li)
 
         // 创建 Bar

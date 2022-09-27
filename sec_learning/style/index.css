@@ -107,6 +107,8 @@ img{margin-right: 20px;}
     background-color: #0074D9;  
     color: #fff;   
     border: 1px solid transparent;  
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: bolder;
     height: 30px; 
     font-size: 15px; 
     transition: all;
@@ -127,7 +129,7 @@ img{margin-right: 20px;}
     border: 0px;
     height: 30px;
     width: 270px;
-    padding: 0px 3px;
+    padding: 0px 8px;
     font-size: 15px;
 }
 
