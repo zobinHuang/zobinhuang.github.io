@@ -1584,13 +1584,6 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Computer_Architerture/System_System_Bus_Interface_PCIe_1_PC_Bus_And_PCI_PCIe_Intro/index.html</loc>
-    
-    <lastmod>2021-11-28</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Computer_Architerture/FPGA_Dev_AXI_1_AXI_bus_Intro/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
@@ -1599,6 +1592,13 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Computer_Architerture/System_System_Bus_Interface_NVMe_1_NVMe_Intro/index.html</loc>
+    
+    <lastmod>2021-11-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Computer_Architerture/System_System_Bus_Interface_PCIe_1_PC_Bus_And_PCI_PCIe_Intro/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -1619,13 +1619,6 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Advanced_Network/Infrastructure_Offloading_2_Config_SmartNIC/index.html</loc>
-    
-    <lastmod>2021-11-28</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Advanced_Network/Infrastructure_SDN_1_SDN_OpenFlow_Intro/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
@@ -1633,7 +1626,7 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Advanced_Network/Infrastructure_Virtualization_1_Motivation_And_Principles/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Advanced_Network/Infrastructure_Offloading_2_Config_SmartNIC/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -1641,6 +1634,13 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Advanced_Network/Infrastructure_Virtualization_2_Network_Virtualization_Definition/index.html</loc>
+    
+    <lastmod>2021-11-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Advanced_Network/Infrastructure_Virtualization_1_Motivation_And_Principles/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -1668,13 +1668,6 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Service_Type/index.html</loc>
-    
-    <lastmod>2021-11-28</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Product_IaaS_form/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
@@ -1682,7 +1675,7 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Linux_Internal_Network_Data_Structure/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Advanced_Network/Backup/Cloud_Computing/Cloud_Service_Type/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -1690,6 +1683,13 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning_backup/Linux_Internal_Network_1_Receiving_Packet/index.html</loc>
+    
+    <lastmod>2021-11-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Linux_Internal_Network_Data_Structure/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -1710,13 +1710,6 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Non_Archived_Segment_And_Section/index.html</loc>
-    
-    <lastmod>2021-11-28</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zobinhuang.github.io/sec_learning_backup/Paper_Walk_Through/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
@@ -1724,7 +1717,7 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Non_Archived_Segment_And_Section/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -1732,6 +1725,13 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning_backup/Linux_Internal_Network_Notification_Chain/index.html</loc>
+    
+    <lastmod>2021-11-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Linux_Internal_Network_Key_Data_Structure/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -1801,7 +1801,7 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_11_Task_Switch/user.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_11_Task_Switch/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -1815,7 +1815,7 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_11_Task_Switch/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_11_Task_Switch/user.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -1857,14 +1857,14 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Architecture_1_Architecture_Intro_And_ISA/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Architecture_2_Quantify/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Architecture_2_Quantify/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Architecture_1_Architecture_Intro_And_ISA/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -1948,14 +1948,14 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_essay/20_12_5/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_essay/21_4_27/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_essay/21_4_27/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_essay/20_12_5/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
@@ -1983,14 +1983,14 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_8_Protect_Mode/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_7_Intel_32_CPU_And_IA_32/index.html</loc>
     
     <lastmod>2021-11-02</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_7_Intel_32_CPU_And_IA_32/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_8_Protect_Mode/index.html</loc>
     
     <lastmod>2021-11-02</lastmod>
     
@@ -2018,13 +2018,6 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_research/Ref_Network_Measurement_SIGCOMM_20_Flow_Event_Telemetry/index.html</loc>
-    
-    <lastmod>2021-09-07</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zobinhuang.github.io/sec_research/Ref_Network_Measurement_SIGCOMM_20_BeauCoup/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
@@ -2033,6 +2026,13 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_research/template_post/index.html</loc>
+    
+    <lastmod>2021-09-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_research/Ref_Network_Measurement_SIGCOMM_20_Flow_Event_Telemetry/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2053,20 +2053,6 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_9_Outside_Interrupt/index.html</loc>
-    
-    <lastmod>2021-09-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/Linux_Kernel_Driver_1_PCIe_NIC/index.html</loc>
-    
-    <lastmod>2021-09-07</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/OS_Basic_Kernel_1_Overview/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
@@ -2081,7 +2067,14 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_4_Segment/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/Linux_Kernel_Driver_1_PCIe_NIC/index.html</loc>
+    
+    <lastmod>2021-09-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_9_Outside_Interrupt/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2095,7 +2088,7 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_2_Register/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_4_Example_Data_Segment/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2130,14 +2123,21 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_4_Example_Data_Segment/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_8_Port/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_8_Port/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_4_Segment/index.html</loc>
+    
+    <lastmod>2021-09-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_2_Register/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2151,14 +2151,14 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_4_Segment/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_5_Internal_Interrupt/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_5_Internal_Interrupt/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/x86_ISA_4_Segment/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2200,7 +2200,7 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_JWT/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_1_Combinational_Circuit/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2214,13 +2214,6 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_1_Combinational_Circuit/index.html</loc>
-    
-    <lastmod>2021-09-07</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Digtal_And_Compter_Arch_Basic_2_Sequential_Circuit/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
@@ -2228,7 +2221,7 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Basic_Network/TCP_IP_Application_Layer_1_WWW_And_HTTP/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_JWT/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2242,14 +2235,14 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Go_Collection/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Basic_Network/TCP_IP_Application_Layer_1_WWW_And_HTTP/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Program_JavaScript_And_Node/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Go_Collection/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2263,7 +2256,14 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Container_1_Docker_Intro/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Program_JavaScript_And_Node/index.html</loc>
+    
+    <lastmod>2021-09-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Container_11_Docker_Network/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2291,7 +2291,7 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Container_5_Docker_Portainer/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Container_1_Docker_Intro/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2305,28 +2305,7 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Container_11_Docker_Network/index.html</loc>
-    
-    <lastmod>2021-09-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Container_7_Docker_Commit/index.html</loc>
-    
-    <lastmod>2021-09-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Container_9_Docker_DockerFile/index.html</loc>
-    
-    <lastmod>2021-09-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Container_8_Docker_volume/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Container_5_Docker_Portainer/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2340,28 +2319,21 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Program_JavaScript_And_Node/JavaScript_3_Ajax/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Container_7_Docker_Commit/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Program_JavaScript_And_Node/JavaScript_4_Fetch/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Container_8_Docker_volume/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Program_JavaScript_And_Node/JavaScript_2_Async/index.html</loc>
-    
-    <lastmod>2021-09-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Program_JavaScript_And_Node/JavaScript_1_Crash/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Container_9_Docker_DockerFile/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2382,14 +2354,35 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Go_Basic_3_Compound_Type/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Program_JavaScript_And_Node/JavaScript_3_Ajax/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Go_Basic_4_Function/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Program_JavaScript_And_Node/JavaScript_1_Crash/index.html</loc>
+    
+    <lastmod>2021-09-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Program_JavaScript_And_Node/JavaScript_4_Fetch/index.html</loc>
+    
+    <lastmod>2021-09-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Program_JavaScript_And_Node/JavaScript_2_Async/index.html</loc>
+    
+    <lastmod>2021-09-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Go_Basic_3_Compound_Type/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2410,14 +2403,7 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Go_Basic_8_Go_Shared_Variables/index.html</loc>
-    
-    <lastmod>2021-09-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Go_Basic_9_Go_Package/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Go_Basic_4_Function/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2438,7 +2424,7 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Go_Standard_Library_2_Net/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Go_Basic_8_Go_Shared_Variables/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2452,7 +2438,21 @@
   </url>
   
   <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Go_Standard_Library_2_Net/index.html</loc>
+    
+    <lastmod>2021-09-07</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Go_Standard_Library_3_Context/index.html</loc>
+    
+    <lastmod>2021-09-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Go_Basic_9_Go_Package/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2487,14 +2487,14 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Go_Basic_1_Basic_Concept/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Go_Basic_10_Unit_Test/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Go_Basic_10_Unit_Test/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/Go_Basic_1_Basic_Concept/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2509,6 +2509,13 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning_backup/AI_CUDA/Environment_Setup_1_Install_on_Win10/index.html</loc>
+    
+    <lastmod>2021-09-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/AI_ML_Andrew_Ng/1_2_supervised_learning/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2536,35 +2543,7 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/AI_ML_Andrew_Ng/1_2_supervised_learning/index.html</loc>
-    
-    <lastmod>2021-09-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/AI_ML_Andrew_Ng/2_2_cost_function/index.html</loc>
-    
-    <lastmod>2021-09-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Data_Structure_And_Algorithm_Algorithm_Intro_backup/1_Intro_and_algorithm_analyse/index.html</loc>
-    
-    <lastmod>2021-09-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Data_Structure_And_Algorithm_Algorithm_Intro_backup/2_Asymptotic_notation_and_recurrences/index.html</loc>
-    
-    <lastmod>2021-09-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Data_Structure_And_Algorithm_Algorithm_Intro_backup/3_Divide_and_conquer/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Data_Structure_And_Algorithm_Data_Structure/Basic_Graph/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
@@ -2578,7 +2557,28 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning_backup/Data_Structure_And_Algorithm_Data_Structure/Basic_Graph/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Data_Structure_And_Algorithm_Algorithm_Intro_backup/1_Intro_and_algorithm_analyse/index.html</loc>
+    
+    <lastmod>2021-09-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/AI_ML_Andrew_Ng/2_2_cost_function/index.html</loc>
+    
+    <lastmod>2021-09-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Data_Structure_And_Algorithm_Algorithm_Intro_backup/3_Divide_and_conquer/index.html</loc>
+    
+    <lastmod>2021-09-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning_backup/Data_Structure_And_Algorithm_Algorithm_Intro_backup/2_Asymptotic_notation_and_recurrences/index.html</loc>
     
     <lastmod>2021-09-07</lastmod>
     
