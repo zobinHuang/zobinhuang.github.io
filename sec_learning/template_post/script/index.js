@@ -1,7 +1,7 @@
 async function load_page(){
     
     _load_metadata()
-
+    
     _load_paragraph()
 
     _load_flow_chart()
@@ -366,6 +366,30 @@ async function _load_flow_chart(){
     }
 }
 
+// 处理文章中所有水印
+async function __load_watermark(){
+    let imgs = document.getElementsByTagName('img')
+
+    for(let i = 0; i < imgs.length; i++){
+        // 组合出水印图片的路径
+        let img = imgs[i]
+        let img_path = img.getAttribute('src')
+        let img_file = img_path.substring(img_path.lastIndexOf('/')+1);
+        let img_dict = img_path.substring(0,-1+img_path.length-img_file.length);
+        //let watermark_file = 'watermark_' + img_file
+        let watermark_file = 'watermark/' + img_file
+        let watermark_img_path  = img_dict + '/' + watermark_file
+
+        // 判断水印文件是否存在，若存在则替换
+        let img_obj = new Image();
+        img_obj.onload = function(){
+            console.log('exist')
+            img.setAttribute('src', watermark_img_path)
+        }
+        img_obj.src= watermark_img_path;
+    }
+}
+
 // 处理文章中所有的图片
 async function _load_pic(){
     let img_index_list = new Array()
@@ -418,6 +442,9 @@ async function _load_pic(){
         img_refs[i].innerHTML = ''
         img_refs[i].append(img_link)
     }
+
+    // 处理水印
+    __load_watermark()
 }
 
 // 处理文章中所有的等式
