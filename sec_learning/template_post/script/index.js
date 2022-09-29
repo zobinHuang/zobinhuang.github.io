@@ -383,7 +383,6 @@ async function __load_watermark(){
         // 判断水印文件是否存在，若存在则替换
         let img_obj = new Image();
         img_obj.onload = function(){
-            console.log('exist')
             img.setAttribute('src', watermark_img_path)
         }
         img_obj.src= watermark_img_path;
