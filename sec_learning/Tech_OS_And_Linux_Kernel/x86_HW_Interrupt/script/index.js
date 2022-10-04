@@ -1,12 +1,6 @@
 async function load_page(){
-    _load_catalogue().then( 
-        (return_struct)=>{ 
-            document.getElementById('load_catalogue_alert').style.display = 'none'
-
-            let label_list = return_struct.label_list
-            _load_reference(label_list)
-        }
-    )
+    
+    _load_metadata()
     
     _load_paragraph()
 
@@ -31,6 +25,174 @@ async function load_page(){
     _load_citation()
 }
 
+// 显示/隐藏目录按钮回调
+async function _show_catalogue(){
+    let div_catalogue = document.getElementById('div_catalogue')
+    let button = document.getElementById('show_catalogue_btn')
+    if(div_catalogue.className === 'div_catalogue'){
+        div_catalogue.setAttribute('class', 'div_catalogue_disappear')
+        button.innerHTML = '显示目录'
+        setTimeout(function() { div_catalogue.style.display = 'none'; }, 300);
+    } else {
+        div_catalogue.style.display = ''
+        button.innerHTML = '隐藏目录'
+        div_catalogue.setAttribute('class', 'div_catalogue')
+    }
+}
+
+// 加载本文的元数据，包括目录
+/* 该函数构造出来的 DOM 形如:
+    <div id="metadata" class="base_block indicate_source_block">
+    <div class="base_block_container indicate_source_block_container">
+        <!-- Title -->
+        <div class="base_block_title_container indicate_source_block_title_container">
+            <button id='show_catalogue_btn'>显示目录</button>
+            <img src="./pic/source_sign.png" width="30px" />
+            <p>About This Post
+        </div>
+        <!-- Bar -->
+        <div class="base_block_bar indicate_source_block_bar"></div>
+        <!-- Content -->
+        <div class="base_block_content_container indicate_source_block_content_container">
+            <ul>
+                <li><entry_title>作者</entry_title>: Zhuobin Huang</li>
+                <li><entry_title>日期</entry_title>: Sept.19 2022</li>
+                <li><entry_title>版权声明</entry_title>: 著作权归作者所有，商业转载请联系作者获得授权，非商业转载请注明出处，违者必究。</li>
+                <li><entry_title>本文链接</entry_title>: </li>
+            </ul>
+        </div>
+        <!-- Bar -->
+        <div class="base_block_bar indicate_source_block_bar"></div>
+        <!-- Catalogue -->
+        <div class="div_catalogue" id="div_catalogue">
+            <div class="div_load_catalogue_alert" id="load_catalogue_alert">正在加载目录...</div>
+            <div class="div_catalogue_container" id="catalogue_container"></div>
+        </div>
+    </div>
+    </div>
+*/
+async function _load_metadata(){
+    // 获取本文 Metadata Json
+    fetch('./metadata.json')
+    .then((res) => {return res.json();})
+    .then((meta_entries) => {
+        // 获取最外层 block，并设置样式
+        let metadata_block = document.getElementById('metadata')
+        metadata_block.setAttribute('class', 'base_block indicate_source_block')
+
+        // 创建 container，并设置样式
+        let block_container = document.createElement('div')
+        block_container.setAttribute('class', 'base_block_container indicate_source_block_container')
+        metadata_block.append(block_container)
+
+        // 创建 title container 内的相关内容 (也即 About This Post)
+        let block_title_container = document.createElement('div')
+        block_title_container.setAttribute('class', 'base_block_title_container indicate_source_block_title_container')
+        block_container.append(block_title_container)
+        // 按钮
+        let show_catalogue_button = document.createElement('button')
+        show_catalogue_button.setAttribute('onclick', '_show_catalogue()')
+        show_catalogue_button.setAttribute('id', 'show_catalogue_btn')
+        show_catalogue_button.innerHTML = '显示目录'
+        block_title_container.append(show_catalogue_button)
+        // 标志
+        let icon = document.createElement('img')
+        icon.setAttribute('src', './pic/source_sign.png')
+        icon.setAttribute('width', '30px')
+        block_title_container.append(icon)
+        // 文字
+        let title_words = document.createElement('p')
+        title_words.innerHTML = 'About This Post'
+        block_title_container.append(title_words)
+
+        // 创建 Bar
+        let bar_1 = document.createElement('div')
+        bar_1.setAttribute('class', 'base_block_bar indicate_source_block_bar')
+        block_container.append(bar_1)
+
+        // 创建 content container 内的相关内容
+        let block_content_container = document.createElement('div')
+        block_content_container.setAttribute('class', 'base_block_content_container indicate_source_block_content_container')
+        block_container.append(block_content_container)
+        // ul
+        let block_content_ul = document.createElement('ul')
+        block_content_container.append(block_content_ul)
+        // li
+        // ---- author
+        let author_li = document.createElement('li')
+        let author_entry_title = document.createElement('entry_title')
+        author_entry_title.innerHTML = '作者: '
+        author_li.innerHTML = `${meta_entries.author}`
+        author_li.insertBefore(author_entry_title,author_li.firstChild)
+        block_content_ul.append(author_li)
+        // ---- date
+        let date_li = document.createElement('li')
+        let date_entry_title = document.createElement('entry_title')
+        date_entry_title.innerHTML = '日期: '
+        date_li.innerHTML = `${meta_entries.date}`
+        date_li.insertBefore(date_entry_title,date_li.firstChild)
+        block_content_ul.append(date_li)
+        // ---- copyright
+        let copyright_li = document.createElement('li')
+        let copyright_entry_title = document.createElement('entry_title')
+        copyright_entry_title.innerHTML = '版权: '
+        copyright_li.innerHTML = `${meta_entries.copyright}`
+        copyright_li.insertBefore(copyright_entry_title,copyright_li.firstChild)
+        block_content_ul.append(copyright_li)
+        // ---- link
+        let link_li = document.createElement('li')
+        // let link_entry_title = document.createElement('entry_title')
+        // let link_br = document.createElement('br')
+        // let link_content = document.createElement('a')
+        // link_entry_title.innerHTML = '本文链接: '
+        if(meta_entries.link !== ''){
+            link_li.innerHTML = `本文链接: ${meta_entries.link}`
+            // link_content.setAttribute('href', `${meta_entries.link}`)
+        } else {
+            link_li.innerHTML = `本文链接: ${window.location.href}`
+            // link_content.setAttribute('href', `${window.location.href}`)
+        }
+        // link_li.insertBefore(link_entry_title,link_li.firstChild)
+        // link_li.append(link_entry_title)
+        // link_li.append(link_br)
+        // link_li.append(link_content)
+        block_content_ul.append(link_li)
+
+        // 创建 Bar
+        let bar_2 = document.createElement('div')
+        bar_2.setAttribute('class', 'base_block_bar indicate_source_block_bar')
+        block_container.append(bar_2)
+
+        // 创建 Catalogue Container 内的相关内容
+        let catalogue_container = document.createElement('div')
+        catalogue_container.setAttribute('class', 'div_catalogue_disappear')
+        catalogue_container.style.display = 'none'
+        catalogue_container.setAttribute('id', 'div_catalogue')
+        block_container.append(catalogue_container)
+        // 创建 Alert
+        let load_catalogue_alert_container = document.createElement('div')
+        load_catalogue_alert_container.setAttribute('class', 'div_load_catalogue_alert')
+        load_catalogue_alert_container.setAttribute('id', 'load_catalogue_alert')
+        load_catalogue_alert_container.innerHTML = '正在加载目录...'
+        catalogue_container.append(load_catalogue_alert_container)
+        // 创建目录 Container
+        let real_catalogue_container = document.createElement('div')
+        real_catalogue_container.setAttribute('class', 'div_catalogue_container')
+        real_catalogue_container.setAttribute('id', 'catalogue_container')
+        catalogue_container.append(real_catalogue_container)
+
+        // 加载目录
+        _load_catalogue().then( 
+            (return_struct)=>{ 
+                document.getElementById('load_catalogue_alert').style.display = 'none'
+
+                let label_list = return_struct.label_list
+                _load_reference(label_list)
+            }
+        )
+    })
+}
+
 // 处理文章中所有的 paragraphs
 async function _load_paragraph(){
     let paragraphs = document.getElementsByClassName("paragraph")
@@ -47,26 +209,14 @@ async function _load_sign_block() {
     for(let i = 0; i < note_blocks.length; i++){
         note_block = note_blocks[i]
 
-        // 创建 Note 图片部分 Container
-        let note_block_sign_container = document.createElement('div')
-        note_block_sign_container.setAttribute('class', 'block_sign_container')
-        let note_block_sign = document.createElement('img')
-        note_block_sign.setAttribute('src', './pic/note_sign.png')
-        note_block_sign.setAttribute('height', '40px')
-        note_block_sign.setAttribute('style', 'margin:0px;padding:0px;')
-        note_block_sign_container.append(note_block_sign)
+        // 创建 block
+        let elements = __create_block("note", "./pic/note_sign.png", "Note")
 
-        // 创建 Note 文字部分 Container
-        let note_block_content_container = document.createElement('div')
-        note_block_content_container.setAttribute('class', 'block_content_container')
-        note_block.parentNode.insertBefore(note_block_content_container, note_block.nextElementSibling)
-        note_block_content_container.append(note_block)
+        // 将创建的 block 放在相应位置
+        note_block.parentNode.insertBefore(elements[0], note_block.nextElementSibling)
 
-        let overall_container = document.createElement('div')
-        overall_container.setAttribute('class', 'note_block')
-        note_block_content_container.parentNode.insertBefore(overall_container, note_block_content_container.nextElementSibling)
-        overall_container.append(note_block_sign_container)
-        overall_container.append(note_block_content_container)
+        // 将 note_block 放入创建的 block 的 block_content_container 中
+        elements[3].append(note_block)
     }
 
     // question block
@@ -74,26 +224,14 @@ async function _load_sign_block() {
     for(let i = 0; i < question_blocks.length; i++){
         question_block = question_blocks[i]
 
-        // 创建 Question 图片部分 Container
-        let question_block_sign_container = document.createElement('div')
-        question_block_sign_container.setAttribute('class', 'block_sign_container')
-        let question_block_sign = document.createElement('img')
-        question_block_sign.setAttribute('src', './pic/question_sign.png')
-        question_block_sign.setAttribute('height', '40px')
-        question_block_sign.setAttribute('style', 'margin:0px;padding:0px;')
-        question_block_sign_container.append(question_block_sign)
+        // 创建 block
+        let elements = __create_block("question", "./pic/question_sign.png", "Question")
 
-        // 创建 Question 文字部分 Container
-        let question_block_content_container = document.createElement('div')
-        question_block_content_container.setAttribute('class', 'block_content_container')
-        question_block.parentNode.insertBefore(question_block_content_container, question_block.nextElementSibling)
-        question_block_content_container.append(question_block)
+        // 将创建的 block 放在相应位置
+        question_block.parentNode.insertBefore(elements[0], question_block.nextElementSibling)
 
-        let overall_container = document.createElement('div')
-        overall_container.setAttribute('class', 'question_block')
-        question_block_content_container.parentNode.insertBefore(overall_container, question_block_content_container.nextElementSibling)
-        overall_container.append(question_block_sign_container)
-        overall_container.append(question_block_content_container)
+        // 将 question_block 放入创建的 block 的 block_content_container 中
+        elements[3].append(question_block)
     }
 }
 
@@ -204,6 +342,29 @@ async function _load_flow_chart(){
     }
 }
 
+// 处理文章中所有水印
+async function __load_watermark(){
+    let imgs = document.getElementsByTagName('img')
+
+    for(let i = 0; i < imgs.length; i++){
+        // 组合出水印图片的路径
+        let img = imgs[i]
+        let img_path = img.getAttribute('src')
+        let img_file = img_path.substring(img_path.lastIndexOf('/')+1);
+        let img_dict = img_path.substring(0,-1+img_path.length-img_file.length);
+        //let watermark_file = 'watermark_' + img_file
+        let watermark_file = 'watermark/' + img_file
+        let watermark_img_path  = img_dict + '/' + watermark_file
+
+        // 判断水印文件是否存在，若存在则替换
+        let img_obj = new Image();
+        img_obj.onload = function(){
+            img.setAttribute('src', watermark_img_path)
+        }
+        img_obj.src= watermark_img_path;
+    }
+}
+
 // 处理文章中所有的图片
 async function _load_pic(){
     let img_index_list = new Array()
@@ -256,6 +417,9 @@ async function _load_pic(){
         img_refs[i].innerHTML = ''
         img_refs[i].append(img_link)
     }
+
+    // 处理水印
+    __load_watermark()
 }
 
 // 处理文章中所有的等式
@@ -348,26 +512,55 @@ async function _load_theorm(){
 async function _show_code_segment(id){
     let code_segment_container = document.getElementById(`container_${id}`)
     let code_segment_button = document.getElementById(`${id}`)
+    let code_segment_button_content = code_segment_button.firstChild
 
-    if(code_segment_container.style.display == 'none'){
+    if(code_segment_container.className == 'div_code_container_disapear'){
         code_segment_container.style.display = ''
-        code_segment_button.innerHTML = '隐藏代码段'
+        code_segment_container.setAttribute('class', 'div_code_container')
+        code_segment_button_content.innerHTML = `Hide Codes`
     } else {
-        code_segment_container.style.display = 'none'
-        code_segment_button.innerHTML = '显示代码段'
+        code_segment_container.setAttribute('class', 'div_code_container_disapear')
+        code_segment_button_content.innerHTML = `Show Codes`
+        setTimeout(function() { code_segment_container.style.display = 'none'; }, 300);
     }
 }
 
 // 处理文章中所有的代码段
 async function _load_code_segment(){
     let code_segments = document.getElementsByTagName('figure')
+
+    function __process_language_name(language){
+        if(language == 'python') return 'Python'
+        else if(language == 'bash') return 'Bash Script'
+        else if(language == 'cpp') return 'C++'
+        else if(language == 'c') return 'C'
+        else if(language == 'go' || language == 'golang') return 'Golang'
+        else return language
+    }
+
     for(let i = 0; i < code_segments.length; i++){
+        // 获取代码段语言
+        let code_segment_language = __process_language_name(`${code_segments[i].classList[1]}`)
+
         // 创建一个按钮
         let code_segment_btn = document.createElement('button')
         code_segment_btn.setAttribute('type', 'button')
         code_segment_btn.setAttribute('id', `code_segment_${i}`)
         code_segment_btn.setAttribute('onclick', '_show_code_segment(id)')
-        code_segment_btn.innerHTML = '显示代码段'
+        code_segment_btn.setAttribute('language', code_segment_language)
+
+        // 创建按钮内容 - 按钮文字
+        let code_segment_btn_content = document.createElement('div')
+        code_segment_btn_content.setAttribute('class', 'div_code_segment_button_sign')
+        code_segment_btn_content.innerHTML = `Hide Codes`
+
+        // 创建按钮内容 - 语言类型
+        let code_segment_btn_language_type = document.createElement('div')
+        code_segment_btn_language_type.setAttribute('class', 'div_code_segment_language_type')
+        code_segment_btn_language_type.innerHTML = `${code_segment_language}`
+        
+        code_segment_btn.append(code_segment_btn_content)
+        code_segment_btn.append(code_segment_btn_language_type)
 
         // 在代码段外面包上一个 container
         let code_segment_container = document.createElement('div')
@@ -376,7 +569,9 @@ async function _load_code_segment(){
 
         // 设置 container 属性，以及暂时设置为不可见
         code_segment_container.setAttribute('id', `container_code_segment_${i}`)
-        code_segment_container.style.display = 'none'
+        code_segment_container.setAttribute('class', `div_code_container`)
+        // code_segment_container.style.display = 'none'    // 不可见
+        code_segment_container.style.display = ''       // 可见
 
         // 创建一个最外层的 container
         let outside_container = document.createElement('div')
@@ -746,4 +941,47 @@ function insertAfter(newElement, targentElement) {
     } else {
         parent.insertBefore(newElement, targentElement.nextSibling)
     }
+}
+
+function __create_block(block_name, sign_img_path, title){
+    let ret = new Array();
+
+    // 获取最外层 block，并设置样式
+    let block = document.createElement('div')
+    block.setAttribute('class', `base_block ${block_name}_block`)
+    ret[0] = block
+
+    // 创建 container，并设置样式
+    let block_container = document.createElement('div')
+    block_container.setAttribute('class', `base_block_container ${block_name}_block_container`)
+    block.append(block_container)
+    ret[1] = block_container
+
+    // 创建 title container 内的相关内容
+    let block_title_container = document.createElement('div')
+    block_title_container.setAttribute('class', `base_block_title_container ${block_name}_block_title_container`)
+    block_container.append(block_title_container)
+    // 标志
+    let icon = document.createElement('img')
+    icon.setAttribute('src', `${sign_img_path}`)
+    icon.setAttribute('width', '30px')
+    block_title_container.append(icon)
+    // 文字
+    let title_words = document.createElement('p')
+    title_words.innerHTML = `${title}`
+    block_title_container.append(title_words)
+    ret[2] = block_title_container
+
+    // 创建 Bar
+    let bar_1 = document.createElement('div')
+    bar_1.setAttribute('class', `base_block_bar ${block_name}_block_bar`)
+    block_container.append(bar_1)
+
+    // 创建 content container，相关内容后续填充
+    let block_content_container = document.createElement('div')
+    block_content_container.setAttribute('class', `base_block_content_container ${block_name}_block_content_container`)
+    block_container.append(block_content_container)
+    ret[3] = block_content_container
+
+    return ret
 }

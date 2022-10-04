@@ -266,50 +266,6 @@ theorm_index {
     margin: 0px;
 }
 
-noteblock{
-    font-size: 18px;
-    color: #FFFFFF;
-    font-weight: bolder;
-}
-
-noteblock a{
-    color: #FFFFFF;
-}
-
-.note_block{
-    background-color:#646bee;
-    padding: 10px 20px; 
-    word-spacing:0px;  
-    border-radius: 15px;
-    margin: 15px 0px;
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    box-shadow: 5px 5px 5px #888888;
-}
-
-queblock{
-    font-size: 18px;
-    color: #FFFFFF;
-    font-weight: bolder;
-}
-
-queblock a{
-    color: #FFFFFF;
-}
-
-.question_block{
-    background-color:#ff8686;
-    padding: 10px 20px; 
-    word-spacing:0px;  
-    border-radius: 15px;
-    margin: 15px 0px;
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    box-shadow: 5px 5px 5px #888888;
-}
-
 .block_sign_container {
     margin-right: 30px;
     display: flex;
@@ -485,4 +441,64 @@ flowchart_index {
 
 .indicate_source_block_content_container li{
     font-family: 'Courier New', Courier, monospace;
+}
+
+/* III. Note Block */
+.note_block{
+    justify-content: center;
+    margin: 20px 0px;
+}
+
+.note_block_container{
+    width: 100%;
+}
+
+.note_block_title_container{
+    background-color: rgb(4, 0, 114);
+    color: #ffffff;
+}
+
+.note_block_bar{
+    background-color: #000144;
+}
+
+.note_block_content_container{
+    background-color: #f3f1ff;
+    overflow-x: initial;
+    white-space: initial;
+}
+
+noteblock{
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+/* IV. Question Block */
+.question_block{
+    justify-content: center;
+    margin: 20px 0px;
+}
+
+.question_block_container{
+    width: 100%;
+}
+
+.question_block_title_container{
+    background-color: rgb(135, 0, 0);
+    color: #ffffff;
+}
+
+.question_block_bar{
+    background-color: #400000;
+}
+
+.question_block_content_container{
+    background-color: #ffeeee;
+    overflow-x: initial;
+    white-space: initial;
+}
+
+queblock{
+    padding: 10px 20px;
+    font-size: 14px;
 }

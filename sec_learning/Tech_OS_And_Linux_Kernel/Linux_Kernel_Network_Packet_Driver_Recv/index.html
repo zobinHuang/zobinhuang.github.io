@@ -27,15 +27,14 @@
 <meta property="og:site_name" content="Zobin">
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
-<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/pic/intel_nic.jpg">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/pic/other_intel_nic.jpg">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/pic/recv_desp_ring_buffer.png">
-<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/pic/recv_desp_ring_buffer_official.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/pic/other_recv_desp_ring_buffer_official.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/pic/legacy_recv_descriptor.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/pic/advanced_recv_descriptor_read.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/pic/xxx.png">
-<meta property="article:published_time" content="2022-09-18T13:41:05.357Z">
-<meta property="article:modified_time" content="2022-09-18T13:41:05.357Z">
+<meta property="article:published_time" content="2022-09-30T14:36:15.019Z">
+<meta property="article:modified_time" content="2022-09-30T14:36:15.019Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -43,7 +42,7 @@
 <meta property="article:tag" content="网络工程">
 <meta property="article:tag" content="Networking Engineering">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta name="twitter:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/pic/other_intel_nic.jpg">
 
 <link rel="canonical" href="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_Network_Packet_Driver_Recv/">
 
@@ -252,36 +251,23 @@
 <script src="script/mermaid.min.js"></script>
 <script>mermaid.initialize({startOnLoad:true});</script>
 
-<div align="center" class="div_indicate_source">
-  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Aug.21 2022</i></font></h4>
-</div>
-<div class="div_licence">
-  <br>
-  <div align="center">
-      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
-  </div>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
-  </p>
-</div>
-<br>
-<div class="div_catalogue">
-  <div align="center">
-    <h1> 目录 </h1>
-    <p>
-    <font size="3px">有特定需要的内容直接跳转到相关章节查看即可。</font>
-  </div>
-  <div class="div_load_catalogue_alert" id="load_catalogue_alert">正在加载目录...</div>
-  <div class="div_catalogue_container" id="catalogue_container">
-  </div>
-</div><br>
+<!-- 本文的 Metadata -->
+<div id="metadata"></div>
 
-<noteblock>
-本文主要参考自 <cite>zhihu_ovs_datapath_1</cite>, <cite>monitoring_recv</cite>, <cite>monitoring_illustrating</cite>, <cite>layer_2_receving</cite>，感谢前人的文章。随着内核版本的更新，这些文章展示的源码可能略有过时。本文基于 Linux 内核 5.12.19 版本进行阐述。
-</noteblock>
+<h2 class="title">前言</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本文将结合源码分析 Linux Kernel 实现异步地从网卡收取数据包的过程。
+
+  <noteblock>
+  本文主要参考自 <cite>zhihu_ovs_datapath_1</cite>, <cite>monitoring_recv</cite>, <cite>monitoring_illustrating</cite>, <cite>layer_2_receving</cite>，感谢前人的文章。随着内核版本的更新，这些文章展示的源码可能略有过时。本文基于 Linux 内核 5.12.19 版本进行阐述。
+  </noteblock>
+
+
+</div>
 
 <!-- Start your post here -->
-<h2 class="title">网卡驱动部分收包流程</h2>
+<h2 class="title">流程总览</h2>
 <div class="div_learning_post">
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;
@@ -353,13 +339,16 @@
 <h2 class="title">Intel I350 Ethernet Controller 网卡收包驱动程序分析</h2>
 <div class="div_learning_post">
   <div class="img" title="Intel 82599ES 10-Gigabit SFI/SFP+ 网卡" source="https://www.technologycentre.com.au/products/intel-10gbps-e10g42btda-copper-server-adatper-1319846">
-    <img src="./pic/intel_nic.jpg" width="400px" />
+    <img src="./pic/other_intel_nic.jpg" width="400px" />
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们分析的网卡是搭载了 Intel 82599ES 以太网控制器的 10-Gigabit SFI/SFP+ 网卡，通过运行 <code>lspci -v</code> 命令，结果如下所示，我们可以发现它所使用的驱动是 <code>ixgbe</code>，从 Intel 官方的 Intel® Ethernet Controller Products 27.6 Release Notes <cite>intel_ethernet_product</cite> 也能查到其使用的驱动的相关信息，因此下面我们就以 <code>ixgbe</code> 驱动为例展开分析。
+  &nbsp;&nbsp;&nbsp;&nbsp;我们分析的网卡是搭载了 Intel 82599ES 以太网控制器的 10-Gigabit SFI/SFP+ 网卡，通过运行 <code>lspci -v</code> 命令，结果如下所示，我们可以发现它所使用的驱动是 <code>ixgbe</code>:
 
   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">  04:00.0 Ethernet controller: Intel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection (rev 01)</span><br><span class="line">        Subsystem: Intel Corporation Ethernet Server Adapter X520-2</span><br><span class="line">        Physical Slot: 2</span><br><span class="line">        Flags: bus master, fast devsel, latency 0, IRQ 46, NUMA node 0</span><br><span class="line">        Memory at d0a80000 (64-bit, non-prefetchable) [size=512K]</span><br><span class="line">        I/O ports at 3020 [size=32]</span><br><span class="line">        Memory at d0b10000 (64-bit, non-prefetchable) [size=16K]</span><br><span class="line">        Expansion ROM at d0a00000 [disabled] [size=512K]</span><br><span class="line">        Capabilities: &lt;access denied&gt;</span><br><span class="line">        Kernel driver <span class="keyword">in</span> use: ixgbe</span><br><span class="line">        Kernel modules: ixgbe</span><br><span class="line"></span><br><span class="line">04:00.1 Ethernet controller: Intel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection (rev 01)</span><br><span class="line">        Subsystem: Intel Corporation Ethernet Server Adapter X520-2</span><br><span class="line">        Physical Slot: 2</span><br><span class="line">        Flags: bus master, fast devsel, latency 0, IRQ 162, NUMA node 0</span><br><span class="line">        Memory at d0980000 (64-bit, non-prefetchable) [size=512K]</span><br><span class="line">        I/O ports at 3000 [size=32]</span><br><span class="line">        Memory at d0b00000 (64-bit, non-prefetchable) [size=16K]</span><br><span class="line">        Expansion ROM at d0900000 [disabled] [size=512K]</span><br><span class="line">        Capabilities: &lt;access denied&gt;</span><br><span class="line">        Kernel driver <span class="keyword">in</span> use: ixgbe</span><br><span class="line">        Kernel modules: ixgbe</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;从 Intel 官方的 Intel® Ethernet Controller Products 27.6 Release Notes <cite>intel_ethernet_product</cite> 也能查到其使用的驱动的相关信息，因此下面我们就以 <code>ixgbe</code> 驱动为例展开分析。
+
   <noteblock>
   Intel 82599 系列以太网控制器的 Datasheet 点击查看: <a href="./files/82599_datasheet.pdf">Intel® 82599 10 GbE Controller Datasheet</a>
   </noteblock>
@@ -416,7 +405,7 @@
   <h4 class="title">写入主机内存</h4>
   <h3 class="paragraph">接收描述符环形缓冲区</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;完成网卡硬件部分的数据帧处理后，网卡会将数据帧使用 PCIe DMA 的方式异步传输到主机内存中，同时网卡会向位于主机内存中的 <def>接收描述符环形缓冲区</def>(Receive Descriptor Ring Buffer，下面简称 Ring Buffer) 写入一个接收描述符 (下面简称 Descriptor)，里面包含了接收到的数据帧的相关信息。一个 Descriptor 对应了一个接收到的网络数据帧。
+  &nbsp;&nbsp;&nbsp;&nbsp;完成网卡硬件部分的数据帧处理后，网卡会将数据帧使用 PCIe DMA 的方式异步传输到主机内存中，同时网卡会向位于主机内存中的 <def>接收描述符环形缓冲区</def> (Receive Descriptor Ring Buffer，下面简称 Ring Buffer) 写入一个接收描述符 (下面简称 Descriptor)，里面包含了接收到的数据帧的相关信息。一个 Descriptor 对应了一个接收到的网络数据帧。
 
   <div 
     class="img"
@@ -427,7 +416,7 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;可以看出来，Ring Buffer 就是网卡和主机 CPU 之间实现异步的数据交换的一段内存。Ring Buffer 是在主机探测到网卡设备，调用网卡驱动初始化的时候，由网卡驱动进行分配的。Intel 82599 网卡所维护的 Ring Buffer 的形式如 <imgref>img_ring_buffer</imgref> 所示，在网卡上有若干个寄存器的值用于记录 Ring Buffer 的相关信息，这些寄存器由网卡和主机之间共同维护，它们分别是:
+  &nbsp;&nbsp;&nbsp;&nbsp;可以看出来，Ring Buffer 就是网卡和主机 CPU 之间实现异步的数据交换的用于存放管理信息的一段内存。Ring Buffer 是在主机探测到网卡设备，调用网卡驱动初始化的时候，由网卡驱动进行分配的。Intel 82599 网卡所维护的 Ring Buffer 的形式如 <imgref>img_ring_buffer</imgref> 所示，在网卡上有若干个寄存器的值用于记录 Ring Buffer 的相关信息，这些寄存器由网卡和主机之间共同维护，它们分别是:
 
   <ol>
     <li><code>RDBA</code>: 这个寄存器存放了 Ring Buffer 在主机内存中的起始物理地址;</li>
@@ -448,7 +437,7 @@
     label="img_ring_buffer_offical"
     source="./files/82599_datasheet.pdf"
   >
-    <img src="./pic/recv_desp_ring_buffer_official.png" width="80%" />
+    <img src="./pic/other_recv_desp_ring_buffer_official.png" width="80%" />
   </div>
 
   <p>
