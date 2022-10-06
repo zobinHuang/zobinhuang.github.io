@@ -28,8 +28,8 @@
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_mTCP_Compiled/pic/xxx.png">
-<meta property="article:published_time" content="2022-10-06T13:28:53.177Z">
-<meta property="article:modified_time" content="2022-10-06T13:28:53.177Z">
+<meta property="article:published_time" content="2022-10-06T14:41:01.608Z">
+<meta property="article:modified_time" content="2022-10-06T14:41:01.608Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -257,16 +257,27 @@
   </noteblock>
 </div>
 
-<h2 class="title">Modified mTCP Source</h2>
+<h2 class="title">Build mTCP from Source</h2>
 <div class="div_learning_post">
-  <h3 class="title">dependencies</h3>
+  <h3 class="title">Dependencies</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+  &nbsp;&nbsp;&nbsp;&nbsp;Firstly we need to append some dependencies installation:
 
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install libgmp-dev</span><br></pre></td></tr></table></figure>
+  <h3 class="title">Set up environment variables</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;We need to specify the DPDK-related environment variables to instruct the mTCP build process to find DPDK, in my platform, these environment variables are set as:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> RTE_SDK=/usr/<span class="built_in">local</span>/lib/x86_64-linux-gnu/dpdk/pmds-22.0/</span><br><span class="line"><span class="built_in">export</span> RTE_TARGET=x86_64-native-linuxapp-gcc</span><br></pre></td></tr></table></figure>
   <h3 class="title">Configure Build Process</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+  &nbsp;&nbsp;&nbsp;&nbsp;Then, we need to modify the <code>Makefile.am</code> under the mTCP root path, since we don't want to compile the example code using Makefile-based build system, we comment out the related configuration as followed:
 
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AUTOMAKE_OPTIONS = foreign</span><br><span class="line"><span class="comment">#SUBDIRS = mtcp/src util io_engine/lib apps/example</span></span><br><span class="line">SUBDIRS = mtcp/src util io_engine/lib</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Then we can run use the <code>configure</code> file to help us generate the <code>Makefile</code> we need:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --with-dpdk-lib=<span class="variable">$RTE_SDK</span>/<span class="variable">$RTE_TARGET</span></span><br></pre></td></tr></table></figure>
   <h3 class="title">Modified Makefile</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;As DPDK deprecated Makefile-based build system since DPDK 20.11 <cite>dpdk_deprecated_make</cite>, one can't find any <code>Makefile</code> under DPDK's source files. However the mTCP defaultly uses DPDK 19.11 as underlying userspace dataplane kit, so in mTCP's <code>Makefile</code> one can find it refer to some of the old DPDK's <code>Makefile</code>, like this:
@@ -333,6 +344,10 @@
     <li><code>PKT_TX_IPV4</code> $\rightarrow$ <code>RTE_MBUF_F_TX_IPV4</code></li>
     <li><code>PKT_TX_TCP_CKSUM</code> $\rightarrow$ <code>RTE_MBUF_F_TX_TCP_CKSUM</code></li>
   </ul>
+
+  <h3 class="title">Start Building</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Now we can start to build mTCP, just simply run <code>make</code> under the root path of mTCP repo, and we can get <code>libmtcp.a</code> under <code>mtcp/lib</code> if it is successfully compiled.
 </div>
 
 <div class="div_ref" id="ref_container"></div>
