@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Exo 2:300,300italic,400,400italic,700,700italic|Caveat:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"post","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Guide to compile mTCP with DPDK 21.11">
+<meta property="og:url" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_mTCP_Compiled/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_mTCP_Compiled/pic/xxx.png">
+<meta property="article:published_time" content="2022-10-06T13:28:53.177Z">
+<meta property="article:modified_time" content="2022-10-06T13:28:53.177Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_mTCP_Compiled/pic/xxx.png">
+
+<link rel="canonical" href="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_mTCP_Compiled/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Guide to compile mTCP with DPDK 21.11 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Lovin' Tech with Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about-me-(关于我)">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-user fa-fw"></i>About Me (关于我)</a>
+
+  </li>
+        <li class="menu-item menu-item-library-(知识库)">
+
+    <a href="/sec_learning" rel="section"><i class="fa fa-duotone fa-book fa-fw"></i>Library (知识库)</a>
+
+  </li>
+        <li class="menu-item menu-item-music-(独立音乐人)">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>Music (独立音乐人)</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="en">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">Guide to compile mTCP with DPDK 21.11
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_System_And_Network/">TECH_SYSTEM_AND_NETWORK</a></li>
+          <li>DPDK_MTCP_COMPILED</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body onload="load_page()">
+
+<!-- 导入 mermaid -->
+<script src="script/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true});</script>
+
+<!-- 本文的 Metadata -->
+<div id="metadata"></div>
+
+<!-- Start your post here -->
+<h2 class="title">Compiled DPDK From Source</h2>
+<div class="div_learning_post">
+  <noteblock>
+  Check my another post for more details: <a href="/sec_learning/Tech_System_And_Network/DPDK_1_Installation/">Installation of DPDK 21.11</a>
+  </noteblock>
+</div>
+
+<h2 class="title">Modified mTCP Source</h2>
+<div class="div_learning_post">
+  <h3 class="title">dependencies</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+
+  <h3 class="title">Configure Build Process</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+
+  <h3 class="title">Modified Makefile</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;As DPDK deprecated Makefile-based build system since DPDK 20.11 <cite>dpdk_deprecated_make</cite>, one can't find any <code>Makefile</code> under DPDK's source files. However the mTCP defaultly uses DPDK 19.11 as underlying userspace dataplane kit, so in mTCP's <code>Makefile</code> one can find it refer to some of the old DPDK's <code>Makefile</code>, like this:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mtcp/src/Makefile</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ...</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># CFLAGS for DPDK-related compilation</span></span><br><span class="line">ifeq ($(DPDK), 1)</span><br><span class="line">include $(RTE_SDK)/mk/rte.vars.mk</span><br><span class="line">CFLAGS+=-g -O2</span><br><span class="line">ifeq ($(ENFORCE_RX_IDLE), 1)</span><br><span class="line">INC += -DENFORCE_RX_IDLE -DRX_IDLE_THRESH=0</span><br><span class="line">endif</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">INC += -DDISABLE_DPDK</span><br><span class="line">endif</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;We can change it to the format below according to DPDK's official guide <cite>dpdkdoc_meson</cite>:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mtcp/src/Makefile</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ...</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># CFLAGS for DPDK-related compilation</span></span><br><span class="line">ifeq ($(DPDK), 1)</span><br><span class="line"><span class="comment"># include $(RTE_SDK)/mk/rte.vars.mk</span></span><br><span class="line"><span class="comment"># CFLAGS+=-g -O2</span></span><br><span class="line">CFLAGS+=$(pkg-config --cflags libdpdk)</span><br><span class="line">LDFLAGS+=$(pkg-config --libs libdpdk)</span><br><span class="line">ifeq ($(ENFORCE_RX_IDLE), 1)</span><br><span class="line">INC += -DENFORCE_RX_IDLE -DRX_IDLE_THRESH=0</span><br><span class="line">endif</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">INC += -DDISABLE_DPDK</span><br><span class="line">endif</span><br></pre></td></tr></table></figure>
+  <h3 class="title">Explicitly specify the SSE version</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;To avoid the SSE version mismatch issue, we should explicitly specify the SSE version we are going to use, for the CPU platform I used, it supports up to SSE 4.2, so we should add <code>-msse4.2</code> to the <code>CFLAGS</code> as follows:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mtcp/src/Makefile</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ...</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># CFLAGS for DPDK-related compilation</span></span><br><span class="line">ifeq ($(DPDK), 1)</span><br><span class="line"><span class="comment"># include $(RTE_SDK)/mk/rte.vars.mk</span></span><br><span class="line"><span class="comment"># CFLAGS+=-g -O2</span></span><br><span class="line">CFLAGS+=$(pkg-config --cflags libdpdk)</span><br><span class="line">CFLAGS+=-msse4.2</span><br><span class="line">LDFLAGS+=$(pkg-config --libs libdpdk)</span><br><span class="line">ifeq ($(ENFORCE_RX_IDLE), 1)</span><br><span class="line">INC += -DENFORCE_RX_IDLE -DRX_IDLE_THRESH=0</span><br><span class="line">endif</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">INC += -DDISABLE_DPDK</span><br><span class="line">endif</span><br></pre></td></tr></table></figure>
+  <h3 class="title">Change GCC Version</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Some string compilation warnings will occur while using <code>strcpy</code> under GCC 9, so we just simply switch to GCC 8 to avoid this issue.
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Firstly we need to install all dependencies:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt install build-essential</span><br><span class="line">$ sudo apt -y install gcc-7 gcc-8 gcc-9</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Then we use the <code>update-alternatives</code> tool to create list of multiple GCC and G++ compiler alternatives:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 7</span><br><span class="line">$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 8</span><br><span class="line">$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Then we can check the available C and C++ compilers list and select desired version by entering relevant selection number:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ sudo update-alternatives --config gcc</span><br><span class="line">There are 3 choices <span class="keyword">for</span> the alternative gcc (providing /usr/bin/gcc).</span><br><span class="line"></span><br><span class="line">  Selection    Path            Priority   Status</span><br><span class="line">------------------------------------------------------------</span><br><span class="line">* 0            /usr/bin/gcc-9   9         auto mode</span><br><span class="line">  1            /usr/bin/gcc-7   7         manual mode</span><br><span class="line">  2            /usr/bin/gcc-8   8         manual mode</span><br><span class="line">  3            /usr/bin/gcc-9   9         manual mode</span><br><span class="line"></span><br><span class="line">Press &lt;enter&gt; to keep the current choice[*], or <span class="built_in">type</span> selection number: 2</span><br><span class="line">update-alternatives: using /usr/bin/gcc-8 to provide /usr/bin/gcc (gcc) <span class="keyword">in</span> manual mode</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;We can check the gcc version we are using through:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ gcc --version</span><br><span class="line">gcc (Ubuntu 8.4.0-3ubuntu2) 8.4.0</span><br><span class="line">Copyright (C) 2018 Free Software Foundation, Inc.</span><br><span class="line">This is free software; see the <span class="built_in">source</span> <span class="keyword">for</span> copying conditions.  There is NO</span><br><span class="line">warranty; not even <span class="keyword">for</span> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span><br></pre></td></tr></table></figure>
+  <h3 class="title">Modified DPDK API in mTCP</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Some of the DPDK APIs have been updated, hence we need to modify these DPDK API references in mTCP source code. These modifications including:
+
+  <h5 class="paragraph"><code>rte_get_master_lcore</code> $\rightarrow$ <code>rte_get_main_lcore</code></h5>
+
+  <h5 class="paragraph">Privatized <code>lcore_config</code></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;The struct <code>lcore_config</code> has been change to be a EAL private struct <cite>dpdk_lcore_config</cite>, so third-party applications are no longer be able to use it, so we need to comment out some references to this struct:
+
+  <queblock>
+  TO CHECK: Does simply comment these code making sense?
+  </queblock> 
+
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// core.c</span></span><br><span class="line"></span><br><span class="line"> <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line"> <span class="meta">#<span class="meta-keyword">ifndef</span> DISABLE_DPDK</span></span><br><span class="line"><span class="comment">/* Wake up mTCP threads (wake up I/O threads) */</span></span><br><span class="line"><span class="keyword">if</span> (current_iomodule_func == &amp;dpdk_module_func) &#123;</span><br><span class="line">	<span class="keyword">int</span> master;</span><br><span class="line">	master = rte_get_main_lcore();</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (master == whichCoreID(cpu)) &#123;</span><br><span class="line">		<span class="comment">// lcore_config[master].ret = 0;</span></span><br><span class="line">		<span class="comment">// lcore_config[master].state = FINISHED;</span></span><br><span class="line"> </span><br><span class="line"> <span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+  <h5 class="paragraph">Deprecated Field of <code>rte_eth_rxmode</code></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;The field <code>max_rx_pkt_len</code> of <code>rte_eth_rxmode</code> is deprecated, so we need to comment out following code:
+
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// mtcp/src/dpdk_module.c</span></span><br><span class="line"></span><br><span class="line"> <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line"> <span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">rte_eth_conf</span> <span class="title">port_conf</span> =</span> &#123;</span><br><span class="line">.rxmode = &#123;</span><br><span class="line">	.mq_mode	= 	ETH_MQ_RX_RSS,</span><br><span class="line">   <span class="comment">// #if RTE_VERSION &lt; RTE_VERSION_NUM(19, 8, 0, 0)</span></span><br><span class="line">   <span class="comment">// 		.max_rx_pkt_len = 	ETHER_MAX_LEN,</span></span><br><span class="line">   <span class="comment">// #else</span></span><br><span class="line">   <span class="comment">// 		.max_rx_pkt_len = 	RTE_ETHER_MAX_LEN,</span></span><br><span class="line">   <span class="comment">// #endif</span></span><br></pre></td></tr></table></figure>
+
+  <h5 class="paragraph">Update Deprecated Checksum Flag</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Some flag related to checksum offloading are deprecated, we should modify change them to new flags as listed as follows:
+
+  <ul>
+    <li><code>PKT_RX_L4_CKSUM_BAD</code> $\rightarrow$ <code>RTE_MBUF_F_RX_L4_CKSUM_BAD</code></li>
+    <li><code>PKT_RX_IP_CKSUM_BAD</code> $\rightarrow$ <code>RTE_MBUF_F_RX_IP_CKSUM_BAD</code></li>
+    <li><code>PKT_TX_IP_CKSUM</code> $\rightarrow$ <code>RTE_MBUF_F_TX_IP_CKSUM</code></li>
+    <li><code>PKT_TX_IPV4</code> $\rightarrow$ <code>RTE_MBUF_F_TX_IPV4</code></li>
+    <li><code>PKT_TX_TCP_CKSUM</code> $\rightarrow$ <code>RTE_MBUF_F_TX_TCP_CKSUM</code></li>
+  </ul>
+</div>
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+
+<!-- Note Support -->
+<!-- Check https://theme-next.js.org/docs/tag-plugins/note.html -->
+
+<!-- 圆圈数字 -->
+<!--
+⓪ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳ ㉑ ㉒ ㉓ ㉔ ㉕ ㉖ ㉗ ㉘ ㉙ ㉚ ㉛ ㉜ ㉝ ㉞ ㉟ ㊱ ㊲ ㊳ ㊴ ㊵ ㊶ ㊷ ㊸ ㊹ ㊺ ㊻ ㊼ ㊽ ㊾ ㊿
+-->
+
+<!-- Flow Chart -->
+<!--
+Format see: https://mermaid-js.github.io/mermaid/#/flowchart
+-->
+<!-- <flowchart class="mermaid">
+ Mermaid Flow Chart Code
+</flowchart> -->
+
+<!-- Sign Block -->
+<!--
+<noteblock>
+A NOTE
+</noteblock>
+
+<queblock>
+A QUESTION
+</queblock>
+-->
+
+<!--图片、引用-->
+<!-- 
+<div class="img" title="img title" label="img_label" source="url">
+  <img src="" height="" />
+</div>
+
+<imaging>img_label</imaging>
+-->
+
+<!--等式、引用-->
+<!-- 
+<div class="equation" label="equation_label">
+</div>
+
+<equation>equation_label</equation>
+-->
+
+<!--定理、引用、证明-->
+<!-- 
+<div class="theorm" label="theorm_label">
+</div>
+
+<theorm>theorm_label</theorm>
+
+<div class="theorm_prove">
+</div>
+-->
+
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--段落-->
+<!--
+<h3 class="paragraph">Paragraph Name</h3>
+-->
+
+<!--表格-->
+<!--
+<div class="table" title="Table Title" label="table_label">
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+    </tr>
+    <tr>
+      <td>xxx</td>
+      <td>xxx</td>
+      <td>xxx</td>
+    </tr>
+  </table>
+</div>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_System_And_Network/">TECH_SYSTEM_AND_NETWORK</a></li>
+          <li>DPDK_MTCP_COMPILED</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar_2.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
