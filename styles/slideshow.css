@@ -1,12 +1,155 @@
-.slideshow_container{
+.slideshow {
   width: 100%;
-  border: solid 1px #838383;
-	box-shadow: 5px 5px 5px #696969;
-	border-radius: 5px ;
+  padding: 0px 0px;
+	padding-bottom: 5px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #e493d0;
+  background-image: 
+    radial-gradient(closest-side, rgb(255, 128, 106), rgba(255, 41, 4, 0)),
+    radial-gradient(closest-side, rgb(255, 237, 118), rgba(255, 221, 0, 0)),
+    radial-gradient(closest-side, rgb(255, 142, 142), rgba(255, 92, 92, 0)),
+    radial-gradient(closest-side, rgb(183, 163, 255), rgba(126, 90, 255, 0)),
+    radial-gradient(closest-side, rgb(255, 185, 128), rgba(255, 152, 68, 0));
+  background-size:
+    130vmax 130vmax,
+    80vmax 80vmax,
+    90vmax 90vmax,
+    110vmax 110vmax,
+    90vmax 90vmax;
+  background-position: 
+    -80vmax -80vmax,
+    60vmax 60vmax,
+    10vmax 10vmax,
+    -30vmax -30vmax,
+    50vmax 50vmax;
+  background-repeat: no-repeat;
+  animation: 2s movement linear infinite;
+}
+
+.slideshow::after{
+  content: '';
+  display: block;
+  position: fixed;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+@keyframes movement {
+  0%, 100% {
+    background-size:
+      130vmax 130vmax,
+      80vmax 80vmax,
+      90vmax 90vmax,
+      110vmax 110vmax,
+      90vmax 90vmax;
+    background-position: 
+      -80vmax -80vmax,
+      60vmax 60vmax,
+      10vmax 10vmax,
+      -30vmax -30vmax,
+      50vmax 50vmax;
+  }
+  25% {
+    background-size:
+      100vmax 100vmax,
+      90vmax 90vmax,
+      100vmax 100vmax,
+      90vmax 90vmax,
+      60vmax 60vmax;
+    background-position: 
+      -60vmax -60vmax,
+      50vmax 50vmax,
+      0vmax 0vmax,
+      -40vmax -40vmax,
+      40vmax 40vmax;
+  }
+  75% {
+    background-size:
+      90vmax 90vmax,
+      90vmax 90vmax,
+      100vmax 100vmax,
+      90vmax 90vmax,
+      70vmax 70vmax;
+    background-position: 
+      -50vmax -40vmax,
+      50vmax -30vmax,
+      20vmax 0vmax,
+      -10vmax 10vmax,
+      40vmax 60vmax;
+  }
+}
+
+.slideshow .title_container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.slideshow .title_container h1{
+  margin-top: 0px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+  color: #ffffff;
+  padding-left: 20px;
+}
+
+.slideshow .title_container h2{
+	margin: 0px;
+	padding: 0px;
+  padding-left: 20px;
+  color: #ffffff;
+  font-size: 18px;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+
+.broadcast_container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.broadcast_container p {
+  padding: 0px;
+  margin: 0px;
+  margin-right: 5px;
+}
+
+.marquee_container {
+  display: flex;
+  width: 100%;
+  background-color: #6c0000;
+  border-radius: 5px;
+  color: #ffffff;
+  margin: 0px;
+  padding: 0px;
+  font-size: 12px;
+  align-items: center;
+}
+
+.marquee_container marquee{
+  padding: 0px;
+  margin: 0px;
+}
+
+.marquee_container marquee a{
+  color:#ffffff;
+}
+
+
+.slideshow_container{
+  width: 80%;
 }
 
 .slide_item {
-  height: 700px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -14,8 +157,17 @@
   justify-content: center;
 }
 
+.slide_item a{
+  text-decoration: none;
+  border-bottom: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .slide_item img{
-  height: 600px;
+  width: 50%;
   margin: 0;
   padding: 0;
 }
@@ -23,16 +175,16 @@
 .slide_item h2{
   margin-top: 10px;
   padding: 0;
-  font-size: 16px;
+  font-size: 14px;
+  color: #ffffff;
 }
 
 .slide_item place{
   background-color: #00579e;
   font-size: 14px;
   color: #FFFFFF;
-  padding: 0px 5px;
+  padding: 2px 5px;
   margin: 0px 2px;
-  border: #000000 solid 1px;
   border-radius: 5px;
 }
 
@@ -40,14 +192,13 @@
   background-color: #ff4a4a;
   font-size: 14px;
   color: #FFFFFF;
-  padding: 0px 5px;
+  padding: 2px 5px;
   margin: 0px 2px;
-  border: #000000 solid 1px;
   border-radius: 5px;
 }
 
 .videoplayer{
-  width: 75%;
+  width: 50%;
   /* margin: 0;
   padding: 0; */
 }

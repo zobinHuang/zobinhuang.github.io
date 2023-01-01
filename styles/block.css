@@ -8,68 +8,67 @@
 
 .introduction_container {
 	width: 100%;
+	max-width: 880px;
+	position: relative;
 	border: solid 1px #838383;
 	box-shadow: 5px 5px 5px #696969;
 	border-radius: 5px ;
 	margin: 0px;
 	padding: 0px 20px;
+	padding-bottom: 20px;
 }
 
-.common_link {
-	background-color: #868686;
+.introduction_container_bg {
+	width: 30%;
+	position: absolute;
+	right: 0px;
+	z-index: -1;
+	height: 100%;
+	background-image: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0)), url(../pic/me.jpeg);
+	background-repeat: no-repeat;
+	background-position: right bottom;
+	background-size: cover;
+}
+
+.introduction_container h1{
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+.introduction_container p{
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+english {
+	font-size: 12px;
+	font-weight: bolder;
+	padding: 0px;
+	margin: 0px;
+	color: #e70000;
+}
+
+.introduction_container a{
+	background-color: #b0b0b0;
 	color: #FFFFFF;
-	padding: 0px 5px;
+	padding: 2px 5px;
 	margin-left: 1px;
 	margin-right: 2px;
-	border: #000000 solid 2px;
+	text-decoration: none;
+	border-bottom: none;
+	/* border: #000000 solid 2px; */
 	transition: all;
     transition-duration: 0.2s;
 }
 
-.common_link:hover{
+.introduction_container a:hover{
     cursor:pointer;
     outline: 0;
 	color: #FFFFFF;
+	text-decoration: none;
+	border-bottom: none;
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(124, 124, 124, 0.6);
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(124, 124, 124, 0.6)
-}
-
-.email_link {
-	background-color: #868686;
-	color: #FFFFFF;
-	padding: 0px 5px;
-	margin-left: 1px;
-	margin-right: 2px;
-	border: #000000 solid 2px;
-	transition: all;
-    transition-duration: 0.2s;
-}
-
-.email_link:hover{
-    cursor:pointer;
-    outline: 0;
-	color: #FFFFFF;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(124, 124, 124, 0.6);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(124, 124, 124, 0.6)
-}
-
-.linkedin_link {
-	background-color: #003e94;
-	color: #FFFFFF;
-	padding: 0px 5px;
-	margin-left: 1px;
-	margin-right: 2px;
-	border: #000000 solid 2px;
-	transition: all;
-    transition-duration: 0.2s;
-}
-
-.linkedin_link:hover{
-    cursor:pointer;
-    outline: 0;
-	color: #FFFFFF;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(66, 135, 255, 0.6)
 }
 
 .recent_post {

@@ -20,17 +20,16 @@
     var CONFIG = {"hostname":"zobinhuang.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"post","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Installation of DPDK 21.11">
+<meta property="og:title" content="DPDK 21.11 实验平台配置">
 <meta property="og:url" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_1_Installation/index.html">
 <meta property="og:site_name" content="Zobin">
-<meta property="og:description" content="img{margin-left: 20px; margin-right: 20px;}     #table th{text-align:center;}     #table td{text-align:center;}     p{margin-left: 15px; margin-right: 15px;}     .div_concurrent_img{padding: 10p">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_1_Installation/pic/xxx.png">
-<meta property="article:published_time" content="2022-10-05T13:29:29.784Z">
-<meta property="article:modified_time" content="2022-10-05T13:29:29.784Z">
+<meta property="article:published_time" content="2022-12-08T13:41:10.140Z">
+<meta property="article:modified_time" content="2022-12-08T13:41:10.140Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -38,7 +37,7 @@
 <meta property="article:tag" content="网络工程">
 <meta property="article:tag" content="Networking Engineering">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+<meta name="twitter:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_1_Installation/pic/xxx.png">
 
 <link rel="canonical" href="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_1_Installation/">
 
@@ -53,7 +52,7 @@
   };
 </script>
 
-  <title>Installation of DPDK 21.11 | Zobin
+  <title>DPDK 21.11 实验平台配置 | Zobin
 </title>
   
 
@@ -172,7 +171,7 @@
     <div class="post-block" lang="en">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">Installation of DPDK 21.11
+<h1 class="post-title" itemprop="name headline">DPDK 21.11 实验平台配置
 </h1>
 
 <div class="post-meta">
@@ -194,41 +193,33 @@
       
       <div class="post-body">
           <head>
-<style>
-    img{margin-left: 20px; margin-right: 20px;}
-    #table th{text-align:center;}
-    #table td{text-align:center;}
-    p{margin-left: 15px; margin-right: 15px;}
-    .div_concurrent_img{padding: 10px 10px; display: flex; align-items:center; justify-content:center;}
-    @media(max-width: 768px) {
-      .div_concurrent_img{flex-direction: column;}
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
     }
-    .div_catalogue{padding: 10px 10px; font-size: 16px; background-color: #E0E0E0; word-spacing:0px;  border:1px solid black; border-radius: 10px;}
-    .div_licence{font-size: 16px; word-spacing:0px; border:1px solid black;}
-    .div_learning_post{font-size: 16px; word-spacing:0px;}
-    .div_indicate_source{font-size: 18px; word-spacing:0px; background-color: #E0E0E0;}
-    .div_learning_post_border{
-      margin-bottom: 20px;
-      padding: 10px 10px; 
-      font-size: 16px; 
-      word-spacing:0px;  
-      border:1px solid black;
-    }
-    .div_learning_post_background{
-      background-color:#E3E2E2;
-      padding: 10px 40px; 
-      font-size: 16px;
-      word-spacing:0px;  
-      border-radius: 15px;
-      margin-bottom: 15px;
-    }
-    .div_learning_post_background p{
-      margin: 0px;
-    }
-</style>
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
 
 <!--支持网页公式显示-->    
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
 <!--支持矩阵显示-->
 <script type="text/javascript">
   run_maths = function() {
@@ -249,89 +240,22 @@
 </script>
 </head>
 
-<body>
+<body onload="load_page()">
 
-<div align="center" class="div_indicate_source">
-  <h4>⚠ 转载请注明出处：<font color="red"><i>作者：ZobinHuang，更新日期：Oct.28   2021</i></font></h4>
-</div>
+<!-- 导入 mermaid -->
+<script src="script/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true});</script>
 
-<div class="div_licence">
-  <br>
-  <div align="center">
-      <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="知识共享许可协议" style="border-width:0; margin-left: 20px; margin-right: 20px;" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
-  </div>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;本<span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" rel="dct:type">作品</span>由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"><b>ZobinHuang</b></span> 采用 <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><font color="red">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</font></a> 进行许可，在进行使用或分享前请查看权限要求。若发现侵权行为，会采取法律手段维护作者正当合法权益，谢谢配合。
-  </p>
-</div>
+<!-- 本文的 Metadata -->
+<div id="metadata"></div>
 
-<!--表格-->
-<!--
-<table border="1" align="center" bgcolor="#FFFFFF">
-  <caption>表格</caption>
-  <tr>
-    <th>A</th>
-    <th>B</th>
-    <th>C</th>
-  </tr>
-  <tr>
-    <td>xxx</td>
-    <td>xxx</td>
-    <td>xxx</td>
-  </tr>
-</table>
--->
-
-<!--矩阵公式-->
-<!--
-<div class="cmath" align="center">
-  `((1, 0),(1, 0))`
-</div>
--->
-
-<!--图片-->
-<!--
-<div align="center">
-  <img src="./pic/xxx.png" width=30%>
-</div>
--->
-
-<!--正文-->
-<!--
-<p>
-&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
-</p>
--->
-
-
-<!--
-<br>
-
-<div class="div_catalogue">
-  <div align="center">
-    <h2> 目录 </h2>
-    <p>
-    <font size="2px">有特定需要的内容直接跳转到相关章节查看即可。</font>
-  </div>
-  <div class="div_learning_post_boder">
-    <p>
-    &nbsp;&nbsp;&nbsp;&nbsp;Section 1. <a href="#1_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
-    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.1 <a href="#1_xxx"><font color="blue">xxx</font></a>：xxx
-    <p>
-    &nbsp;&nbsp;&nbsp;&nbsp;Section 2. <a href="#2_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
-    <p>
-    &nbsp;&nbsp;&nbsp;&nbsp;Section 3. <a href="#3_xxx"><font color="blue"><b>xxx</b></font></a>：xxx
-
-  </div>
-</div>
--->
-
-<!--标题-->
-<h2><a name="1_platform">1. 部署平台情况</a></h2>
+<!-- Start your post here -->
+<h2 class="title">实验平台</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们使用的部署平台的配置如下所示：
+  &nbsp;&nbsp;&nbsp;&nbsp;我们本系列博客使用的部署平台的配置如下所示：
 
+  <div class="table" title="实验平台">
   <table border="1" align="center" bgcolor="#FFFFFF">
     <tr>
       <th>Component</th>
@@ -389,129 +313,167 @@
       <td>Kernel</td>
       <td>5.11.0-38-generic</td>
     </tr>
+    <tr>
+      <td>DPDK</td>
+      <td>21.11</td>
+    </tr>
   </table>
+  </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们将在上述搭载上述配置的机器上编译和安装 DPDK 21.11 版本。
+  &nbsp;&nbsp;&nbsp;&nbsp;我们装载了 Intel 和 Mellanox 的网卡，针对这两种不同类型的网卡将有不同的配置过程，
 </div>
 
-<h2><a name="2_installation">2. Installation</a></h2>
-<div class="div_learning_post">
-  <h3><a name="2_installation_1">2.1 基础软件包安装</a></h3>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;首先从官方下载到对应版本的 DPDK 软件包，并进行解压
 
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Download</span></span><br><span class="line"><span class="built_in">cd</span> /usr/src</span><br><span class="line">wget http://fast.dpdk.org/rel/dpdk-21.11.tar.xz</span><br><span class="line">  </span><br><span class="line"><span class="comment"># unpacked</span></span><br><span class="line">tar xf dpdk-21.11.tar.xz</span><br><span class="line"></span><br><span class="line"><span class="comment"># enter root directory</span></span><br><span class="line"><span class="built_in">cd</span> ./dpdk-21.11</span><br></pre></td></tr></table></figure>
 
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;然后安装依赖项:
 
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># install necessary python tools</span></span><br><span class="line">sudo apt-get install python3-pip</span><br><span class="line">pip3 install pyelftools</span><br><span class="line">sudo apt-get install -y python3-pyelftools python-pyelftools</span><br><span class="line"></span><br><span class="line"><span class="comment"># install numa supported library</span></span><br><span class="line">sudo apt-get install libnuma-dev</span><br></pre></td></tr></table></figure>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;配置 DPDK 构建过程：
 
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># To include the examples as part of the build</span></span><br><span class="line">meson -Dexamples=all build</span><br></pre></td></tr></table></figure>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;构建和安装 DPDK：
+<div class="div_ref" id="ref_container"></div>
 
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># enter build directory</span></span><br><span class="line"><span class="built_in">cd</span> ./build</span><br><span class="line"></span><br><span class="line"><span class="comment"># start building</span></span><br><span class="line">ninja</span><br><span class="line"></span><br><span class="line"><span class="comment"># need superuser to install</span></span><br><span class="line">su root</span><br><span class="line"></span><br><span class="line"><span class="comment"># install dpdk to System</span></span><br><span class="line">ninja install</span><br><span class="line"></span><br><span class="line"><span class="comment"># causing the dynamic loader ld.so to update its cache to take account of the new objects</span></span><br><span class="line">ldconfig</span><br></pre></td></tr></table></figure>
-
-  <h3><a name="2_installation_2">2.2 在相应的 NUMA 结点上启动内存大页</a></h3>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们需要手动地为 DPDK Runtime 预留内存大页，在 NUMA 结点上的命令如下所示：
-
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> 1024 &gt; /sys/devices/system/node/node0/hugepages/hugepages-2048kB/nr_hugepages</span><br><span class="line"><span class="built_in">echo</span> 1024 &gt; /sys/devices/system/node/node1/hugepages/hugepages-2048kB/nr_hugepages</span><br></pre></td></tr></table></figure>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;然后我们需要手动地新建挂载点：
-
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir /mnt/huge</span><br><span class="line">sudo mount -t hugetlbfs pagesize=1GB /mnt/huge</span><br></pre></td></tr></table></figure>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们可以在 <code>/etc/fstab</code> 文件下加入下面的内容，使得我们上面创建的挂载点变成一个永久的挂载点 (i.e. 即使遭遇重启也不会消失)：
-
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nodev /mnt/huge hugetlbfs pagesize=1GB 0 0</span><br></pre></td></tr></table></figure>
-  <h3><a name="2_installation_3">2.3 配置 poll-mode drivers (PMD)</a></h3>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;为了绕开内核，我们需要使用 PMD 驱动来接管我们的网卡。有多种 PMD 驱动，包括 VFIO，UIO 等。下面我们就 UIO 为例子，展示如何用 UIO 驱动来接管网卡。首先确认内核中加载了 UIO 网卡驱动模块：
-
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo modprobe uio_pci_generic</span><br></pre></td></tr></table></figure>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;然后使用 DPDK 自带的脚本首先检查当前主机系统下的网络接口情况，如下所示：
-
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">sudo ./usertools/dpdk-devbind.py --status</span><br><span class="line"></span><br><span class="line">Network devices using kernel driver</span><br><span class="line">===================================</span><br><span class="line">0000:02:00.0 <span class="string">&#x27;82599ES 10-Gigabit SFI/SFP+ Network Connection 10fb&#x27;</span> <span class="keyword">if</span>=ens3f0 drv=ixgbe unused=vfio-pci </span><br><span class="line">0000:08:00.0 <span class="string">&#x27;I350 Gigabit Network Connection 1521&#x27;</span> <span class="keyword">if</span>=eno0 drv=igb unused=vfio-pci *Active*</span><br><span class="line">0000:08:00.1 <span class="string">&#x27;I350 Gigabit Network Connection 1521&#x27;</span> <span class="keyword">if</span>=enp8s0f1 drv=igb unused=vfio-pci </span><br><span class="line">0000:81:00.0 <span class="string">&#x27;82599ES 10-Gigabit SFI/SFP+ Network Connection 10fb&#x27;</span> <span class="keyword">if</span>=ens5f0 drv=ixgbe unused=vfio-pci *Active*</span><br><span class="line">0000:81:00.1 <span class="string">&#x27;82599ES 10-Gigabit SFI/SFP+ Network Connection 10fb&#x27;</span> <span class="keyword">if</span>=ens5f1 drv=ixgbe unused=vfio-pci </span><br><span class="line"></span><br><span class="line">Other Network devices</span><br><span class="line">=====================</span><br><span class="line">0000:02:00.1 <span class="string">&#x27;82599ES 10-Gigabit SFI/SFP+ Network Connection 10fb&#x27;</span> unused=ixgbe,vfio-pci</span><br><span class="line"></span><br><span class="line">No <span class="string">&#x27;Baseband&#x27;</span> devices detected</span><br><span class="line">==============================</span><br><span class="line"></span><br><span class="line">No <span class="string">&#x27;Crypto&#x27;</span> devices detected</span><br><span class="line">============================</span><br><span class="line"></span><br><span class="line">No <span class="string">&#x27;Eventdev&#x27;</span> devices detected</span><br><span class="line">==============================</span><br><span class="line"></span><br><span class="line">No <span class="string">&#x27;Mempool&#x27;</span> devices detected</span><br><span class="line">=============================</span><br><span class="line"></span><br><span class="line">No <span class="string">&#x27;Compress&#x27;</span> devices detected</span><br><span class="line">==============================</span><br><span class="line"></span><br><span class="line">No <span class="string">&#x27;Misc (rawdev)&#x27;</span> devices detected</span><br><span class="line">===================================</span><br><span class="line"></span><br><span class="line">No <span class="string">&#x27;Regex&#x27;</span> devices detected</span><br><span class="line">===========================</span><br></pre></td></tr></table></figure>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在上面呈现的网络接口中，我们想把 <code>ens5f0</code> 接口的驱动从正常的网卡驱动切换为 UIO 驱动，如下所示。其中 <code>--force</code> 的选项是因为修改驱动的网卡可能在 Linux 内核的三层路由表中存在路由表项，如果不加这个选项将无法切换驱动。
-
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># bind to UIO driver</span></span><br><span class="line">sudo ./usertools/dpdk-devbind.py --<span class="built_in">bind</span>=uio_pci_generic ens5f0 --force</span><br><span class="line"></span><br><span class="line"><span class="comment"># check state</span></span><br><span class="line">sudo ./usertools/dpdk-devbind.py -s</span><br><span class="line"></span><br><span class="line">Network devices using DPDK-compatible driver</span><br><span class="line">============================================</span><br><span class="line">0000:81:00.0 <span class="string">&#x27;82599ES 10-Gigabit SFI/SFP+ Network Connection 10fb&#x27;</span> drv=uio_pci_generic unused=ixgbe,vfio-pci</span><br><span class="line"></span><br><span class="line">Network devices using kernel driver</span><br><span class="line">===================================</span><br><span class="line">0000:02:00.0 <span class="string">&#x27;82599ES 10-Gigabit SFI/SFP+ Network Connection 10fb&#x27;</span> <span class="keyword">if</span>=ens3f0 drv=ixgbe unused=vfio-pci,uio_pci_generic </span><br><span class="line">0000:02:00.1 <span class="string">&#x27;82599ES 10-Gigabit SFI/SFP+ Network Connection 10fb&#x27;</span> <span class="keyword">if</span>=ens3f1 drv=ixgbe unused=vfio-pci,uio_pci_generic </span><br><span class="line">0000:08:00.0 <span class="string">&#x27;I350 Gigabit Network Connection 1521&#x27;</span> <span class="keyword">if</span>=eno0 drv=igb unused=vfio-pci,uio_pci_generic *Active*</span><br><span class="line">0000:08:00.1 <span class="string">&#x27;I350 Gigabit Network Connection 1521&#x27;</span> <span class="keyword">if</span>=enp8s0f1 drv=igb unused=vfio-pci,uio_pci_generic </span><br><span class="line">0000:81:00.1 <span class="string">&#x27;82599ES 10-Gigabit SFI/SFP+ Network Connection 10fb&#x27;</span> <span class="keyword">if</span>=ens5f1 drv=ixgbe unused=vfio-pci,uio_pci_generic </span><br><span class="line"></span><br><span class="line">No <span class="string">&#x27;Baseband&#x27;</span> devices detected</span><br><span class="line">==============================</span><br><span class="line"></span><br><span class="line">No <span class="string">&#x27;Crypto&#x27;</span> devices detected</span><br><span class="line">============================</span><br><span class="line"></span><br><span class="line">No <span class="string">&#x27;Eventdev&#x27;</span> devices detected</span><br><span class="line">==============================</span><br><span class="line"></span><br><span class="line">No <span class="string">&#x27;Mempool&#x27;</span> devices detected</span><br><span class="line">=============================</span><br><span class="line"></span><br><span class="line">No <span class="string">&#x27;Compress&#x27;</span> devices detected</span><br><span class="line">==============================</span><br><span class="line"></span><br><span class="line">No <span class="string">&#x27;Misc (rawdev)&#x27;</span> devices detected</span><br><span class="line">===================================</span><br><span class="line"></span><br><span class="line">No <span class="string">&#x27;Regex&#x27;</span> devices detected</span><br><span class="line">===========================</span><br></pre></td></tr></table></figure>
-</div>
-
-<h2><a name="3_complile">3. 编译 DPDK 程序</a></h2>
-<div class="div_learning_post">
-
-  <h3><a name="3_complile_1">3.1 配置 Meson 环境</a></h3>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;DPDK 如今构建使用的都是 <a target="_blank" rel="noopener" href="https://mesonbuild.com/">Meson</a>，所以在本节我们演示如何基于 Meson 来构建我们自定义的 DPDK 程序。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在开始编译程序之前，请再次明确：
-
-  <ul>
-    <li>安装了 Compiler ToolChain: <code>sudo apt install build-essential</code></li>
-    <li>安装了 Meason: <code>sudo apt install meson ninja-build</code></li>
-  </ul>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;为了测试 Meson 的使用，我们使用如下命令来创建一个骨架 (skeleton) 程序:
-
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># create directory</span></span><br><span class="line">mkdir testproject</span><br><span class="line"><span class="built_in">cd</span> testproject</span><br><span class="line"></span><br><span class="line"><span class="comment"># create skeleton project</span></span><br><span class="line">meson init --name testproject --build</span><br></pre></td></tr></table></figure>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;如果成功的话，我们会在该目录下生成一个默认的 .c 文件，以及一个 build 目录，在下面生成了对应平台下的可执行程序。
-
-  <h3><a name="3_complile_2">3.2 编写 <code>meson.build</code></a></h3>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;和基于传统的 <code>make</code> 的构建系统一样，我们也是需要编写一个用于描述构建过程和依赖关系等等的构建文件，在 Meson 语义下这个文件就是 <code>meson.build</code>。对于一个 DPDK 程序，该文件的简单示例如下所示 (更多的关于 <code>meson.build</code> 文件的编写规范可以参考 <a target="_blank" rel="noopener" href="https://mesonbuild.com/Tutorial.html">Tutorial</a>)：
-
-  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># meson.build</span></span><br><span class="line">project(<span class="string">&#x27;dpdk-app&#x27;</span>, <span class="string">&#x27;c&#x27;</span>)</span><br><span class="line"></span><br><span class="line">dpdk = dependency(<span class="string">&#x27;libdpdk&#x27;</span>)</span><br><span class="line">sources = files(<span class="string">&#x27;main.c&#x27;</span>)</span><br><span class="line">executable(<span class="string">&#x27;dpdk-app&#x27;</span>, sources, dependencies: dpdk)</span><br></pre></td></tr></table></figure>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们同时创建如下所示的简单的一个 DPDK 程序：
-
-  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;rte_memory.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;rte_launch.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;rte_eal.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;rte_per_lcore.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;rte_lcore.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;rte_debug.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">int</span></span><br><span class="line">lcore_hello(__rte_unused <span class="keyword">void</span> *arg)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> lcore_id;</span><br><span class="line">  lcore_id = rte_lcore_id();</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;hello from core %u\n&quot;</span>, lcore_id);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ret;</span><br><span class="line">    <span class="keyword">unsigned</span> lcore_id;</span><br><span class="line"></span><br><span class="line">    ret = rte_eal_init(argc, argv);</span><br><span class="line">    <span class="keyword">if</span> (ret &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        rte_panic(<span class="string">&quot;Cannot init EAL\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    RTE_LCORE_FOREACH_WORKER(lcore_id)&#123;</span><br><span class="line">        rte_eal_remote_launch(lcore_hello, <span class="literal">NULL</span>, lcore_id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    lcore_hello(<span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    rte_eal_mp_wait_lcore();</span><br><span class="line"></span><br><span class="line">    rte_eal_cleanup();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;接下来我们就尝试基于 Meson 工具进行构建。首先我们需要使用如下命令来初始化一个 Build 目录，这个目录会用于后续装载 Compiler 的所有输出。Meson 不同于其他的构建系统，它必须创建一个独立的 Build 目录，而不能把构建输出和源文件放在同一个文件夹下：
-
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">meson setup builddir</span><br></pre></td></tr></table></figure>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们目前的目录情况如下所示：
-
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">zobin@vnf4:~/dpdk/projects/<span class="built_in">test</span>$ tree ./</span><br><span class="line">./</span><br><span class="line">├── builddir</span><br><span class="line">│   ├── build.ninja</span><br><span class="line">│   ├── compile_commands.json</span><br><span class="line">│   ├── meson-info</span><br><span class="line">│   │   ├── intro-benchmarks.json</span><br><span class="line">│   │   ├── intro-buildoptions.json</span><br><span class="line">│   │   ├── intro-buildsystem_files.json</span><br><span class="line">│   │   ├── intro-dependencies.json</span><br><span class="line">│   │   ├── intro-installed.json</span><br><span class="line">│   │   ├── intro-projectinfo.json</span><br><span class="line">│   │   ├── intro-targets.json</span><br><span class="line">│   │   ├── intro-tests.json</span><br><span class="line">│   │   └── meson-info.json</span><br><span class="line">│   ├── meson-logs</span><br><span class="line">│   │   └── meson-log.txt</span><br><span class="line">│   └── meson-private</span><br><span class="line">│       ├── build.dat</span><br><span class="line">│       ├── cmd_line.txt</span><br><span class="line">│       ├── coredata.dat</span><br><span class="line">│       ├── install.dat</span><br><span class="line">│       ├── meson_benchmark_setup.dat</span><br><span class="line">│       ├── meson.lock</span><br><span class="line">│       ├── meson_test_setup.dat</span><br><span class="line">│       ├── sanitycheckc.c</span><br><span class="line">│       └── sanitycheckc.exe</span><br><span class="line">├── main.c</span><br><span class="line">└── meson.build</span><br><span class="line"></span><br><span class="line">4 directories, 23 files</span><br></pre></td></tr></table></figure>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;然后我们进入刚刚新建的 <code>builddir</code> 目录，运行 <code>ninja</code> 命令，正常情况下，我们就能成功构建出我们的项目：
-
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">zobin@vnf4:~/dpdk/projects/<span class="built_in">test</span>$ <span class="built_in">cd</span> builddir/</span><br><span class="line"></span><br><span class="line">zobin@vnf4:~/dpdk/projects/<span class="built_in">test</span>/builddir$ ninja</span><br><span class="line">[2/2] Linking target dpdk-app.</span><br><span class="line"></span><br><span class="line">zobin@vnf4:~/dpdk/projects/<span class="built_in">test</span>/builddir$ </span><br></pre></td></tr></table></figure>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们尝试予以运行：
-
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">zobin@vnf4:~/dpdk/projects/<span class="built_in">test</span>/builddir$ sudo ./dpdk-app -l 0-3 -n 4</span><br><span class="line">EAL: Detected 24 lcore(s)</span><br><span class="line">EAL: Detected 2 NUMA nodes</span><br><span class="line">EAL: Detected shared linkage of DPDK</span><br><span class="line">EAL: Multi-process socket /var/run/dpdk/rte/mp_socket</span><br><span class="line">EAL: Selected IOVA mode <span class="string">&#x27;PA&#x27;</span></span><br><span class="line">EAL: No available 1048576 kB hugepages reported</span><br><span class="line">EAL: VFIO support initialized</span><br><span class="line">EAL: Probe PCI driver: net_ixgbe (8086:10fb) device: 0000:81:00.0 (socket 1)</span><br><span class="line">TELEMETRY: No legacy callbacks, legacy socket not created</span><br><span class="line">hello from core 1</span><br><span class="line">hello from core 3</span><br><span class="line">hello from core 2</span><br><span class="line">hello from core 0</span><br></pre></td></tr></table></figure>
-</div>
-
-<!--ref-->
-
-<h2>附录：参考源</h2>
-<div class="div_learning_post">
-<p>
-
-<ol>
-<li>DPDK, <a target="_blank" rel="noopener" href="http://doc.dpdk.org/guides-20.11/linux_gsg/sys_reqs.html">System Requirements</a></li>
-<li>DPDK, <a target="_blank" rel="noopener" href="http://doc.dpdk.org/guides-20.11/linux_gsg/build_dpdk.html">Compiling the DPDK Target from Source</a></li>
-<li>DPDK, <a target="_blank" rel="noopener" href="http://doc.dpdk.org/guides-20.11/linux_gsg/linux_drivers.html">Linux Drivers</a></li>
-<li>DPDK, <a target="_blank" rel="noopener" href="https://dpdk.readthedocs.io/en/v17.11/tools/devbind.html">dpdk-devbind Application</a></p>
-</div>
-
-</li>
-</ol>
 </body>
+
+<!-- Note Support -->
+<!-- Check https://theme-next.js.org/docs/tag-plugins/note.html -->
+
+<!-- 圆圈数字 -->
+<!--
+⓪ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳ ㉑ ㉒ ㉓ ㉔ ㉕ ㉖ ㉗ ㉘ ㉙ ㉚ ㉛ ㉜ ㉝ ㉞ ㉟ ㊱ ㊲ ㊳ ㊴ ㊵ ㊶ ㊷ ㊸ ㊹ ㊺ ㊻ ㊼ ㊽ ㊾ ㊿
+-->
+
+<!-- Flow Chart -->
+<!--
+Format see: https://mermaid-js.github.io/mermaid/#/flowchart
+-->
+<!-- <flowchart class="mermaid">
+ Mermaid Flow Chart Code
+</flowchart> -->
+
+<!-- Sign Block -->
+<!--
+<noteblock>
+A NOTE
+</noteblock>
+
+<queblock>
+A QUESTION
+</queblock>
+-->
+
+<!--图片、引用-->
+<!-- 
+<div class="img" title="img title" label="img_label" source="url">
+  <img src="" height="" />
+</div>
+
+<imaging>img_label</imaging>
+-->
+
+<!--等式、引用-->
+<!-- 
+<div class="equation" label="equation_label">
+</div>
+
+<equation>equation_label</equation>
+-->
+
+<!--定理、引用、证明-->
+<!-- 
+<div class="theorm" label="theorm_label">
+</div>
+
+<theorm>theorm_label</theorm>
+
+<div class="theorm_prove">
+</div>
+-->
+
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--段落-->
+<!--
+<h3 class="paragraph">Paragraph Name</h3>
+-->
+
+<!--表格-->
+<!--
+<div class="table" title="Table Title" label="table_label">
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+    </tr>
+    <tr>
+      <td>xxx</td>
+      <td>xxx</td>
+      <td>xxx</td>
+    </tr>
+  </table>
+</div>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
       </div>
       
       
@@ -615,14 +577,12 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
-  </div>
 
         
 

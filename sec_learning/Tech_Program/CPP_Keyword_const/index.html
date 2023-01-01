@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Exo 2:300,300italic,400,400italic,700,700italic|Caveat:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"post","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:type" content="website">
+<meta property="og:title" content="const 关键字">
+<meta property="og:url" content="https://zobinhuang.github.io/sec_learning/Tech_Program/CPP_Keyword_const/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Program/CPP_Keyword_const/pic/xxx.png">
+<meta property="article:published_time" content="2023-01-01T14:13:29.749Z">
+<meta property="article:modified_time" content="2023-01-01T14:13:29.749Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zobinhuang.github.io/sec_learning/Tech_Program/CPP_Keyword_const/pic/xxx.png">
+
+<link rel="canonical" href="https://zobinhuang.github.io/sec_learning/Tech_Program/CPP_Keyword_const/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'en'
+  };
+</script>
+
+  <title>const 关键字 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Lovin' Tech with Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about-me-(关于我)">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-user fa-fw"></i>About Me (关于我)</a>
+
+  </li>
+        <li class="menu-item menu-item-library-(知识库)">
+
+    <a href="/sec_learning" rel="section"><i class="fa fa-duotone fa-book fa-fw"></i>Library (知识库)</a>
+
+  </li>
+        <li class="menu-item menu-item-music-(独立音乐人)">
+
+    <a href="/sec_music" rel="section"><i class="fa fa-music fa-fw"></i>Music (独立音乐人)</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="en">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">const 关键字
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Program/">TECH_PROGRAM</a></li>
+          <li>CPP_KEYWORD_CONST</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body onload="load_page()">
+
+<!-- 导入 mermaid -->
+<script src="script/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true});</script>
+
+<!-- 本文的 Metadata -->
+<div id="metadata"></div>
+
+<h2 class="title"><code>const</code> 修饰普通类型的变量</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;众所周知，和 C 语言一样，使用 <code>const</code> 修饰的变量，将被定义为一个常量，在程序运行过程中，对一个常量进行再次赋值将是一件违法的事情，也即:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> a = <span class="number">6</span>;</span><br><span class="line"><span class="keyword">int</span> b = a;        <span class="comment">// valid</span></span><br><span class="line">a = <span class="number">8</span>;            <span class="comment">// invalid</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在来看如下代码，其尝试通过指针的方式，"绕后" 完成对 <code>const</code> 修饰的变量的值的修改:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test_const_1</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> a = <span class="number">6</span>;</span><br><span class="line">  <span class="keyword">int</span> *p = (<span class="keyword">int</span>*)&amp;a;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;the value of a: &quot;</span> &lt;&lt; a &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;the addr of a: &quot;</span> &lt;&lt; p &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">  *p = <span class="number">8</span>;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;the value of a: &quot;</span> &lt;&lt; a &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;the value of *p: &quot;</span> &lt;&lt; *p &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  test_const_1();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面程序的输入如下所示:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译程序</span></span><br><span class="line">$ g++ main.cpp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 程序输出</span></span><br><span class="line">$ ./a.out</span><br><span class="line">the value of a: 6</span><br><span class="line">the addr of a: 0x16d8f765c</span><br><span class="line">the value of a: 6</span><br><span class="line">the value of *p: 8</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以发现，绕后的方式虽然改变了指针 <code>p</code> 指向的整形数据的值，并没能改变常量 <code>a</code> 的值。这个结果是由于编译器优化产生的: 编译器认为常量 <code>a</code> 在其 Scope 内的值将一直为其初始化值，从而会产生上面的结果，因此千万不要尝试通过任何方式修改 <code>const</code> 修饰的变量，不然会产生意想不到的结果。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;避免编译器优化的方式当然也有，也即使用 <code>volatile</code> 关键字，加上这个关键字等于告诉编译器，所修饰的变量其值有可能在运行时发生改变，从而避免编译器暴力地将变量在编译期优化为一个固定不变的值。修改后的代码如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test_const_1</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">volatile</span> <span class="keyword">const</span> <span class="keyword">int</span> a = <span class="number">6</span>;</span><br><span class="line">  <span class="keyword">int</span> *p = (<span class="keyword">int</span>*)&amp;a;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;the value of a: &quot;</span> &lt;&lt; a &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;the addr of a: &quot;</span> &lt;&lt; p &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">  *p = <span class="number">8</span>;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;the value of a: &quot;</span> &lt;&lt; a &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;the value of *p: &quot;</span> &lt;&lt; *p &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  test_const_1();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上述程序的输出如下所示:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译程序</span></span><br><span class="line">$ g++ main.cpp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 程序输出</span></span><br><span class="line">$ ./a.out</span><br><span class="line">the value of a: 6</span><br><span class="line">the addr of a: 0x16d34765c</span><br><span class="line">the value of a: 8</span><br><span class="line">the value of *p: 8</span><br></pre></td></tr></table></figure>
+</div>
+
+<h2 class="title"><code>const</code> 修饰指针变量</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>const</code> 关键字修饰指针有如下三种情况:
+
+  <ol>
+    <li>
+      <p><code>const</code> 修饰指针指向的内容，则指针指向的变量为不可变量，程序将无法通过指针来修改指针指向的变量的值，例子如下所示:
+      <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> a = <span class="number">0</span>; </span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p1 = &amp;a; <span class="comment">// valid</span></span><br><span class="line"><span class="keyword">int</span> b = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p2 = &amp;b; <span class="comment">// valid</span></span><br></pre></td></tr></table></figure>
+      <p>针对上面的程序，如果尝试通过 <code>p2</code> 修改变量 <code>b</code> 的值:
+      <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*p2 = <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+      <p>则会遭遇如下编译错误:
+      <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ g++ main.cpp</span><br><span class="line">main.cpp:19:7: error: read-only variable is not assignable</span><br><span class="line">  *p2 = 3;</span><br><span class="line">  ~~~ ^</span><br></pre></td></tr></table></figure>
+      <p>直接修改变量 <code>b</code> 是允许的，并且通过指针 <code>p2</code> 可以获取更新后的值，测试代码如下所示:
+      <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> b = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p2 = &amp;b;</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;value of b via p2: &quot;</span> &lt;&lt; *p2 &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">b = <span class="number">3</span>;</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;value of b via p2: &quot;</span> &lt;&lt; *p2 &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
+      <p>上述程序的输出如下所示:
+      <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./a.out</span><br><span class="line">value of b via p2: 0</span><br><span class="line">value of b via p2: 3</span><br></pre></td></tr></table></figure>
+    </li>
+    <li>
+      <p><code>const</code> 修饰指针本身，则指针本身不能修改为指向其它变量，例子如下所示:
+      <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">8</span></span><br><span class="line"><span class="keyword">int</span>* <span class="keyword">const</span> p = &amp;a; </span><br><span class="line">*p = <span class="number">6</span>;   <span class="comment">// valid</span></span><br><span class="line"><span class="keyword">int</span> b = <span class="number">10</span>;</span><br><span class="line">p = &amp;b;   <span class="comment">// invalid</span></span><br></pre></td></tr></table></figure>
+    </li>
+    <li>
+      <p><code>const</code> 修饰 ① 指针指向的内容 和 ② 指针本身，以实现上述两种修饰功能，例子如下所示:
+      <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">8</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span>* <span class="keyword">const</span> p = &amp;a;</span><br></pre></td></tr></table></figure>
+    </li>
+  </ol>
+</div>
+
+<h2 class="title"><code>const</code> 修饰普通函数</h2>
+<div class="div_learning_post">
+  <h3 class="title">修饰函数参数</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>const</code> 修饰函数参数可以分为三种情况:
+  <ol>
+    <li>
+      <p><code>const</code> 修饰值参数，一般这种情况不需要使用 <code>const</code> 进行修饰，因为函数传参会自动复制实参进行压栈，实例代码如下所示:
+      <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test_const</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> a)</span> </span>&#123; a++; <span class="comment">/* invalid */</span> &#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  test_const(<span class="number">2</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;报错信息如下所示:
+      <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ g++ main.cpp</span><br><span class="line">main.cpp:25:4: error: cannot assign to variable <span class="string">&#x27;a&#x27;</span> with const-qualified <span class="built_in">type</span> <span class="string">&#x27;const int&#x27;</span></span><br><span class="line">  a++;</span><br><span class="line">  ~^</span><br><span class="line">main.cpp:24:29: note: variable <span class="string">&#x27;a&#x27;</span> declared const here</span><br><span class="line">void test_const(const int a) &#123;</span><br><span class="line">                ~~~~~~~~~~^</span><br><span class="line">1 error generated.</span><br></pre></td></tr></table></figure>
+    </li>
+    <li>
+      <p><code>const</code> 修饰指针参数，实际上对应了上述的 <code>const</code> 对指针的修饰:
+      <ul>
+        <li>
+          <p><code>const</code> 修饰指针指向的内容，实例代码如下所示:
+          <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test_const</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span>* a)</span> </span>&#123;</span><br><span class="line">  *a = <span class="number">3</span>;  <span class="comment">// invalid</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> a = <span class="number">6</span>;</span><br><span class="line">  test_const(&amp;a);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>上述代码报错信息如下所示:
+          <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ g++ main.cpp</span><br><span class="line">main.cpp:<span class="number">29</span>:<span class="number">6</span>: error: read-only variable is <span class="keyword">not</span> assignable</span><br><span class="line">  *a = <span class="number">3</span>;</span><br><span class="line">  ~~ ^</span><br><span class="line"><span class="number">1</span> error generated.</span><br></pre></td></tr></table></figure>
+        </li>
+        <li>
+          <p><code>const</code> 修饰指针本身，实例代码如下所示:
+          <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test_const</span><span class="params">(<span class="keyword">int</span>* <span class="keyword">const</span> a)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> b = <span class="number">0</span>;</span><br><span class="line">  a = &amp;b;    <span class="comment">// invalid</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> a = <span class="number">6</span>;</span><br><span class="line">  test_const(&amp;a);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>上述代码报错信息如下所示:
+          <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ g++ main.cpp</span><br><span class="line">main.cpp:30:5: error: cannot assign to variable <span class="string">&#x27;a&#x27;</span> with const-qualified <span class="built_in">type</span> <span class="string">&#x27;int *const&#x27;</span></span><br><span class="line">  a = &amp;b;</span><br><span class="line">  ~ ^</span><br><span class="line">main.cpp:28:30: note: variable <span class="string">&#x27;a&#x27;</span> declared const here</span><br><span class="line">void test_const_4(int* const a) &#123;</span><br><span class="line">                  ~~~~~~~~~~~^</span><br><span class="line">1 error generated.</span><br></pre></td></tr></table></figure>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <p><code>const</code> 修饰自定义类型参数，为了避免函数传参时对自定义类型参数的复制造成的性能下降，可以采用 <code>const</code> 修饰和引用传递的方法，实现 ① 把自定义类型参数传入函数使用 和 ② 避免函数对自定义类型变量进行修改 的目的。实例代码如下所示:
+      <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Object</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  Object()&#123;&#125;</span><br><span class="line">  Object(<span class="keyword">int</span> _m):_cm(_m)&#123;&#125;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">get_cm</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> _cm; &#125;</span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">int</span> _cm;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test_const</span><span class="params">(<span class="keyword">const</span> Object&amp; obj)</span></span>&#123; </span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; obj.get_cm() &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="function">Object <span class="title">obj</span><span class="params">(<span class="number">8</span>)</span></span>;</span><br><span class="line">  test_const(obj);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      <p>值得注意的是，对于像 <code>int</code>, <code>double</code> 等内置类型，由于拷贝开销较小，一般就不采用上述引用的传递方式。
+    </li>
+  </ol>
+
+  <h3 class="title">修饰函数返回值</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>const</code> 修饰函数返回值同样可以分为三种情况:
+  <ol>
+    <li>
+      <p><code>const</code> 修饰
+    </li>
+  </ol>
+</div>
+
+<h2 class="title"><code>const</code> 修饰普通类型的变量</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+
+<!-- Note Support -->
+<!-- Check https://theme-next.js.org/docs/tag-plugins/note.html -->
+
+<!-- 圆圈数字 -->
+<!--
+⓪ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳ ㉑ ㉒ ㉓ ㉔ ㉕ ㉖ ㉗ ㉘ ㉙ ㉚ ㉛ ㉜ ㉝ ㉞ ㉟ ㊱ ㊲ ㊳ ㊴ ㊵ ㊶ ㊷ ㊸ ㊹ ㊺ ㊻ ㊼ ㊽ ㊾ ㊿
+-->
+
+<!-- Flow Chart -->
+<!--
+Format see: https://mermaid-js.github.io/mermaid/#/flowchart
+-->
+<!-- <flowchart class="mermaid">
+ Mermaid Flow Chart Code
+</flowchart> -->
+
+<!-- Sign Block -->
+<!--
+<noteblock>
+A NOTE
+</noteblock>
+
+<queblock>
+A QUESTION
+</queblock>
+-->
+
+<!--图片、引用-->
+<!-- 
+<div class="img" title="img title" label="img_label" source="url">
+  <img src="" height="" />
+</div>
+
+<imaging>img_label</imaging>
+-->
+
+<!--等式、引用-->
+<!-- 
+<div class="equation" label="equation_label">
+</div>
+
+<equation>equation_label</equation>
+-->
+
+<!--定理、引用、证明-->
+<!-- 
+<div class="theorm" label="theorm_label">
+</div>
+
+<theorm>theorm_label</theorm>
+
+<div class="theorm_prove">
+</div>
+-->
+
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--段落-->
+<!--
+<h3 class="paragraph">Paragraph Name</h3>
+-->
+
+<!--表格-->
+<!--
+<div class="table" title="Table Title" label="table_label">
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+    </tr>
+    <tr>
+      <td>xxx</td>
+      <td>xxx</td>
+      <td>xxx</td>
+    </tr>
+  </table>
+</div>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Program/">TECH_PROGRAM</a></li>
+          <li>CPP_KEYWORD_CONST</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar_2.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

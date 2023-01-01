@@ -28,8 +28,8 @@
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_mTCP_Compiled/pic/xxx.png">
-<meta property="article:published_time" content="2022-10-07T07:34:23.769Z">
-<meta property="article:modified_time" content="2022-10-07T07:34:23.769Z">
+<meta property="article:published_time" content="2022-10-08T12:22:45.813Z">
+<meta property="article:modified_time" content="2022-10-08T12:22:45.813Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -352,6 +352,34 @@
   &nbsp;&nbsp;&nbsp;&nbsp;Now we can start to build mTCP, just simply run <code>make</code> under the root path of mTCP repo, and we can get <code>libmtcp.a</code> under <code>mtcp/lib</code> if it is successfully compiled.
 </div>
 
+<h2 class="title">Build <code>dpdk-iface-kmod</code> from Source</h2>
+<div class="div_learning_post">
+  <h3 class="title">Makefile Modification</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+
+  <h3 class="title">Modify Source Code</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO:
+
+  <h5 class="paragraph"><code>rte_eth_dev_count</code> $\rightarrow$ <code>rte_eth_dev_count_avail</code> <cite>dpdk_remove_port_count</cite></h5>
+
+  <h5 class="paragraph">Replace <code>ether_addr</code> <cite>dpdk_replace_ether_addr</cite></h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Structure <code>ether_addr</code> are deprecated, hence we need to change the reference within <code>dpdk-iface-main.c</code> to <code>rte_ether_addr</code>.
+
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// dpdk-iface-main.c</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line"> PciDevice pd;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">rte_eth_dev_info</span> <span class="title">dev_details</span>;</span></span><br><span class="line">  <span class="comment">// struct rte_ether_addr ether_addr;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">rte_ether_addr</span> <span class="title">ports_eth_addr</span>;</span></span><br><span class="line">&#125; DevInfo;</span><br></pre></td></tr></table></figure>
+  <h5 class="paragraph">Modify netdev operation interface</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;We need to add more dummy function with two argments:
+
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// dpdk-iface.h</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * dummy function that returns void</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> </span><br><span class="line">netdev_no_ret(struct net_device *netdev) </span><br><span class="line">&#123;</span><br><span class="line">  (<span class="keyword">void</span>)netdev;</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * dummy function that returns void (with two args)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> </span><br><span class="line">netdev_no_ret_two_args(struct net_device *netdev, <span class="keyword">unsigned</span> <span class="keyword">int</span> k) </span><br><span class="line">&#123;</span><br><span class="line">  (<span class="keyword">void</span>)netdev;</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Then we change the <code>netdev_ops</code> as follows:
+
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">net_device_ops</span> <span class="title">netdev_ops</span> =</span> &#123;</span><br><span class="line">        .ndo_open               = netdev_open,</span><br><span class="line">        .ndo_stop               = netdev_open,</span><br><span class="line">        .ndo_start_xmit         = netdev_xmit,</span><br><span class="line">        .ndo_set_rx_mode        = netdev_no_ret,</span><br><span class="line">        .ndo_validate_addr      = netdev_open,</span><br><span class="line">        .ndo_set_mac_address    = <span class="literal">NULL</span>,</span><br><span class="line">        .ndo_change_mtu         = <span class="literal">NULL</span>,</span><br><span class="line">        .ndo_tx_timeout         = netdev_no_ret_two_args,</span><br><span class="line">        .ndo_vlan_rx_add_vid    = <span class="literal">NULL</span>,</span><br><span class="line">        .ndo_vlan_rx_kill_vid   = <span class="literal">NULL</span>,</span><br><span class="line">        .ndo_do_ioctl           = <span class="literal">NULL</span>,</span><br><span class="line">        .ndo_set_vf_mac         = <span class="literal">NULL</span>,</span><br><span class="line">        .ndo_set_vf_vlan        = <span class="literal">NULL</span>,</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> LINUX_VERSION_CODE &lt;= KERNEL_VERSION(3, 15, 0)</span></span><br><span class="line">        .ndo_set_vf_tx_rate     = <span class="literal">NULL</span>,</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">        .ndo_set_vf_rate        = <span class="literal">NULL</span>,</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">        .ndo_set_vf_spoofchk    = <span class="literal">NULL</span>,</span><br><span class="line">        .ndo_get_vf_config      = <span class="literal">NULL</span>,</span><br><span class="line">        .ndo_get_stats          = netdev_stats,</span><br><span class="line">        .ndo_setup_tc           = <span class="literal">NULL</span>,</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_NET_POLL_CONTROLLER</span></span><br><span class="line">        .ndo_poll_controller    = netdev_no_ret,</span><br><span class="line">  .ndo_netpoll_setup	= <span class="literal">NULL</span>,</span><br><span class="line">  .ndo_netpoll_cleanup	= <span class="literal">NULL</span>,</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">        .ndo_set_features 	= netdev_set_features,</span><br><span class="line">        .ndo_fix_features 	= netdev_fix_features,</span><br><span class="line">        .ndo_fdb_add            = <span class="literal">NULL</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</div>
+
 <div class="div_ref" id="ref_container"></div>
 
 </body>
@@ -601,14 +629,12 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
-  </div>
 
         
 
