@@ -2,7 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://zobinhuang.github.io/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_music/index.html</loc>
+    
+    <lastmod>2023-01-01</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_about/index.html</loc>
     
     <lastmod>2023-01-01</lastmod>
     
@@ -10,6 +17,13 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning/index.html</loc>
+    
+    <lastmod>2023-01-01</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/index.html</loc>
     
     <lastmod>2023-01-01</lastmod>
     
@@ -614,13 +628,6 @@
     <loc>https://zobinhuang.github.io/sec_learning_backup/Linux_Kernel_Interrupt_and_Exception_Intro/index.html</loc>
     
     <lastmod>2022-08-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_about/index.html</loc>
-    
-    <lastmod>2022-08-16</lastmod>
     
   </url>
   
@@ -1732,13 +1739,6 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_schedule/index_backup.html</loc>
-    
-    <lastmod>2021-11-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_music/index.html</loc>
     
     <lastmod>2021-11-28</lastmod>
     
