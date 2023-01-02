@@ -2,20 +2,32 @@ img{margin-left: 10px;}
 
 img{margin-right: 20px;}
 
-.div_concurrent{
+.concurrent{
     padding: 0px 0px; 
-    display: flex; 
+    display: flex;
     align-items:center; 
-    justify-content:center;
+    justify-content:space-evenly;
 }
 
-.div_concurrent_post{
-    width: 120%;
+.concurrent img {
+    width: 30%;
+}
+
+.concurrent_content{
+    margin-right: 20px;
+    padding: 5px 10px;
+}
+
+.concurrent_content a{
+    color: #001f3f;
 }
 
 @media(max-width: 768px) {
-    .div_concurrent{flex-direction: column;}
-    .div_concurrent_post{width: 90%;}
+    .concurrent{flex-direction: column;}
+    .concurrent_content{width: 90%;}
+    .concurrent img {
+        width: 100%;
+    }
 }
 
 .industry_container{
@@ -61,33 +73,30 @@ img{margin-right: 20px;}
 }
 
 .industry_intro_title_container department{
-    background-color: #868686;
+    background-color: #00078a;
     font-size: 10px;
     color: #FFFFFF;
-    padding: 0px 5px;
+    padding: 4px 5px;
     margin-left: 4px;
-    border: #000000 solid 1px;
-    border-radius: 5px;
+    border-radius: 2px;
 }
 
 .industry_intro_title_container job{
-    background-color: #868686;
+    background-color: #ff4343;
     font-size: 10px;
     color: #FFFFFF;
-    padding: 0px 5px;
+    padding: 4px 5px;
     margin-left: 4px;
-    border: #000000 solid 1px;
-    border-radius: 5px;
+    border-radius: 2px;
 }
 
 .industry_intro_title_container duration{
-    background-color: #868686;
+    background-color: #ff7575;
     font-size: 10px;
-    color: #FFFFFF;
-    padding: 0px 5px;
+    color: #ffffff;
+    padding: 4px 5px;
     margin-left: 4px;
-    border: #000000 solid 1px;
-    border-radius: 5px;
+    border-radius: 2px;
 }
 
 .project_container{
@@ -118,6 +127,7 @@ img{margin-right: 20px;}
 
 .project_title_content_container{
     padding: 0px 2px;
+    width: 100%;
 }
 
 .project_title_content_container h4{
@@ -126,36 +136,19 @@ img{margin-right: 20px;}
     margin-bottom: 5px;
 }
 
-.project_title_content_container place{
-    background-color: #868686;
+.project_title_content_container tag{
+    background-color: #9a0000;
     font-size: 10px;
     color: #FFFFFF;
-    padding: 0px 5px;
-    margin-left: 4px;
-    border: #000000 solid 1px;
-    border-radius: 5px;
+    padding: 4px 5px;
+    margin-left: 10px;
+    border-radius: 2px;
 }
 
-.post_fs14_ws1{
+.intro_block{
     font-size: 16px; 
     word-spacing:0px;
-    margin-bottom: 60px;
-}
-
-.post_fs14_ws1 h1{
-    font-family:'Times New Roman', Times, serif;
-    font-size: 25px;
-    background-color: #acacac;
-    color: #FFFFFF;
-    margin: 0;
-    padding: 0px 20px;
-    box-shadow: 5px 5px 5px #9b9b9b;
-}
-
-.post_fs14_ws0{
-    font-size: 16px; 
-    word-spacing:0px;
-    margin-bottom: 40px;
+    margin-bottom: 80px;
     /* border: #000000 1px solid;
     border-radius: 5px; */
     /* padding: 30px 30px; */
@@ -163,24 +156,116 @@ img{margin-right: 20px;}
     /* box-shadow: 5px 5px 5px #9b9b9b; */
 }
 
-.post_fs14_ws0 h1{
+.intro_block h1{
     font-family:'Times New Roman', Times, serif;
     font-size: 25px;
-    background-color: #acacac;
     color: #FFFFFF;
     margin: 10px 0px;
-    padding: 0px 20px;
-    box-shadow: 5px 5px 5px #9b9b9b;
+    padding: 4px 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #e493d0;
+    background-image: 
+        radial-gradient(closest-side, rgb(0, 24, 105), rgba(255, 41, 4, 0)),
+        radial-gradient(closest-side, rgb(255, 221, 0), rgba(255, 221, 0, 0)),
+        radial-gradient(closest-side, rgb(131, 0, 0), rgba(255, 92, 92, 0)),
+        radial-gradient(closest-side, rgb(255, 255, 0), rgba(126, 90, 255, 0)),
+        radial-gradient(closest-side, rgb(255, 123, 0), rgba(255, 152, 68, 0));
+    background-size:
+        130vmax 130vmax,
+        80vmax 80vmax,
+        90vmax 90vmax,
+        110vmax 110vmax,
+        90vmax 90vmax;
+    background-position: 
+        -80vmax -80vmax,
+        60vmax 60vmax,
+        10vmax 10vmax,
+        -30vmax -30vmax,
+        50vmax 50vmax;
+    background-repeat: no-repeat;
+    animation: 2s movement linear infinite;
 }
 
-.post_fs14_ws0 a{
-    background-color: #868686;
-    color: #FFFFFF;
-    padding: 0px 5px;
-    margin-left: 1px;
-    margin-right: 2px;
-    margin-bottom: 0px;
-    border: #000000 solid 2px;
+.intro_block h1::after{
+    content: '';
+    display: block;
+    position: fixed;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+  
+@keyframes movement {
+    0%, 100% {
+        background-size:
+        130vmax 130vmax,
+        80vmax 80vmax,
+        90vmax 90vmax,
+        110vmax 110vmax,
+        90vmax 90vmax;
+        background-position: 
+        -80vmax -80vmax,
+        60vmax 60vmax,
+        10vmax 10vmax,
+        -30vmax -30vmax,
+        50vmax 50vmax;
+    }
+    25% {
+        background-size:
+        100vmax 100vmax,
+        90vmax 90vmax,
+        100vmax 100vmax,
+        90vmax 90vmax,
+        60vmax 60vmax;
+        background-position: 
+        -60vmax -60vmax,
+        50vmax 50vmax,
+        0vmax 0vmax,
+        -40vmax -40vmax,
+        40vmax 40vmax;
+    }
+    75% {
+        background-size:
+        90vmax 90vmax,
+        90vmax 90vmax,
+        100vmax 100vmax,
+        90vmax 90vmax,
+        70vmax 70vmax;
+        background-position: 
+        -50vmax -40vmax,
+        50vmax -30vmax,
+        20vmax 0vmax,
+        -10vmax 10vmax,
+        40vmax 60vmax;
+    }
+}
+
+.intro_block h1 .btn_group{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.intro_block h1 .btn_group button{
+    margin-left: 10px;
+    font-size: 15px;
+    background-color: transparent;
+    color: #ffffff;
+    border: none;
+    padding: 5px 10px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    transition: all 0.5s;
+}
+
+.intro_block h1 button:hover{
+    color: #FFDC00;
+    background-color: #dddddd2c;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .post_border{

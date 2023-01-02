@@ -6,7 +6,6 @@ img{margin-right: 20px;}
     color: #FFFFFF;
     font-size: 18px; 
     word-spacing:0px; 
-    border:1px solid #010101; 
     border-radius: 10px; 
     padding: 20px 20px;
     display: flex;
@@ -24,6 +23,10 @@ img{margin-right: 20px;}
 
 .div_tea_content_container h2{
     color:#FFDC00;
+}
+
+.div_tea_content_container p{
+    font-size: 15px;
 }
 
 .div_tea_img_container {
