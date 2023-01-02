@@ -95,12 +95,14 @@ async function _load_catalogue(){
                                 if(module.posts[k].hasOwnProperty("origin")){
                                     if(module.posts[k].origin){
                                         let origin_tag = document.createElement('origin_tag')
-                                        origin_tag.innerHTML = `原创`
+                                        // origin_tag.innerHTML = `原创`
+                                        origin_tag.innerHTML = `Original`
                                         let fc = table_entry_td.firstChild
                                         table_entry_td.insertBefore(origin_tag,fc)
                                     } else {
                                         let forward_tag = document.createElement('forward_tag')
-                                        forward_tag.innerHTML = `转载`
+                                        // forward_tag.innerHTML = `转载`
+                                        forward_tag.innerHTML = `Reproduced`
                                         let fc = table_entry_td.firstChild
                                         table_entry_td.insertBefore(forward_tag,fc)
                                     }
@@ -108,12 +110,14 @@ async function _load_catalogue(){
                                     // 兼容老版本 (文章没有 origin 属性)
                                     if(module.posts[k].external_link === ""){
                                         let origin_tag = document.createElement('origin_tag')
-                                        origin_tag.innerHTML = `原创`
+                                        // origin_tag.innerHTML = `原创`
+                                        origin_tag.innerHTML = `Original`
                                         let fc = table_entry_td.firstChild
                                         table_entry_td.insertBefore(origin_tag,fc)
                                     } else {
                                         let forward_tag = document.createElement('forward_tag')
-                                        forward_tag.innerHTML = `转载`
+                                        // forward_tag.innerHTML = `转载`
+                                        forward_tag.innerHTML = `Reproduced`
                                         let fc = table_entry_td.firstChild
                                         table_entry_td.insertBefore(forward_tag,fc)
                                     }
@@ -225,12 +229,14 @@ async function _load_catalogue(){
                         if(module.posts[k].hasOwnProperty("origin")){
                             if(module.posts[k].origin){
                                 let origin_tag = document.createElement('origin_tag')
-                                origin_tag.innerHTML = `原创`
+                                // origin_tag.innerHTML = `原创`
+                                origin_tag.innerHTML = `Original`
                                 let fc = table_entry_td.firstChild
                                 table_entry_td.insertBefore(origin_tag,fc)
                             } else {
                                 let forward_tag = document.createElement('forward_tag')
-                                forward_tag.innerHTML = `转载`
+                                // forward_tag.innerHTML = `转载`
+                                forward_tag.innerHTML = `Reproduced`
                                 let fc = table_entry_td.firstChild
                                 table_entry_td.insertBefore(forward_tag,fc)
                             }
@@ -238,12 +244,14 @@ async function _load_catalogue(){
                             // 兼容老版本 (文章没有 origin 属性)
                             if(module.posts[k].external_link === ""){
                                 let origin_tag = document.createElement('origin_tag')
-                                origin_tag.innerHTML = `原创`
+                                // origin_tag.innerHTML = `原创`
+                                origin_tag.innerHTML = `Original`
                                 let fc = table_entry_td.firstChild
                                 table_entry_td.insertBefore(origin_tag,fc)
                             } else {
                                 let forward_tag = document.createElement('forward_tag')
-                                forward_tag.innerHTML = `转载`
+                                // forward_tag.innerHTML = `转载`
+                                forward_tag.innerHTML = `Reproduced`
                                 let fc = table_entry_td.firstChild
                                 table_entry_td.insertBefore(forward_tag,fc)
                             }
@@ -326,12 +334,14 @@ async function _load_catalogue(){
                         if(module.posts[k].hasOwnProperty("origin")){
                             if(module.posts[k].origin){
                                 let origin_tag = document.createElement('origin_tag')
-                                origin_tag.innerHTML = `原创`
+                                // origin_tag.innerHTML = `原创`
+                                origin_tag.innerHTML = `Original`
                                 let fc = table_entry_td.firstChild
                                 table_entry_td.insertBefore(origin_tag,fc)
                             } else {
                                 let forward_tag = document.createElement('forward_tag')
-                                forward_tag.innerHTML = `转载`
+                                // forward_tag.innerHTML = `转载`
+                                forward_tag.innerHTML = `Reproduced`
                                 let fc = table_entry_td.firstChild
                                 table_entry_td.insertBefore(forward_tag,fc)
                             }
@@ -339,12 +349,14 @@ async function _load_catalogue(){
                             // 兼容老版本 (文章没有 origin 属性)
                             if(module.posts[k].external_link === ""){
                                 let origin_tag = document.createElement('origin_tag')
-                                origin_tag.innerHTML = `原创`
+                                // origin_tag.innerHTML = `原创`
+                                origin_tag.innerHTML = `Original`
                                 let fc = table_entry_td.firstChild
                                 table_entry_td.insertBefore(origin_tag,fc)
                             } else {
                                 let forward_tag = document.createElement('forward_tag')
-                                forward_tag.innerHTML = `转载`
+                                // forward_tag.innerHTML = `转载`
+                                forward_tag.innerHTML = `Reproduced`
                                 let fc = table_entry_td.firstChild
                                 table_entry_td.insertBefore(forward_tag,fc)
                             }
@@ -423,12 +435,14 @@ async function _load_catalogue(){
                         if(module.posts[k].hasOwnProperty("origin")){
                             if(module.posts[k].origin){
                                 let origin_tag = document.createElement('origin_tag')
-                                origin_tag.innerHTML = `原创`
+                                // origin_tag.innerHTML = `原创`
+                                origin_tag.innerHTML = `Original`
                                 let fc = table_entry_td.firstChild
                                 table_entry_td.insertBefore(origin_tag,fc)
                             } else {
                                 let forward_tag = document.createElement('forward_tag')
-                                forward_tag.innerHTML = `转载`
+                                // forward_tag.innerHTML = `转载`
+                                forward_tag.innerHTML = `Reproduced`
                                 let fc = table_entry_td.firstChild
                                 table_entry_td.insertBefore(forward_tag,fc)
                             }
@@ -436,12 +450,14 @@ async function _load_catalogue(){
                             // 兼容老版本 (文章没有 origin 属性)
                             if(module.posts[k].external_link === ""){
                                 let origin_tag = document.createElement('origin_tag')
-                                origin_tag.innerHTML = `原创`
+                                // origin_tag.innerHTML = `原创`
+                                origin_tag.innerHTML = `Original`
                                 let fc = table_entry_td.firstChild
                                 table_entry_td.insertBefore(origin_tag,fc)
                             } else {
                                 let forward_tag = document.createElement('forward_tag')
-                                forward_tag.innerHTML = `转载`
+                                // forward_tag.innerHTML = `转载`
+                                forward_tag.innerHTML = `Reproduced`
                                 let fc = table_entry_td.firstChild
                                 table_entry_td.insertBefore(forward_tag,fc)
                             }

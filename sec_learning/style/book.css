@@ -76,7 +76,7 @@ img{margin-right: 20px;}
 }
 
 origin_tag {
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     background-color: #ff5353;
     color: #FFFFFF;
     padding: 2px 10px;
@@ -85,7 +85,7 @@ origin_tag {
 }
 
 forward_tag {
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     background-color: #9b9b9b;
     color: #FFFFFF;
     padding: 2px 10px;

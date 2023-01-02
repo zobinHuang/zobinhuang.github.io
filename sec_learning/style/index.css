@@ -85,6 +85,32 @@ img{margin-right: 20px;}
     padding: 0;
 }
 
+.div_table_entry_content h2{
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+.div_table_entry_content h5{
+    margin-top: 0px;
+    padding-top: 0px;
+}
+
+.div_table_entry_content p{
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+.div_table_entry_content .intro{
+    margin-top: 0px;
+    padding-top: 0px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    font-size: 12px;
+}
+
+
+
+
 /* 搜索框样式 */
 .search_engine{
     width: 80%;
