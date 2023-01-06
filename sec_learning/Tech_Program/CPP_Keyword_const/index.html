@@ -22,14 +22,14 @@
 
   <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:type" content="website">
-<meta property="og:title" content="const 关键字">
+<meta property="og:title" content="详解 const 关键字">
 <meta property="og:url" content="https://zobinhuang.github.io/sec_learning/Tech_Program/CPP_Keyword_const/index.html">
 <meta property="og:site_name" content="Zobin">
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Program/CPP_Keyword_const/pic/xxx.png">
-<meta property="article:published_time" content="2023-01-01T14:13:29.749Z">
-<meta property="article:modified_time" content="2023-01-01T14:13:29.749Z">
+<meta property="article:published_time" content="2023-01-05T17:19:38.675Z">
+<meta property="article:modified_time" content="2023-01-05T17:19:38.675Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -52,7 +52,7 @@
   };
 </script>
 
-  <title>const 关键字 | Zobin
+  <title>详解 const 关键字 | Zobin
 </title>
   
 
@@ -171,7 +171,7 @@
     <div class="post-block" lang="en">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">const 关键字
+<h1 class="post-title" itemprop="name headline">详解 const 关键字
 </h1>
 
 <div class="post-meta">
@@ -343,18 +343,71 @@
 
   <h3 class="title">修饰函数返回值</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<code>const</code> 修饰函数返回值同样可以分为三种情况:
-  <ol>
-    <li>
-      <p><code>const</code> 修饰
-    </li>
-  </ol>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>const</code> 修饰函数返回值，大多数情况是: 函数返回值是引用类型，为了防止外部对类内部成员变量进行修改，可以使用 <code>const</code> 关键字对函数返回值进行修饰，例子如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Object</span> &#123;</span></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">int</span> _data;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  Object(<span class="keyword">int</span> num):_data(num)&#123;&#125;</span><br><span class="line">  ~Object()&#123;&#125;</span><br><span class="line">  <span class="function"><span class="keyword">const</span> <span class="keyword">int</span>&amp; <span class="title">get_data</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> _data; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test_const</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="function">Object <span class="title">o</span><span class="params">(<span class="number">1</span>)</span></span>;</span><br><span class="line">  o.get_data() = <span class="number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  test_const();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面代码的报错信息如下所示:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ g++ main.cpp</span><br><span class="line">main.cpp:63:16: error: cannot assign to <span class="built_in">return</span> value because <span class="keyword">function</span> <span class="string">&#x27;get_data&#x27;</span> returns a const value</span><br><span class="line">  o.get_data() = 3;</span><br><span class="line">  ~~~~~~~~~~~~ ^</span><br><span class="line">main.cpp:58:9: note: <span class="keyword">function</span> <span class="string">&#x27;get_data&#x27;</span> <span class="built_in">which</span> returns const-qualified <span class="built_in">type</span> <span class="string">&#x27;const int &amp;&#x27;</span> declared here</span><br><span class="line">  const int&amp; <span class="function"><span class="title">get_data</span></span>()&#123; <span class="built_in">return</span> _data; &#125;</span><br><span class="line">        ^~~~</span><br><span class="line">2 errors generated.</span><br></pre></td></tr></table></figure>
 </div>
 
-<h2 class="title"><code>const</code> 修饰普通类型的变量</h2>
+<h2 class="title"><code>const</code> 修饰类成员函数</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;首先来看下面的示例代码:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Object</span> &#123;</span></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">int</span> _data;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  Object(<span class="keyword">int</span> num):_data(num)&#123;&#125;</span><br><span class="line">  ~Object()&#123;&#125;</span><br><span class="line">  <span class="function"><span class="keyword">int</span>&amp; <span class="title">get_data</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> _data; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test_const</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">const</span> Object <span class="title">o</span><span class="params">(<span class="number">1</span>)</span></span>;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; o.get_data() &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  test_const();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这段代码的特别之处就在于: Line 11 在实例化类 <code>Object</code> 时，使用了 <code>const</code> 关键字进行修饰，然后在 Line 12 尝试调用 <code>Object</code> 对象的成员函数 <code>get_data</code>。上面代码的编译报错信息如下所示:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ g++ main.cpp</span><br><span class="line">main.cpp:63:16: error: <span class="string">&#x27;this&#x27;</span> argument to member <span class="keyword">function</span> <span class="string">&#x27;get_data&#x27;</span> has <span class="built_in">type</span> <span class="string">&#x27;const Object&#x27;</span>, but <span class="keyword">function</span> is not marked const</span><br><span class="line">  std::cout &lt;&lt; <span class="string">o.get_data() &lt;&lt; std::endl;</span></span><br><span class="line"><span class="string">               ^</span></span><br><span class="line"><span class="string">main.cpp:58:8: note: &#x27;get_data&#x27; declared here</span></span><br><span class="line"><span class="string">  int&amp; get_data()&#123; return _data; &#125;</span></span><br><span class="line"><span class="string">      ^</span></span><br><span class="line"><span class="string">1 error generated.</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们发现上面的报错信息中对 <code>this</code> 指针进行了报错。这里需要补充一个背景知识:
+
+  <noteblock>
+  任何成员函数的第一个参数默认都隐式地为 <code>this</code> 指针，调用了哪个对象的成员函数，这个 <code>this</code> 指针就传的是哪个对象的指针
+  </noteblock>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在再来看报错信息就不难理解了，我们定义的成员函数 <code>get_data</code>，默认的第一个隐式参数是 <code>Object*</code>，而我们实例化出来的对象实际上是 <code>const Object</code> 对象 <code>o</code>，不符合参数列表，因此报错。为了解决这个问题，我们可以通过在定义成员函数是在参数列表后面加上 <code>const</code> 来解决:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span>&amp; <span class="title">get_data</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> _data; &#125;</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这里我们需要补充一下在实例化对象的过程中，使用 <code>const</code> 进行修饰的原因:
+
+  <noteblock>
+  当我们使用 <code>const</code> 修饰对象实例化时，这说明该对象的成员变量在实例化之后就不能被改变。
+  </noteblock>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下表展示了一些对应关系:
+
+  <div class="table" title="const 对象和 const 成员函数的对应关系">
+  <table>
+    <tr>
+      <th align="center"></th>
+      <th align="center">const object<br>(成员变量不能改变)</th>
+      <th align="center">non-const object<br>(成员变量可以改变)</th>
+    </tr>
+    <tr>
+      <td align="center">const 成员函数<br>(保证不修改成员变量)</td>
+      <td align="center">允许调用</td>
+      <td align="center">允许调用</td>
+    </tr>
+    <tr>
+      <td align="center">non-const 成员函数<br>(不保证不修改成员变量)</td>
+      <td align="center">不允许调用</td>
+      <td align="center">允许调用</td>
+    </tr>
+  </table>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，如果实在需要在 <code>const</code> 修饰的成员函数中修改成员变量，做法是使用 <code>mutable</code> 关键字来修饰该成员变量，这样一来它就可以被 <code>const</code> 修饰的成员函数所修改。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后需要补充的是，如果成员函数同时具有 <code>const</code> 和非 <code>const</code> 两个版本的话， <code>const</code> 对象只能调用 <code>const</code> 成员函数，而非 <code>const</code> 对象只能调用非 <code>const</code> 成员函数。
 </div>
 
 <div class="div_ref" id="ref_container"></div>
