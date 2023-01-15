@@ -1,9 +1,8 @@
 let language = ''
 
 async function load_page(){
-    
     _load_metadata()
-    
+
     _load_paragraph()
 
     _load_flow_chart()
@@ -18,13 +17,92 @@ async function load_page(){
 
     _load_theorm()
 
-    _load_code_segment()
-
     _load_note()
 
     _load_keyword()
 
     _load_citation()
+
+    _show_chartjs()
+}
+
+async function _show_chartjs(){
+    fetch('./chartjs_data.json')
+    .then((res) => {return res.json();})
+    .then((charts_info) => {
+        let chart_datas = charts_info.charts
+
+        // 创建 Charts，并且记录所有的 labels
+        let chartjs_index_list = new Array()
+        for(let i=0; i<chart_datas.length; i++){
+            // find the div with the given id
+            let chartjs_divs = document.getElementsByClassName("chartjs")
+            let target_div = null
+            for(let j=0; j<chartjs_divs.length; j++){
+                if(chartjs_divs[j].getAttribute("label") === chart_datas[i].label){
+                    target_div = chartjs_divs[j]
+                    break;
+                }
+            }
+
+            if(target_div === null){
+                console.log(`Can't find chartjs div with id ${chart_datas[i].label}`)
+                continue;
+            }
+
+            // create canvas
+            let target_canvas = document.createElement('canvas')
+            target_div.append(target_canvas)
+
+            // setup the weight and hight of the canvas
+            if(chart_datas[i].width !== ""){
+                target_canvas.setAttribute("width", chart_datas[i].width)
+            }
+            if(chart_datas[i].height !== ""){
+                target_canvas.setAttribute("height", chart_datas[i].height)
+            }
+
+            // create new chart instance
+            try {
+                const new_chart = new Chart(target_canvas, chart_datas[i].chartjs_config);
+            } catch (error) {
+                console.log(error)
+            }
+
+            // 记录 label
+            chartjs_index_list[chart_datas[i].label] = i+1
+            let chartjs_index = document.createElement('chartjs_index')
+            if(!chart_datas[i].title === "")
+                chartjs_index.innerHTML = `Chart ${i+1}`
+            else
+                chartjs_index.innerHTML = `Chart ${i+1}: ${chart_datas[i].title}`
+
+            // 显示标号
+            target_div.append(chartjs_index)
+
+            // 设置 id，方便跳转
+            target_div.setAttribute('id', `chartjs_${i+1}`)
+
+        }
+
+        // 替换所有的 Charts 引用
+        let chart_refs = document.getElementsByTagName("chartref")
+        for(let i = 0; i < chart_refs.length; i++){
+            // 获取 Chart 标识号
+            let selected_chart_index = chartjs_index_list[chart_refs[i].innerHTML]
+
+            // 创建链接
+            let chart_link = document.createElement('a')
+            chart_link.setAttribute('href', `#chartjs_${selected_chart_index}`)
+
+            // 修改 imgref 的内部内容
+            chart_link.innerHTML = `Chart ${selected_chart_index}`
+
+            // 塞入原先位置
+            chart_refs[i].innerHTML = ''
+            chart_refs[i].append(chart_link)
+        }
+    })
 }
 
 // 显示/隐藏目录按钮回调
@@ -212,6 +290,12 @@ async function _load_metadata(){
                 _load_reference(label_list)
             }
         )
+
+        // 加载 code segment (这里面需要用到 language 属性)
+        _load_code_segment()
+        
+        // 加载 comment (这里面需要用到 language 属性)
+        _load_comments()
     })
 }
 
@@ -221,6 +305,88 @@ async function _load_paragraph(){
     for(let i = 0; i < paragraphs.length; i++){
         paragraphs[i].setAttribute('style', 'color:#0074D9;')
         paragraphs[i].innerHTML = `❐ ${paragraphs[i].innerHTML}`
+    }
+}
+
+// 点击 显示/隐藏附录 按钮的回调函数
+async function _show_comment(id){
+    let comment_container = document.getElementById(`container_${id}`)
+    let comment_button = document.getElementById(`${id}`)
+
+    if(comment_container.className == 'comblock_disappear'){
+        comment_container.style.display = ''
+        comment_container.setAttribute('class', 'comblock')
+        if(language === 'cn'){
+            comment_button.innerHTML = `隐藏附录`
+        } else {
+            comment_button.innerHTML = `Hide Comment`
+        }
+    } else {
+        comment_container.setAttribute('class', 'comblock_disappear')
+        if(language === 'cn'){
+            comment_button.innerHTML = `显示附录`
+        } else {
+            comment_button.innerHTML = `Show Comment`
+        }
+        setTimeout(function() { comment_container.style.display = 'none'; }, 300);
+    }
+}
+
+async function _load_comments(){
+    let comments = document.getElementsByClassName("comblock")
+    for(let i = 0; i < comments.length; i++){
+        // 设置 id
+        comments[i].setAttribute('id', `container_comment_${i}`)
+
+        // 创建整个 Outside Container
+        let outside_container = document.createElement('div')
+        outside_container.setAttribute("class", "comment_container")
+        comments[i].parentNode.insertBefore(outside_container, comments[i].nextElementSibling)
+
+        // 创建一个 bar_container，用来承载标题和按钮
+        let bar_container = document.createElement('div')
+        bar_container.setAttribute("class", "bar_container")
+        outside_container.append(bar_container)
+
+        // 创建 title_container
+        let title_container = document.createElement('div')
+        title_container.setAttribute("class", "title_container")
+        bar_container.append(title_container)
+
+        // 创建 title
+        let h5_title = document.createElement('h5')
+        if(comments[i].getAttribute("title") !== ""){
+            if(language === 'cn'){
+                h5_title.innerHTML = `附录: ${comments[i].getAttribute("title")}`
+            } else {
+                h5_title.innerHTML = `Comment: ${comments[i].getAttribute("title")}`
+            }
+        } else {
+            if(language === 'cn'){
+                h5_title.innerHTML = `附录`
+            } else {
+                h5_title.innerHTML = `Comment`
+            }
+        }
+        title_container.append(h5_title)
+
+        // 创建一个按钮
+        let comment_btn = document.createElement('button')
+        comment_btn.setAttribute('type', 'button')
+        comment_btn.setAttribute('id', `comment_${i}`)
+        comment_btn.setAttribute('onclick', '_show_comment(id)')
+        if(language === 'cn'){
+            comment_btn.innerHTML = `显示附录`
+        } else {
+            comment_btn.innerHTML = `Show Comment`
+        }
+        bar_container.append(comment_btn)
+    
+        // 将注释本体也送入 outside_container
+        outside_container.append(comments[i])
+        
+        comments[i].style.display = 'none'
+        comments[i].setAttribute('class', `comblock_disappear`)
     }
 }
 
@@ -530,6 +696,7 @@ async function _load_theorm(){
     }
 }
 
+
 // 点击 显示/隐藏代码段 按钮的回调函数
 async function _show_code_segment(id){
     let code_segment_container = document.getElementById(`container_${id}`)
@@ -539,10 +706,18 @@ async function _show_code_segment(id){
     if(code_segment_container.className == 'div_code_container_disapear'){
         code_segment_container.style.display = ''
         code_segment_container.setAttribute('class', 'div_code_container')
-        code_segment_button_content.innerHTML = `Hide Codes`
+        if(language === 'cn'){
+            code_segment_button_content.innerHTML = `隐藏代码`
+        } else {
+            code_segment_button_content.innerHTML = `Hide Codes`
+        }
     } else {
         code_segment_container.setAttribute('class', 'div_code_container_disapear')
-        code_segment_button_content.innerHTML = `Show Codes`
+        if(language === 'cn'){
+            code_segment_button_content.innerHTML = `显示代码 (共 ${code_segment_button.getAttribute('nb_rows')} 行)`
+        } else {
+            code_segment_button_content.innerHTML = `Show Codes (${code_segment_button.getAttribute('nb_rows')} rows)`
+        }
         setTimeout(function() { code_segment_container.style.display = 'none'; }, 300);
     }
 }
@@ -551,36 +726,59 @@ async function _show_code_segment(id){
 async function _load_code_segment(){
     let code_segments = document.getElementsByTagName('figure')
 
-    function __process_language_name(language){
-        if(language == 'python') return 'Python'
-        else if(language == 'bash') return 'Bash Script'
-        else if(language == 'cpp') return 'C++'
-        else if(language == 'c') return 'C'
-        else if(language == 'go' || language == 'golang') return 'Golang'
-        else return language
+    function __process_language_name(p_language){
+        if(p_language == 'python') return 'Python'
+        else if(p_language == 'bash') return 'Bash Script'
+        else if(p_language == 'cpp') return 'C++'
+        else if(p_language == 'c') return 'C'
+        else if(p_language == 'go' || p_language == 'golang') return 'Golang'
+        else return p_language
     }
 
     for(let i = 0; i < code_segments.length; i++){
         // 获取代码段语言
         let code_segment_language = __process_language_name(`${code_segments[i].classList[1]}`)
+        
+        // 获取代码段落行数
+        // 这里写的比较 Dan Teng，调试的时候可以打印出来看看
+        let code_segment_row_numbers = code_segments[i].children[0].children[0].children[0].children[0].children[0].children[0].childNodes
+        let code_segment_nb_rows_str = code_segment_row_numbers[code_segment_row_numbers.length-2].innerHTML;
+        let code_segment_nb_rows = parseInt(code_segment_nb_rows_str)
+        // console.log(code_segment_nb_rows)
 
+        // 显示代码块的最大行数阈值 (可修改)
+        const max_showing_nb_rows = 10 
+        let to_show = false
+        if(code_segment_nb_rows <= max_showing_nb_rows) to_show = true
+        
         // 创建一个按钮
         let code_segment_btn = document.createElement('button')
         code_segment_btn.setAttribute('type', 'button')
         code_segment_btn.setAttribute('id', `code_segment_${i}`)
+        code_segment_btn.setAttribute('nb_rows', code_segment_nb_rows)
         code_segment_btn.setAttribute('onclick', '_show_code_segment(id)')
         code_segment_btn.setAttribute('language', code_segment_language)
 
         // 创建按钮内容 - 按钮文字
         let code_segment_btn_content = document.createElement('div')
         code_segment_btn_content.setAttribute('class', 'div_code_segment_button_sign')
-        code_segment_btn_content.innerHTML = `Hide Codes`
-
+        console.log(`language: ${language}`)
+        if(language === 'cn'){
+            if(to_show)
+                code_segment_btn_content.innerHTML = `隐藏代码`
+            else
+                code_segment_btn_content.innerHTML = `显示代码 (共 ${code_segment_btn.getAttribute('nb_rows')} 行)`
+        } else {
+            if(to_show)
+                code_segment_btn_content.innerHTML = `Hide Codes`
+            else
+                code_segment_btn_content.innerHTML = `Show Codes (${code_segment_btn.getAttribute('nb_rows')} rows)`
+        }
+        
         // 创建按钮内容 - 语言类型
         let code_segment_btn_language_type = document.createElement('div')
         code_segment_btn_language_type.setAttribute('class', 'div_code_segment_language_type')
         code_segment_btn_language_type.innerHTML = `${code_segment_language}`
-        
         code_segment_btn.append(code_segment_btn_content)
         code_segment_btn.append(code_segment_btn_language_type)
 
@@ -589,11 +787,15 @@ async function _load_code_segment(){
         code_segments[i].parentNode.insertBefore(code_segment_container, code_segments[i].nextElementSibling)
         code_segment_container.appendChild(code_segments[i])
 
-        // 设置 container 属性，以及暂时设置为不可见
+        // 设置 container 属性，以及暂时设置为可见
         code_segment_container.setAttribute('id', `container_code_segment_${i}`)
-        code_segment_container.setAttribute('class', `div_code_container`)
-        // code_segment_container.style.display = 'none'    // 不可见
-        code_segment_container.style.display = ''       // 可见
+        if(to_show){ // 可见
+            code_segment_container.setAttribute('class', `div_code_container`)
+            code_segment_container.style.display = ''
+        } else {    // 不可见
+            code_segment_container.setAttribute('class', `div_code_container_disapear`)
+            code_segment_container.style.display = 'none'
+        }
 
         // 创建一个最外层的 container
         let outside_container = document.createElement('div')

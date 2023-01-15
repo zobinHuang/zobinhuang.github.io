@@ -22,17 +22,16 @@
 
   <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:type" content="website">
-<meta property="og:title" content="P4 系列教程笔记-1：Programmable Dataplane 和 P4lang 导论">
-<meta property="og:url" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/P4_1_Introduction/index.html">
+<meta property="og:title" content="在 Oneflow 中开发算子的基本流程">
+<meta property="og:url" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Operator_Development/index.html">
 <meta property="og:site_name" content="Zobin">
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/P4_1_Introduction/pic/3_planes.png">
-<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/P4_1_Introduction/pic/other_sdn_sw.png">
-<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/P4_1_Introduction/pic/other_ovs.png">
-<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/P4_1_Introduction/pic/xxx.png">
-<meta property="article:published_time" content="2022-12-15T14:48:40.730Z">
-<meta property="article:modified_time" content="2022-12-15T14:48:40.730Z">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Operator_Development/pic/naive_impt_ncu_1.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Operator_Development/pic/naive_impt_ncu_2.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Operator_Development/pic/xxx.png">
+<meta property="article:published_time" content="2023-01-13T15:59:58.304Z">
+<meta property="article:modified_time" content="2023-01-13T15:59:58.304Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -40,9 +39,9 @@
 <meta property="article:tag" content="网络工程">
 <meta property="article:tag" content="Networking Engineering">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/P4_1_Introduction/pic/3_planes.png">
+<meta name="twitter:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Operator_Development/pic/naive_impt_ncu_1.png">
 
-<link rel="canonical" href="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/P4_1_Introduction/">
+<link rel="canonical" href="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Operator_Development/">
 
 
 <script id="page-configurations">
@@ -55,7 +54,7 @@
   };
 </script>
 
-  <title>P4 系列教程笔记-1：Programmable Dataplane 和 P4lang 导论 | Zobin
+  <title>在 Oneflow 中开发算子的基本流程 | Zobin
 </title>
   
 
@@ -174,7 +173,7 @@
     <div class="post-block" lang="en">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">P4 系列教程笔记-1：Programmable Dataplane 和 P4lang 导论
+<h1 class="post-title" itemprop="name headline">在 Oneflow 中开发算子的基本流程
 </h1>
 
 <div class="post-meta">
@@ -183,7 +182,7 @@
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
             <li><a href="/sec_learning/Tech_System_And_Network/">TECH_SYSTEM_AND_NETWORK</a></li>
-          <li>P4_1_INTRODUCTION</li>
+          <li>ONEFLOW_OPERATOR_DEVELOPMENT</li>
         
   </ul>
 
@@ -249,68 +248,120 @@
 <script src="script/mermaid.min.js"></script>
 <script>mermaid.initialize({startOnLoad:true});</script>
 
+<!-- 导入 chart.js -->
+<script src="script/chart.min.js"></script>
+
 <!-- 本文的 Metadata -->
 <div id="metadata"></div>
 
 <!-- Start your post here -->
-
-<h2 class="title">为什么需要可编程数据平面?</h2>
+<h2 class="title">前言</h2>
 <div class="div_learning_post">
-  <h3 class="title">三大平面</h3>
-
-  <div class="img" title="三大平面">
-    <img src="./pic/3_planes.png" width="400px" />
-  </div>
-
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于一个标准的通信系统，我们通常可以将其解耦为三个平面: <def>数据平面 (Data Plane)</def>, <def>控制平面 (Control Plane)</def> 和 <def>管理平面 (Management Plane)</def>，这里的 <def>平面 (Plane)</def> 一词通常被释义为「一系列的算法」，这三个平面的功能可以总结为:
-
-  <ul>
-    <li>数据平面: 提供数据包转发 (Packet Forwarding) 的能力;</li>
-    <li>控制平面: 提供在网络上进行路由 (Routing) 和发现 (Discovery) 等能力，用于控制数据平面;</li>
-    <li>管理平面: 提供 CLI 或者 GUI 等人机交互接口，用于管理控制平面和整个通信系统</li>
-  </ul>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;简单地说，处理网络数据包的逻辑通常是「查表+转发」，数据平面提供了「查表+转发」逻辑的实现，控制平面为数据平面要查的控制表中填入相关表项，而管理平面则为网络管理员提供了手动管理这些表项的接口。
-
-  <h3 class="title">传统交换机</h3>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;传统的商业交换机拥有完全固定的 <u>数据平面</u> 和 <u>控制平面</u>，分别指的是厂商在设备出厂时:
-
-  <ul>
-    <li>规定好了设备可以支持的协议类型，以及数据包从进入设备，到从设备转出的处理流程 (数据平面);</li>
-    <li>规定好了设备上运行的网络路由、发现协议的具体类型 (控制平面);</li>
-  </ul>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;具体来说，传统交换机设备，通过 ① 在 <u>控制平面</u> 上运行二层协议 (e.g. ARP, STP, PPP, etc.) 和路由协议 (e.g. BGP, OSPF, RIP, etc.) 等以自动填充相关控制表；② 在 <u>管理平面</u> 静态配置 ACL 规则等以手动填充相关控制表，可以实现对交换机 <u>数据平面</u> 行为的控制，并且对于 <u>数据平面</u> 来说，设备可以识别的数据包头类型是有限的，并且在处理数据包时的查表顺序也是固定的。传统交换机由于固定简单的逻辑，通常可以做到很高的交换速率，但几乎没有可编程能力。
-
-  <h3 class="title">SDN 交换机</h3>
-  <div class="img" title="OpenFlow Switch">
-    <img src="./pic/other_sdn_sw.png" width="400px" />
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;SDN 交换机的最大特点在于独立出交换机本身的可编程的 <u>控制平面</u>，网络管理员可以把整张网络的控制逻辑 (i.e. 填充控制表的能力) 放在统一的集中式控制器上进行实现，交换机设备只负责完成「查表+转发」的能力。在 <u>数据平面</u> 上，SDN 交换机仍然拥有固定的 「查表+转发」 逻辑，这里 “固定” 的意思是 SDN 交换机能够识别的数据包头格式是固定的，并且和传统交换机一样，SDN 交换机的查表顺序也是规定好的。
-
-  <div class="img" title="Open vSwitch">
-    <img src="./pic/other_ovs.png" width="600px" />
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;值得注意的是，对于像 Open vSwitch 这类软件交换机来说，由于是软件交换机，因此它们的可定制化程度更高，例如可以针对自研的数据平面协议定制数据包头的格式，配套以对应的控制表和查表流程设计，因此是 <u>可编程数据平面</u> 的交换机，可编程数据平面使得数据包以及数据包在网络中的行为可以更加灵活，但是由于 CPU 性能的限制，即使应用了用户态驱动 (i.e. DPDK PMD)，软件交换机能做的带宽和时延仍然有限，因此无法应用在高速大吞吐的场景下 (e.g.，网关)。理想的情况是，我们既能采用软件交换机的可编程性，又能利用硬件带来的线速率转发能力，这就是 P4 交换机的 Motivation。
-
-  <h3 class="title">P4 可编程交换机</h3>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;P4 交换机最大的特点是拥有可编程的 <u>数据平面</u>。正如上面所说，P4 在硬件上实现了像 vSwitch 一样的 <u>数据平面</u> 可编程性: 底层转发面可以解析的数据包的包头格式如何，有几张转发表，收到数据包之后转发流程如何，可以由研发人员通过编写基于 P4lang 的程序进行定义。完成基于 P4lang 的定义后，将程序送入 P4 编译器，编译形成的最终程序可以被烧录到 P4 设备上进行重新编程，以更新 <u>数据平面</u> 的具体行为。P4 编译器同时也会生成对应的 <u>控制平面</u> 接口，对应着 <u>数据平面</u> 所定义的控制表，为这些控制表提供表项增删改查的能力，基于这些接口，用户即可以实现自己的 <u>控制平面</u> 程序。
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
 </div>
 
+<h2 class="title">背景: GLU 及其变种的计算过程</h2>
+<div class="div_learning_post">
+  <h3 class="title">基本计算过程</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;参考 GLU Variants Improve Transformer <cite>glu_var_paper</cite> 这篇 Paper，GLU 及其变种的计算过程如下所示:
+
+  <div class="equation" label="glu_identity">
+  $\text{GLU}_{\text{Identity}}(x,W,V,b,c)=(xW+b)\otimes(xV+c)$
+  </div>
+
+  <div class="equation" label="glu_sigmoid">
+  $\text{GLU}_{\text{sigmoid}}(x,W,V,b,c)=\sigma(xW+b)\otimes(xV+c)$
+  </div>
+
+  <div class="equation" label="glu_relu">
+  $\text{GLU}_{\text{relu}}(x,W,V,b,c)=\text{RELU}(xW+b)\otimes(xV+c)$
+  </div>
+
+  <div class="equation" label="glu_gelu">
+  $\text{GLU}_{\text{gelu}}(x,W,V,b,c)=\text{GELU}(xW+b)\otimes(xV+c)$
+  </div>
+
+  <div class="equation" label="glu_silu">
+  $\text{GLU}_{\text{silu}}(x,W,V,b,c)=\text{SILU}(xW+b)\otimes(xV+c)$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以发现，上述变种的区别就在于计算式子中的激活函数不同，其余的计算过程基本一致: 给定一个输入张量 $x$，参数张量 $W$ 和 $V$，以及偏移张量 $b$ 和 $c$，首先进行 $(xW+b)$ 和 $(xV+c)$ 的线性运算 (p.s. 下文把前者的结果称为 <code>gate</code>，把后者的结果称为 <code>hidden_state</code>)；完成线性运算后，在 <code>gate</code> 上应用相应的激活函数 (p.s. 得到的结果下文称为 <code>act_gate</code>)；最终将 <code>hidden_state</code> 和 <code>act_gate</code> 上应用 Element-wise 的乘法，得到最终的结果。
+</div>
+
+<h2 class="title">Motivation: 为什么需要为 GLU 构造 Fused 实现?</h2>
+<div class="div_learning_post">
+  <h3 class="title">性能之殇</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;采用最 Naive 的方法，我们可以在 Oneflow 中通过构造继承自 <code>nn.Module</code> 的类来实现 GLU 的计算过程，源码如下:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> oneflow <span class="keyword">as</span> flow</span><br><span class="line"><span class="keyword">import</span> oneflow.nn <span class="keyword">as</span> nn</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Glu</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">      <span class="built_in">super</span>().__init__()</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">      self,</span></span></span><br><span class="line"><span class="function"><span class="params">      x: flow.Tensor,             <span class="comment"># 输入张量 x</span></span></span></span><br><span class="line"><span class="function"><span class="params">      w: flow.Tensor,             <span class="comment"># 参数张量 w</span></span></span></span><br><span class="line"><span class="function"><span class="params">      b: flow.Tensor,             <span class="comment"># 偏移张量 b</span></span></span></span><br><span class="line"><span class="function"><span class="params">      v: flow.Tensor = <span class="literal">None</span>,      <span class="comment"># 参数张量 v (optional)</span></span></span></span><br><span class="line"><span class="function"><span class="params">      c: flow.Tensor = <span class="literal">None</span>,      <span class="comment"># 偏移张量 c (optional)</span></span></span></span><br><span class="line"><span class="function"><span class="params">      split_mode: <span class="built_in">bool</span> = <span class="literal">False</span>,   <span class="comment"># 指示是否是分离参数张量的输入</span></span></span></span><br><span class="line"><span class="function"><span class="params">      activation: <span class="built_in">str</span> = <span class="string">&quot;none&quot;</span>,   <span class="comment"># 指示激活函数类型</span></span></span></span><br><span class="line"><span class="function"><span class="params">  </span>) -&gt; flow.Tensor:</span></span><br><span class="line">      <span class="comment"># matmul</span></span><br><span class="line">      matmul_wx = flow._C.matmul(<span class="built_in">input</span>=x, other=w, transpose_a=<span class="literal">False</span>, transpose_b=<span class="literal">True</span>)</span><br><span class="line">      <span class="keyword">if</span> split_mode:</span><br><span class="line">          matmul_vx = flow._C.matmul(<span class="built_in">input</span>=x, other=v, transpose_a=<span class="literal">False</span>, transpose_b=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">      <span class="comment"># add bias</span></span><br><span class="line">      matmul_wx_b = flow._C.add(<span class="built_in">input</span>=matmul_wx, other=b)</span><br><span class="line">      <span class="keyword">if</span> split_mode:</span><br><span class="line">          matmul_vx_c = flow._C.add(<span class="built_in">input</span>=matmul_vx, other=c)</span><br><span class="line"></span><br><span class="line">      <span class="comment"># chunk</span></span><br><span class="line">      <span class="keyword">if</span> split_mode:</span><br><span class="line">          hidden_state = matmul_wx_b</span><br><span class="line">          gate = matmul_vx_c</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          hidden_state, gate = matmul_wx_b.chunk(<span class="number">2</span>, dim=-<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">      <span class="comment"># activation and element-wise product</span></span><br><span class="line">      <span class="keyword">if</span> activation == <span class="string">&quot;none&quot;</span>:</span><br><span class="line">          <span class="keyword">return</span> hidden_state * gate</span><br><span class="line">      <span class="keyword">elif</span> activation == <span class="string">&quot;sigmoid&quot;</span>:</span><br><span class="line">          <span class="keyword">return</span> hidden_state * flow.sigmoid(gate)</span><br><span class="line">      <span class="keyword">elif</span> activation == <span class="string">&quot;relu&quot;</span>:</span><br><span class="line">          <span class="keyword">return</span> hidden_state * flow.relu(gate)</span><br><span class="line">      <span class="keyword">elif</span> activation == <span class="string">&quot;gelu&quot;</span>:</span><br><span class="line">          <span class="keyword">return</span> hidden_state * flow.gelu(gate)</span><br><span class="line">      <span class="keyword">elif</span> activation == <span class="string">&quot;fast_gelu&quot;</span>:</span><br><span class="line">          <span class="keyword">return</span> hidden_state * flow._C.fast_gelu(gate)</span><br><span class="line">      <span class="keyword">elif</span> activation == <span class="string">&quot;silu&quot;</span>:</span><br><span class="line">          <span class="keyword">return</span> hidden_state * flow.silu(gate)</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于上述实现，下面我们在不同的激活函数设置下，尝试向这段计算过程中打入不同规模的张量进行计算，并且获取计算过程的时延情况。完整的测试脚本可见 <a href="./naive_test.html">Naive 实现性能测试脚本</a>，这段测试脚本从 ① 激活函数种类、② 输入张量规模和 ③ 前向/反向三个维度测试了 Native 实现的性能，测试结果总体耗时情况如 <chartref>naive_impt_performance</chartref> 所示。
+
+  <div class="chartjs" label="naive_impt_performance"></div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们可以粗略地对这个计算过程的理论最优执行时间进行估算:
+
+  <div class="comblock" title="怎么进行 Naive 实现的性能测试?">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;由于 Oneflow 的执行是异步的，也就是说 Python 脚本构建出的逻辑计算图的各个 Op 实际上在 Oneflow 的 Runtime 中的执行是异步执行的，因此我们并不能直接在 Python 脚本中对 Duration 进行测试，上述的结果是首先使用 <code>ncu</code> 工具对这段计算过程中调用的各个 Kernels 的 Duration 进行记录，然后将这些 Kernels 的执行时间进行相加得到的。下面我们简单阐述一下这个过程:
+
+  <div class="img" label="img_forward_identity_ncu" title="Nsight Compute 中观察到的 ① 激活函数为 Identity; ② 数据类型为 half/float; ③ 张量形状为 m=256, n=1280, k=5120; 时调用的 Kernels">
+    <img src="./pic/naive_impt_ncu_1.png" width="100%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<note>结合上面给出的测试脚本</note>，我们可以尝试将测试过程对应上在 Nsight Compute 中的相应记录结果。这里以前向传播的测试为例进行说明，如 <imgref>img_forward_identity_ncu</imgref> 所示，当我们设置 ① 激活函数为 Identity; ② 数据类型为 half/float; ③ 张量形状为 m=256, n=1280, k=5120 时，我们可以在图中的选中部分观察到对应调用的 Kernels。如果读者对 Oneflow 中相关算子的具体实现不是很熟悉，这里识别的技巧是:
+
+  <ul>
+    <li>Kernel 0~3 用于实际上是调用了 <code>CastFunctor</code>，其工作是将 <code>half</code> 类型的张量转换为 <code>float</code> 类型的张量，因此可以判断出这是针对 <code>half</code> 数据类型计算的开端;</li>
+    <li>Kernel 4~8 和 Kernel 9~13 实际上拥有类似的 Pattern，因此可以粗略判断出这两部分分别是 <code>half</code> 和 <code>float</code> 的计算过程;</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;而实际上，这些 Kernels 的功能分析如下:
+
+  <ul>
+    <li><code></code>: </li>
+  </ul>
+
+  <div class="img" label="img_forward_sigmoid_ncu" title="Nsight Compute 中观察到的 ① 激活函数为 Sigmoid; ② 数据类型为 half/float; ③ 张量形状为 m=256, n=1280, k=5120; 时调用的 Kernels">
+    <img src="./pic/naive_impt_ncu_2.png" width="100%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同理，我们可以紧接着观察当我们设置 ① 激活函数为 Sigmoid; ② 数据类型为 half/float; ③ 张量形状为 m=256, n=1280, k=5120 时计算过程调用的 Kernels。我们可以发现大部分流程与上面激活函数为 Identity 时基本一致，不同的是 Kernel 21 和 27，它们实际上调用的是 Sigmoid 激活函数对应的 <code>UnaryFunctor</code>，我们在上面没有观察到对 <code>UnaryFunctor</code> 的调用是因为 Identity 实际上什么也没算，因此也无需调用任何 <code>UnaryFunctor</code> 来进行计算。
+  </div>
+
+  <h3 class="title">算子设计目标</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<chartref>naive_impt_performance</chartref>
+</div>
+
+
+
+<h2 class="title">定义 Operator</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+</div>
 
 
 <div class="div_ref" id="ref_container"></div>
 
 </body>
+
+<!-- Comment -->
+<!-- <div class="comblock" title="xxx"> -->
+
+<!-- Chart Support -->
+<!-- Check https://www.runoob.com/chartjs/chartjs-tutorial.html -->
+<!-- <div class="chartjs" label="naive_impt_performance"></div> -->
+
 
 <!-- Note Support -->
 <!-- Check https://theme-next.js.org/docs/tag-plugins/note.html -->
@@ -464,7 +515,7 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
             <li><a href="/sec_learning/Tech_System_And_Network/">TECH_SYSTEM_AND_NETWORK</a></li>
-          <li>P4_1_INTRODUCTION</li>
+          <li>ONEFLOW_OPERATOR_DEVELOPMENT</li>
         
   </ul>
 

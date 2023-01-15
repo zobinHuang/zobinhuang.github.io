@@ -1,9 +1,8 @@
 let language = ''
 
 async function load_page(){
-    
     _load_metadata()
-    
+
     _load_paragraph()
 
     _load_flow_chart()
@@ -17,8 +16,6 @@ async function load_page(){
     _load_equation()
 
     _load_theorm()
-
-    _load_code_segment()
 
     _load_note()
 
@@ -212,6 +209,9 @@ async function _load_metadata(){
                 _load_reference(label_list)
             }
         )
+
+        // 加载 code segment (这里面需要用到 language 属性)
+        _load_code_segment()
     })
 }
 
@@ -539,10 +539,19 @@ async function _show_code_segment(id){
     if(code_segment_container.className == 'div_code_container_disapear'){
         code_segment_container.style.display = ''
         code_segment_container.setAttribute('class', 'div_code_container')
-        code_segment_button_content.innerHTML = `Hide Codes`
+        if(language === 'cn'){
+            code_segment_button_content.innerHTML = `隐藏代码`
+        } else {
+            code_segment_button_content.innerHTML = `Hide Codes`
+        }
     } else {
         code_segment_container.setAttribute('class', 'div_code_container_disapear')
         code_segment_button_content.innerHTML = `Show Codes`
+        if(language === 'cn'){
+            code_segment_button_content.innerHTML = `展示代码`
+        } else {
+            code_segment_button_content.innerHTML = `Show Codes`
+        }
         setTimeout(function() { code_segment_container.style.display = 'none'; }, 300);
     }
 }
@@ -551,13 +560,13 @@ async function _show_code_segment(id){
 async function _load_code_segment(){
     let code_segments = document.getElementsByTagName('figure')
 
-    function __process_language_name(language){
-        if(language == 'python') return 'Python'
-        else if(language == 'bash') return 'Bash Script'
-        else if(language == 'cpp') return 'C++'
-        else if(language == 'c') return 'C'
-        else if(language == 'go' || language == 'golang') return 'Golang'
-        else return language
+    function __process_language_name(p_language){
+        if(p_language == 'python') return 'Python'
+        else if(p_language == 'bash') return 'Bash Script'
+        else if(p_language == 'cpp') return 'C++'
+        else if(p_language == 'c') return 'C'
+        else if(p_language == 'go' || p_language == 'golang') return 'Golang'
+        else return p_language
     }
 
     for(let i = 0; i < code_segments.length; i++){
@@ -574,8 +583,13 @@ async function _load_code_segment(){
         // 创建按钮内容 - 按钮文字
         let code_segment_btn_content = document.createElement('div')
         code_segment_btn_content.setAttribute('class', 'div_code_segment_button_sign')
-        code_segment_btn_content.innerHTML = `Hide Codes`
-
+        console.log(`language: ${language}`)
+        if(language === 'cn'){
+            code_segment_btn_content.innerHTML = `隐藏代码`
+        } else {
+            code_segment_btn_content.innerHTML = `Hide Codes`
+        }
+        
         // 创建按钮内容 - 语言类型
         let code_segment_btn_language_type = document.createElement('div')
         code_segment_btn_language_type.setAttribute('class', 'div_code_segment_language_type')

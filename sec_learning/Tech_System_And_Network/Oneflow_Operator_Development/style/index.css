@@ -169,6 +169,29 @@ p{margin-left: 15px; margin-right: 15px;}
     color: #FFFFFF;
 }
 
+.chartjs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0px;
+    margin-bottom: 30px;
+    justify-content: center;
+}
+
+.chartjs canvas{
+    margin: 0px;
+    margin-bottom: 10px;
+}
+
+chartjs_index {
+    align-items: center;
+    color: #000000;
+    margin: 0px;
+    background-color: #f0f0f0;
+    padding: 2px 20px;
+    font-size: 15px;
+    border-radius: 8px;
+}
 
 .img {
     display: flex;
@@ -501,4 +524,63 @@ noteblock{
 queblock{
     padding: 10px 20px;
     font-size: 14px;
+}
+
+.comblock {
+    border: #4f4f4f3c solid 1px;
+    padding: 20px 10px;
+    padding-bottom: 10px;
+    animation: scale-display .3s;
+}
+
+.comblock_disappear {
+    height: 0%;
+    animation: scale-display--reversed .3s;
+    animation-fill-mode:forwards;
+    display: inline-flex;
+}
+
+.comment_container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.comment_container .bar_container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-color: #e7e7e7;
+    color: #000000;
+    padding: 8px 0px;
+}
+
+.comment_container .bar_container h5 {
+    margin: 2px 0px;
+    padding: 0px;
+}
+
+.comment_container .bar_container button{
+    /* position: absolute;
+    right: 20px; */
+    border: none;
+    border-radius: 2px;
+    padding: 2px 5px;
+    background-color: #e30000;
+    color: #ffffff;
+    margin-left: 20px;
+}
+
+.comment_container .bar_container button:hover{
+    transition: all .2s ease-in-out;
+    background-color: #830000;
+    border:none;
+    color: #ffffff;
+    cursor: pointer;
 }
