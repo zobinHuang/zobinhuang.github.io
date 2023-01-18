@@ -22,14 +22,17 @@
 
   <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:type" content="website">
-<meta property="og:title" content="标题">
-<meta property="og:url" content="https://zobinhuang.github.io/sec_learning/template_post/index.html">
+<meta property="og:title" content="在 Oneflow 中开发 Gather Primitive">
+<meta property="og:url" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/index.html">
 <meta property="og:site_name" content="Zobin">
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/template_post/pic/xxx.png">
-<meta property="article:published_time" content="2023-01-18T16:07:08.344Z">
-<meta property="article:modified_time" content="2023-01-18T16:07:08.344Z">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/tensor_exp.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/matmul.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/general_dims.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/xxx.png">
+<meta property="article:published_time" content="2023-01-18T20:29:33.639Z">
+<meta property="article:modified_time" content="2023-01-18T20:29:33.639Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -37,9 +40,9 @@
 <meta property="article:tag" content="网络工程">
 <meta property="article:tag" content="Networking Engineering">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://zobinhuang.github.io/sec_learning/template_post/pic/xxx.png">
+<meta name="twitter:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/tensor_exp.png">
 
-<link rel="canonical" href="https://zobinhuang.github.io/sec_learning/template_post/">
+<link rel="canonical" href="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/">
 
 
 <script id="page-configurations">
@@ -52,7 +55,7 @@
   };
 </script>
 
-  <title>标题 | Zobin
+  <title>在 Oneflow 中开发 Gather Primitive | Zobin
 </title>
   
 
@@ -171,7 +174,7 @@
     <div class="post-block" lang="en">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">标题
+<h1 class="post-title" itemprop="name headline">在 Oneflow 中开发 Gather Primitive
 </h1>
 
 <div class="post-meta">
@@ -179,7 +182,8 @@
   <ul class="breadcrumb">
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
-          <li>TEMPLATE_POST</li>
+            <li><a href="/sec_learning/Tech_System_And_Network/">TECH_SYSTEM_AND_NETWORK</a></li>
+          <li>ONEFLOW_GATHER_PRIMITIVE_DEVELOPMENT</li>
         
   </ul>
 
@@ -249,20 +253,99 @@
 <div id="metadata"></div>
 
 <!-- Start your post here -->
-<h2 class="title">Section</h2>
+<h2 class="title">前言</h2>
 <div class="div_learning_post">
-  <desp class="title">Desp</desp>
-
-  <h3 class="title">Subsection</h3>
-  <desp class="title">Desp</desp>
+  <h3 class="title">Gather 和 Batch Gather</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Cite from <cite>sample</cite>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+
+  <h3 class="title">对 Tensor 形状的简化</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在进入对 Gather 和 Batch Gather 的讨论之前，我们需要对 Tensor 的概念进行细化讨论，尤其是区别 Operator 和 Kernel 看待 Tensor 的方式，以方便后面对 Gather 和 Batch Gather 具体实现的理解。
+
+  <h4 class="title">Tensor 包含的两种信息: 形状与存储</h4>
+  <div class="img" title="Tensor 的形状和存储 (拥有相同底层存储的两个形状不同的 Tensors)" label="img_tensor_shape_data">
+    <img src="./pic/tensor_exp.png" width="600px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;通常来说，我们把 Tensor 理解为高维的矩阵。给定一个 Tensor，我们可以获取两方面的信息:
+
+  <ul>
+    <li><b><u>形状信息</u></b>: Tensor 的形状通常可以使用一组数字来表示，我们下文称之为形状向量 (Shape Vector)，这些数字分别代表着 Tensor 在各个维度上的宽度，如 <imgref>img_tensor_shape_data</imgref> 所示，$\text{Tensor_A}$ 的维度向量为 $[5,4,3]$, $\text{Tensor_B}$ 的维度向量为 $[5,12]$。总结来说，<note>"形状" 信息描述了我们看待 Tensor 的方式，其精确地描述了这组数据的内部边界</note>;</li>
+    <li><b><u>存储信息</u></b>: Tensor 实际上是一组数的组合，这些数在计算机中通常使用一段连续内存用于存储。为了追踪这段内存，程序一般需要 ① 一个指针变量来描述数据存储的起始地址和 ② 一个整形变量来描述数据存储的规模。不同形状的 Tensor 可能拥有相同的底层存储，如 <imgref>img_tensor_shape_data</imgref> 所示，虽然 $\text{Tensor_A}$ 和 $\text{Tensor_B}$ 拥有不同的形状，是两个不同的 Tensor，但是它们底层的数据存储是完全相同的。总结来说，<note>"数据" 信息描述了 Tensor 实际存储的内容</note>;</li>
+  </ul>
+
+  <h4 class="title">Operator 和 Kernel 分别关心的 Tensor 信息</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于构成计算图的 Operator 来说，它主要关心输入/输出 Tensor 的 <u>形状信息</u>，Opeartor 除了负责调用底层 Kernel 完成数据计算之外，还负责对输入的 Tensor 的形状、数据类型等信息进行合法性检查，以及推导输出 Tensor 的形状。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;而对于实际完成计算任务的底层 Kernel 来说，它主要关心输入/输出 Tensor 的 <u>存储信息</u>，简单来说 Kernel 的任务实际上就是 ① 完成数据的计算并且 ② 将结果放到正确的内存位置上，因此实际上 Kernel 并不需要关心 Tensor 的形状，它只需要知道:
+
+  <ol>
+    <li>输入/输出数据的起始地址;</li>
+    <li>当前 Thread (对应 GPU Kernel) / Iteration (对应 CPU Kernel) 操作对应的偏移量;</li>
+    <li>单批次操作的粒度;</li>
+    <li>操作重复的次数 (i.e. Thread 的个数 / Iteration 的次数)</li>
+  </ol>
+
+  <h4 class="title">Kernel 处理: 合并边界信息，简化形状</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上述的 Kernel 关心的信息中， ① 可以直接给出，即 Tensor 在内存中的实际存储地址; ② 也可以基于 Thread/Iteration Id 直接给出；而对于 ③ ④ 来说，由于 Operator 通常会在某一个维度对输入 Tensor 进行操作，一旦指定处理的维度，③ 单次操作的粒度以及 ④ 操作重复的次数也可以被确定。
+
+  <h4 class="paragraph">例子 1</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;举个例子，对于 <imgref>img_tensor_shape_data</imgref> 中的 $\text{Tensor_A}$ 来说，如果 Operator 是在 Dim_0 上对其进行操作 (i.e. 不会在 Dim_1 或 Dim_2 上对部分元素进行修改)，则 Operator 实际上可以把 $\text{Tensor_A}$ 从形状向量为 $[5,3,4]$ 的三维张量简化为形状向量为 $[5,12]$ 的二维张量 (i.e. $\text{Tensor_B}$) 交给底层 Kernel 进行处理，这样一来:
+
+  <ul>
+    <li>如果按照原始 $\text{Tensor_A}$ 的形状 $[5,3,4]$，则 Kernel 单批次操作的粒度为 4 个元素 (i.e. $\text{Tensor_A}$ 在 Dim_2 的宽度)，操作重复的次数为 15 次 (i.e. $\text{Tensor_A}$ 在 Dim_0 和 Dim_1 的宽度之积);</li>
+    <li>简化后，Kernel 单批次操作的粒度为 12 个元素 (i.e. $\text{Tensor_B}$ 在 Dim_1 的宽度)，操作重复的次数为 5 次 (i.e. $\text{Tensor_B}$ 在 Dim_0 的宽度);</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;通常来说，后者的 Kernel 的实现往往更加简单和高效，简单是因为其合并了大部分无用的内部边界信息，对于高维张量的处理，可以统一基于一套低维的逻辑进行处理；高效是因为其增加了单批次操作的元素个数，操作重复的次数减少，使用向量化访存进行优化的机会更大。
+
+  <h4 class="paragraph">例子 2</h4>
+
+  <div class="img" title="Matmul 中的 Tensor 形状简化" label="img_matmul">
+    <img src="./pic/matmul.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;再举个例子，如 <imgref>img_matmul</imgref> 所示，考虑将一个形状向量为 $[2,4,3]$ 的三维张量 $\text{Tensor_A}$ 和形状向量为 $[3,5]$ 的二维张量 $\text{Tensor_W}$ 进行乘法操作的 Operator，其实际上是在 Dim_2 上对 $\text{Tensor_A}$ 进行操作，因此 Operator 在调用底层 Kernel 进行处理时，可以合并 $\text{Tensor_A}$ 在 Dim_0 和 Dim_1 上的内部边界信息，将 $\text{Tensor_A}$ 视为一个形状向量为 $[8,3]$ 的二维张量 $\text{Tensor_A}'$。
+
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在上述对 Tensor 形状的简化的例子中，第一个例子实现了指定处理维度 (i.e. Dim_0) <note>以下</note>的边界信息的合并 (i.e. 合并 Dim_1 和 Dim_2); 第二个例子实现了指定处理维度 (i.e. Dim_2) <note>以上</note>的边界信息的合并 (i.e. 合并 Dim_0 和 Dim_1)。通用地说，在给定处理维度的情况下，Operator 在调用 Kernel 进行处理之前，可以模糊掉对于 Kernel 来说无用的张量形状信息，仅保留:
+
+  <div class="img" title="通用形状简化" label="img_general_dims">
+    <img src="./pic/general_dims.png" width="500px" />
+  </div>
+
+  <ol>
+    <li><def>Processed Dim</def>：指定处理维度的边界信息，指示了 Kernel 处理的维度上有多少个元素;</li>
+    <li><def>Outer Dim</def>：指定处理维度以上的<note><u>合并</u></note>边界信息，指示了 Kernel 的处理需要重复的次数;</li>
+    <li><def>Inner Dim</def>：指定处理维度以下的<note><u>合并</u></note>边界信息，指示了 Kernel 处理的维度上各个元素的大小;</li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们在后文中将看到，在 Gather / Batch Gather 逻辑的实现中，我们将利用上述形状简化方法对 Primitive 进行设计。
+
+  <h3 class="title">Oneflow 中 Primitive 是什么?</h3>
+  <h4 class="title">Primitive 概念</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+
+  <h4 class="title">文件目录</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
 </div>
 
-<h2 class="title">xxx</h2>
+<h2 class="title">开发</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;TODO
 </div>
 
 
@@ -428,7 +511,8 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
   <ul class="breadcrumb">
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
-          <li>TEMPLATE_POST</li>
+            <li><a href="/sec_learning/Tech_System_And_Network/">TECH_SYSTEM_AND_NETWORK</a></li>
+          <li>ONEFLOW_GATHER_PRIMITIVE_DEVELOPMENT</li>
         
   </ul>
 
