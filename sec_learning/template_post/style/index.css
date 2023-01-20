@@ -491,9 +491,14 @@ flowchart_index {
     white-space: initial;
 }
 
-noteblock{
+.noteblock_content{
     padding: 10px 20px;
     font-size: 14px;
+}
+
+.noteblock_content p{
+    margin: 0px;
+    padding: 0px;
 }
 
 /* IV. Question Block */
@@ -521,9 +526,14 @@ noteblock{
     white-space: initial;
 }
 
-queblock{
+.question_content{
     padding: 10px 20px;
     font-size: 14px;
+}
+
+.question_content p{
+    margin: 0px;
+    padding: 0px;
 }
 
 .comblock {

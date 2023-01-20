@@ -393,7 +393,7 @@ async function _load_comments(){
 // 处理文章中所有的 Sign Block
 async function _load_sign_block() {
     // note block
-    let note_blocks = document.getElementsByTagName("noteblock")
+    let note_blocks = document.getElementsByClassName("noteblock")
     for(let i = 0; i < note_blocks.length; i++){
         note_block = note_blocks[i]
 
@@ -403,12 +403,17 @@ async function _load_sign_block() {
         // 将创建的 block 放在相应位置
         note_block.parentNode.insertBefore(elements[0], note_block.nextElementSibling)
 
-        // 将 note_block 放入创建的 block 的 block_content_container 中
-        elements[3].append(note_block)
+        // 创建 Content
+        let note_block_content = document.createElement("div")
+        note_block_content.setAttribute("class", "noteblock_content")
+        note_block_content.append(note_block)
+
+        // 将 Content 放入创建的 block 的 block_content_container 中
+        elements[3].append(note_block_content)
     }
 
     // question block
-    let question_blocks = document.getElementsByTagName("queblock")
+    let question_blocks = document.getElementsByClassName("queblock")
     for(let i = 0; i < question_blocks.length; i++){
         question_block = question_blocks[i]
 
@@ -418,8 +423,13 @@ async function _load_sign_block() {
         // 将创建的 block 放在相应位置
         question_block.parentNode.insertBefore(elements[0], question_block.nextElementSibling)
 
-        // 将 question_block 放入创建的 block 的 block_content_container 中
-        elements[3].append(question_block)
+        // 创建 Content
+        let question_block_content = document.createElement("div")
+        question_block_content.setAttribute("class", "question_content")
+        question_block_content.append(question_block)
+
+        // 将 Content 放入创建的 block 的 block_content_container 中
+        elements[3].append(question_block_content)
     }
 }
 
@@ -747,7 +757,7 @@ async function _load_code_segment(){
         // console.log(code_segment_nb_rows)
 
         // 显示代码块的最大行数阈值 (可修改)
-        const max_showing_nb_rows = 10 
+        const max_showing_nb_rows = 20 
         let to_show = false
         if(code_segment_nb_rows <= max_showing_nb_rows) to_show = true
         

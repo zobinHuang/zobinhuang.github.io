@@ -4,7 +4,35 @@
   <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/index.html</loc>
     
-    <lastmod>2023-01-18</lastmod>
+    <lastmod>2023-01-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/ref.json</loc>
+    
+    <lastmod>2023-01-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/template_post/index.html</loc>
+    
+    <lastmod>2023-01-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/index.html</loc>
+    
+    <lastmod>2023-01-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/metadata.json</loc>
+    
+    <lastmod>2023-01-20</lastmod>
     
   </url>
   
@@ -17,13 +45,6 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Operator_Development/metadata.json</loc>
-    
-    <lastmod>2023-01-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/metadata.json</loc>
     
     <lastmod>2023-01-18</lastmod>
     
@@ -44,21 +65,7 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/ref.json</loc>
-    
-    <lastmod>2023-01-18</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/chartjs_data.json</loc>
-    
-    <lastmod>2023-01-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/template_post/index.html</loc>
     
     <lastmod>2023-01-18</lastmod>
     
@@ -94,13 +101,6 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Operator_Development/naive_test.html</loc>
-    
-    <lastmod>2023-01-12</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/index.html</loc>
     
     <lastmod>2023-01-12</lastmod>
     
@@ -2846,7 +2846,7 @@
 
   <url>
     <loc>https://zobinhuang.github.io/</loc>
-    <lastmod>2023-01-18</lastmod>
+    <lastmod>2023-01-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

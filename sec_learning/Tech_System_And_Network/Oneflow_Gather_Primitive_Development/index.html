@@ -27,12 +27,30 @@
 <meta property="og:site_name" content="Zobin">
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_exp_1.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_exp_2.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_exp_3.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_exp_4.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_exp_5.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_exp_6.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/batch_gather_exp_1.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/batch_gather_exp_2.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_sbp_exp_1.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_sbp_exp_2.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_sbp_exp_6.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_sbp_exp_4.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_sbp_exp_3.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_sbp_exp_5.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/batch_gather_sbp_exp_1.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/batch_gather_sbp_exp_2.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/batch_gather_sbp_exp_3.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/comp_graph_op_impt.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/tensor_exp.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/matmul.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/general_dims.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/xxx.png">
-<meta property="article:published_time" content="2023-01-18T20:29:33.639Z">
-<meta property="article:modified_time" content="2023-01-18T20:29:33.639Z">
+<meta property="article:published_time" content="2023-01-20T19:22:46.321Z">
+<meta property="article:modified_time" content="2023-01-20T19:22:46.321Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -40,7 +58,7 @@
 <meta property="article:tag" content="网络工程">
 <meta property="article:tag" content="Networking Engineering">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/tensor_exp.png">
+<meta name="twitter:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_exp_1.png">
 
 <link rel="canonical" href="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/">
 
@@ -255,13 +273,256 @@
 <!-- Start your post here -->
 <h2 class="title">前言</h2>
 <div class="div_learning_post">
-  <h3 class="title">Gather 和 Batch Gather</h3>
+  <h3 class="title">Gather 的行为</h3>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+  &nbsp;&nbsp;&nbsp;&nbsp;Gather 是一种常见的对 Tensor 元素进行提取和部分重排的操作，以 TensorFlow 为例，其 Gather 接口 <cite>tf_gather</cite> 的函数原型的简化版本如下所示:
 
-  <h3 class="title">对 Tensor 形状的简化</h3>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gather(params, indices, axis=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在进入对 Gather 和 Batch Gather 的讨论之前，我们需要对 Tensor 的概念进行细化讨论，尤其是区别 Operator 和 Kernel 看待 Tensor 的方式，以方便后面对 Gather 和 Batch Gather 具体实现的理解。
+  &nbsp;&nbsp;&nbsp;&nbsp;在参数列表中，<code>params</code> 是操作的源 Tensor，<code>indices</code> 是用于指示排列顺序的整型 Tensor，<code>axis</code> 是用于指示 Gather 维度的整型变量。举个简单的例子来说:
+
+  <div class="img" label="gather_exp_1" title="例子 - 1 维 params 和 1 维 indices, 在 params 的第 0 维上进行 Gather">
+    <img src="./pic/gather_exp_1.png" width="700px" />
+  </div>
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">params = tf.constant([<span class="number">10.38</span>, <span class="number">16.19</span>, <span class="number">19.54</span>, <span class="number">15.39</span>, <span class="number">17.21</span>, <span class="number">8.13</span>])</span><br><span class="line">indices = tf.constant([<span class="number">2</span>, <span class="number">3</span>])                                   </span><br><span class="line">output = tf.gather(params, indices, axis=<span class="number">0</span>)</span><br><span class="line"><span class="comment"># output: ([19.54, 15.39])</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上述程序调用了 Gather 接口，在第 0 维对 <code>params</code> 张量按照 <code>indices</code> 张量所指示的顺序进行了重排。对于 <code>params</code> 张量来说，它也可以是多维的，此时 <code>axis</code> 参数的意义就在于告知 Gather 接口在 <code>params</code> 张量的哪个维度上进行重排，举例如下所示，当在 2 维 <code>params</code> 张量的第 0 维上进行重排时:
+
+  <div class="img" label="gather_exp_2" title="例子 - 2 维 params 和 1 维 indices, 在 params 的第 0 维上进行 Gather">
+    <img src="./pic/gather_exp_2.png" width="700px" />
+  </div>
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">params = tf.constant([[<span class="number">0</span>, <span class="number">1.0</span>, <span class="number">2.0</span>],</span><br><span class="line">                     [<span class="number">10.0</span>, <span class="number">11.0</span>, <span class="number">12.0</span>],</span><br><span class="line">                     [<span class="number">20.0</span>, <span class="number">21.0</span>, <span class="number">22.0</span>],</span><br><span class="line">                     [<span class="number">30.0</span>, <span class="number">31.0</span>, <span class="number">32.0</span>]])</span><br><span class="line">indices = tf.constant([<span class="number">2</span>, <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在第 0 维上进行重排                           </span></span><br><span class="line">output = tf.gather(params, indices, axis=<span class="number">0</span>)</span><br><span class="line"><span class="comment"># output: ([[20.0, 21.0, 22.0],</span></span><br><span class="line"><span class="comment">#           [10.0, 11.0, 12.0]])</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当在 2 维 <code>params</code> 张量的第 1 维上进行重排时:
+
+  <div class="img" label="gather_exp_3" title="例子 - 2 维 params 和 1 维 indices, 在 params 的第 1 维上进行 Gather">
+    <img src="./pic/gather_exp_3.png" width="700px" />
+  </div>
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">params = tf.constant([[<span class="number">0</span>, <span class="number">1.0</span>, <span class="number">2.0</span>],</span><br><span class="line">                     [<span class="number">10.0</span>, <span class="number">11.0</span>, <span class="number">12.0</span>],</span><br><span class="line">                     [<span class="number">20.0</span>, <span class="number">21.0</span>, <span class="number">22.0</span>],</span><br><span class="line">                     [<span class="number">30.0</span>, <span class="number">31.0</span>, <span class="number">32.0</span>]])</span><br><span class="line">indices = tf.constant([<span class="number">2</span>, <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在第 1 维上进行重排                           </span></span><br><span class="line">output = tf.gather(params, indices, axis=<span class="number">1</span>)</span><br><span class="line"><span class="comment"># output: ([[2.0, 1.0],</span></span><br><span class="line"><span class="comment">#           [12.0, 11.0],</span></span><br><span class="line"><span class="comment">#           [22.0, 21.0],</span></span><br><span class="line"><span class="comment">#           [32.0, 31.0]])</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;除了 <code>params</code> 张量可以是多维的以外，<code>indices</code> 张量也可以是多维的，举例如下所示:
+
+  <div class="img" label="gather_exp_4" title="例子 - 1 维 params 和 2 维 indices, 在 params 的第 0 维上进行 Gather">
+    <img src="./pic/gather_exp_4.png" width="700px" />
+  </div>
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">params = tf.constant([<span class="number">10.38</span>, <span class="number">16.19</span>, <span class="number">19.54</span>, <span class="number">15.39</span>, <span class="number">17.21</span>, <span class="number">8.13</span>])</span><br><span class="line">indices = tf.constant([[<span class="number">2</span>, <span class="number">0</span>], [<span class="number">2</span>, <span class="number">5</span>]])                                   </span><br><span class="line">output = tf.gather(params, indices, axis=<span class="number">0</span>)</span><br><span class="line"><span class="comment"># output: ([[19.54, 10.38]</span></span><br><span class="line"><span class="comment">#           [19.54, 8.13]])</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面是一个 <code>params</code> 张量和 <code>indices</code> 张量都是多维张量的复杂例子，当在 2 维 <code>params</code> 张量的第 0 维上使用 2 维 <code>indices</code> 张量进行重排时:
+
+  <div class="img" label="gather_exp_5" title="例子 - 2 维 params 和 2 维 indices, 在 params 的第 0 维上进行 Gather">
+    <img src="./pic/gather_exp_5.png" width="700px" />
+  </div>
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">params = tf.constant([[<span class="number">0</span>, <span class="number">1.0</span>, <span class="number">2.0</span>],</span><br><span class="line">                     [<span class="number">10.0</span>, <span class="number">11.0</span>, <span class="number">12.0</span>],</span><br><span class="line">                     [<span class="number">20.0</span>, <span class="number">21.0</span>, <span class="number">22.0</span>],</span><br><span class="line">                     [<span class="number">30.0</span>, <span class="number">31.0</span>, <span class="number">32.0</span>]])</span><br><span class="line">indices = tf.constant([[<span class="number">2</span>, <span class="number">0</span>], [<span class="number">0</span>, <span class="number">1</span>]])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在第 0 维上进行重排</span></span><br><span class="line">output = tf.gather(params, indices, axis=<span class="number">0</span>)</span><br><span class="line"><span class="comment"># output: (</span></span><br><span class="line"><span class="comment">#   [             </span></span><br><span class="line"><span class="comment">#     [ </span></span><br><span class="line"><span class="comment">#       [20.0, 21.0, 22.0], [0, 1.0, 2.0] </span></span><br><span class="line"><span class="comment">#     ],</span></span><br><span class="line"><span class="comment">#     [</span></span><br><span class="line"><span class="comment">#       [0, 1.0, 2.0], [10.0, 11.0, 12.0]</span></span><br><span class="line"><span class="comment">#     ]</span></span><br><span class="line"><span class="comment">#   ]</span></span><br><span class="line"><span class="comment"># )</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当在 2 维 <code>params</code> 张量的第 1 维上使用 2 维 <code>indices</code> 张量进行重排时:
+
+  <div class="img" label="gather_exp_6" title="例子 - 2 维 params 和 2 维 indices, 在 params 的第 1 维上进行 Gather">
+    <img src="./pic/gather_exp_6.png" width="700px" />
+  </div>
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">params = tf.constant([[<span class="number">0</span>, <span class="number">1.0</span>, <span class="number">2.0</span>],</span><br><span class="line">                     [<span class="number">10.0</span>, <span class="number">11.0</span>, <span class="number">12.0</span>],</span><br><span class="line">                     [<span class="number">20.0</span>, <span class="number">21.0</span>, <span class="number">22.0</span>],</span><br><span class="line">                     [<span class="number">30.0</span>, <span class="number">31.0</span>, <span class="number">32.0</span>]])</span><br><span class="line">indices = tf.constant([[<span class="number">2</span>, <span class="number">0</span>], [<span class="number">0</span>, <span class="number">1</span>]])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在第 1 维上进行重排</span></span><br><span class="line">output = tf.gather(params, indices, axis=<span class="number">1</span>)</span><br><span class="line"><span class="comment"># output: (</span></span><br><span class="line"><span class="comment">#   [             </span></span><br><span class="line"><span class="comment">#     [ [2.0, 0], [0, 1.0] ],</span></span><br><span class="line"><span class="comment">#     [ [12.0, 10.0], [10.0, 11.0] ],</span></span><br><span class="line"><span class="comment">#     [ [22.0, 20.0], [20.0, 21.0] ],</span></span><br><span class="line"><span class="comment">#     [ [32.0, 30.0], [30.0, 31.0] ]</span></span><br><span class="line"><span class="comment">#   ]</span></span><br><span class="line"><span class="comment"># )</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;观察上述例子，从 Tensor 形状来说，输入的 <code>params</code> 张量的形状是 $[\underbrace{4}_{\text{第 0 维}},\underbrace{3}_{\text{第 1 维}}]$，<code>indices</code> 的形状是 $[2,2]$。如果在 <code>params</code> 张量的第 0 维上进行重排，则输出的张量的形状是 $[2,2,3]$; 如果在 <code>params</code> 张量的第 1 维上进行重排，则输出的张量的形状就是 $[4,2,2]$。细心的读者可以发现规律，实际上 Gather 对形状的处理就是将 <code>params</code> 在 <code>axis</code> 指定维度上的形状替换为 <code>indices</code> 的形状，用代码表示即:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">result_shape</span>(<span class="params">p_shape, i_shape, axis=<span class="number">0</span></span>):</span></span><br><span class="line">  <span class="keyword">return</span> p_shape[:axis] + i_shape + p_shape[axis+<span class="number">1</span>:]</span><br></pre></td></tr></table></figure>
+  <h3 class="title">Batch Gather 的行为</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在理解了 Gather 接口的行为后，我们再来看 Batch Gather。Batch Gather 允许我们指定 <code>params</code> 张量中有多少维是 Batch 维，指定后，Batch Gather 应用一个拥有相同 Batch 维形状的 <code>indices</code> 张量，对 <code>params</code> 张量中的各个 Batch 元素在指定 <code>axis</code> 上进行重排。还是以 TensorFlow 为例，还是同样的 <code>tf.gather</code> 接口，其支持 Batch Gather 的函数原型如下所示:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gather(params, indices, axis=<span class="number">0</span>, batch_dims=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;其中，新加入的参数 <code>batch_dims</code> 用于指定 <code>params</code> 拥有的 Batch 维的数目。举个简单的例子，我们可以指定一个形状为 $[4,3]$ 的 <code>params</code> 张量拥有一个维度的 Batch 维 (i.e. 该维度宽度为 $4$)，然后应用一个拥有相同 Batch 维宽度的，整体形状为 $[4,2]$ 的 <code>indices</code> 张量，在 <code>params</code> 张量的第 1 维上对其进行重排，如下所示:
+
+  <div class="img" label="batch_gather_exp_1" title="例子 - 2 维 params 和 2 维 indices, 在指定拥有 1 维 Batch 维情况下，在 params 的第 1 维上进行 Gather">
+    <img src="./pic/batch_gather_exp_1.png" width="700px" />
+  </div>
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">params = tf.constant([ [<span class="number">0</span>,<span class="number">1.0</span>,<span class="number">2.0</span>], [<span class="number">10.0</span>,<span class="number">11.0</span>,<span class="number">12.0</span>], [<span class="number">20.0</span>,<span class="number">21.0</span>,<span class="number">22.0</span>], [<span class="number">30.0</span>,<span class="number">31.0</span>,<span class="number">32.0</span>] ])</span><br><span class="line">indices = tf.constant([ [<span class="number">2</span>,<span class="number">1</span>], [<span class="number">0</span>,<span class="number">2</span>], [<span class="number">1</span>,<span class="number">1</span>], [<span class="number">1</span>,<span class="number">0</span>] ])</span><br><span class="line"></span><br><span class="line">output = tf.gather(params, indices, axis=<span class="number">1</span>, batch_dims=<span class="number">1</span>)</span><br><span class="line"><span class="comment"># output: (</span></span><br><span class="line"><span class="comment">#   [             </span></span><br><span class="line"><span class="comment">#     [2.0, 1.0],</span></span><br><span class="line"><span class="comment">#     [10.0, 12.0],</span></span><br><span class="line"><span class="comment">#     [21.0, 21.0],</span></span><br><span class="line"><span class="comment">#     [31.0, 30.0]</span></span><br><span class="line"><span class="comment">#   ]</span></span><br><span class="line"><span class="comment"># )</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Batch Gather 也可以更复杂，如 <imgref>batch_gather_exp_2</imgref> 所示，我们可以指定一个形状为 $[\underbrace{4,2}_{\text{Batch 维}},3,2]$ 的 <code>params</code> 张量拥有 2 个 Batch 维度 (i.e. <code>batch_dims=2</code>，也即第 0 维和第 1 维是 Batch 维)，然后应用一个形状为 $[\underbrace{4,2}_{\text{Batch 维}},5]$ 的 <code>indices</code> 张量对其进行重排，并且指定在 <code>params</code> 张量上进行重排的维度为第 3 维(i.e. <code>axis=3</code>)，最终得到一个形状为 $[4,2,3,5]$ 的张量。
+
+  <div class="img" label="batch_gather_exp_2" title="例子 - [4,2,3,2] 的 params 和 [4,2,5] 的 indices, 在指定拥有 2 维 Batch 维情况下，在 params 的第 3 维上进行 Gather">
+    <img src="./pic/batch_gather_exp_2.png" width="300px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;通过上面的例子我们可以发现，实际上 Batch Gather 的工作过程就是: 首先按照指定的 Batch 维度的个数，将 <code>params</code> 张量和 <code>indices</code> 张量分别进行切分，例如在上面的例子中，当指定 Batch 维度数目为 2 时，<code>params</code> 可以切分出 $[4,2]$ 个形状为 $[3,2]$ 的元素，<code>indices</code> 可以切分出 $[4,2]$ 个形状为 $[5]$ 的元素，然后基于参数 <code>axis</code> 指定的 Gather 维度，将这些元素一一对应进行重排操作。
+
+  <div class="noteblock">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上面的说法暗示了，Batch Gather 接口对输入参数将有如下 约束:
+
+  <ul>
+    <li><code>batch_dims</code> 的值不能大于 <code>axis</code>，例如指定 <code>params</code> 有 1 个 Batch 维时，不能在第 0 维上进行 Batch Gather 操作;</li>
+    <li><code>params</code> 和 <code>indices</code> 在 Batch 维需要有相同的形状，否则不能形成一一对应的关系;</li>
+  </ul>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;与 Gather 类似，我们也可以总结出 Batch Gather 输出张量的形状的规律:
+
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">batched_result_shape</span>(<span class="params">params_shape, indices_shape, axis=<span class="number">0</span>, batch_dims=<span class="number">0</span></span>):</span></span><br><span class="line">  <span class="keyword">return</span> params_shape[:axis] + indices_shape[batch_dims:] + params_shape[axis+<span class="number">1</span>:]</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外值得注意的是，上述的 TensorFlow 的接口中，其支持由用户自行指定 Batch 维的数目，而在目前 OneFlow 实现的 Batch Gather 仅支持固定的 Batch 维数目，该数目由输入的 <code>indices</code> 张量决定，<code>indices</code> 张量除了最后一维剩余维度都是 Batch 维，<code>params</code> 的 Batch 维与之相对应。在下文中，为了保持与 OneFlow 的同步，我们将默认 Batch Gather 是 OneFlow 的情况，而不是 TensorFlow 中的任意指定 Batch 维度数目的情况。
+
+  <h3 class="title">OneFlow 如何对 Gather / Batch Gather 进行 SBP</h3>
+  <div class="noteblock">
+  若您对 SBP 相关的概念并不熟悉，可参考 OneFlow 官方文档 <cite>of_sbp</cite>。
+  </div>
+
+  <h4 class="title">对 Gather 进行 SBP</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Gather Operator 来说，可以进行 SBP 的 Tensor 一共有两个: <code>params</code>，<code>indices</code>。我们下面分为两种情况 (i.e. 将 Broadcast 和 Split 操作分别应用在这两个张量上) 进行讨论。
+
+  <h5 class="paragraph">对 <code>params</code> 进行 Broadcast，对 <code>indices</code> 进行 Split</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当 Gather 的维度为 <code>axis=0</code> 时，<code>indices</code> 在不同维度下的 Split 的情况如 <imgref>gather_sbp_exp_1</imgref> 和 <imgref>gather_sbp_exp_2</imgref> 所示:
+
+  <div class="img" title="SBP 例子 - 对 indices 进行 S0 (Gather 的 axis = 0)" label="gather_sbp_exp_1">
+    <img src="./pic/gather_sbp_exp_1.png" width="600px" />
+  </div>
+
+  <div class="img" title="SBP 例子 - 对 indices 进行 S1 (Gather 的 axis = 0)" label="gather_sbp_exp_2">
+    <img src="./pic/gather_sbp_exp_2.png" width="600px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;上述的例子比较简单，是常规的 SBP 操作。值得注意的是，由于 <code>indices</code> 张量是作用在 <code>params</code> 张量的指定维度 <code>axis</code> 上的，因此当我们思考输出张量的 SBP 形状时，实际上需要将 Gather 指定的维度考虑其中，输出张量的 Split 的维度应该是 Gather 维度 <code>axis</code> 和 <code>indices</code> 的 Split 维度之和。举例如 <imgref>gather_sbp_exp_6</imgref> 所示，当指定的 Gather 维度为 1 时，对 <code>indices</code> 进行 S0 的切分，输出张量 <code>output</code> 实际上会形成 S2 的切分.
+
+  <div class="img" title="SBP 例子 - 对 indices 进行 S1 (Gather 的 axis = 1)" label="gather_sbp_exp_6">
+    <img src="./pic/gather_sbp_exp_6.png" width="600px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;综上，我们首先定义了对 <code>params</code> 张量进行 Broadcast，对 <code>indices</code> 张量进行 Split 的 SBP，OneFlow 源码 <cite>of_gather_op</cite> 如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">auto GatherOp::GetSbp(user_op::SbpContext* ctx) -&gt; Maybe&lt;void&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int64_t</span> in_num_axes =</span><br><span class="line">      ctx-&gt;LogicalTensorDesc4InputArgNameAndIndex(<span class="string">&quot;in&quot;</span>, <span class="number">0</span>).shape().NumAxes();</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int64_t</span> indices_num_axes =</span><br><span class="line">      ctx-&gt;LogicalTensorDesc4InputArgNameAndIndex(<span class="string">&quot;indices&quot;</span>, <span class="number">0</span>).shape().NumAxes();</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int64_t</span> gather_axis = ctx-&gt;Attr&lt;<span class="keyword">int64_t</span>&gt;(<span class="string">&quot;axis&quot;</span>);</span><br><span class="line">  CHECK_GE_OR_RETURN(gather_axis, <span class="number">0</span>);</span><br><span class="line">  CHECK_LT_OR_RETURN(gather_axis, in_num_axes);</span><br><span class="line">  FOR_RANGE(<span class="keyword">int64_t</span>, i, <span class="number">0</span>, indices_num_axes) &#123;</span><br><span class="line">    ctx-&gt;NewBuilder()</span><br><span class="line">        .Split(user_op::OpArg(<span class="string">&quot;indices&quot;</span>, <span class="number">0</span>), i)</span><br><span class="line">        .Broadcast(user_op::OpArg(<span class="string">&quot;in&quot;</span>, <span class="number">0</span>))</span><br><span class="line">        .Split(user_op::OpArg(<span class="string">&quot;out&quot;</span>, <span class="number">0</span>), gather_axis + i)</span><br><span class="line">        .Build();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <h5 class="paragraph">对 <code>params</code> 进行 Split，对 <code>indices</code> 进行 Broadcast</h5>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;这种情况比较复杂，因为 <code>params</code> 是 Gather 的对象，对 <code>params</code> 张量进行 Split 的维度 $d_s$ 和 Gather 的维度 $g_s$ 之间的前后关系将会影响到输出张量的 SBP 形状，下面我们分情况进行讨论。
+
+
+  <div class="img" title="SBP 例子 - 对 params 进行 S0 (Gather 的 axis = 1)" label="gather_sbp_exp_4">
+    <img src="./pic/gather_sbp_exp_4.png" width="600px" />
+  </div>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如 <imgref>gather_sbp_exp_4</imgref> 所示，当 Split 的维度 $d_s=0$ 在 Gather 维度 $g_s=1$ 之前时 ($d_s < g_s$)，实际上就可以理解为 Split 动作发生在 Batch 维，此时情况就比较简单，输出张量的 Split 维度 $d'_s$ 与 <code>params</code> 张量 $d_s$ 相同，也即 $d'_s = d_s$。
+
+  <div class="img" title="SBP 例子 - 对 params 进行 S1 (Gather 的 axis = 0)" label="gather_sbp_exp_3">
+    <img src="./pic/gather_sbp_exp_3.png" width="600px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如 <imgref>gather_sbp_exp_3</imgref> 所示，当 Split 的维度 $d_s=1$ 在 Gather 维度 $g_s=0$ 之后时 ($d_s > g_s$)，由于 Split 所在的维度后续会受到 Gather 操作的影响 (i.e. 如果 <code>indices</code> 的维度大于 1，则将在 $g_s$ 维后插入新的维度)，因此输出张量对应的 Split 维度 $d'_s$ 将会被推高，即 $d'_s = d_s+g_s-1$。
+
+  <div class="img" title="SBP 例子 - 对 params 进行 S0 (Gather 的 axis = 0)" label="gather_sbp_exp_5">
+    <img src="./pic/gather_sbp_exp_5.png" width="600px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如 <imgref>gather_sbp_exp_5</imgref> 所示，当 Split 的维度 $d_s=0$ 与 Gather 维度 $g_s=0$ 相同时 ($d_s = g_s$)，此时 Split 操作将造成部分 Gather 维度部分元素的缺失，此时缺失部分可以采用补 0 的方式进行填充，这样一来，输出张量的 SBP 形状将是 PartialSum。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;综上，我们首先定义了对 <code>params</code> 张量进行 Split，对 <code>indices</code> 张量进行 Broadcast 的 SBP，OneFlow 源码 <cite>of_gather_op</cite> 如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">auto GatherOp::GetSbp(user_op::SbpContext* ctx) -&gt; Maybe&lt;void&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int64_t</span> in_num_axes =</span><br><span class="line">      ctx-&gt;LogicalTensorDesc4InputArgNameAndIndex(<span class="string">&quot;in&quot;</span>, <span class="number">0</span>).shape().NumAxes();</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int64_t</span> indices_num_axes =</span><br><span class="line">      ctx-&gt;LogicalTensorDesc4InputArgNameAndIndex(<span class="string">&quot;indices&quot;</span>, <span class="number">0</span>).shape().NumAxes();</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int64_t</span> gather_axis = ctx-&gt;Attr&lt;<span class="keyword">int64_t</span>&gt;(<span class="string">&quot;axis&quot;</span>);</span><br><span class="line">  CHECK_GE_OR_RETURN(gather_axis, <span class="number">0</span>);</span><br><span class="line">  CHECK_LT_OR_RETURN(gather_axis, in_num_axes);</span><br><span class="line">  FOR_RANGE(<span class="keyword">int64_t</span>, i, <span class="number">0</span>, in_num_axes) &#123;</span><br><span class="line">    <span class="keyword">if</span> (i == gather_axis) &#123;</span><br><span class="line">      ctx-&gt;NewBuilder()</span><br><span class="line">          .Broadcast(user_op::OpArg(<span class="string">&quot;indices&quot;</span>, <span class="number">0</span>))</span><br><span class="line">          .Split(user_op::OpArg(<span class="string">&quot;in&quot;</span>, <span class="number">0</span>), i)</span><br><span class="line">          .PartialSum(user_op::OpArg(<span class="string">&quot;out&quot;</span>, <span class="number">0</span>))</span><br><span class="line">          .Build();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      ctx-&gt;NewBuilder()</span><br><span class="line">          .Broadcast(user_op::OpArg(<span class="string">&quot;indices&quot;</span>, <span class="number">0</span>))</span><br><span class="line">          .Split(user_op::OpArg(<span class="string">&quot;in&quot;</span>, <span class="number">0</span>), i)</span><br><span class="line">          .Split(user_op::OpArg(<span class="string">&quot;out&quot;</span>, <span class="number">0</span>), i &lt; gather_axis ? i : i + indices_num_axes - <span class="number">1</span>)</span><br><span class="line">          .Build();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> Maybe&lt;<span class="keyword">void</span>&gt;::Ok();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <h4 class="title">对 Batch Gather 进行 SBP</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于 Batch Gather 来说，由于 OneFlow 中的实现保证了 Gather Dim 永远是 <code>indices</code> 的最后一维，因此 SBP 的情况比较简单。
+
+  <div class="img" title="SBP 例子 - 对 params 进行 PartialSum (Gather 的 axis = 1)" label="batch_gather_sbp_exp_1">
+    <img src="./pic/batch_gather_sbp_exp_1.png" width="600px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先有一种基于 PartialSum 的 SBP 方法，如 <imgref>batch_gather_sbp_exp_1</imgref> 所示，将 <code>params</code> 进行 PartialSum，将 <code>indices</code> 进行 Broadcast 处理，得到的输出张量将与 <code>params</code> 保持相同的 PartialSum 形状。
+
+  <div class="img" title="SBP 例子 - 对 params 和 indices 进行 S0 (Gather 的 axis = 1)" label="batch_gather_sbp_exp_2">
+    <img src="./pic/batch_gather_sbp_exp_2.png" width="600px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同时也有基于对 <code>params</code> 和 <code>indices</code> 在同一个维度上进行 Split 的方法，当 Split 的维度 $d_s=0$ 在 Gather 维度 $g_s=1$ 之前时，此时的 Split 不会影响 Gather 在指定维度上的操作，因此输出张量拥有和输入张量相同的 Split 格式。
+
+  <div class="img" title="SBP 例子 - 对 params 进行 S1 (Gather 的 axis = 1)" label="batch_gather_sbp_exp_3">
+    <img src="./pic/batch_gather_sbp_exp_3.png" width="600px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当 Split 的维度 $d_s=1$ 与 Gather 维度 $g_s=1$ 相同时，和 Gather 中阐述过的逻辑类似，此时 Split 将导致 Gather 在指定维度上的部分元素缺失，此时可以将输出张量设置为 PartialSum 来补齐缺失元素。
+
+  <div class="queblock">
+  OneFlow 源码目前没有最后一种 SBP 形式，是否需要补齐？
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;综上所述，对应到 OneFlow 源码 <cite>of_batch_gather_op</cite>，如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Maybe&lt;<span class="keyword">void</span>&gt; <span class="title">BatchGatherOp::GetSbp</span><span class="params">(user_op::SbpContext* ctx)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int64_t</span> indices_num_axes =</span><br><span class="line">      ctx-&gt;LogicalTensorDesc4InputArgNameAndIndex(<span class="string">&quot;indices&quot;</span>, <span class="number">0</span>).shape().NumAxes();</span><br><span class="line">  <span class="keyword">if</span> (indices_num_axes &gt; <span class="number">1</span>) &#123;</span><br><span class="line">    FOR_RANGE(<span class="keyword">int64_t</span>, i, <span class="number">0</span>, indices_num_axes - <span class="number">1</span>) &#123;</span><br><span class="line">      ctx-&gt;NewBuilder()</span><br><span class="line">          .Split(user_op::OpArg(<span class="string">&quot;indices&quot;</span>, <span class="number">0</span>), i)</span><br><span class="line">          .Split(user_op::OpArg(<span class="string">&quot;in&quot;</span>, <span class="number">0</span>), i)</span><br><span class="line">          .Split(user_op::OpArg(<span class="string">&quot;out&quot;</span>, <span class="number">0</span>), i)</span><br><span class="line">          .Build();</span><br><span class="line">    &#125;</span><br><span class="line">    ctx-&gt;NewBuilder()</span><br><span class="line">          .Split(user_op::OpArg(<span class="string">&quot;indices&quot;</span>, <span class="number">0</span>), indices_num_axes - <span class="number">1</span>)</span><br><span class="line">          .Broadcast(user_op::OpArg(<span class="string">&quot;in&quot;</span>, <span class="number">0</span>))</span><br><span class="line">          .PartialSum(user_op::OpArg(<span class="string">&quot;out&quot;</span>, <span class="number">0</span>))</span><br><span class="line">          .Build();</span><br><span class="line">  &#125;</span><br><span class="line">  ctx-&gt;NewBuilder()</span><br><span class="line">      .Broadcast(user_op::OpArg(<span class="string">&quot;indices&quot;</span>, <span class="number">0</span>))</span><br><span class="line">      .PartialSum(user_op::OpArg(<span class="string">&quot;in&quot;</span>, <span class="number">0</span>))</span><br><span class="line">      .PartialSum(user_op::OpArg(<span class="string">&quot;out&quot;</span>, <span class="number">0</span>))</span><br><span class="line">      .Build();</span><br><span class="line">  <span class="keyword">return</span> Maybe&lt;<span class="keyword">void</span>&gt;::Ok();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <h3 class="title">Oneflow 中 Primitive 是什么?</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本文记录的是将 Gather / Batch Gather 功能开发为一个 OneFlow Primitive 的过程，因此我们需要花一些篇幅来阐述 Primitive 的概念。
+
+  <h4 class="title">Primitive 概念</h4>
+  <div class="img" title="Computation Graph、Operator 和 Implementation 之间的关系" label="comp_graph_op_impt">
+    <img src="./pic/comp_graph_op_impt.png" width="600px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<imgref>comp_graph_op_impt</imgref> 简单说明了 Computation Graph、Operator 和 Implementation 之间的关系。首先 <def>Computation Graph (计算图)</def> 用于描述程序计算流，各个节点代表的是 <def>Operator (算子)</def>，各条边描述的是 Operator 为算子之间的依赖关系，Operator 之间相互依赖的是输入输出 Tensor。对于 Operator 来说，它底层可以有多种实现，例如编写 CUDA Kernel 在 GPGPU 硬件上进行处理，编写 CPU Kernel 在多核处理器上进行处理等。在 OneFlow 中，Primitive 可以理解为供 CUDA/CPU Kernel 程序调用的函数接口，例如 OneFlow 中定义了一系列的 UnaryFunctor <cite>of_unary_functor</cite> 用于实现各种激活函数的前向传播运算，定义了一系列的 BinaryFunctor <cite>of_binary_functor</cite> 用于实现各种激活函数的反向传播运算等。
+
+  <div class="noteblock">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本文把实际完成计算任务的程序称为 <def>Implementation</def>，这里指的是一个广义概念，包括 CUDA Kernel, CPU Kernel，CUBLAS 等厂商库和 OneFlow Primitive 等和底层实际计算相关的程序。
+  </div>
+
+  <h4 class="title">文件目录</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 OneFlow 中，与 primitive 相关的有几个文件目录:
+
+  <div class="table" title="OneFlow 中与 Primitive 相关的文件目录">
+  <table>
+    <tr>
+      <th align="center">文件路径</th>
+      <th align="center">描述</th>
+    </tr>
+    <tr>
+      <td><code>oneflow/core/ep/include/primitive</code> <cite>of_include_primitive</cite></td>
+      <td>对各个 Primitive 的定义</td>
+    </tr>
+    <tr>
+      <td><code>oneflow/core/ep/common/primitive</code> <cite>of_common_primitive</cite></td>
+      <td>对各个 Primitive 的定义的实现</td>
+    </tr>
+    <tr>
+      <td><code>oneflow/core/ep/cuda/primitive</code> <cite>of_cuda_primitive</cite></td>
+      <td>实现各个 Primitive 的 CUDA Kernel</td>
+    </tr>
+    <tr>
+      <td><code>oneflow/core/ep/cpu/primitive</code> <cite>of_cpu_primitive</cite></td>
+      <td>实现各个 Primitive 的 CPU Kernel</td>
+    </tr>
+  </table>
+  </div>
+
+  <h3 class="title">简化 Tensor 形状</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在进入对 Gather 和 Batch Gather 具体实现的讨论之前，我们还需要补充一个背景知识，首先我们提出一个这样的问题:
+
+  <div class="queblock">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;用户传入的 Tensor，在符合规则的条件下，其形状是任意的，底层的 CUDA Kernel、CPU Kernel 和 Primitive 等 Implementation 程序是如何适配不同维度数、不同维度大小的输入 Tensor 的呢？
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;例如对于本文要实现的 Gather / Batch Gather Primitive 来说，用户传入的 <code>params</code>、<code>indices</code> 张量形状将是任意的，指定的 <code>axis</code> 和 <code>batch_dims</code> 也将是任意的。简单一想，如何实现处理任意输入形状的 Implementation 似乎是个棘手的问题。Implementation 是否真的需要关心输入张量的形状呢？我们下面进行分析。
 
   <h4 class="title">Tensor 包含的两种信息: 形状与存储</h4>
   <div class="img" title="Tensor 的形状和存储 (拥有相同底层存储的两个形状不同的 Tensors)" label="img_tensor_shape_data">
@@ -276,35 +537,34 @@
     <li><b><u>存储信息</u></b>: Tensor 实际上是一组数的组合，这些数在计算机中通常使用一段连续内存用于存储。为了追踪这段内存，程序一般需要 ① 一个指针变量来描述数据存储的起始地址和 ② 一个整形变量来描述数据存储的规模。不同形状的 Tensor 可能拥有相同的底层存储，如 <imgref>img_tensor_shape_data</imgref> 所示，虽然 $\text{Tensor_A}$ 和 $\text{Tensor_B}$ 拥有不同的形状，是两个不同的 Tensor，但是它们底层的数据存储是完全相同的。总结来说，<note>"数据" 信息描述了 Tensor 实际存储的内容</note>;</li>
   </ul>
 
-  <h4 class="title">Operator 和 Kernel 分别关心的 Tensor 信息</h4>
+  <h4 class="title">Operator 和 Implementation 分别关心的 Tensor 信息</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于构成计算图的 Operator 来说，它主要关心输入/输出 Tensor 的 <u>形状信息</u>，Opeartor 除了负责调用底层 Kernel 完成数据计算之外，还负责对输入的 Tensor 的形状、数据类型等信息进行合法性检查，以及推导输出 Tensor 的形状。
+  &nbsp;&nbsp;&nbsp;&nbsp;对于构成计算图的 Operator 来说，它主要关心输入/输出 Tensor 的 <u>形状信息</u>，Opeartor 除了负责调用底层实现完成数据计算之外，还负责对输入的 Tensor 的形状、数据类型等信息进行合法性检查，以及推导输出 Tensor 的形状。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;而对于实际完成计算任务的底层 Kernel 来说，它主要关心输入/输出 Tensor 的 <u>存储信息</u>，简单来说 Kernel 的任务实际上就是 ① 完成数据的计算并且 ② 将结果放到正确的内存位置上，因此实际上 Kernel 并不需要关心 Tensor 的形状，它只需要知道:
+  &nbsp;&nbsp;&nbsp;&nbsp;而对于 Implementation 来说，它主要关心输入/输出 Tensor 的 <u>存储信息</u>。实际上，Implementation 的任务就是 
 
   <ol>
-    <li>输入/输出数据的起始地址;</li>
-    <li>当前 Thread (对应 GPU Kernel) / Iteration (对应 CPU Kernel) 操作对应的偏移量;</li>
-    <li>单批次操作的粒度;</li>
-    <li>操作重复的次数 (i.e. Thread 的个数 / Iteration 的次数)</li>
+    <li>从指定的内存空间中取到操作数;</li>
+    <li>完成相应的计算过程;</li>
+    <li>将结果写回指定的内存空间;</li>
   </ol>
 
-  <h4 class="title">Kernel 处理: 合并边界信息，简化形状</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;上述的 Kernel 关心的信息中， ① 可以直接给出，即 Tensor 在内存中的实际存储地址; ② 也可以基于 Thread/Iteration Id 直接给出；而对于 ③ ④ 来说，由于 Operator 通常会在某一个维度对输入 Tensor 进行操作，一旦指定处理的维度，③ 单次操作的粒度以及 ④ 操作重复的次数也可以被确定。
+  &nbsp;&nbsp;&nbsp;&nbsp;因此，Implementation 并不需要关心 Tensor 的形状，在保证取值和回写的内存地址是正确的情况下，Implementation 输出的结果就是正确的。所以，Tensor 的形状信息在实际处理时可以被模糊化，从而简化 Implementation 的实现难度。下面我们进行举例说明。
 
+  <h4 class="title">简化 Implementation: 合并边界信息，简化输入输出形状</h4>
   <h4 class="paragraph">例子 1</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;举个例子，对于 <imgref>img_tensor_shape_data</imgref> 中的 $\text{Tensor_A}$ 来说，如果 Operator 是在 Dim_0 上对其进行操作 (i.e. 不会在 Dim_1 或 Dim_2 上对部分元素进行修改)，则 Operator 实际上可以把 $\text{Tensor_A}$ 从形状向量为 $[5,3,4]$ 的三维张量简化为形状向量为 $[5,12]$ 的二维张量 (i.e. $\text{Tensor_B}$) 交给底层 Kernel 进行处理，这样一来:
+  &nbsp;&nbsp;&nbsp;&nbsp;举个例子，对于 <imgref>img_tensor_shape_data</imgref> 中的 $\text{Tensor_A}$ 来说，如果 Operator 是在 Dim_0 上对其进行操作 (i.e. 不会在 Dim_1 或 Dim_2 上对部分元素进行修改)，则 Operator 实际上可以把 $\text{Tensor_A}$ 从形状向量为 $[5,3,4]$ 的三维张量简化为形状向量为 $[5,12]$ 的二维张量 (i.e. $\text{Tensor_B}$) 交给 Implementation 进行处理，这样一来:
 
   <ul>
-    <li>如果按照原始 $\text{Tensor_A}$ 的形状 $[5,3,4]$，则 Kernel 单批次操作的粒度为 4 个元素 (i.e. $\text{Tensor_A}$ 在 Dim_2 的宽度)，操作重复的次数为 15 次 (i.e. $\text{Tensor_A}$ 在 Dim_0 和 Dim_1 的宽度之积);</li>
-    <li>简化后，Kernel 单批次操作的粒度为 12 个元素 (i.e. $\text{Tensor_B}$ 在 Dim_1 的宽度)，操作重复的次数为 5 次 (i.e. $\text{Tensor_B}$ 在 Dim_0 的宽度);</li>
+    <li>如果按照原始 $\text{Tensor_A}$ 的形状 $[5,3,4]$，则 Implementation 单次操作的粒度为 4 个元素 (i.e. $\text{Tensor_A}$ 在 Dim_2 的宽度)，操作重复的次数为 15 次 (i.e. $\text{Tensor_A}$ 在 Dim_0 和 Dim_1 的宽度之积);</li>
+    <li>简化后，Implementation 单次操作的粒度为 12 个元素 (i.e. $\text{Tensor_B}$ 在 Dim_1 的宽度)，操作重复的次数为 5 次 (i.e. $\text{Tensor_B}$ 在 Dim_0 的宽度);</li>
   </ul>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;通常来说，后者的 Kernel 的实现往往更加简单和高效，简单是因为其合并了大部分无用的内部边界信息，对于高维张量的处理，可以统一基于一套低维的逻辑进行处理；高效是因为其增加了单批次操作的元素个数，操作重复的次数减少，使用向量化访存进行优化的机会更大。
+  &nbsp;&nbsp;&nbsp;&nbsp;通常来说，后者的 Implementation 往往更加简单，因为其合并了大部分无用的内部边界信息 (i.e. 合并了 Dim_1 和 Dim_2)，仅保留了指定处理维度 (i.e. Dim_0) 的形状信息。这样一来，对于高维张量的处理，可以设计一个统一的 Implementation，基于一套处理低维张量的逻辑进行处理。
 
   <h4 class="paragraph">例子 2</h4>
 
@@ -313,33 +573,26 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;再举个例子，如 <imgref>img_matmul</imgref> 所示，考虑将一个形状向量为 $[2,4,3]$ 的三维张量 $\text{Tensor_A}$ 和形状向量为 $[3,5]$ 的二维张量 $\text{Tensor_W}$ 进行乘法操作的 Operator，其实际上是在 Dim_2 上对 $\text{Tensor_A}$ 进行操作，因此 Operator 在调用底层 Kernel 进行处理时，可以合并 $\text{Tensor_A}$ 在 Dim_0 和 Dim_1 上的内部边界信息，将 $\text{Tensor_A}$ 视为一个形状向量为 $[8,3]$ 的二维张量 $\text{Tensor_A}'$。
-
+  &nbsp;&nbsp;&nbsp;&nbsp;再举个例子，如 <imgref>img_matmul</imgref> 所示，考虑将一个形状向量为 $[2,4,3]$ 的三维张量 $\text{Tensor_A}$ 和形状向量为 $[3,5]$ 的二维张量 $\text{Tensor_W}$ 进行乘法操作的 Operator，其实际上是在 Dim_2 上对 $\text{Tensor_A}$ 进行操作，因此 Operator 在调用底层 Implementation 进行处理时，可以合并 $\text{Tensor_A}$ 在 Dim_0 和 Dim_1 上的内部边界信息，将 $\text{Tensor_A}$ 视为一个形状向量为 $[8,3]$ 的二维张量 $\text{Tensor_A}'$。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在上述对 Tensor 形状的简化的例子中，第一个例子实现了指定处理维度 (i.e. Dim_0) <note>以下</note>的边界信息的合并 (i.e. 合并 Dim_1 和 Dim_2); 第二个例子实现了指定处理维度 (i.e. Dim_2) <note>以上</note>的边界信息的合并 (i.e. 合并 Dim_0 和 Dim_1)。通用地说，在给定处理维度的情况下，Operator 在调用 Kernel 进行处理之前，可以模糊掉对于 Kernel 来说无用的张量形状信息，仅保留:
+  &nbsp;&nbsp;&nbsp;&nbsp;在上述对 Tensor 形状的简化的例子中，第一个例子实现了指定处理维度 (i.e. Dim_0) <note>之后</note>的边界信息的合并 (i.e. 合并 Dim_1 和 Dim_2); 第二个例子实现了指定处理维度 (i.e. Dim_2) <note>之前</note>的边界信息的合并 (i.e. 合并 Dim_0 和 Dim_1)。通用地说，在给定处理维度的情况下，Operator 在调用 Implementation 进行处理之前，可以模糊掉对于 Implementation 来说无用的张量形状信息，仅保留:
 
   <div class="img" title="通用形状简化" label="img_general_dims">
     <img src="./pic/general_dims.png" width="500px" />
   </div>
 
   <ol>
-    <li><def>Processed Dim</def>：指定处理维度的边界信息，指示了 Kernel 处理的维度上有多少个元素;</li>
-    <li><def>Outer Dim</def>：指定处理维度以上的<note><u>合并</u></note>边界信息，指示了 Kernel 的处理需要重复的次数;</li>
-    <li><def>Inner Dim</def>：指定处理维度以下的<note><u>合并</u></note>边界信息，指示了 Kernel 处理的维度上各个元素的大小;</li>
+    <li><def>Processed Dim</def>：指定处理维度的边界信息，指示了 Implementation 处理的维度上有多少个元素;</li>
+    <li><def>Outer Dim</def>：指定处理维度之前的<note><u>合并</u></note>边界信息，指示了 Implementation 的处理需要重复的次数;</li>
+    <li><def>Inner Dim</def>：指定处理维度之后的<note><u>合并</u></note>边界信息，指示了 Implementation 处理的维度上各个元素的规模;</li>
   </ol>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;我们在后文中将看到，在 Gather / Batch Gather 逻辑的实现中，我们将利用上述形状简化方法对 Primitive 进行设计。
+  &nbsp;&nbsp;&nbsp;&nbsp;如果还需要举例说明，那么本文的主角 — Gather 就是最好的例子。考虑对一个 $[\underbrace{4}_{\text{Dim_0}},\underbrace{2}_{\text{Dim_1}},\underbrace{3}_{\text{Dim_2}},\underbrace{2}_{\text{Dim_3}},\underbrace{6}_{\text{Dim_4}}]$ 的 <code>params</code> 张量应用 Gather 操作，指定在 Dim_2 上进行，则我们首先可以把 <code>params</code> 张量的 Dim_0 和 Dim_1 模糊掉，视为统一的 Outer Dim (Size 为 $4 \times 2 = 8$)，把 Dim_0 和 Dim_1 视为统一的 Inner Dim (Size 为 $2 \times 6 = 12$)，把 Dim_2 视为 Processed Dim (Size 为 $3$)，最终形成一个 $[8,3,12]$ 的输入张量交给 Implementation 进行处理。可能有读者好奇，那么对于 <code>indices</code> 的形状该如何处理呢？实际上，不论 <code>indices</code> 是什么形状，在 Implementation 看来，它都是一个一维的向量 (i.e. 被化简为 $[\underbrace{1}_{\text{Outer Dim}},\underbrace{x}_{\text{Processed Dim}},\underbrace{1}_{\text{Inner Dim}}]$ 的形状)，Implementation 只需要依次从 <code>indices</code> 取出 Gather Index，然后将 <code>params</code> 在其 Processed Dim 上的相应元素搬运到对应位置即可。
 
-  <h3 class="title">Oneflow 中 Primitive 是什么?</h3>
-  <h4 class="title">Primitive 概念</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;TODO
-
-  <h4 class="title">文件目录</h4>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;TODO
+  &nbsp;&nbsp;&nbsp;&nbsp;综上所述，这样一来不论输入的张量是什么形状，Implementation 都可以统一地用一套处理三维张量的逻辑进行 Gather 逻辑的处理，这也就回答了本节最开始提出的问题。
 </div>
 
 <h2 class="title">开发</h2>
@@ -378,13 +631,13 @@ Format see: https://mermaid-js.github.io/mermaid/#/flowchart
 
 <!-- Sign Block -->
 <!--
-<noteblock>
+<div class="noteblock">
 A NOTE
-</noteblock>
+</div>
 
-<queblock>
+<div class="queblock">
 A QUESTION
-</queblock>
+</div>
 -->
 
 <!--图片、引用-->
