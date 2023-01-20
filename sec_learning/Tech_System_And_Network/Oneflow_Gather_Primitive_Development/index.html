@@ -49,8 +49,8 @@
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/matmul.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/general_dims.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/xxx.png">
-<meta property="article:published_time" content="2023-01-20T19:22:46.321Z">
-<meta property="article:modified_time" content="2023-01-20T19:22:46.321Z">
+<meta property="article:published_time" content="2023-01-20T19:43:16.655Z">
+<meta property="article:modified_time" content="2023-01-20T19:43:16.655Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -370,7 +370,7 @@
 
   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">batched_result_shape</span>(<span class="params">params_shape, indices_shape, axis=<span class="number">0</span>, batch_dims=<span class="number">0</span></span>):</span></span><br><span class="line">  <span class="keyword">return</span> params_shape[:axis] + indices_shape[batch_dims:] + params_shape[axis+<span class="number">1</span>:]</span><br></pre></td></tr></table></figure>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;另外值得注意的是，上述的 TensorFlow 的接口中，其支持由用户自行指定 Batch 维的数目，而在目前 OneFlow 实现的 Batch Gather 仅支持固定的 Batch 维数目，该数目由输入的 <code>indices</code> 张量决定，<code>indices</code> 张量除了最后一维剩余维度都是 Batch 维，<code>params</code> 的 Batch 维与之相对应。在下文中，为了保持与 OneFlow 的同步，我们将默认 Batch Gather 是 OneFlow 的情况，而不是 TensorFlow 中的任意指定 Batch 维度数目的情况。
+  &nbsp;&nbsp;&nbsp;&nbsp;另外值得注意的是，上述的 TensorFlow 的接口中，其支持由用户自行指定 Batch 维的数目，而在目前 OneFlow 实现的 Batch Gather 仅支持固定的 Batch 维数目，该数目由输入的 <code>indices</code> 张量决定: <code>indices</code> 张量除了最后一维剩余维度都是 Batch 维，<code>params</code> 的 Batch 维与之相对应，也即 Gather 操作在 <code>indices</code> 的最后一维上进行。在下文中，为了保持与 OneFlow 的同步，我们将默认 Batch Gather 是 OneFlow 的情况，而不是 TensorFlow 中的任意指定 Batch 维度数目的情况。
 
   <h3 class="title">OneFlow 如何对 Gather / Batch Gather 进行 SBP</h3>
   <div class="noteblock">
@@ -456,7 +456,7 @@
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;当 Split 的维度 $d_s=1$ 与 Gather 维度 $g_s=1$ 相同时，和 Gather 中阐述过的逻辑类似，此时 Split 将导致 Gather 在指定维度上的部分元素缺失，此时可以将输出张量设置为 PartialSum 来补齐缺失元素。
+  &nbsp;&nbsp;&nbsp;&nbsp;当 Split 的维度 $d_s=1$ 与 Gather 维度 $g_s=1$ 相同时，和 Gather 中阐述过的逻辑类似，此时首先我们需要将 <code>indices</code> 张量改为进行 Broadcast，其次对 <code>params</code> 在 Gather 维度上进行 Split 将导致 Gather 在指定维度上的部分元素缺失，此时可以将输出张量设置为 PartialSum 来补齐缺失元素。
 
   <div class="queblock">
   OneFlow 源码目前没有最后一种 SBP 形式，是否需要补齐？
