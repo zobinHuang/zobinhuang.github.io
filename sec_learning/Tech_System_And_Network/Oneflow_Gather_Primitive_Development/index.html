@@ -48,9 +48,13 @@
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/tensor_exp.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/matmul.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/general_dims.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_impt_exp_1.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_impt_exp_2.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_sbp_exp_5.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_impt_exp_3.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/xxx.png">
-<meta property="article:published_time" content="2023-01-20T19:43:16.655Z">
-<meta property="article:modified_time" content="2023-01-20T19:43:16.655Z">
+<meta property="article:published_time" content="2023-01-21T19:44:21.172Z">
+<meta property="article:modified_time" content="2023-01-21T19:44:21.172Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -378,6 +382,7 @@
   </div>
 
   <h4 class="title">对 Gather 进行 SBP</h4>
+  <label class="title">section_gather_sbp</label>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;对于 Gather Operator 来说，可以进行 SBP 的 Tensor 一共有两个: <code>params</code>，<code>indices</code>。我们下面分为两种情况 (i.e. 将 Broadcast 和 Split 操作分别应用在这两个张量上) 进行讨论。
 
@@ -542,7 +547,7 @@
   &nbsp;&nbsp;&nbsp;&nbsp;对于构成计算图的 Operator 来说，它主要关心输入/输出 Tensor 的 <u>形状信息</u>，Opeartor 除了负责调用底层实现完成数据计算之外，还负责对输入的 Tensor 的形状、数据类型等信息进行合法性检查，以及推导输出 Tensor 的形状。
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;而对于 Implementation 来说，它主要关心输入/输出 Tensor 的 <u>存储信息</u>。实际上，Implementation 的任务就是 
+  &nbsp;&nbsp;&nbsp;&nbsp;而对于 Implementation 来说，它主要关心输入/输出 Tensor 的 <u>存储信息</u>。实际上，Implementation 的任务就是:
 
   <ol>
     <li>从指定的内存空间中取到操作数;</li>
@@ -551,9 +556,10 @@
   </ol>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;因此，Implementation 并不需要关心 Tensor 的形状，在保证取值和回写的内存地址是正确的情况下，Implementation 输出的结果就是正确的。所以，Tensor 的形状信息在实际处理时可以被模糊化，从而简化 Implementation 的实现难度。下面我们进行举例说明。
+  &nbsp;&nbsp;&nbsp;&nbsp;Implementation 并不需要关心 Tensor 的具体形状，其工作就是从正确的内存地址取数、将计算结果写回指定的内存地址。不论 Tensor 有多少维度，每个维度的 Size 是多大，在 Implementation 看来都是一段连续内存。因此，Tensor 的形状信息之于 Implementation 是可以被模糊化的，从而简化 Implementation 的实现难度。下面我们进行举例说明。
 
   <h4 class="title">简化 Implementation: 合并边界信息，简化输入输出形状</h4>
+  <label class="title">section_simplied_tensor</label>
   <h4 class="paragraph">例子 1</h4>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;举个例子，对于 <imgref>img_tensor_shape_data</imgref> 中的 $\text{Tensor_A}$ 来说，如果 Operator 是在 Dim_0 上对其进行操作 (i.e. 不会在 Dim_1 或 Dim_2 上对部分元素进行修改)，则 Operator 实际上可以把 $\text{Tensor_A}$ 从形状向量为 $[5,3,4]$ 的三维张量简化为形状向量为 $[5,12]$ 的二维张量 (i.e. $\text{Tensor_B}$) 交给 Implementation 进行处理，这样一来:
@@ -593,9 +599,82 @@
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;综上所述，这样一来不论输入的张量是什么形状，Implementation 都可以统一地用一套处理三维张量的逻辑进行 Gather 逻辑的处理，这也就回答了本节最开始提出的问题。
+
+  <h4 class="title"><code>NdIndexOffsetHelper</code>: OneFlow 提供的「Offset」和「张量坐标」互转工具</h4>
+  <label class="title">section_nd_index_offset_helper</label>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们上面说过，张量在内存中是一段连续的内存空间，那么每个张量元素在这段连续内存空间中就会有一个 Offset; 我们上面还说过，在实现 Implementation 时可以将输入 Tensor 的形状简化为 $[d_{\text{Outer}}, d_{\text{Processed}}, d_{\text{Inner}}]$。我们在下面 Gather 和 Batch Gather 的具体实现中将看到两个重要的需求:
+
+  <ul>
+    <li>给定一个 Offset $l_o$，输出高位张量坐标 $[d_{\text{Outer}}, d_{\text{Processed}}, d_{\text{Inner}}]$;</li>
+    <li>给定一个 高位张量坐标 $[d_{\text{Outer}}, d_{\text{Processed}}, d_{\text{Inner}}]$，输出该元素在内存空间中存储相应的 Offset $l_o$;</li>
+  </ul>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在 OneFlow 中提供了一个 <code>NdIndexOffsetHelper</code> 类 <cite>of_nd_index_offset_helper</cite> 用于提供上述的功能 <cite>of_ndindex_offset_helper_post</cite>。在实例化该类时，我们可以首先在参数列表中传入对应的形状向量:
+
+  <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;oneflow/core/common/nd_index_offset_helper.h&quot;</span></span></span><br><span class="line">NdIndexOffsetHelper&lt;int32_t, 3&gt; in_helper(outer_dim_size, gather_dim_size, inner_dim_size);</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后把这个对象传入 CUDA Kernel，或者 Device Function 中，我们就可以通过它实现 Offset 和 高维张量坐标的互转了:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__global__ <span class="keyword">void</span> <span class="title">TestDeviceFunction</span><span class="params">(NdIndexOffsetHelper&lt;<span class="keyword">int32_t</span>, <span class="number">3</span>&gt; in_helper, <span class="keyword">int32_t</span> elem_cnt)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int32_t</span> index[<span class="number">3</span>];</span><br><span class="line">  CUDA_1D_KERNEL_LOOP_T(<span class="keyword">int32_t</span>, i, elem_cnt) &#123;</span><br><span class="line">    in_helper.OffsetToNdIndex(i, index);                <span class="comment">// Offset -&gt; 高维张量坐标</span></span><br><span class="line">    <span class="keyword">int32_t</span> offset = in_helper.NdIndexToOffset(index)   <span class="comment">// 高维张量坐标 -&gt; Offset</span></span><br><span class="line">    assert(i == offset);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </div>
 
 <h2 class="title">开发</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;下面我们对 Gather 和 Batch Gather Primitive 的具体实现进行说明。
+
+  <h3 class="title">Gather Primitive 的 CUDA 实现思路</h3>
+  <h4 class="paragraph">简单情况</h4>
+  <div class="img" title="例子 - 使用 [2,3] 的 indices 对 [2,5,2] 的 params 在第 1 维上进行 Gather" label="gather_impt_exp_1">
+    <img src="./pic/gather_impt_exp_1.png" width="100%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们来看 Gather 的 CUDA 实现思路，我们在本节中将使用 <imgref>gather_impt_exp_1</imgref> 所示的例子进行说明，这个例子中使用了一个形状为 $[2,3]$ 的 <code>indices</code> 张量，在一个形状为 $[2,5,2]$ 的 <code>params</code> 张量的第 1 维上进行 Gather 操作。基于我们在 <ref>section_simplied_tensor</ref> 中讨论的内容，我们可以把上述张量按照 Outer Dim, Processed Dim 和 Inner Dim 进行排列，化简为如 <imgref>gather_impt_exp_2</imgref> 所示的形状。
+
+  <div class="img" title="例子 - 使用 [2,3] 的 indices 对 [2,5,2] 的 params 在第 1 维上进行 Gather" label="gather_impt_exp_2">
+    <img src="./pic/gather_impt_exp_2.png" width="100%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;设计 CUDA Kernel / Device Function 的一个窍门是: 通常来说，我们会在输出张量的每一个元素上应用一条 Thread 进行处理，因此我们可以从输出张量的单个元素出发，反推为了计算出这个元素，应该使用到哪些输入张量的哪些元素，从而完成整个 Implementation。这里我们应用相同的思路。如 <imgref>gather_impt_exp_2</imgref> 所示，我们以输出张量偏移量为 $18$ 的元素为例进行说明。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，我们可以调用上面 <ref>section_nd_index_offset_helper</ref> 所提到的 <code>NdIndexOffsetHelper</code> 类提供的 <code>OffsetToNdIndex</code> 函数，将 Offset (i.e. $18$) 转化为输出张量的坐标 (i.e. $[1,3,0]$)，也即上图中的步骤 ①。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在获取坐标 $[1,3,0]$ 后，我们就可以根据其 Processed Dim 的值 $3$，知悉当前输出的元素是来源于 <code>indices</code> 中偏移量为 $3$ 的坐标，也即上图中的步骤 ②。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;注意到完成通用形状简化后，<code>output</code> 中的元素所在的 Outer Dim 和 Inner Dim 和它们在 <code>params</code> 中是一致的，因此我们只需要将元素在 <code>output</code> 中的高维坐标 $[d_{\text{Outer}}, d_{\text{Processed}}, d_{\text{Inner}}]$ 中的 Processed Dim 替换为 <code>indices</code> 中偏移量为 $3$ 的元素的值 $0$，就可以得到该输出元素在 <code>params</code> 中的坐标 (i.e. $[1,0,0]$)，也即上图中的步骤 ③。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后调用 <code>NdIndexOffsetHelper</code> 类提供的 <code>NdIndexToOffset</code> 函数，我们就可以得到对应输入元素在连续内存空间中的 Offset (i.e. $10$)，也即上图中的步骤 ④。在知悉元素在输入张量 <code>params</code> 存储空间中的偏移量后，Implementation 就可以从输入张量 <code>params</code> 偏移 $10$ 位置取出元素，放入到输出张量 <code>output</code> 偏移 $18$ 位置上去了。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;针对输出张量的每一个元素，其推导源输入张量偏移量的逻辑都是一样的。我们把上述过程总结为如下 CUDA 程序:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TODO</span></span><br></pre></td></tr></table></figure>
+  <h4 class="paragraph">考虑 SBP 切分 Gather 维的情况</h4>
+
+  <div class="img" title="SBP 例子 - 对 params 进行 S0 (Gather 的 axis = 0)" label="gather_sbp_exp_5_second">
+    <img src="./pic/gather_sbp_exp_5.png" width="600px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回顾我们在 <ref>section_gather_sbp</ref> 中讨论过的，当对 Gather Operator 采用对 <code>params</code> 输入张量进行 Split，<code>indices</code> 进行 Broadcast 的 SBP 形式时，如 <imgref>gather_sbp_exp_5_second</imgref> 所示，一旦对 <code>params</code> 输入张量进行 Split 的维度恰好是 Gather 的维度，那么将会导致 <code>indices</code> 中指定的部分 Gather 序号对应的元素的缺失，此时的输出张量 <code>output</code> 将呈现 PartialSum 的 SBP 形式。在这种情况下，底层 Implementation 在处理的时候就需要引入对当前机器是否拥有 Gather 所需元素的判断，如果判断到当前机器没有某个 Index 所指定的元素，则需要往对应的输出元素写 0，以保证 PartialSum 的正确性。下面我们对如何实现这层判断进行讨论。
+
+  <div class="img" title="例子 - 使用 [2,3] 的 indices 对 [2,5,2] 的 params 在第 1 维上进行 Gather" label="gather_impt_exp_3">
+    <img src="./pic/gather_impt_exp_3.png" width="100%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+
+<h2 class="title">性能测试</h2>
 <div class="div_learning_post">
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;TODO
