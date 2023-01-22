@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"zobinhuang.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"post","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+  <meta name="description" content="本文首先介绍了 Gather 和 Batch Gather 的行为、以及它们在 OneFlow 中如何进行 SBP 操作，然后介绍了它们底层 (CUDA 和 CPU) 实现的具体思路">
 <meta property="og:type" content="website">
 <meta property="og:title" content="在 Oneflow 中开发 Gather Primitive">
 <meta property="og:url" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/index.html">
 <meta property="og:site_name" content="Zobin">
-<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:description" content="本文首先介绍了 Gather 和 Batch Gather 的行为、以及它们在 OneFlow 中如何进行 SBP 操作，然后介绍了它们底层 (CUDA 和 CPU) 实现的具体思路">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_exp_1.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_exp_2.png">
@@ -50,11 +50,10 @@
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/general_dims.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_impt_exp_1.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_impt_exp_2.png">
-<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_sbp_exp_5.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_impt_exp_3.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/xxx.png">
-<meta property="article:published_time" content="2023-01-21T19:44:21.172Z">
-<meta property="article:modified_time" content="2023-01-21T19:44:21.172Z">
+<meta property="article:published_time" content="2023-01-22T09:56:19.079Z">
+<meta property="article:modified_time" content="2023-01-22T09:56:19.079Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -200,6 +199,7 @@
 </h1>
 
 <div class="post-meta">
+    <div class="post-description">本文首先介绍了 Gather 和 Batch Gather 的行为、以及它们在 OneFlow 中如何进行 SBP 操作，然后介绍了它们底层 (CUDA 和 CPU) 实现的具体思路</div>
   
   <ul class="breadcrumb">
           
@@ -617,7 +617,7 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;然后把这个对象传入 CUDA Kernel，或者 Device Function 中，我们就可以通过它实现 Offset 和 高维张量坐标的互转了:
 
-  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__global__ <span class="keyword">void</span> <span class="title">TestDeviceFunction</span><span class="params">(NdIndexOffsetHelper&lt;<span class="keyword">int32_t</span>, <span class="number">3</span>&gt; in_helper, <span class="keyword">int32_t</span> elem_cnt)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int32_t</span> index[<span class="number">3</span>];</span><br><span class="line">  CUDA_1D_KERNEL_LOOP_T(<span class="keyword">int32_t</span>, i, elem_cnt) &#123;</span><br><span class="line">    in_helper.OffsetToNdIndex(i, index);                <span class="comment">// Offset -&gt; 高维张量坐标</span></span><br><span class="line">    <span class="keyword">int32_t</span> offset = in_helper.NdIndexToOffset(index)   <span class="comment">// 高维张量坐标 -&gt; Offset</span></span><br><span class="line">    assert(i == offset);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__device__ <span class="keyword">void</span> <span class="title">TestDeviceFunction</span><span class="params">(NdIndexOffsetHelper&lt;<span class="keyword">int32_t</span>, <span class="number">3</span>&gt; in_helper, <span class="keyword">int32_t</span> elem_cnt)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int32_t</span> index[<span class="number">3</span>];</span><br><span class="line">  CUDA_1D_KERNEL_LOOP_T(<span class="keyword">int32_t</span>, i, elem_cnt) &#123;</span><br><span class="line">    in_helper.OffsetToNdIndex(i, index);                <span class="comment">// Offset -&gt; 高维张量坐标</span></span><br><span class="line">    <span class="keyword">int32_t</span> offset = in_helper.NdIndexToOffset(index)   <span class="comment">// 高维张量坐标 -&gt; Offset</span></span><br><span class="line">    assert(i == offset);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </div>
 
 <h2 class="title">开发</h2>
@@ -625,7 +625,7 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;下面我们对 Gather 和 Batch Gather Primitive 的具体实现进行说明。
 
-  <h3 class="title">Gather Primitive 的 CUDA 实现思路</h3>
+  <h3 class="title">Gather 过程 的实现思路</h3>
   <h4 class="paragraph">简单情况</h4>
   <div class="img" title="例子 - 使用 [2,3] 的 indices 对 [2,5,2] 的 params 在第 1 维上进行 Gather" label="gather_impt_exp_1">
     <img src="./pic/gather_impt_exp_1.png" width="100%" />
@@ -657,19 +657,60 @@
   &nbsp;&nbsp;&nbsp;&nbsp;针对输出张量的每一个元素，其推导源输入张量偏移量的逻辑都是一样的。我们把上述过程总结为如下 CUDA 程序:
 
   <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TODO</span></span><br></pre></td></tr></table></figure>
-  <h4 class="paragraph">考虑 SBP 切分 Gather 维的情况</h4>
-
-  <div class="img" title="SBP 例子 - 对 params 进行 S0 (Gather 的 axis = 0)" label="gather_sbp_exp_5_second">
-    <img src="./pic/gather_sbp_exp_5.png" width="600px" />
-  </div>
-
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;回顾我们在 <ref>section_gather_sbp</ref> 中讨论过的，当对 Gather Operator 采用对 <code>params</code> 输入张量进行 Split，<code>indices</code> 进行 Broadcast 的 SBP 形式时，如 <imgref>gather_sbp_exp_5_second</imgref> 所示，一旦对 <code>params</code> 输入张量进行 Split 的维度恰好是 Gather 的维度，那么将会导致 <code>indices</code> 中指定的部分 Gather 序号对应的元素的缺失，此时的输出张量 <code>output</code> 将呈现 PartialSum 的 SBP 形式。在这种情况下，底层 Implementation 在处理的时候就需要引入对当前机器是否拥有 Gather 所需元素的判断，如果判断到当前机器没有某个 Index 所指定的元素，则需要往对应的输出元素写 0，以保证 PartialSum 的正确性。下面我们对如何实现这层判断进行讨论。
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述逻辑的 CPU 处理程序如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TODO</span></span><br></pre></td></tr></table></figure>
+  <h4 class="paragraph">考虑 SBP 切分 Gather 维的情况</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回顾我们在 <ref>section_gather_sbp</ref> 中讨论过的，当对 Gather Operator 采用对 <code>params</code> 输入张量进行 Split，<code>indices</code> 进行 Broadcast 的 SBP 形式时，如 <imgref>gather_sbp_exp_5</imgref> 所示，一旦对 <code>params</code> 输入张量进行 Split 的维度恰好是 Gather 的维度，那么将会导致 <code>indices</code> 中指定的部分 Gather 序号对应的元素的缺失，此时的输出张量 <code>output</code> 将呈现 PartialSum 的 SBP 形式。在这种情况下，底层 Implementation 在处理的时候就需要引入对当前机器是否拥有 Gather 所需元素的判断，如果判断到当前机器没有某个 Index 所指定的元素，则需要往对应的输出元素写 0，以保证 PartialSum 的正确性。下面我们对如何实现这层判断进行讨论。
 
   <div class="img" title="例子 - 使用 [2,3] 的 indices 对 [2,5,2] 的 params 在第 1 维上进行 Gather" label="gather_impt_exp_3">
     <img src="./pic/gather_impt_exp_3.png" width="100%" />
   </div>
 
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们还是复用上面的例子，并且我们让 <code>params</code> 张量在 Gather 维进行 SBP Split 切分，如 <imgref>gather_impt_exp_3</imgref> 所示：Gather 维中偏移量为 0 和 1 的元素在第 0 号机器上，偏移量为 2、3 和 4 的元素在第 1 号机器上。此时我们首先使用一个变量 <code>tensor_offset</code>，来指示每台机器所拥有的张量在 Split 的维度上的偏移量: 第 0 号机器的偏移量 <code>tensor_offset_0</code> 为 0，第 1 号机器的偏移量 <code>tensor_offset_1</code> 为 2。每台机器上的这个变量将用于后续判断当前机器是否拥有某个元素。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们使用上面一样的思路，针对每一个输出元素反推出它在输入张量中的 Offset。如 <imgref>gather_impt_exp_3</imgref> 所示，对于第 0 号机器来说，流程照常，首先 ① 根据输出元素在内存中的偏移量反推出张量坐标; 然后 ② 根据 Inner Dim 的坐标得到 Index 在 <code>indices</code> 中的偏移量; 完成后，接下来的流程与上面稍有所不同，③ 我们让 Index 在 <code>indices</code> 中的偏移量减去 <code>tensor_offset</code>, 此时如果同时满足以下两个条件:
+
+  <div class="border">
+  <ul>
+    <li>减法结果大于 0;</li>
+    <li>减法结果小于当前机器所持有的 <code>params</code> 张量部分在 Processed Dim 上的 Size;</li>
+  </ul>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;那么说明当前机器拥有指定的元素，并且减法结果就是对应元素在 <code>params</code> 张量中在 Processed Dim 的偏移量。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;举例如 <imgref>gather_impt_exp_3</imgref> 所示，对于第 0 号机器输出张量中偏移量为 18 的元素 (i.e. 值为 50)，在进行到 ③ 时，计算得到 
+
+<p>  $$\text{offset}_{(\text{Processed Dim})} = 0 - \text{tensor_offset_0} = 0$$</p>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此可以使用坐标 $[1,\underbrace{0}_{\text{Processed Dim}},0]$ 对输入张量 <code>params</code> 的对应元素进行访问。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;对于第 1 号机器输出张量中偏移量为 17 的元素 (i.e. 值为 71) 来说，在进行到 ③ 时，计算得到:
+
+<p>  $$\text{offset}_{(\text{Processed Dim})} = 2 - \text{tensor_offset_1} = 0$$</p>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;因此可以使用坐标 $[1,\underbrace{0}_{\text{Processed Dim}},1]$ 对输入张量 <code>params</code> 的对应元素进行访问。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如果 $\text{offset}_{(\text{Processed Dim})}$ 求出来小于 $0$，那么说明请求的元素超出了当前机器所持有的张量部分在 Processed Dim 上的下界，因此需要对输出元素填 0。除了判断下界，当然需要判断上界，如果 $\text{offset}_{(\text{Processed Dim})}$ 大于等于当前机器所持有的张量部分在 Processed Dim 上的 Size，则同理需要对输出元素填 0。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;补充上述对 SBP 逻辑的处理，更新后的 CUDA 程序如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TODO</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;CPU 处理程序如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TODO</span></span><br></pre></td></tr></table></figure>
+  <h3 class="title">Batch Gather 的实现思路</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;
 </div>

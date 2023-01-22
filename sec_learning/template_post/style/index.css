@@ -317,6 +317,8 @@ theorm_index {
     font-size: 16px; 
     word-spacing:0px;  
     border:1px solid black;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px #888888
 }
 
 .div_learning_post_background{
