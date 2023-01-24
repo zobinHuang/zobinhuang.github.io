@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"zobinhuang.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"post","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="本文首先介绍了 Gather 和 Batch Gather 的行为、以及它们在 OneFlow 中如何进行 SBP 操作，然后介绍了它们底层 (CUDA 和 CPU) 实现的具体思路">
+  <meta name="description" content="本文首先介绍了 Gather 和 Batch Gather 的行为、以及它们在 OneFlow 中如何进行 SBP 操作，然后介绍了它们底层 (CUDA 和 CPU) 实现的具体思路，以及将它们开发为 OneFlow Primitive 的过程">
 <meta property="og:type" content="website">
 <meta property="og:title" content="在 Oneflow 中开发 Gather Primitive">
 <meta property="og:url" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/index.html">
 <meta property="og:site_name" content="Zobin">
-<meta property="og:description" content="本文首先介绍了 Gather 和 Batch Gather 的行为、以及它们在 OneFlow 中如何进行 SBP 操作，然后介绍了它们底层 (CUDA 和 CPU) 实现的具体思路">
+<meta property="og:description" content="本文首先介绍了 Gather 和 Batch Gather 的行为、以及它们在 OneFlow 中如何进行 SBP 操作，然后介绍了它们底层 (CUDA 和 CPU) 实现的具体思路，以及将它们开发为 OneFlow Primitive 的过程">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_exp_1.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_exp_2.png">
@@ -51,9 +51,11 @@
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_impt_exp_1.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_impt_exp_2.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/gather_impt_exp_3.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/batch_gather_impt_exp_1.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/batch_gather_impt_exp_2.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/pic/xxx.png">
-<meta property="article:published_time" content="2023-01-22T09:56:19.079Z">
-<meta property="article:modified_time" content="2023-01-22T09:56:19.079Z">
+<meta property="article:published_time" content="2023-01-24T19:49:05.505Z">
+<meta property="article:modified_time" content="2023-01-24T19:49:05.505Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -199,7 +201,7 @@
 </h1>
 
 <div class="post-meta">
-    <div class="post-description">本文首先介绍了 Gather 和 Batch Gather 的行为、以及它们在 OneFlow 中如何进行 SBP 操作，然后介绍了它们底层 (CUDA 和 CPU) 实现的具体思路</div>
+    <div class="post-description">本文首先介绍了 Gather 和 Batch Gather 的行为、以及它们在 OneFlow 中如何进行 SBP 操作，然后介绍了它们底层 (CUDA 和 CPU) 实现的具体思路，以及将它们开发为 OneFlow Primitive 的过程</div>
   
   <ul class="breadcrumb">
           
@@ -375,6 +377,10 @@
   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">batched_result_shape</span>(<span class="params">params_shape, indices_shape, axis=<span class="number">0</span>, batch_dims=<span class="number">0</span></span>):</span></span><br><span class="line">  <span class="keyword">return</span> params_shape[:axis] + indices_shape[batch_dims:] + params_shape[axis+<span class="number">1</span>:]</span><br></pre></td></tr></table></figure>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;另外值得注意的是，上述的 TensorFlow 的接口中，其支持由用户自行指定 Batch 维的数目，而在目前 OneFlow 实现的 Batch Gather 仅支持固定的 Batch 维数目，该数目由输入的 <code>indices</code> 张量决定: <code>indices</code> 张量除了最后一维剩余维度都是 Batch 维，<code>params</code> 的 Batch 维与之相对应，也即 Gather 操作在 <code>indices</code> 的最后一维上进行。在下文中，为了保持与 OneFlow 的同步，我们将默认 Batch Gather 是 OneFlow 的情况，而不是 TensorFlow 中的任意指定 Batch 维度数目的情况。
+
+  <div class="queblock">
+  在 OneFlow 中，我们是否需要开发 与 TF 类似的 Batch Gather 逻辑?
+  </div>
 
   <h3 class="title">OneFlow 如何对 Gather / Batch Gather 进行 SBP</h3>
   <div class="noteblock">
@@ -711,8 +717,129 @@
 
   <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TODO</span></span><br></pre></td></tr></table></figure>
   <h3 class="title">Batch Gather 的实现思路</h3>
+  <div class="img" title="例子 - 使用 [2,5,2] 的 indices 对 [2,5,2,3] 的 params 在第 2 维上进行 Batch Gather，指定 Batch 维度第 0 和 1 维" label="batch_gather_impt_exp_1">
+    <img src="./pic/batch_gather_impt_exp_1.png" width="100%" />
+  </div>
+
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;我们使用 <imgref>batch_gather_impt_exp_1</imgref> 所示的例子来说明 Batch Gather 的实现过程。上述的例子使用了一个形状为 $[2,5,2,3]$ 的 <code>indices</code> 张量对形状为 $[2,5,2,3]$ 的 <code>params</code> 张量在第 $2$ 维上进行了 Batch Gather，且指定了 Batch 维度一共有两维，也即第 $0$ 和 $1$ 维。在完成 Batch Gather 后，将输出一个形状为 $[2,5,2,3,3]$ 的 <code>output</code> 张量。
+
+  <h4 class="paragraph">预先计算值</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;在进行实际的输出元素计算逻辑的推导前，我们先计算几个后面会使用到的值。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先，我们可以确定上述例子中 Batch 的数目:
+
+  <div class="equation" label="eq_nb_batch">
+  $\text{Nb_Batch} = \underbrace{2}_{\text{params 第 0 维}} \times \underbrace{5}_{\text{params 第 1 维}} = 10$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;每个 Batch 在被 Gather 之前的 Size 为:
+
+  <div class="equation" label="eq_size_origin_batch">
+  $\text{Size_Origin_Batch} = \underbrace{2}_{\text{params 第 2 维}} \times \underbrace{3}_{\text{params 第 3 维}} = 6$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;并且结合 Gather 前每个 Batch 的形状 $[2,3]$，可以得到每个 Batch 的通用形状简化为:
+
+  <div class="equation" label="eq_params_gerneal_shape">
+  $\left\{
+  \begin{aligned}
+  & \text{params}_{\text{Outer Dim}} &= 1 \\
+  & \text{params}_{\text{Processed Dim}} &= 2 \\
+  & \text{params}_{\text{Inner Dim}} &= 3
+  \end{aligned}
+  \right.
+  $
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;另外，每个 Batch 在被 Gather 之后的 Size 为:
+
+  <div class="equation" label="eq_size_gathered_batch">
+  $\text{Size_Gathered_Batch} = \underbrace{2}_{\text{output 第 2 维}} \times \underbrace{3}_{\text{output 第 3 维}} \times \underbrace{3}_{\text{output 第 4 维}} = 18$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;回顾我们上面对 Gather 逻辑的阐述: 由于我们在针对每个 Batch 进行 Gather 的过程中，我们把当前 Batch 所使用的 <code>indices</code> 视为一条向量，因此 Batch 输入输出的形状拥有相同的 Outer Dim 和 Inner Dim。结合 Gather 后每个 Batch 的形状 $[2,3,3]$，可以得到每个 Batch 的通用形状简化为:
+
+  <div class="equation" label="eq_output_gerneal_shape">
+  $\left\{
+  \begin{aligned}
+  & \text{output}_{\text{Outer Dim}} &= 1 \\
+  & \text{output}_{\text{Processed Dim}} &= 6 \\
+  & \text{output}_{\text{Inner Dim}} &= 3
+  \end{aligned}
+  \right.
+  $
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同时，在 <code>indices</code> 中，Per-batch <code>indices</code> 的 Size 为:
+
+  <div class="equation" label="eq_size_per_batch_indices">
+  $\text{Size_Per_Batch_Indices} = \underbrace{2}_{\text{indices 第 2 维}} \times \underbrace{3}_{\text{indices 第 3 维}} = 6$
+  </div>
+
+  <h4 class="paragraph">输出元素计算逻辑推导</h4>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;给定一个输出张量 <code>output</code> 中的元素在内存中的偏移量，如 <imgref>batch_gather_impt_exp_1</imgref> 所示我们以偏移量为 $58$ 的元素 (i.e. 值为 $97.3$) 为例，基于 <equation>eq_size_gathered_batch</equation>，我们可以知道当前这个元素所属的 Batch 的序号为:
+
+  <div class="equation" label="eq_batch_id">
+  $\text{Batch_Id}_{58} = \frac{58}{\text{Size_Gathered_Batch}} = \frac{58}{18} = 3$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;并且这个元素在所在 Batch 在内存中存储的偏移量为:
+
+  <div class="equation" label="eq_offset_within_per_batch_output">
+  $\text{Offset_Within_Per_Batch_Output}_{58} = 58 \% \text{Size_Gathered_Batch} = 58 \% 18 = 4$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有了 Batch Id，结合 $\text{Size_Origin_Batch}$ (<equation>eq_size_origin_batch</equation>), $\text{Size_Gathered_Batch}$ (<equation>eq_size_gathered_batch</equation>), $\text{Size_Per_Batch_Indices}$ (<equation>eq_size_per_batch_indices</equation>)，我们就可以以 Batch 为粒度在 <code>params</code>, <code>indices</code> 和 <code>output</code> 张量中进行访问，因此我们可以单独把一个 Batch 拎出来，然后按照上面介绍过的 Gather 逻辑进行推导，然后最后加上当前 Batch 相应的 Offset 即可。按照 <equation>eq_params_gerneal_shape</equation> 和 <equation>eq_output_gerneal_shape</equation> 所指示的通用形状简化，可以得到如 <imgref>batch_gather_impt_exp_2</imgref> 所示的 Gather 过程:
+
+  <div class="img" title="例子 - Id 为 3 的 Batch 的 Gather 过程" label="batch_gather_impt_exp_2">
+    <img src="./pic/batch_gather_impt_exp_2.png" width="100%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如 <imgref>batch_gather_impt_exp_2</imgref> 所示，我们可以再次通过设置 <code>NdIndexOffsetHelper</code> (详见 <ref>section_nd_index_offset_helper</ref>) 的方法，将 $\text{Offset_Within_Per_Batch_Output}_{58} = 4$ 转为张量坐标 $[0,1,1]$，然后采用和上述 Gather 过程相同的思路，以 $[0,1,1]$ 的 Processed Dim 值 $1$ 作为对应 Per-batch <code>indices</code> 的下标，利用这个下标以及 $\text{Size_Per_Batch_Indices}$ (<equation>eq_size_per_batch_indices</equation>) 和 $\text{Batch_Id}_{58}$ (<equation>eq_batch_id</equation>)，我们就可以得到对应的 Index 在 <code>indices</code> 张量中的偏移量:
+
+  <div class="equation" label="eq_offset_within_per_batch_params">
+  $\text{Offset_Within_Per_Batch_Indices}_{58} = \underbrace{3}_{\text{Batch_Id}_{58}} \times \underbrace{6}_{\text{Size_Per_Batch_Indices}} + 1 = 19$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于 $\text{Offset_Within_Per_Batch_Indices}_{58}=19$ 取出 Index 值 $1$ 后，将其替换 $[0,1,1]$ 中的 Processed Dim，最终得到对应元素在 <code>params</code> 中的张量坐标 $[0,1,1]$，然后再次使用 <code>NdIndexOffsetHelper</code> 将其转化为内存偏移量 $4$，也即
+
+  <div class="equation" label="eq_offset_within_per_batch_params">
+  $\text{Offset_Within_Per_Batch_Params}_{58} = 4$
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;拿到 $\text{Offset_Within_Per_Batch_Params}$ 后，我们就可以根据当前 Batch 对应的 Offset，最终计算得到相应元素在输入张量 <code>params</code> 中的偏移量:
+
+  <div class="equation" label="eq_offset_within_per_batch_params">
+  $\begin{aligned}
+  & \text{Offset_Within_Params}_{58} \\ 
+  & = \underbrace{3}_{\text{Batch_Id}_{58}} \times \underbrace{6}_{\text{Size_Origin_Batch}} + \underbrace{4}_{\text{Offset_Within_Per_Batch_Params}_{58}} \\
+  & = 22
+  \end{aligned}
+  $
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于上述逻辑的 CUDA 代码程序如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TODO</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;CPU 代码如下所示:
+
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TODO</span></span><br></pre></td></tr></table></figure>
 </div>
 
 <h2 class="title">性能测试</h2>
