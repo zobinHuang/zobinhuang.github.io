@@ -26,12 +26,18 @@
 .weekly-report-current-report{
 	width: 250px;
 	border: 1px solid #000000;
-	box-shadow: 10px 10px 5px #888888;
+	border-radius: 10px;
+	box-shadow: 2px 2px 1px #888888;
+	transition: all 0.2s;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	margin: 20px 20px;
+}
+
+.weekly-report-current-report:hover{
+	box-shadow: 5px 5px 2px #888888;
 }
 
 /*本周周报封面 container*/

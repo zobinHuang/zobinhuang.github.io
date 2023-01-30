@@ -34,19 +34,22 @@ async function _show_chartjs(){
 
         // 创建 Charts，并且记录所有的 labels
         let chartjs_index_list = new Array()
-        for(let i=0; i<chart_datas.length; i++){
+
+        let chartjs_divs = document.getElementsByClassName("chartjs")
+
+        for(let i=0; i<chartjs_divs.length; i++){
             // find the div with the given id
-            let chartjs_divs = document.getElementsByClassName("chartjs")
-            let target_div = null
-            for(let j=0; j<chartjs_divs.length; j++){
-                if(chartjs_divs[j].getAttribute("label") === chart_datas[i].label){
-                    target_div = chartjs_divs[j]
+            let target_div = chartjs_divs[i]
+            let target_chartjs_data = null
+            for(let j=0; j<chart_datas.length; j++){
+                if(target_div.getAttribute("label") === chart_datas[j].label){
+                    target_chartjs_data = chart_datas[j]
                     break;
                 }
             }
 
-            if(target_div === null){
-                console.log(`Can't find chartjs div with id ${chart_datas[i].label}`)
+            if(target_chartjs_data === null){
+                console.log(`Can't find chartjs data with label ${target_div.getAttribute("label")}`)
                 continue;
             }
 
@@ -55,27 +58,27 @@ async function _show_chartjs(){
             target_div.append(target_canvas)
 
             // setup the weight and hight of the canvas
-            if(chart_datas[i].width !== ""){
-                target_canvas.setAttribute("width", chart_datas[i].width)
+            if(target_chartjs_data.width !== ""){
+                target_canvas.setAttribute("width", target_chartjs_data.width)
             }
-            if(chart_datas[i].height !== ""){
-                target_canvas.setAttribute("height", chart_datas[i].height)
+            if(target_chartjs_data.height !== ""){
+                target_canvas.setAttribute("height", target_chartjs_data.height)
             }
 
             // create new chart instance
             try {
-                const new_chart = new Chart(target_canvas, chart_datas[i].chartjs_config);
+                const new_chart = new Chart(target_canvas, target_chartjs_data.chartjs_config);
             } catch (error) {
                 console.log(error)
             }
 
             // 记录 label
-            chartjs_index_list[chart_datas[i].label] = i+1
+            chartjs_index_list[target_chartjs_data.label] = i+1
             let chartjs_index = document.createElement('chartjs_index')
-            if(!chart_datas[i].title === "")
+            if(!target_chartjs_data.title === "")
                 chartjs_index.innerHTML = `Chart ${i+1}`
             else
-                chartjs_index.innerHTML = `Chart ${i+1}: ${chart_datas[i].title}`
+                chartjs_index.innerHTML = `Chart ${i+1}: ${target_chartjs_data.title}`
 
             // 显示标号
             target_div.append(chartjs_index)
@@ -334,9 +337,11 @@ async function _show_comment(id){
 
 async function _load_comments(){
     let comments = document.getElementsByClassName("comblock")
+    let sub_number = 0
+
     for(let i = 0; i < comments.length; i++){
         // 设置 id
-        comments[i].setAttribute('id', `container_comment_${i}`)
+        comments[i].setAttribute('id', `container_comment_${i+sub_number}`)
 
         // 创建整个 Outside Container
         let outside_container = document.createElement('div')
@@ -373,7 +378,7 @@ async function _load_comments(){
         // 创建一个按钮
         let comment_btn = document.createElement('button')
         comment_btn.setAttribute('type', 'button')
-        comment_btn.setAttribute('id', `comment_${i}`)
+        comment_btn.setAttribute('id', `comment_${i+sub_number}`)
         comment_btn.setAttribute('onclick', '_show_comment(id)')
         if(language === 'cn'){
             comment_btn.innerHTML = `显示附录`
@@ -384,16 +389,19 @@ async function _load_comments(){
     
         // 将注释本体也送入 outside_container
         outside_container.append(comments[i])
-        
+
         comments[i].style.display = 'none'
         comments[i].setAttribute('class', `comblock_disappear`)
+
+        i -= 1
+        sub_number += 1
     }
 }
 
 // 处理文章中所有的 Sign Block
 async function _load_sign_block() {
     // note block
-    let note_blocks = document.getElementsByTagName("noteblock")
+    let note_blocks = document.getElementsByClassName("noteblock")
     for(let i = 0; i < note_blocks.length; i++){
         note_block = note_blocks[i]
 
@@ -403,12 +411,17 @@ async function _load_sign_block() {
         // 将创建的 block 放在相应位置
         note_block.parentNode.insertBefore(elements[0], note_block.nextElementSibling)
 
-        // 将 note_block 放入创建的 block 的 block_content_container 中
-        elements[3].append(note_block)
+        // 创建 Content
+        let note_block_content = document.createElement("div")
+        note_block_content.setAttribute("class", "noteblock_content")
+        note_block_content.append(note_block)
+
+        // 将 Content 放入创建的 block 的 block_content_container 中
+        elements[3].append(note_block_content)
     }
 
     // question block
-    let question_blocks = document.getElementsByTagName("queblock")
+    let question_blocks = document.getElementsByClassName("queblock")
     for(let i = 0; i < question_blocks.length; i++){
         question_block = question_blocks[i]
 
@@ -418,8 +431,13 @@ async function _load_sign_block() {
         // 将创建的 block 放在相应位置
         question_block.parentNode.insertBefore(elements[0], question_block.nextElementSibling)
 
-        // 将 question_block 放入创建的 block 的 block_content_container 中
-        elements[3].append(question_block)
+        // 创建 Content
+        let question_block_content = document.createElement("div")
+        question_block_content.setAttribute("class", "question_content")
+        question_block_content.append(question_block)
+
+        // 将 Content 放入创建的 block 的 block_content_container 中
+        elements[3].append(question_block_content)
     }
 }
 
@@ -747,7 +765,7 @@ async function _load_code_segment(){
         // console.log(code_segment_nb_rows)
 
         // 显示代码块的最大行数阈值 (可修改)
-        const max_showing_nb_rows = 10 
+        const max_showing_nb_rows = 20 
         let to_show = false
         if(code_segment_nb_rows <= max_showing_nb_rows) to_show = true
         

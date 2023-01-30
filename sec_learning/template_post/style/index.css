@@ -570,6 +570,7 @@ flowchart_index {
     position: relative;
     background-color: #e7e7e7;
     color: #000000;
+    border-radius: 10px;
     padding: 8px 0px;
 }
 

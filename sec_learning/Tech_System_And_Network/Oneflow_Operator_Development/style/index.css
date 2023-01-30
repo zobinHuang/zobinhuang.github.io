@@ -317,6 +317,8 @@ theorm_index {
     font-size: 16px; 
     word-spacing:0px;  
     border:1px solid black;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px #888888
 }
 
 .div_learning_post_background{
@@ -491,9 +493,14 @@ flowchart_index {
     white-space: initial;
 }
 
-noteblock{
+.noteblock_content{
     padding: 10px 20px;
     font-size: 14px;
+}
+
+.noteblock_content p{
+    margin: 0px;
+    padding: 0px;
 }
 
 /* IV. Question Block */
@@ -521,9 +528,14 @@ noteblock{
     white-space: initial;
 }
 
-queblock{
+.question_content{
     padding: 10px 20px;
     font-size: 14px;
+}
+
+.question_content p{
+    margin: 0px;
+    padding: 0px;
 }
 
 .comblock {
@@ -558,6 +570,7 @@ queblock{
     position: relative;
     background-color: #e7e7e7;
     color: #000000;
+    border-radius: 10px;
     padding: 8px 0px;
 }
 
