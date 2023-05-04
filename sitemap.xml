@@ -2,6 +2,48 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/post_index.json</loc>
+    
+    <lastmod>2023-05-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/script/book_index.json</loc>
+    
+    <lastmod>2023-05-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/CPP_Function_Alias/ref.json</loc>
+    
+    <lastmod>2023-05-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/CPP_Function_Alias/metadata.json</loc>
+    
+    <lastmod>2023-05-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/CPP_Function_Alias/index.html</loc>
+    
+    <lastmod>2023-05-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/CPP_Function_Alias/chartjs_data.json</loc>
+    
+    <lastmod>2023-05-04</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zobinhuang.github.io/sec_about/index.html</loc>
     
     <lastmod>2023-04-30</lastmod>
@@ -24,13 +66,6 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/SmartNIC_Performance_Profiling/metadata.json</loc>
-    
-    <lastmod>2023-03-14</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/script/book_index.json</loc>
     
     <lastmod>2023-03-14</lastmod>
     
@@ -94,13 +129,6 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning/template_post/index.html</loc>
-    
-    <lastmod>2023-02-03</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Program/post_index.json</loc>
     
     <lastmod>2023-02-03</lastmod>
     
@@ -2902,7 +2930,7 @@
 
   <url>
     <loc>https://zobinhuang.github.io/</loc>
-    <lastmod>2023-04-30</lastmod>
+    <lastmod>2023-05-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
