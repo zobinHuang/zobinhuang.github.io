@@ -22,19 +22,15 @@
 
   <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Ethernet 基本架构解析">
-<meta property="og:url" content="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/index.html">
+<meta property="og:title" content="Corundum Hierarchy Overview">
+<meta property="og:url" content="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_2_Top_Overview/index.html">
 <meta property="og:site_name" content="Zobin">
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/pic/eth_arch.png">
-<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/pic/pcs_arch.png">
-<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/pic/pma_arch.png">
-<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/pic/qpsk-symbols.png">
-<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/pic/pmd_arch.png">
-<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/pic/xxx.png">
-<meta property="article:published_time" content="2023-05-29T07:54:37.312Z">
-<meta property="article:modified_time" content="2023-05-29T07:54:37.312Z">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_2_Top_Overview/pic/top_overview.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_2_Top_Overview/pic/xxx.png">
+<meta property="article:published_time" content="2023-05-27T19:11:15.344Z">
+<meta property="article:modified_time" content="2023-05-27T19:11:15.344Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -42,9 +38,9 @@
 <meta property="article:tag" content="网络工程">
 <meta property="article:tag" content="Networking Engineering">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/pic/eth_arch.png">
+<meta name="twitter:image" content="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_2_Top_Overview/pic/top_overview.png">
 
-<link rel="canonical" href="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/">
+<link rel="canonical" href="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_2_Top_Overview/">
 
 
 <script id="page-configurations">
@@ -57,7 +53,7 @@
   };
 </script>
 
-  <title>Ethernet 基本架构解析 | Zobin
+  <title>Corundum Hierarchy Overview | Zobin
 </title>
   
 
@@ -181,7 +177,7 @@
     <div class="post-block" lang="en">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">Ethernet 基本架构解析
+<h1 class="post-title" itemprop="name headline">Corundum Hierarchy Overview
 </h1>
 
 <div class="post-meta">
@@ -190,7 +186,7 @@
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
             <li><a href="/sec_learning/Tech_Computer_Architerture/">TECH_COMPUTER_ARCHITERTURE</a></li>
-          <li>PROTOCOL_ETHERNET_BASIC_ARCHITECTURE</li>
+          <li>CORUNDUM_2_TOP_OVERVIEW</li>
         
   </ul>
 
@@ -263,198 +259,30 @@
 <div id="metadata"></div>
 
 <!-- Start your post here -->
-<h2 class="title">Overview</h2>
+<h2 class="title">Corundum Architecture Roadmap</h2>
 <div class="div_learning_post">
-  <h3 class="title">标准演进</h3>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;<def>Ethernet</def> (以太网) 自从 1980 年 2 月开始由 IEEE 着手进行标准制定，到目前为止出现了下面几代 Ethernet 技术:
-
-  <div class="table" title="以太网技术演进">
-    <table>
-      <tr>
-        <th align="center">速度</th>
-        <th align="center">名称</th>
-        <th align="center">IEEE 标准</th>
-      </tr>
-      <tr>
-        <td align="center">10 Mbps</td>
-        <td align="center">以太网</td>
-        <td align="center">802.3</td>
-      </tr>
-      <tr>
-        <td align="center">100 Mbps</td>
-        <td align="center">快速以太网</td>
-        <td align="center">802.u</td>
-      </tr>
-      <tr>
-        <td align="center">1000 Mbps</td>
-        <td align="center">千兆位以太网 (GigE)</td>
-        <td align="center">802.ab</td>
-      </tr>
-      <tr>
-        <td align="center">10 Gbps</td>
-        <td align="center">万兆位以太网</td>
-        <td align="center">802.ae</td>
-      </tr>
-      <tr>
-        <td align="center">100 Gbps</td>
-        <td align="center">十万兆位以太网</td>
-        <td align="center">802.bj</td>
-      </tr>
-    </table>
-  </div>
-
-  <h3 class="title">以太网基本架构与接口</h3>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对应 OSI 协议来看，以太网对应了 OSI 的最下面两层，即数据链路层和物理层，如下图所示:
-
-  <div 
-    class="img"
-    title="Ethernet 基本架构"
-  >
-    <img src="./pic/eth_arch.png" width="600px" />
+  <div class="img" title="Corundum Architecture Roadmap">
+    <img src="./pic/top_overview.png" width="100%" />
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在数据链路层 (ETH)，<def>MAC</def> (Media Access Control) 子层用于实现物理网的编址 (MAC 地址)、数据帧的组装和拆分、数据帧的正确性校验等；而 <def>LLC</def> (Logic Link Control) 子层用于承载上层不同的三层协议，现在基本已经被废除。而在物理层 (PHY)，<def>PCS</def> (Physical Coding Sublayer) 用于实现物理层的数据传输的编码; <def>PMA</def> (Physical Medium Attachment) 用于实现 PCS 的 bit 数据到 PMD 的 data symbol 的映射，以及在接收方向上从 PMD 的 data symbol 数据中恢复出接收时钟; <def>PMD</def> (Physcal Medium Dependent) 用于将实现 data symbol 和传输媒介上信号的转换。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;就接口来说，ETH 和 PHY 之间，使用的是 <def>MII</def> (Media Independent Interface) 接口进行通信; PHY 和最终传输的实际介质之间，用的是 <def>MDI</def> (Media Dependent Interface) 接口进行通信。
-
-  <h3 class="title">以太网标准命名</h3>
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;对于其它的串行接口协议，像 PCIe, SATA 和 USB 来说，针对不同的速率，它们分别有一代的标准与之对应。以太网则不同，即使在同一个速率下，以太网也存在多种标准，这与以太网底层支持的传输介质和编码模式等的丰富性有关。本节我们将探讨以太网标准的命名方法。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;以太网的标准命名遵循 <code>R</code><code>mTYPE</code>-<code>L</code><code>C</code> 的格式，它们分别的含义如下所示 <cite>understanding_ethernet</cite>:
-
-  <div class="border">
-  <ul>
-    <li>
-      <code>R</code>: 传输速率，分为如下几种形式:
-      <ul>
-        <li><b>1000</b> $\rightarrow$ 1000 Mbps 或者 1 Gbps;</li>
-        <li><b>10G</b> $\rightarrow$ 10 Gbps</li>
-        <li><b>10/1G</b> $\rightarrow$ 10 Gbps 下行，1 Gbps 上行;</li>
-      </ul>
-    </li>
-    <li>
-      <code>mTYPE</code>: 指代的是 <note>Media Layer</note> 的调制方式，取值基本为 <b>BASE</b>，代表基带传输的意思;
-    </li>
-    <li>
-      <code>L</code>: 指代的是 <note>Media Layer</note> 的介质类型/波长，通常有如下形式:
-      <ul>
-        <li><b>B</b> $\rightarrow$ Bidirectional optics, with downstream (D) or upstream (U) asymmetric qualifiers;</li>
-        <li><b>C</b> $\rightarrow$ Twin axial copper;</li>
-        <li><b>D</b> $\rightarrow$ Parallel single mode (500 m);</li>
-        <li><b>E</b> $\rightarrow$ Extra-long optical wavelength λ (1510/1550 nm) / reach (40 km);</li>
-        <li><b>F</b> $\rightarrow$ Fiber (2 km);</li>
-        <li><b>K</b> $\rightarrow$ Backplane;</li>
-        <li><b>L</b> $\rightarrow$ Long optical wavelength λ (~1310 nm) / reach (10 km);</li>
-        <li><b>P</b> $\rightarrow$ Passive optics, with single or multiple downstream (D) or upstream (U) asymmetric qualifiers, as well as eXternal sourced coding (X) of 4B/5B or 8B/10B;</li>
-        <li><b>RH</b> $\rightarrow$ Red LED plastic optical fiber with PAM16 coding and different transmit power optics;</li>
-        <li><b>S</b> $\rightarrow$ Short optical wavelength λ (850 nm) / reach (100 m);</li>
-        <li><b>T</b> $\rightarrow$ Twisted pair;</li>
-      </ul>
-    </li>
-    <li>
-      <code>C</code>: 指代的是 <note>Physical Layer</note> 的 PCS 层编码格式，通常有如下形式:
-      <ul>
-        <li><b>R</b> $\rightarrow$ scRambled coding (64B/66B);</li>
-        <li><b>X</b> $\rightarrow$ eXternal sourced coding (4B/5B, 8B/10B);</li>
-      </ul>
-    </li>
-    <li>
-      <code>n</code>: Number of Lanes，通常有如下形式:
-      <ul>
-        <li><b>Blank space without lane number</b> $\rightarrow$ 默认 1-lane;</li>
-        <li><b>4</b> $\rightarrow$ 4-lane;</li>
-      </ul>
-    </li>
-  </ul>
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;以太网的标准通常可以描述的是关于 PHY 的相关电气标准 (Electrical Specifications)。举个例子来说，<code>10GBASE-KR</code> 描述的是传输速率为 10Gbps 的，在基带传输的，以 Backplane 作为传输介质的，PCS 编码为 64B/66B 的，1-lane 的以太网 PHY；而 <code>10GBASE-KX4</code> 代表的则是传输速率为 10Gbps 的，在基带传输的，以 Backplane 作为传输介质的，但 PCS 编码为 8B/10B 的，4-lane 的以太网 PHY。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;以太网的标准有时也用于描述光纤收发器标准 (Optical Transceiver Specification)。举个例子来说，<code>10GBASE-ER</code> 描述的是传输速率为 10Gbps 的，在基带传输的，以 extra-long reach 作为传输介质的，PCS 编码为 8B/10B 的，1-lane 的单模光纤收发器。<code>10GBASE-ER</code> 标准主要描述的是光纤收发器的基本要求，而没有提供用于驱动光纤收发器的 PHY 的电气特性。
+  &nbsp;&nbsp;&nbsp;&nbsp;需要持续更新...
 </div>
 
-<h2 class="title">Ethernet PHY 层</h2>
-<div class="div_learning_post">
-  <h3 class="title">PCS (Physical Coding Sublayer)</h3>
-  <div 
-    class="img"
-    title="PCS 基本架构"
-    source="https://www.youtube.com/watch?v=JH3cMYErmKI"
-    label="img_pcs"
-  >
-    <img src="./pic/pcs_arch.png" width="600px" />
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;PCS 位于 PHY 层的顶端，在 Tx 方向上，其输入是 Bit，输出也是 Bit。PCS 的基本功能有：① 数据 <def>编码/解码 (Encoding/Decoding)</def>；② 接口状态/信道冲突检测；③ 接收方向上的 <def>时钟恢复 (Clock Recovery)</def> 和 ④ 数据 <def>扰码/解扰码 (Screambling/Descreambling)</def>。PCS 的内部流程如 <imgref>img_pcs</imgref> 所示，具体来说:
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;PAC 与 MAC 层通过 xMII 接口交换 Tx/Rx 的数据以及其他控制信号，Tx/Rx 数据的宽度取决于所使用的 xMII 接口格式，有 1, 2, 4, 8-bits 等不同规格。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在 Rx 方向上，PCS 从 PMA 接收 Code Group，并将其解码 (decode) 为原始的数据包比特，在解码成功时，会通过 <code>RX_DV</code> 信号向 MAC 层通告解码的成功；在失败时通过 <code>RX_ER</code> 信号向 MAC 层宣告数据解码的失败。在 Tx 方向上的操作基本上与 Rx 操作相反，在有的 IEEE 802.3 标准中，在对数据进行编码之后，还会进行扰码的操作。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;PCS 还拥有监控 Tx 和 Rx 通道，以判定 Network Interface 是否 Active 的功能。当物理信道上有冲突发生时，PCS 会通过 <code>COL</code> 信号通告 MAC 层冲突的发生，以便 MAC 实现介质冲突回退功能。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;在 Rx 方向上，PCS 从 PMA 拿到 Recovered CLK，结合本地的 Ref CLK，最终恢复得到接收时钟，并且将该时钟信号通过 xMII 接口传给 MAC 层。
-
-  <h3 class="title">PMA (Physical Medium Attachment)</h3>
-  <div
-    class="img"
-    title="PMA 基本架构"
-    source="https://www.youtube.com/watch?v=JH3cMYErmKI"
-    label="img_pma"
-  >
-    <img src="./pic/pma_arch.png" width="600px" />
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;PMA 位于 PCS 的下层，在 Tx 方向上，其输入是 Bit，输出是 Symbol。的主要功能是 <def>比特流-信道符号映射 (Bit-Data Symbol Mapping)</def>: 在 Rx 方向上将 PCS 层完成编码的比特流数据，转化为可以在 Network Medium 上进行传输的 Symbol；Tx 方向上反向同理。 
-
-  <div class="noteblock">
-  Bit 是承载数据的基本单元；Symbol 是在信道上真正进行传输的模拟信号样式，一种 Symbol 可以代表若干 Bits，例如 <imgref>qpsk_symbols</imgref> 所示，QPSK 调制通过相位的偏移，一共可以有四种 Symbols，因此一个 Symbols 可以代表 2 个 Bits。
-  </div>
-
-  <div class="img" title="QPSK Symbols" label="qpsk_symbols">
-    <img src="./pic/qpsk-symbols.png" width="500px" />
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;另外，PMA 还拥有 <def>Carrier Detection (载体监测)</def> 的功能 (i.e., 有没有插上网线): 在 Rx 方向上，当在 mapping 后的比特流 <code>rx(k)</code> 中检测到链路状态发生改变 (link transition from IDLE State) 时，PMA 会开始寻找 <def>Start of Stream Delimiter (SSD)</def>，若检测到，则说明网线已经接上，PMA 会向 PCS 层进行通告该信息。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;有的 PMA 实现还支持 <def>自动链路协商 (Auto-negotiation)</def>: 在和对端完成链路状态 (Link State) 协商后，将 Link Status 通告给 PCS 层。如果 PMA 不支持自动协商，则 PMA 会根据 PMD 提供的 Signal Status 向 PCS 通告 Link Status。如果 PMA 不支持自动协商时，它有可能会支持 <def>远端故障检测 (Far-end Fault Detection)</def> 功能，当 PMA 在 Rx 方向上检测到错误时，它会生成一个 Fault Indication，将其插入 Tx Bit Stream 中进行发送；当 PMA 接收到来自远端发送的 Fault Indication 时，PMA 会重新开始传输 IDLE Symbol Pattern 以重新建立通信链路。
-
-  <h3 class="title">PMD (Physical Media Dependent)</h3>
-  <div
-    class="img"
-    title="PMD 基本架构"
-    source="https://www.youtube.com/watch?v=JH3cMYErmKI"
-    label="img_pmd"
-  >
-    <img src="./pic/pmd_arch.png" width="600px" />
-  </div>
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;PMD 位于 PHY 的最底层，在 Tx 方向上，其输入是 PMA 给出的调制 Symbol，输出是真正能在对应物理介质上进行传输的 Signal。
-
-  <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;PHY 不一定拥有 PMD 这一层，例如在 IEEE 802.3bw (i.e., 100BASE-T1) 标准中，PMD 就不包括在 PHY 中，因为这个标准只支持 single-twisted pair copper 这种传输介质，在这种情况下，PMA 会完成 Symbol 到 Signal 的转换。
-</div>
 
 <div class="div_ref" id="ref_container"></div>
 
 </body>
+
+<!-- Comment -->
+<!-- <div class="comblock" title="xxx"> -->
+
+<!-- Chart Support -->
+<!-- Check https://www.runoob.com/chartjs/chartjs-tutorial.html -->
+<!-- <div class="chartjs" label="naive_impt_performance"></div> -->
+
+<!-- Note Support -->
+<!-- Check https://theme-next.js.org/docs/tag-plugins/note.html -->
 
 <!-- 圆圈数字 -->
 <!--
@@ -471,13 +299,13 @@ Format see: https://mermaid-js.github.io/mermaid/#/flowchart
 
 <!-- Sign Block -->
 <!--
-<noteblock>
+<div class="noteblock">
 A NOTE
-</noteblock>
+</div>
 
-<queblock>
+<div class="queblock">
 A QUESTION
-</queblock>
+</div>
 -->
 
 <!--图片、引用-->
@@ -605,7 +433,7 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
           
             <li><a href="/sec_learning/">SEC_LEARNING</a></li>
             <li><a href="/sec_learning/Tech_Computer_Architerture/">TECH_COMPUTER_ARCHITERTURE</a></li>
-          <li>PROTOCOL_ETHERNET_BASIC_ARCHITECTURE</li>
+          <li>CORUNDUM_2_TOP_OVERVIEW</li>
         
   </ul>
 

@@ -2,6 +2,104 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/index.html</loc>
+    
+    <lastmod>2023-05-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_3_CMAC_GTY/index.html</loc>
+    
+    <lastmod>2023-05-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/metadata.json</loc>
+    
+    <lastmod>2023-05-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/script/book_index.json</loc>
+    
+    <lastmod>2023-05-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/post_index.json</loc>
+    
+    <lastmod>2023-05-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/ref.json</loc>
+    
+    <lastmod>2023-05-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/chartjs_data.json</loc>
+    
+    <lastmod>2023-05-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_3_CMAC_GTY/ref.json</loc>
+    
+    <lastmod>2023-05-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_3_CMAC_GTY/metadata.json</loc>
+    
+    <lastmod>2023-05-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_3_CMAC_GTY/chartjs_data.json</loc>
+    
+    <lastmod>2023-05-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_2_Top_Overview/index.html</loc>
+    
+    <lastmod>2023-05-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_2_Top_Overview/metadata.json</loc>
+    
+    <lastmod>2023-05-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_2_Top_Overview/ref.json</loc>
+    
+    <lastmod>2023-05-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_2_Top_Overview/chartjs_data.json</loc>
+    
+    <lastmod>2023-05-27</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_1_Env_Setup/index.html</loc>
     
     <lastmod>2023-05-27</lastmod>
@@ -17,20 +115,6 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_1_Env_Setup/metadata.json</loc>
-    
-    <lastmod>2023-05-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/script/book_index.json</loc>
-    
-    <lastmod>2023-05-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/post_index.json</loc>
     
     <lastmod>2023-05-27</lastmod>
     
@@ -682,20 +766,6 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_PCIe_Turtorial_1/index.html</loc>
-    
-    <lastmod>2022-09-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/ref.json</loc>
-    
-    <lastmod>2022-09-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/index.html</loc>
     
     <lastmod>2022-09-18</lastmod>
     
@@ -2958,7 +3028,7 @@
 
   <url>
     <loc>https://zobinhuang.github.io/</loc>
-    <lastmod>2023-05-27</lastmod>
+    <lastmod>2023-05-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

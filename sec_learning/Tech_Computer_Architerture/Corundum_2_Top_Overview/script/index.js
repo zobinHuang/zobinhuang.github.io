@@ -897,7 +897,7 @@ async function _load_citation(){
 
         // 整理所有引用文献
         for(let i = 0; i < ref_entries.length; i++){
-            if(ref_entries[i].author === "author"){
+            if(ref_entries[i].author !== "author"){
                 continue
             }
 
