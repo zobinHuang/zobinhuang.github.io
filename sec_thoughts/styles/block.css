@@ -49,7 +49,7 @@
 }
 .weekly-report-current-report-image img{
 	margin: 0px;
-	padding: 0px;
+	padding-bottom: 8px;
 	width: 250px;
 }
 .weekly-report-current-report-image .grayscale {-webkit-filter: grayscale(100%);filter: grayscale(100%);} /*img class 灰色*/
@@ -70,13 +70,14 @@
 }
 .weekly-report-current-report-title h2{
 	margin: 0px;
-	padding: 0px;
+	padding: 5px 20px;
 	font-size: 18px;
 }
 .weekly-report-current-report-title h5{
 	margin: 0px;
-	padding: 0px;
-	font-size: 12px;
+	padding: 5px;
+	font-size: 14px;
+	font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 
 /*本周周报封面介绍 container*/
@@ -86,7 +87,7 @@
 .weekly-report-current-report-intro p{
 	margin: 0px;
 	padding: 0px;
-	font-size: 10px;
+	font-size: 12px;
 }
 
 @media(max-width: 768px) {

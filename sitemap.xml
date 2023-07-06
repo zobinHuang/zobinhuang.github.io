@@ -2,6 +2,181 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zobinhuang.github.io/sec_thoughts/2023_7_6_article_1/index.html</loc>
+    
+    <lastmod>2023-07-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_thoughts/index.html</loc>
+    
+    <lastmod>2023-07-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_thoughts/2023_7_6_article_1/metadata.json</loc>
+    
+    <lastmod>2023-07-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_thoughts/thought_index.json</loc>
+    
+    <lastmod>2023-07-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_Intel_Laptop_Double_System/index.html</loc>
+    
+    <lastmod>2023-06-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_Intel_Laptop_Double_System/ref.json</loc>
+    
+    <lastmod>2023-06-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_Intel_Laptop_Double_System/metadata.json</loc>
+    
+    <lastmod>2023-06-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/post_index.json</loc>
+    
+    <lastmod>2023-06-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/post_index.json</loc>
+    
+    <lastmod>2023-06-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/script/book_index.json</loc>
+    
+    <lastmod>2023-06-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_Intel_Laptop_Double_System/chartjs_data.json</loc>
+    
+    <lastmod>2023-06-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_3_CMAC_GTY/index.html</loc>
+    
+    <lastmod>2023-06-17</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_3_CMAC_GTY/ref.json</loc>
+    
+    <lastmod>2023-06-17</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/SmartNIC_Performance_Profiling/chartjs_data.json</loc>
+    
+    <lastmod>2023-06-16</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/P4_1_Intro/ref.json</loc>
+    
+    <lastmod>2023-06-16</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/P4_1_Intro/index.html</loc>
+    
+    <lastmod>2023-06-16</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/P4_1_Intro/metadata.json</loc>
+    
+    <lastmod>2023-06-16</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/SmartNIC_Performance_Profiling/index.html</loc>
+    
+    <lastmod>2023-06-15</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/template_post/chartjs_data.json</loc>
+    
+    <lastmod>2023-06-15</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_thoughts/template_thought/ref.json</loc>
+    
+    <lastmod>2023-06-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_thoughts/template_thought/chartjs_data.json</loc>
+    
+    <lastmod>2023-06-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_thoughts/template_thought/metadata.json</loc>
+    
+    <lastmod>2023-06-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_thoughts/template_thought/index.html</loc>
+    
+    <lastmod>2023-06-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_thoughts/2023_7_6_article_1/ref.json</loc>
+    
+    <lastmod>2023-06-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_thoughts/2023_7_6_article_1/chartjs_data.json</loc>
+    
+    <lastmod>2023-06-04</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/index.html</loc>
     
     <lastmod>2023-05-29</lastmod>
@@ -9,28 +184,7 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_3_CMAC_GTY/index.html</loc>
-    
-    <lastmod>2023-05-29</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/metadata.json</loc>
-    
-    <lastmod>2023-05-29</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/script/book_index.json</loc>
-    
-    <lastmod>2023-05-29</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/post_index.json</loc>
     
     <lastmod>2023-05-29</lastmod>
     
@@ -45,13 +199,6 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/chartjs_data.json</loc>
-    
-    <lastmod>2023-05-29</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_3_CMAC_GTY/ref.json</loc>
     
     <lastmod>2023-05-29</lastmod>
     
@@ -170,20 +317,6 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/SmartNIC_Performance_Profiling/chartjs_data.json</loc>
-    
-    <lastmod>2023-03-14</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/SmartNIC_Performance_Profiling/index.html</loc>
-    
-    <lastmod>2023-03-14</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/SmartNIC_Performance_Profiling/metadata.json</loc>
     
     <lastmod>2023-03-14</lastmod>
@@ -234,13 +367,6 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Operator_Development/chartjs_data.json</loc>
-    
-    <lastmod>2023-02-03</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/template_post/chartjs_data.json</loc>
     
     <lastmod>2023-02-03</lastmod>
     
@@ -299,20 +425,6 @@
     <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Operator_Development/metadata.json</loc>
     
     <lastmod>2023-01-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_thoughts/index.html</loc>
-    
-    <lastmod>2023-01-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_thoughts/thought_index.json</loc>
-    
-    <lastmod>2023-01-27</lastmod>
     
   </url>
   
@@ -507,13 +619,6 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning_backup/Tech_Database_And_Storage/post_index.json</loc>
-    
-    <lastmod>2023-01-03</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/post_index.json</loc>
     
     <lastmod>2023-01-03</lastmod>
     
@@ -1962,20 +2067,6 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_thoughts/template_weekly/index.html</loc>
-    
-    <lastmod>2021-11-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_thoughts/2021_8_3_%E5%8F%98%E4%B8%8E%E4%B8%8D%E5%8F%98/index.html</loc>
-    
-    <lastmod>2021-11-28</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zobinhuang.github.io/sec_schedule/index_backup.html</loc>
     
     <lastmod>2021-11-28</lastmod>
@@ -3028,7 +3119,7 @@
 
   <url>
     <loc>https://zobinhuang.github.io/</loc>
-    <lastmod>2023-06-04</lastmod>
+    <lastmod>2023-07-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

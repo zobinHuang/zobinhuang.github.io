@@ -18,7 +18,7 @@ function load_weekly_list(){
             }
 
             // get local url
-            let weekly_local_url = `/sec_thoughts/${thought_meta.year}_${thought_meta.month}_${thought_meta.day}_${thought_meta.title}`;
+            let weekly_local_url = `/sec_thoughts/${thought_meta.year}_${thought_meta.month}_${thought_meta.day}_${thought_meta.short}`;
 
             // ----------------------- make showcase for each weekly -----------------------
 
@@ -63,7 +63,7 @@ function load_weekly_list(){
             let weekly_report_current_report_intro_container = document.createElement("div");
             weekly_report_current_report_intro_container.setAttribute("class", "weekly-report-current-report-intro")
             let weekly_report_current_report_intro = document.createElement("p");
-            weekly_report_current_report_intro.innerHTML = `${thought_meta.cover_brief}`
+            weekly_report_current_report_intro.innerHTML = `${thought_meta.brief}`
             weekly_report_current_report_intro_container.append(weekly_report_current_report_intro)
 
             weekly_report_current_report.append(weekly_report_current_report_title_container)

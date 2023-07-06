@@ -884,7 +884,7 @@ async function _load_citation(){
         let mapping = new Array();
         let mapping_links = new Array();
 
-        if(ref_entries.length > 0){
+        if(ref_entries.length > 0 && ref_entries[0].author !== "author"){
             // 创建标题
             let title = document.createElement('h2')
             title.innerHTML = "Reference"
@@ -897,6 +897,10 @@ async function _load_citation(){
 
         // 整理所有引用文献
         for(let i = 0; i < ref_entries.length; i++){
+            if(ref_entries[i].author === "author"){
+                continue
+            }
+
             let new_list_entry = document.createElement('li')
             
             if(ref_entries[i].author != ""){

@@ -28,9 +28,10 @@
 <meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_3_CMAC_GTY/pic/xilinx_gtx.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_3_CMAC_GTY/pic/gty_qurd.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Computer_Architerture/Corundum_3_CMAC_GTY/pic/xxx.png">
-<meta property="article:published_time" content="2023-05-29T07:49:39.863Z">
-<meta property="article:modified_time" content="2023-05-29T07:49:39.863Z">
+<meta property="article:published_time" content="2023-06-17T17:02:14.075Z">
+<meta property="article:modified_time" content="2023-06-17T17:02:14.075Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -273,7 +274,7 @@
   请先阅读 <a href="/sec_learning/Tech_Computer_Architerture/Protocol_Ethernet_Basic_Architecture/index.html">Ethernet 基本架构解析</a>，对 PCS, PMA 和 PMD 三层 Ethernet PHY 层架构进行理解。
   </div>
 
-  <h3 class="title">初识 SERDES 与 Xilinx GTx</h3>
+  <h3 class="title">Overview</h3>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;Corundum 在 PHY 层上使用了 Xilinx 提供的 <def>Gigabit Transceiver (GT, 高速收发器)</def> Primitive 进行实现。GT 实现的技术实际上是 <def>SERDES</def>，后者是 <def>SERializer (串行器)</def> 和 <def>DESerializer (解串器)</def> 的简称，其是一种主流的时分多路复用 (TDM)、点对点 (P2P) 的串行通信技术：即在发送端多路低速并行信号被转换成高速串行信号，经过传输媒体 (光缆或铜线)，最后在接收端高速串行信号重新转换成低速并行信号 <cite>baike_serdes</cite> <cite>csdn_xilinx_gt</cite>。
 
@@ -285,13 +286,35 @@
   &nbsp;&nbsp;&nbsp;&nbsp;Xilinx 在各代的 Device 中都会对 GT 进行支持，下图是官网给出的具体细节 <cite>xilinx_serdes</cite>:
 
   <div class="img" title="各个 Xilinx Device Family 对 GT 的支持（[1] 单位: Gb/s; [2] 计入了 both Tx 和 Rx 两个方向;）" source="https://www.xilinx.com/products/technology/high-speed-serial.html">
-    <img src="./pic/xilinx_gtx.png"  width="100%" />
+    <img src="./pic/xilinx_gtx.png"  width="80%" />
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;从上图中可以看到，GT 后有各种不同的后缀，其代表的实际上就是性能上的区别，从 Xilinx 官方 <cite>xilinx_serdes</cite> 可以参考到更多它们性能的差异。在本文中，我们将以 GTY 收发器为例进行说明。
+  &nbsp;&nbsp;&nbsp;&nbsp;从上图中可以看到，GT 后有各种不同的后缀，其代表的实际上就是性能上的区别，从 Xilinx 官方 <cite>xilinx_serdes</cite> 可以参考到更多它们性能的差异。在本文中，我们将以 Ultrascale(+) 下的 GTY 收发器为例进行说明。
 
+  <h3 class="title">GTY 收发器</h3>
 
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;本节我们对 Xilinx FPGA 中的 GTY Primitive 进行说明。
+
+  <div 
+    class="img"
+    label="gty_quad"
+    title="GTY Transceiver Quad Configuration"
+    source="./file/ug578-ultrascale-gty-transceivers.pdf"
+  >
+    <img src="./pic/gty_qurd.png" width="700px" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;Xilinx FPGA 中的 GT 资源以 <def>Quad</def> 为单位，1个 GT Quad 内部的配置如 <imgref>gty_quad</imgref> 所示，其包含了 4 个 <def>GTYE3/4_CHANNEL</def> 和 1 个 <def>GTYE3/4_COMMON</def>。
+
+  <div class="noteblock">
+  在 Ultrascale 架构中，GTY Primitive 是 GTYE3_CHANNEL 和 GTYE3_COMMON；而在 Ultrascale+ 架构中是 GTYE4_CHANNEL 和 GTYE4_COMMON。
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 
 <h2 class="title">介质访问接入层: CMAC</h2>
