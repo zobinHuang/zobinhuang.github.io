@@ -132,7 +132,8 @@
 }
 
 .thought-year-avatar {    
-	margin: 0px 4px;
+	margin-top: 5px;
+	margin-right: 10px;
 
     /* make a square container */
     width: 50px;
@@ -166,6 +167,9 @@
 	}
 
 	.thought-year-avatar-group-container {
+		display: flex;
+		flex-flow: row wrap;
+		margin-top: 10px;
 		padding-left: 20px;
 	}
 }
