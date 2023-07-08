@@ -10,10 +10,12 @@ function load_weekly_list(){
 
         let current_record_year = 0
         let current_showcase = null
-
+        
         for(let i = 0; i < all_thought_meta.length; i++){
             let thought_meta = all_thought_meta[i];
             
+            console.log(thought_meta)
+
             // skip empty index
             if(thought_meta.month === ""){
                 continue;
@@ -32,35 +34,37 @@ function load_weekly_list(){
                 let year_meta = all_year_meta.filter(year_meta => {
                     return year_meta.year === current_record_year
                 })[0]
-                
-                // 创建年份标题 Container
-                let year_title_outside_container = document.createElement("div")
-                year_title_outside_container.setAttribute("class", "thought-year-container")
-                thought_outside_container.append(year_title_outside_container)
 
-                // 创建年份标题 本体
-                let year_title_container = document.createElement("div")
-                year_title_container.setAttribute("class", "thought-year-title-container")
-                let year_title_h4 = document.createElement("h4")
-                let year_title_h5 = document.createElement("h5")
-                year_title_h4.innerHTML = `${current_record_year}`
-                year_title_h5.innerHTML = `${year_meta.meaning}`
-                year_title_container.append(year_title_h4)
-                year_title_container.append(year_title_h5)
-                year_title_outside_container.append(year_title_container)
+                if(year_meta){
+                    // 创建年份标题 Container
+                    let year_title_outside_container = document.createElement("div")
+                    year_title_outside_container.setAttribute("class", "thought-year-container")
+                    thought_outside_container.append(year_title_outside_container)
 
-                // 创建该年份的头像组
-                let year_avatar_group = document.createElement("div")
-                year_avatar_group.setAttribute("class", "thought-year-avatar-group-container")
-                year_title_outside_container.append(year_avatar_group)
-                for(let j = 0; j < year_meta.avatars.length; j++){
-                    let avatar_meta = year_meta.avatars[j]
-                    let avatar = document.createElement("div")
-                    avatar.setAttribute("class", "thought-year-avatar")
-                    avatar.style.backgroundImage = `url(./pic/avatars/${current_record_year}/${avatar_meta.pic_file})`
-                    year_avatar_group.append(avatar)
+                    // 创建年份标题 本体
+                    let year_title_container = document.createElement("div")
+                    year_title_container.setAttribute("class", "thought-year-title-container")
+                    let year_title_h4 = document.createElement("h4")
+                    let year_title_h5 = document.createElement("h5")
+                    year_title_h4.innerHTML = `${current_record_year}`
+                    year_title_h5.innerHTML = `${year_meta.meaning}`
+                    year_title_container.append(year_title_h4)
+                    year_title_container.append(year_title_h5)
+                    year_title_outside_container.append(year_title_container)
+
+                    // 创建该年份的头像组
+                    let year_avatar_group = document.createElement("div")
+                    year_avatar_group.setAttribute("class", "thought-year-avatar-group-container")
+                    year_title_outside_container.append(year_avatar_group)
+                    for(let j = 0; j < year_meta.avatars.length; j++){
+                        let avatar_meta = year_meta.avatars[j]
+                        let avatar = document.createElement("div")
+                        avatar.setAttribute("class", "thought-year-avatar")
+                        avatar.style.backgroundImage = `url(./pic/avatars/${current_record_year}/${avatar_meta.pic_file})`
+                        year_avatar_group.append(avatar)
+                    }
                 }
-
+                
                 // 创建该年份的 showcase
                 let current_year_showcase = document.createElement("div")
                 current_year_showcase.setAttribute("class", "thought-showcase")

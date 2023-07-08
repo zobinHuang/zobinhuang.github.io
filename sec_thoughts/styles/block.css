@@ -8,8 +8,9 @@
 	display: flex;
 	flex-flow: row wrap;
 	/* justify-content: center; */
-	align-items: center;
+	align-items: start;
 	align-content: flex-start;
+	margin-bottom: 50px;
 }
 
 /*周报样式*/
