@@ -2,9 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zobinhuang.github.io/sec_thoughts/thought_index.json</loc>
+    
+    <lastmod>2023-07-08</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/index.html</loc>
+    
+    <lastmod>2023-07-08</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zobinhuang.github.io/sec_thoughts/index.html</loc>
     
-    <lastmod>2023-07-06</lastmod>
+    <lastmod>2023-07-08</lastmod>
     
   </url>
   
@@ -17,13 +31,6 @@
   
   <url>
     <loc>https://zobinhuang.github.io/sec_thoughts/2023_7_6_article_1/metadata.json</loc>
-    
-    <lastmod>2023-07-06</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_thoughts/thought_index.json</loc>
     
     <lastmod>2023-07-06</lastmod>
     
@@ -432,13 +439,6 @@
     <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Oneflow_Gather_Primitive_Development/ref.json</loc>
     
     <lastmod>2023-01-21</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/index.html</loc>
-    
-    <lastmod>2023-01-20</lastmod>
     
   </url>
   
@@ -3119,7 +3119,7 @@
 
   <url>
     <loc>https://zobinhuang.github.io/</loc>
-    <lastmod>2023-07-06</lastmod>
+    <lastmod>2023-07-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

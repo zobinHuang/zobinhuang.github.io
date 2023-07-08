@@ -1,20 +1,71 @@
 function load_weekly_list(){
     fetch('/sec_thoughts/thought_index.json')
     .then((res) => {return res.json();})
-    .then((all_thought_meta) => {
-        let weekly_report_showcase = document.getElementById("weekly-report-showcase");
+    .then((data) => {
+        let all_thought_meta = data.all_thought_meta
+        let all_year_meta = data.all_year_meta
+
+        let thought_outside_container = document.getElementById("thought-outside-container");
+        let weekly_report_showcase = document.getElementById("thought-showcase");
+
+        let current_record_year = 0
+        let current_showcase = null
 
         for(let i = 0; i < all_thought_meta.length; i++){
             let thought_meta = all_thought_meta[i];
-
+            
             // skip empty index
             if(thought_meta.month === ""){
                 continue;
             }
-            
+
             // skip hidden index
             if(thought_meta.hidden){
                 continue;
+            }
+
+            if(thought_meta.year !== current_record_year){
+                // 记录当前在记录的年份
+                current_record_year = thought_meta.year
+                
+                // 获得这个年份的相关信息
+                let year_meta = all_year_meta.filter(year_meta => {
+                    return year_meta.year === current_record_year
+                })[0]
+                
+                // 创建年份标题 Container
+                let year_title_outside_container = document.createElement("div")
+                year_title_outside_container.setAttribute("class", "thought-year-container")
+                thought_outside_container.append(year_title_outside_container)
+
+                // 创建年份标题 本体
+                let year_title_container = document.createElement("div")
+                year_title_container.setAttribute("class", "thought-year-title-container")
+                let year_title_h4 = document.createElement("h4")
+                let year_title_h5 = document.createElement("h5")
+                year_title_h4.innerHTML = `${current_record_year}`
+                year_title_h5.innerHTML = `${year_meta.meaning}`
+                year_title_container.append(year_title_h4)
+                year_title_container.append(year_title_h5)
+                year_title_outside_container.append(year_title_container)
+
+                // 创建该年份的头像组
+                let year_avatar_group = document.createElement("div")
+                year_avatar_group.setAttribute("class", "thought-year-avatar-group-container")
+                year_title_outside_container.append(year_avatar_group)
+                for(let j = 0; j < year_meta.avatars.length; j++){
+                    let avatar_meta = year_meta.avatars[j]
+                    let avatar = document.createElement("div")
+                    avatar.setAttribute("class", "thought-year-avatar")
+                    avatar.style.backgroundImage = `url(./pic/avatars/${current_record_year}/${avatar_meta.pic_file})`
+                    year_avatar_group.append(avatar)
+                }
+
+                // 创建该年份的 showcase
+                let current_year_showcase = document.createElement("div")
+                current_year_showcase.setAttribute("class", "thought-showcase")
+                current_showcase = current_year_showcase
+                thought_outside_container.append(current_showcase)
             }
 
             // get local url
@@ -73,10 +124,8 @@ function load_weekly_list(){
             weekly_report_current_report.append(weekly_report_current_report_intro_container)
             weekly_report_link.append(weekly_report_current_report)
             weekly_report_current_report_container.append(weekly_report_link)
-            weekly_report_showcase.append(weekly_report_current_report_container)
+            current_showcase.append(weekly_report_current_report_container)
         }
-
-        weekly_report_showcase.setAttribute("class", "weekly-report-showcase")
     })
 }
 
