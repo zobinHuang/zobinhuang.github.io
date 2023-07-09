@@ -103,7 +103,7 @@ function load_weekly_list(){
             
 
             // check whether cover exist
-            let cover_url = `${weekly_local_url}/pic/cover.png`
+            let cover_url = `${weekly_local_url}/pic/${thought_meta.cover_file}`
             let is_cover_exist = _image_exists(cover_url)
 
             // cover
