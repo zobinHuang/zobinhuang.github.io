@@ -200,7 +200,7 @@ async function _load_industries(){
                 nothing_alert.append(na_img)
 
                 let na_word = document.createElement("h5")
-                na_word.innerHTML = "N/A, still working on it<br>暂无，正在努力"
+                na_word.innerHTML = "N/A<br>暂无"
                 nothing_alert.append(na_word)
             }
         }
