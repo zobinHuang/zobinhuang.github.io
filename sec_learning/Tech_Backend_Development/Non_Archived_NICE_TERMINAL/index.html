@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Exo 2:300,300italic,400,400italic,700,700italic|Caveat:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"post","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:type" content="website">
+<meta property="og:title" content="在 Ubuntu (+WSL) 上配置好看的终端">
+<meta property="og:url" content="https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_NICE_TERMINAL/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_NICE_TERMINAL/pic/nice.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_NICE_TERMINAL/pic/bypass_error.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_NICE_TERMINAL/pic/set_font.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_NICE_TERMINAL/pic/xxx.png">
+<meta property="article:published_time" content="2023-10-18T05:14:57.744Z">
+<meta property="article:modified_time" content="2023-10-18T05:14:57.744Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_NICE_TERMINAL/pic/nice.png">
+
+<link rel="canonical" href="https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_NICE_TERMINAL/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'en'
+  };
+</script>
+
+  <title>在 Ubuntu (+WSL) 上配置好看的终端 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Lovin' Tech with Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about-me-(关于我)">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-user fa-fw"></i>About Me (关于我)</a>
+
+  </li>
+        <li class="menu-item menu-item-library-(知识库)">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-duotone fa-book fa-fw"></i>Library (知识库)</a>
+
+  </li>
+        <li class="menu-item menu-item-music-(独立音乐人)">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>Music (独立音乐人)</a>
+
+  </li>
+        <li class="menu-item menu-item-thoughts-(想法)">
+
+    <a href="/sec_thoughts/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>Thoughts (想法)</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="en">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">在 Ubuntu (+WSL) 上配置好看的终端
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Backend_Development/">TECH_BACKEND_DEVELOPMENT</a></li>
+          <li>NON_ARCHIVED_NICE_TERMINAL</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body onload="load_page()">
+
+<!-- 导入 mermaid -->
+<script src="script/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true});</script>
+
+<!-- 导入 chart.js -->
+<script src="script/chart.min.js"></script>
+
+<!-- 本文的 Metadata -->
+<div id="metadata"></div>
+
+<!-- Start your post here -->
+<h2 class="title">配置 zsh 和 oh-my-zsh</h2>
+<div class="div_learning_post">
+  <h3 class="title">基础配置</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;参考视频 <cite>vedio</cite>，我们可以使用一些脚本一键完成在 Ubuntu 上基于 oh-my-zsh 终端配置，相关脚本可以克隆自仓库 <cite>terminal_profile_repo</cite>，脚本运行如 <coderef>ubuntu_setup</coderef> 所示:
+
+  <div class="code_segment" label="ubuntu_setup">
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Update your software repositories.</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get upgrade</span><br><span class="line"><span class="comment"># Install Git.</span></span><br><span class="line">sudo apt-get install -y git</span><br><span class="line"><span class="comment"># Install Vim.</span></span><br><span class="line">sudo apt-get install -y vim</span><br><span class="line"><span class="comment"># clone repo</span></span><br><span class="line">git <span class="built_in">clone</span> git@github.com:zobinHuang/terminal-profile.git</span><br><span class="line"><span class="built_in">cd</span> terminal-profile</span><br><span class="line">./install_powerline.sh</span><br><span class="line">./install_terminal.sh</span><br><span class="line">./install_profile.sh</span><br></pre></td></tr></table></figure>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;于是我们就拥有了一个漂亮的终端：
+
+  <div class="img" title="漂亮的终端">
+    <img src="./pic/nice.png" width="80%" />
+  </div>
+
+  <h3 class="title">WSL2 下的额外配置</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;WSL2 环境下，我们需要在 Windows 上也安装对应的字体，才能使得上述终端效果在 Windows Terminal 上也生效，具体流程如下 <cite>powerline_windows</cite>。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们需要克隆 powerline 字体仓库:
+
+  <div class="code_segment" label="clone_font">
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/powerline/fonts</span><br></pre></td></tr></table></figure>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们需要运行仓库中的 <code>install.ps1</code> 脚本完成字体的安装。脚本运行前，我们需要允许 Windows Terminal 执行脚本，在 Powershell 上运行:
+
+  <div class="code_segment" label="bypass_policy">
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-ExecutionPolicy Bypass</span><br></pre></td></tr></table></figure>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;直接运行上述指令可能会遭遇报错:
+
+  <div class="img" title="Windows 下无法 Bypass Exeuction Policy 的报错">
+    <img src="./pic/bypass_error.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以改为:
+
+  <div class="code_segment" label="bypass_policy">
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-ExecutionPolicy -Scope CurrentUser Bypass -Force</span><br></pre></td></tr></table></figure>
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;现在可以运行仓库中的 <code>install.ps1</code> 脚本完成字体的安装。最后，我们在 Windows Terminal 中设置使用 <code>DejaVu San Mono</code> 字体即可。
+
+  <div class="img" title="Windows Terminal 设置字体">
+    <img src="./pic/set_font.png" width="80%" />
+  </div>
+</div>
+
+<h2 class="title">neovim</h2>
+<div class="div_learning_post">
+  <h3 class="title">基础安装</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们需要安装 neovim，并且在 <code>.zshrc</code> 中设置 <code>vim</code> 的别名为 <code>nvim</code>:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install -y gettext</span><br><span class="line">git <span class="built_in">clone</span> git@github.com:neovim/neovim.git</span><br><span class="line"><span class="built_in">cd</span> neovim</span><br><span class="line">make CMAKE_EXTRA_FLAGS=<span class="string">&quot;-DCMAKE_INSTALL_PREFIX=<span class="variable">$HOME</span>/neovim&quot;</span></span><br><span class="line">make install</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;<span class="variable">$HOME</span>/neovim/bin:<span class="variable">$PATH</span>&quot;</span>  <span class="comment"># 可能需要插入到 ~/.bashrc 或 ~/.zshrc</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;alias vim=nvim&#x27;</span> &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们需要安装 Nerd Font 字体 <cite>nerd_fonts_github</cite>，这里我选用的是  JetBrains Mono:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 拉取部分字体 (JetBrainsMono)</span></span><br><span class="line">git <span class="built_in">clone</span> --filter=blob:none --sparse git@github.com:ryanoasis/nerd-fonts</span><br><span class="line"><span class="built_in">cd</span> nerd-fonts</span><br><span class="line">git sparse-checkout add patched-fonts/JetBrainsMono</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装字体</span></span><br><span class="line">./install.sh JetBrainsMono</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;同理，如果是在 WSL2 下运行，我们需要在 Windows 下也安装该字体，并且设置 Windows Terminal 使用该字体。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最后我们需要安装 NVChad <cite>nvchad_github</cite>:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:NvChad/NvChad.git ~/.config/nvim --depth 1</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们就可以启动 vim 了，注意如果提示我们安装 custom configuration，选择 n 即可。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim</span><br></pre></td></tr></table></figure>
+  <h3 class="title">语法高亮</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;可以通过以下命令来安装新的 Syntex Highlighting:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询已经安装过的 syntex highlighting</span></span><br><span class="line">:TSInstallInfo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装新的 syntex highlighting</span></span><br><span class="line">:TSInstall cpp</span><br></pre></td></tr></table></figure>
+  <h3 class="title">定义跳转</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;使用 <code>ctags</code> 支持定义跳转，安装过程如下所示:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/universal-ctags/ctags.git</span><br><span class="line"><span class="built_in">cd</span> ctags</span><br><span class="line">./autogen.sh </span><br><span class="line">./configure --prefix=<span class="variable">$HOME</span></span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;<span class="variable">$HOME</span>/bin:<span class="variable">$PATH</span>&quot;</span> <span class="comment"># 可能需要插入到 ~/.bashrc 或 ~/.zshrc</span></span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;安装后，在工程目录下使用如下命令创建定义文件，然后在文件中使用 <code>Ctrl</code> + <code>]</code> 和 <code>Ctrl</code> + <code>o</code> 在定义间跳转即可。
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctags -R</span><br></pre></td></tr></table></figure>
+  <h3 class="title">WSL2 支持 Windows 系统剪切板</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;有时候我们需要从 WSL2 下的 nvim 把内容拷贝，然后在 Windows 上进行使用 (e.g., 写博客)，参考 <cite>reddit_clipborad</cite>，我们可以在 <code>~/.config/nvim/init.lua</code> 下添加如下命令来完成配置：
+
+  <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> vim.fn.has(<span class="string">&#x27;wsl&#x27;</span>) == <span class="number">1</span> <span class="keyword">then</span></span><br><span class="line">  vim.g.clipboard = &#123;</span><br><span class="line">      name = <span class="string">&#x27;WslClipboard&#x27;</span>,</span><br><span class="line">      copy = &#123;</span><br><span class="line">          [<span class="string">&#x27;+&#x27;</span>] = <span class="string">&#x27;clip.exe&#x27;</span>,</span><br><span class="line">          [<span class="string">&#x27;*&#x27;</span>] = <span class="string">&#x27;clip.exe&#x27;</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      paste = &#123;</span><br><span class="line">          [<span class="string">&#x27;+&#x27;</span>] = <span class="string">&#x27;powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace(&quot;`r&quot;, &quot;&quot;))&#x27;</span>,</span><br><span class="line">          [<span class="string">&#x27;*&#x27;</span>] = <span class="string">&#x27;powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace(&quot;`r&quot;, &quot;&quot;))&#x27;</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      cache_enabled = <span class="number">0</span>,</span><br><span class="line">  &#125;</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+  <h3 class="title">简单用法</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;以下是一些简单用法，更多其它用法可以上网查找，并多加使用已形成肌肉记忆。
+
+  <ul>
+    <li><code>space</code> + <code>t</code> + <code>h</code> 来设置主题</li>
+    <li><code>Ctrl</code> + <code>n</code> 打开 file navigation bar</li>
+    <li><code>m</code> 标记文件</li>
+    <li><code>a</code> 创建文件</li>
+    <li><code>c</code> <code>p</code> 创建、粘贴文件</li>
+    <li><code>r</code> 重命名文件</li>
+    <li><code>Space</code> <code>f</code> 查找文件</li>
+  </ul>
+</div>
+
+<h2 class="title">配置 tmux</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;首先我们需要安装 tmux 的一些依赖:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install bison flex libncurses5-dev</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;接着我们安装 tmux <cite>tmux_github</cite>:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/tmux/tmux.git</span><br><span class="line"><span class="built_in">cd</span> tmux</span><br><span class="line">sh autogen.sh</span><br><span class="line">./configure &amp;&amp; make</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;然后我们需要拉取的代码 tpm (tmux packet manager)，到指定目录下:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:tmux-plugins/tpm.git ~/.tmux/plugins/tpm</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;紧接着我们可以编辑 tmux 的配置文件:
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir ~/.config/tmux</span><br><span class="line">touch ~/.config/tmux/tmux.conf</span><br></pre></td></tr></table></figure>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;配置文件内容如下：
+
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> -g @plugin <span class="string">&#x27;tmux-plugins/tpm&#x27;</span></span><br><span class="line"><span class="built_in">set</span> -g @plugin <span class="string">&#x27;tmux-plugins/tmux-sensible&#x27;</span></span><br><span class="line"></span><br><span class="line">run <span class="string">&#x27;~/.tmux/plugins/tpm/tpm&#x27;</span></span><br></pre></td></tr></table></figure>
+  <h3 class="title">基础用法</h3>
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;参考 <cite>tmux_turtorial</cite>。
+</div>
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+
+<!-- 代码块 -->
+<!-- <div class="code_segment" label="forward">
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* hello*/</span></span><br></pre></td></tr></table></figure>
+</div> -->
+
+<!-- 代码块引用 -->
+<!-- <coderef>forward</coderef> -->
+
+<!-- Comment -->
+<!-- <div class="comblock" title="xxx"> -->
+
+<!-- Chart Support -->
+<!-- Check https://www.runoob.com/chartjs/chartjs-tutorial.html -->
+<!-- <div class="chartjs" label="naive_impt_performance"></div> -->
+
+<!-- Note Support -->
+<!-- Check https://theme-next.js.org/docs/tag-plugins/note.html -->
+
+<!-- 圆圈数字 -->
+<!--
+⓪ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳ ㉑ ㉒ ㉓ ㉔ ㉕ ㉖ ㉗ ㉘ ㉙ ㉚ ㉛ ㉜ ㉝ ㉞ ㉟ ㊱ ㊲ ㊳ ㊴ ㊵ ㊶ ㊷ ㊸ ㊹ ㊺ ㊻ ㊼ ㊽ ㊾ ㊿
+-->
+
+<!-- Flow Chart -->
+<!--
+Format see: https://mermaid-js.github.io/mermaid/#/flowchart
+-->
+<!-- <flowchart class="mermaid">
+ Mermaid Flow Chart Code
+</flowchart> -->
+
+<!-- Sign Block -->
+<!--
+<div class="noteblock">
+A NOTE
+</div>
+
+<div class="queblock">
+A QUESTION
+</div>
+-->
+
+<!--图片、引用-->
+<!-- 
+<div class="img" title="img title" label="img_label" source="url">
+  <img src="" height="" />
+</div>
+
+<imaging>img_label</imaging>
+-->
+
+<!--等式、引用-->
+<!-- 
+<div class="equation" label="equation_label">
+</div>
+
+<equation>equation_label</equation>
+-->
+
+<!--定理、引用、证明-->
+<!-- 
+<div class="theorm" label="theorm_label">
+</div>
+
+<theorm>theorm_label</theorm>
+
+<div class="theorm_prove">
+</div>
+-->
+
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--段落-->
+<!--
+<h3 class="paragraph">Paragraph Name</h3>
+-->
+
+<!--表格-->
+<!--
+<div class="table" title="Table Title" label="table_label">
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+    </tr>
+    <tr>
+      <td>xxx</td>
+      <td>xxx</td>
+      <td>xxx</td>
+    </tr>
+  </table>
+</div>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_Backend_Development/">TECH_BACKEND_DEVELOPMENT</a></li>
+          <li>NON_ARCHIVED_NICE_TERMINAL</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar_2.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

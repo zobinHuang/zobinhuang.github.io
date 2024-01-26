@@ -7,13 +7,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #e493d0;
+  background-color: #001772;
   background-image: 
-    radial-gradient(closest-side, rgb(255, 128, 106), rgba(255, 41, 4, 0)),
-    radial-gradient(closest-side, rgb(255, 237, 118), rgba(255, 221, 0, 0)),
-    radial-gradient(closest-side, rgb(255, 142, 142), rgba(255, 92, 92, 0)),
-    radial-gradient(closest-side, rgb(183, 163, 255), rgba(126, 90, 255, 0)),
-    radial-gradient(closest-side, rgb(255, 185, 128), rgba(255, 152, 68, 0));
+    radial-gradient(closest-side, rgb(42, 42, 42), rgba(255, 41, 4, 0)),
+    radial-gradient(closest-side, rgb(112, 112, 112), rgba(255, 221, 0, 0)),
+    radial-gradient(closest-side, rgb(154, 154, 154), rgba(255, 92, 92, 0)),
+    radial-gradient(closest-side, rgb(188, 188, 188), rgba(126, 90, 255, 0)),
+    radial-gradient(closest-side, rgb(223, 223, 223), rgba(255, 152, 68, 0));
   background-size:
     130vmax 130vmax,
     80vmax 80vmax,
@@ -22,12 +22,12 @@
     90vmax 90vmax;
   background-position: 
     -80vmax -80vmax,
-    60vmax 60vmax,
-    10vmax 10vmax,
-    -30vmax -30vmax,
-    50vmax 50vmax;
+    60vmax -60vmax,
+    10vmax -10vmax,
+    -30vmax 30vmax,
+    50vmax -50vmax;
   background-repeat: no-repeat;
-  animation: 2s movement linear infinite;
+  animation: 10s movement linear infinite;
 }
 
 .slideshow::after{
