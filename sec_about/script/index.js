@@ -270,6 +270,20 @@ async function _load_papers(){
                 let paper_entry_1_row = document.createElement("p")
                 paper_entry.append(paper_entry_1_row)
                 
+                if(paper.occur !== ""){
+                    let paper_occur = document.createElement("span")
+                    paper_occur.setAttribute("class", "paper_occur_span")
+                    paper_occur.innerHTML = `${paper.occur}`
+                    paper_entry_1_row.append(paper_occur)
+                }
+
+                for(let i=0; i<paper.award.length; i++){
+                    let paper_award = document.createElement("span")
+                    paper_award.setAttribute("class", "paper_award_span")
+                    paper_award.innerHTML = `${paper.award[i]}`
+                    paper_entry_1_row.append(paper_award)
+                }
+
                 let paper_title = document.createElement("span")
                 paper_title.setAttribute("class", "paper_title_span")
                 paper_title.innerHTML = `${paper.title} `
@@ -323,15 +337,16 @@ async function _load_papers(){
                 paper_entry_2_row.append(paper_authors)
 
                 // occur
-                let paper_entry_3_row = document.createElement("p")
-                paper_entry.append(paper_entry_3_row)
+                // if(paper.occur !== ""){
+                //     let paper_entry_3_row = document.createElement("p")
+                //     paper_entry.append(paper_entry_3_row)
 
-                let paper_occur = document.createElement("span")
-                paper_occur.setAttribute("class", "paper_occur_span")
-                paper_occur.innerHTML = `[${paper.occur}] `
-                paper_entry_3_row.append(paper_occur)
+                //     let paper_occur = document.createElement("span")
+                //     paper_occur.setAttribute("class", "paper_occur_span")
+                //     paper_occur.innerHTML = `[${paper.occur}] `
+                //     paper_entry_3_row.append(paper_occur)
+                // }
                 
-
                 paper_list_container.append(paper_entry)
                 all_paper_list_container.append(paper_entry.cloneNode(true))
             }

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Exo 2:300,300italic,400,400italic,700,700italic|Caveat:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"post","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:type" content="website">
+<meta property="og:title" content="未来网络迷思">
+<meta property="og:url" content="https://zobinhuang.github.io/sec_thoughts/2022_11_28_1/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_thoughts/2022_11_28_1/pic/1.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_thoughts/2022_11_28_1/pic/2.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_thoughts/2022_11_28_1/pic/xxx.png">
+<meta property="article:published_time" content="2024-06-01T15:43:55.915Z">
+<meta property="article:modified_time" content="2024-06-01T15:43:55.915Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zobinhuang.github.io/sec_thoughts/2022_11_28_1/pic/1.png">
+
+<link rel="canonical" href="https://zobinhuang.github.io/sec_thoughts/2022_11_28_1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'en'
+  };
+</script>
+
+  <title>未来网络迷思 | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Lovin' Tech with Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about-me">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-user fa-fw"></i>About Me</a>
+
+  </li>
+        <li class="menu-item menu-item-library">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-duotone fa-book fa-fw"></i>Library</a>
+
+  </li>
+        <li class="menu-item menu-item-production">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>Production</a>
+
+  </li>
+        <li class="menu-item menu-item-thoughts">
+
+    <a href="/sec_thoughts/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>Thoughts</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="en">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">未来网络迷思
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_thoughts/">SEC_THOUGHTS</a></li>
+          <li>2022_11_28_1</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body onload="load_page()">
+
+<!-- 导入 mermaid -->
+<script src="script/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true});</script>
+
+<!-- 导入 chart.js -->
+<script src="script/chart.min.js"></script>
+
+<!-- 本文的 Metadata -->
+<div id="metadata"></div>
+
+<!-- Start your post here -->
+<h2 class="title">前言：我对我们为什么在讨论这个问题的理解</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>广义：</b>当如今技术的发展速度超过了市场需求的演化速度时，工程师们就需要反向思考自己发展出来的技术能够为这个社会带来什么新需求，进而吸引投资来推动市场朝着某些方向进行演化。这个过程是有趣而痛苦的：有趣在于通过幻想各种落地场景并且加以优化改造，工程师们终于也可以开始摆弄自己创造的东西，成为投资人的得力说客，让自己的产品/技术在各种场景尝试落地；痛苦在于它与传统的思路相反，没有了市场需求的指导，发展技术的 Motivation 就不是那么直观，这会导致一定程度的迷茫，经典的例子例如当下的高速移动通信网络：当新的基础设施被部署时，新的应用 (或者说当年幻想的应用) 的落地并不是十分的顺利。当一些应用落地出现问题时，我理解的是，做工程的人应该回过头来重新认识自己设计的东西，不断迭代之下，才能形成一个被定义的时代。我把这种情况视为新的常态，我们要去适应这样的思路，这意味着：<b>我们需要拓宽眼界，身为工程师要跳出单纯设计、优化系统的自闭空间，多设想自己是给投资人讲故事的角色，把技术的发展和发展之后针对特定需求的落地之间的逻辑关系尝试梳理和解释清楚， 并且要学会不断地从市场经验中汲取教训。</b>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;<b>狭义：</b>在计算机网络发展了 50 年以后，围绕着 TCP/IP 协议栈所展开的设计、优化已经接近饱和，基础设施的讨论和部署已经十分成熟。当然这并不代表着未来的基础设施不会继续发展，我的意思是发展迭代的套路都是一样的。当我们身处在这样的一个时代，当我们讨论下一代网络的时候，我们也许感兴趣的更多的不在于未来移动网络的带宽、时延和吞吐量等量化 metrics，而在于未来的网络除了基本的 switching、routing 和 forwarding 的功能，在更加上层能够为我们带来什么新的花样。回过头思考，网络实际上互联互通了人与人、人与物 以及 物与物。过去 50 年的网络很好地担任了基础设施的角色，成功的构建了所谓 "地球村"。但是这个 “地球村” 好像又不太够：人与人之间的信任关系并没有能够成功地依赖网络连接而建立。地理上的分隔、信息的透明与不透明、新闻的真与假、网络安全和网络稳定性等等因素导致了人们仅仅是把网络当作一种基础设施，一种用于试探性交互的媒介。网络架起了桥梁，却没有交通引导员来指引车辆该走哪座桥才能到达目标彼岸。“我走的这座桥前面真的是我想去的地方吗？”，司机半信半疑，但也只能这样开着，不对了再回头重新走其它路。总结成一句话就是：<b>现在的网络有 Connect 的功能，却没有 Match 的功能。</b>
+</div>
+
+<h2 class="title">未来网络基本构想：从集中式到分布式匹配</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;一个巴掌拍不响，网络需要有人的参与，人和网络两者共同形成了所谓的互联网，因此我们先区分这两者在互联网扮演的角色。人是网络的终端，是某种需求的发起方，是网络存在的根本原因，网络是构建人人、人物互联的基本条件。
+
+  <div class="img" title="传统网络（广义）" label="1">
+    <img src="./pic/1.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;当人发起一种需求时，如上图所示，传统的网络将需求传递到集中式的控制平台，由集中式的平台来完成对需求的满足，包括两部分：平台的基本服务和平台内实体之间的匹配。如：网上购物是由购物平台完成了商品的推荐、与店家的交互以及交易的最终达成。再如：在线求职是由求职平台完成了岗位的筛选、与 HR 的交互以及劳务关系的最终达成。换一个角度想，商家上线的商品，HR 发出的岗位，可以理解为商家和 HR 自身 profile 的一部分，以用于需求方发出需求时匹配使用，因此可以这么理解：网络的功能本质上就是在完成人与人之间的匹配。集中式控制平台存在的逻辑是：基于法律等手段对信任机制的背书，人们自然会选择性地加入由组织、企业或者国家开发维护的集中式的平台，并且交由平台的所有方来管理和形成平台中人与人之间的交互关系。在一套严谨的隐私保护机制下，人们在平台中享受由少部分人决定其工作机理的服务。当匹配机制是放在集中式的平台上进行管理的时候，我们容易发现如下问题：
+
+  <ol>
+    <li>
+      集中式的平台往往是 domain-specific 的，有某种确定导向的功能，并且平台之间的信息 (e.g. 人与人在各个平台上的关系、人在某个平台上形成的 profile 等) 是闭塞的。也就是说，当我们在某个集中式的平台上观察到某个个体的时候，我们看到的该个体的信息实际上是不完整的，我认为这是 "地球村" 缺乏信任的很重要原因；
+    </li>
+    <li>
+      针对匹配人与人、人与物的互联关系这件事情，集中式的平台会定义好一套固定的规则 (或者说基于一个通用框架)，然而这样的设计存在两个小问题：一个是集中式的平台下实际上有大量的小的圈子，如购物平台上各类商品的购物群体、视频平台上各类视频的观看群体、求职平台上各类岗位的求职群体等，有时候这些圈子内部的匹配互联关系难以用一套大一统的固定规则加以描述；另一个问题是，即使在一个小圈子内部，其内部实体的互联关系也是时变的，如对于一个小区来说，可能今天邻里最感兴趣的是门口新水果商店开张全场五折，第二天最感兴趣的事情则变成由于小区处于疫情中风险地带，全员核酸检测的具体时间安排以及小区内的黄、红码人员。在这种场景下，要求一个平台要能迅速抽取各个圈子的特征，然后完成圈子内实体之间的互联匹配。在固定的规则约束下，集中式的平台往往做不到这样的功能。
+    </li>
+  </ol>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;鉴于上述问题，笔者之短见是：<b>在未来网络中，集中式的局限于平台内部的匹配机制将无法满足下一个时代的交互和匹配需求，因而逐渐会形成基于各个个体的分布式的匹配与执行机制。</b>
+
+  <div class="img" title="畅想中的网络（广义）" label="2">
+    <img src="./pic/2.png" width="80%" />
+  </div>
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;如上图所示，人们同样会参与到各个平台所提供的服务中去，也同样会在平台中产生与他人的交互关系，以及在当前平台的 profile。不同的是，人们每个人手中将会持有一份独立于各个平台的，但又来自于各个平台信息的，完整的可以用于给自己背书的 <def>高维度 profile</def>。这样一来，首先，每个人的高维度 profile 都由自己所持有和更新维护，并不交由某一具体的威权来进行收集管理；其次，当人发出需求的时候，整个匹配过程应当是分布式地在网络中的各个高维度 profile 持有人之间完成的，这个过程可以具体描述为：首先通过收集和整理各个平台的 profile 数据，形成了每个人的高维度 profile，每个人都如此，人与人之间在历史上的连接形成 人网；然后当人们有需求的时候，通过在人网中分布式地匹配，需求与目标实体之间高维度 profile 的匹配程度，来实现人与人之间的匹配和新的连接。当人们基于更高维度的 profile 进行交互时，双向信任将更加容易建立，因此交易的达成也就变得更加快速便捷。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;为了保障个人数据所有权和避免个人隐私泄露的安全风险：首先，完整的个人 Profile 数据镜像是一定在个人手里的，可以使用代表个人的移动终端等设备来进行收集、存储和更新；其次，只有当人们有某种需求的时候，这些数据才会被应用于匹配对应的对象，可以基于一定的加密技术来实现完成匹配，以避免个人的数据遭恶意平台的收集等泄漏风险。最后，每个人都可以选择自己的哪些数据是可以被用于匹配的，即别人可以用于匹配和查看的数据范围。总而言之，这样一套机制要 work 起来并不困难，重点是如何保障每个人的数据权益不受侵害，以建立起用户对这套机制的信任。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;基于这套机制，不难想象，在人网中，当某些区域的连接十分密集，交互更为频繁的时候，我们说这块区域形成了一个圈子。从圈子中的人的高维度 profile 提取出的关键信息又可以形成描述该圈子的 高维度 profile，如此迭代。这样一来，当人作为客户端发出需求的时候，可以先匹配大圈子的高维度 profile，然后再慢慢缩小范围直到匹配到某个小圈子或者具体的人身上。基于这样的树形机制，可以更好地加速匹配的精准度、建立连接的速度和系统的复杂性。
+</div>
+
+<h2 class="title">Case Study: 大学校园的匹配机制</h2>
+<div class="div_learning_post">
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我们现在缩小眼界，把范围锁定到大学之中来举列例子。在大学校园中，存在着大量的平台：教务系统、校内 bbs、社团交流平台、学生会交流平台、课程群以及实验室团队交流平台等。假如我们可以安全地融合这些平台的个人 profile，形成对于一个人的 <def>综合性描述文件</def> (i.e. 也就是上面所说的高维度 profile)，然后人与人之间的匹配是基于大量的综合性描述文件 和 人提出的具体需求之间展开的，那么人与人之间的高精准匹配和信任关系快速建立将能得到大幅提升，相对于当下的网络匹配机制而言。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;最经典的例子就是 教授开放日，如果一个学生能够基于自己所感兴趣的东西 (i.e. 个人需求)，结合自己的经历 (i.e. 综合性描述文件)，搜索到相对匹配的实验室团队，相反地教授也可以如此。这样一来教授和学生之间可以大幅地解除双向的不信任。并且，之后的产出又可以反作用于学生和实验室团队的综合性描述文件，为他们之后的需求提供新的匹配基础。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;我认为固然大学生在校园内需要探索，需要犯错，但是这不意味着无意义探索和犯错都是值得的。对于一个本科生来说，她在学校里的时间就只有四年。如何更好的在这四年中尽可能地让她享受到大学里面的资源呢？我觉得网络在这个问题上应该扮演一个比现在更加重要的角色。大学相对于大部分人的高中校园来说都要更大，人与人之间的信任因此被稀释，相对而言建立起信任相对于高中来说是更难的，这是我认为的进入大学后产生迷茫的重要原因。在这样的背景下，如果我们在虚拟网络世界中构建人网，加速人与人之间的匹配和信任关系的建立，那么大学生涯的效率将得到大幅提升。很多时候大家都会感叹："为什么我那一年没遇见你"。这样的问题在有了人网之后，将得到很好的解决。
+
+  <p>
+  &nbsp;&nbsp;&nbsp;&nbsp;原谅笔者的眼界尚属不够，眼光只能局限于大学之中才能把逻辑和例子解释清楚，我相信到了社会上去，事情也大概会是这样的：社会上的大部分事情，不应该在少部分人搭建的框架和平台中来实现大部分人的需求。转移到分布式的个人信息存储和匹配方式之后，需要通过构建合理的安全的保障机制，通过诸如法律和政府信用等手段进行背书，来构建起人与人之间在虚拟网络世界中的连接，从而降低社会的运行成本和拓宽人们在世界中的眼界。
+</div>
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+
+<!-- Comment -->
+<!-- <div class="comblock" title="xxx"> -->
+
+<!-- Chart Support -->
+<!-- Check https://www.runoob.com/chartjs/chartjs-tutorial.html -->
+<!-- <div class="chartjs" label="naive_impt_performance"></div> -->
+
+<!-- Note Support -->
+<!-- Check https://theme-next.js.org/docs/tag-plugins/note.html -->
+
+<!-- 圆圈数字 -->
+<!--
+⓪ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳ ㉑ ㉒ ㉓ ㉔ ㉕ ㉖ ㉗ ㉘ ㉙ ㉚ ㉛ ㉜ ㉝ ㉞ ㉟ ㊱ ㊲ ㊳ ㊴ ㊵ ㊶ ㊷ ㊸ ㊹ ㊺ ㊻ ㊼ ㊽ ㊾ ㊿
+-->
+
+<!-- Flow Chart -->
+<!--
+Format see: https://mermaid-js.github.io/mermaid/#/flowchart
+-->
+<!-- <flowchart class="mermaid">
+ Mermaid Flow Chart Code
+</flowchart> -->
+
+<!-- Sign Block -->
+<!--
+<div class="noteblock">
+A NOTE
+</div>
+
+<div class="queblock">
+A QUESTION
+</div>
+-->
+
+<!--图片、引用-->
+<!-- 
+<div class="img" title="img title" label="img_label" source="url">
+  <img src="" height="" />
+</div>
+
+<imaging>img_label</imaging>
+-->
+
+<!--等式、引用-->
+<!-- 
+<div class="equation" label="equation_label">
+</div>
+
+<equation>equation_label</equation>
+-->
+
+<!--定理、引用、证明-->
+<!-- 
+<div class="theorm" label="theorm_label">
+</div>
+
+<theorm>theorm_label</theorm>
+
+<div class="theorm_prove">
+</div>
+-->
+
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--段落-->
+<!--
+<h3 class="paragraph">Paragraph Name</h3>
+-->
+
+<!--表格-->
+<!--
+<div class="table" title="Table Title" label="table_label">
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+    </tr>
+    <tr>
+      <td>xxx</td>
+      <td>xxx</td>
+      <td>xxx</td>
+    </tr>
+  </table>
+</div>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_thoughts/">SEC_THOUGHTS</a></li>
+          <li>2022_11_28_1</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/avatar_2.png">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
