@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zobinhuang.github.io/index.html</loc>
+    
+    <lastmod>2024-09-06</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zobinhuang.github.io/sec_about/index.html</loc>
     
     <lastmod>2024-09-06</lastmod>
@@ -145,13 +152,6 @@
     <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/OVS_1_Installation/chartjs_data.json</loc>
     
     <lastmod>2024-04-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/index.html</loc>
-    
-    <lastmod>2024-01-26</lastmod>
     
   </url>
   
