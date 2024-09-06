@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/post_index.json</loc>
+    <loc>https://zobinhuang.github.io/sec_about/index.html</loc>
     
-    <lastmod>2024-08-09</lastmod>
+    <lastmod>2024-09-06</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_about/index.html</loc>
+    <loc>https://zobinhuang.github.io/sec_about/script/industries.json</loc>
     
-    <lastmod>2024-06-23</lastmod>
+    <lastmod>2024-09-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/post_index.json</loc>
+    
+    <lastmod>2024-08-09</lastmod>
     
   </url>
   
@@ -271,13 +278,6 @@
     <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/Inference_System_1_FasterTransformer_Encoder_Code_Review/chartjs_data.json</loc>
     
     <lastmod>2023-09-05</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_about/script/industries.json</loc>
-    
-    <lastmod>2023-08-11</lastmod>
     
   </url>
   
