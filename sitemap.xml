@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/post_index.json</loc>
+    
+    <lastmod>2024-08-09</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zobinhuang.github.io/sec_about/index.html</loc>
     
     <lastmod>2024-06-23</lastmod>
@@ -145,13 +152,6 @@
     <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_NICE_TERMINAL/index.html</loc>
     
     <lastmod>2023-10-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/post_index.json</loc>
-    
-    <lastmod>2023-10-06</lastmod>
     
   </url>
   
@@ -3427,7 +3427,7 @@
 
   <url>
     <loc>https://zobinhuang.github.io/</loc>
-    <lastmod>2024-06-23</lastmod>
+    <lastmod>2024-09-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
