@@ -270,32 +270,46 @@ async function _load_papers(){
                 let paper_entry_1_row = document.createElement("p")
                 paper_entry.append(paper_entry_1_row)
                 
+                let paper_title = document.createElement("span")
+                paper_title.setAttribute("class", "paper_title_span")
+                paper_title.innerHTML = `${paper.title} `
+                paper_entry_1_row.append(paper_title)
+                
+                let paper_entry_2_row = document.createElement("p")
+                paper_entry.append(paper_entry_2_row)
+                let paper_authors = document.createElement("span")
+                paper_authors.setAttribute("class", "paper_occur_authors")
+                let authors_string = `${paper.authors}`
+                authors_string = _bold_query(authors_string, "Zhuobin Huang")
+                paper_authors.innerHTML = `${authors_string}`
+                paper_entry_2_row.append(paper_authors)
+
+                // authors  
+                let paper_entry_3_row = document.createElement("p")
+                paper_entry.append(paper_entry_3_row)
+                
                 if(paper.occur !== ""){
                     let paper_occur = document.createElement("span")
                     paper_occur.setAttribute("class", "paper_occur_span")
                     paper_occur.innerHTML = `${paper.occur}`
-                    paper_entry_1_row.append(paper_occur)
+                    paper_entry_3_row.append(paper_occur)
                 }
 
                 for(let i=0; i<paper.award.length; i++){
                     let paper_award = document.createElement("span")
                     paper_award.setAttribute("class", "paper_award_span")
                     paper_award.innerHTML = `${paper.award[i]}`
-                    paper_entry_1_row.append(paper_award)
+                    paper_entry_3_row.append(paper_award)
                 }
-
-                let paper_title = document.createElement("span")
-                paper_title.setAttribute("class", "paper_title_span")
-                paper_title.innerHTML = `${paper.title} `
-                paper_entry_1_row.append(paper_title)
 
                 if(paper.paper_link !== ""){
                     let paper_link = document.createElement("a")
                     paper_link.setAttribute("href", `${paper.paper_link}`)
                     paper_link.setAttribute("target", "_blank")
                     paper_link.setAttribute("class", "paper_link")
+                    paper_link.setAttribute("style", "margin-left: 5px;margin-right: 5px;")
                     paper_link.innerHTML = "[Paper]"
-                    paper_entry_1_row.append(paper_link)
+                    paper_entry_3_row.append(paper_link)
                 }
 
                 if(paper.preprint_link !== ""){
@@ -303,8 +317,9 @@ async function _load_papers(){
                     preprint_link.setAttribute("href", `${paper.preprint_link}`)
                     preprint_link.setAttribute("class", "paper_link")
                     preprint_link.setAttribute("target", "_blank")
+                    preprint_link.setAttribute("style", "margin-left: 5px;margin-right: 5px;")
                     preprint_link.innerHTML = "[Preprint]"
-                    paper_entry_1_row.append(preprint_link)
+                    paper_entry_3_row.append(preprint_link)
                 }
 
                 if(paper.slide_link !== ""){
@@ -312,8 +327,9 @@ async function _load_papers(){
                     slide_link.setAttribute("href", `${paper.slide_link}`)
                     slide_link.setAttribute("class", "paper_link")
                     slide_link.setAttribute("target", "_blank")
+                    slide_link.setAttribute("style", "margin-left: 5px;margin-right: 5px;")
                     slide_link.innerHTML = "[Slide]"
-                    paper_entry_1_row.append(slide_link)
+                    paper_entry_3_row.append(slide_link)
                 }
 
                 if(paper.talk_link !== ""){
@@ -321,20 +337,20 @@ async function _load_papers(){
                     talk_link.setAttribute("href", `${paper.talk_link}`)
                     talk_link.setAttribute("class", "paper_link")
                     talk_link.setAttribute("target", "_blank")
+                    talk_link.setAttribute("style", "margin-left: 5px;margin-right: 5px;")
                     talk_link.innerHTML = "[Talk]"
-                    paper_entry_1_row.append(talk_link)
+                    paper_entry_3_row.append(talk_link)
                 }
 
-                // authors
-                let paper_entry_2_row = document.createElement("p")
-                paper_entry.append(paper_entry_2_row)
-
-                let paper_authors = document.createElement("span")
-                paper_authors.setAttribute("class", "paper_occur_authors")
-                let authors_string = `${paper.authors}`
-                authors_string = _bold_query(authors_string, "Zhuobin Huang")
-                paper_authors.innerHTML = `${authors_string}`
-                paper_entry_2_row.append(paper_authors)
+                if(paper.repo_link !== ""){
+                    let repo_link = document.createElement("a")
+                    repo_link.setAttribute("href", `${paper.repo_link}`)
+                    repo_link.setAttribute("class", "paper_link")
+                    repo_link.setAttribute("target", "_blank")
+                    repo_link.setAttribute("style", "margin-left: 5px;margin-right: 5px;")
+                    repo_link.innerHTML = "[Code]"
+                    paper_entry_3_row.append(repo_link)
+                }
 
                 // occur
                 // if(paper.occur !== ""){
