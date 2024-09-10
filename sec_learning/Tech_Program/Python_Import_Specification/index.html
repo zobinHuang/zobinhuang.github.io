@@ -30,8 +30,8 @@
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Program/Python_Import_Specification/pic/xxx.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Program/Python_Import_Specification/pic/python_file_structure_example.png">
-<meta property="article:published_time" content="2022-08-21T08:29:52.257Z">
-<meta property="article:modified_time" content="2022-02-11T08:00:01.335Z">
+<meta property="article:published_time" content="2024-09-05T09:29:12.977Z">
+<meta property="article:modified_time" content="2022-02-11T08:00:01.330Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -293,12 +293,12 @@
 <br>&nbsp;&nbsp;&nbsp;&nbsp;最重要的一点来了，用以上绝对路径导入模块/包的前提是，你已经把工程的根目录 (i.e. 上面例子中的 .../Commer/) 加入了检索的范围，否则任何尝试使用绝对路径导入包的尝试都将是失败的。我们可以使用以下代码查看当前系统检索包的路径范围：
 </p>
 
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印检索包的路径</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">print(sys.path)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印检索包的路径</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="built_in">print</span>(sys.path)</span><br></pre></td></tr></table></figure>
 <p>
 &nbsp;&nbsp;&nbsp;&nbsp;如果打印出的东西里没有我们的工程的根目录，那么所有的绝对路径寻包都会报错。这里给出一种解决的办法：使用 shell 命令在 <b>PYTHONPATH</b> 变量中添加我们工程的目录。可以把 shell 命令封装成为脚本文件，如下所示
 </p>
 
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> please <span class="built_in">source</span> this shell file</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">set</span> root path of python</span></span><br><span class="line">DIR=&quot;$( cd &quot;$( dirname &quot;$&#123;BASH_SOURCE[0]&#125;&quot; )&quot; &amp;&amp; pwd )&quot;</span><br><span class="line">export PYTHONPATH=$PYTHONPATH:$(dirname &quot;$DIR&quot;)</span><br><span class="line">echo &quot;set PYTHONPATH as:&quot; $PYTHONPATH</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">please <span class="built_in">source</span> this shell file</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">set</span> root path of python</span></span><br><span class="line">DIR=&quot;$( cd &quot;$( dirname &quot;$&#123;BASH_SOURCE[0]&#125;&quot; )&quot; &amp;&amp; pwd )&quot;</span><br><span class="line">export PYTHONPATH=$PYTHONPATH:$(dirname &quot;$DIR&quot;)</span><br><span class="line">echo &quot;set PYTHONPATH as:&quot; $PYTHONPATH</span><br></pre></td></tr></table></figure>
 <p>
 &nbsp;&nbsp;&nbsp;&nbsp;注意，运行这个脚本文件必须使用 <font color="red"><b>source</b></font> 命令而不能是 <b>bash</b> 命令。这里就得扯到 <b>进程全局变量</b> 和 <b>进程局部变量</b> 的事情，故事是这样的：
 <br>&nbsp;&nbsp;&nbsp;&nbsp;进程可以创建局部变量，局部变量只有进程自己内部能够使用，对其他进程包括它自己创建的子进程都是不可见的。进程可以使用 <b>export</b> 命令把局部变量转化为全局变量，全局变量的可见范围就比较广了，当父进程创建子进程后，子进程会继承父进程的全局变量，也就是说全局变量对子进程是可见的，只不过子进程继承的是父进程刚开始全局变量的值。注意，反过来，父进程是看不见子进程自己创建的局部 & 全局变量的。

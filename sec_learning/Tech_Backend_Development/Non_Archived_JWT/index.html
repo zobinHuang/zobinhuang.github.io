@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_JWT/pic/xxx.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_JWT/pic/jwt_rsa.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_JWT/pic/jwt_hmac.png">
-<meta property="article:published_time" content="2022-02-10T14:39:11.750Z">
+<meta property="article:published_time" content="2024-09-05T09:29:11.588Z">
 <meta property="article:modified_time" content="2021-09-07T12:09:24.000Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
@@ -425,7 +425,7 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;理解了具体流程之后，我们下面我们具体看一下 JWT 三部分的构成。从上面我们知道了，JWT 是由三段信息构成的，将这三段信息文本用 "." 链接一起就构成了 JWT 字符串。就像这样:
 
-  <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ</span><br></pre></td></tr></table></figure>
+  <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ</span><br></pre></td></tr></table></figure>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;第一部分就是头部 (header)，第二部分就是载荷 (payload)，第三部分就是签名(signature)。下面我们分析这三个部分的具体作用。
 
@@ -441,11 +441,11 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;完整的头部就像下面这样的 JSON：
 
-  <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;typ&quot;</span>: <span class="string">&quot;JWT&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;alg&quot;</span>: <span class="string">&quot;HS256&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;typ&quot;</span><span class="punctuation">:</span> <span class="string">&quot;JWT&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;alg&quot;</span><span class="punctuation">:</span> <span class="string">&quot;HS256&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;在上面的代码中，alg 属性表示签名使用的算法，默认为 HMAC SHA256 (写为 HS256)；typ 属性表示令牌的类型，JWT 令牌统一写为 JWT。服务端在确定 JWT 头部后，就会将头部进行 Base64URL 编码，构成了第一部分：
 
-  <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9</span><br></pre></td></tr></table></figure>
+  <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9</span><br></pre></td></tr></table></figure>
   <h5><a name="2_jwt_4_2">(2) JWT 载荷</a></h5>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;有效载荷部分，是 JWT 的主体内容部分，包含了用于描述与客户端、服务端相关的信息。它也是一个 JSON 对象，包含需要传递的数据。JWT 指定七个默认字段供选择：
@@ -463,11 +463,11 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;除以上默认字段外，我们还可以自定义私有字段，如下例：
 
-  <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;sub&quot;</span>: <span class="string">&quot;1234567890&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;John Doe&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;admin&quot;</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;sub&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1234567890&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;John Doe&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;admin&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;然后将其进行 Base64URL 编码，得到 JWT 的第二部分：
 
-  <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9</span><br></pre></td></tr></table></figure>
+  <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9</span><br></pre></td></tr></table></figure>
   <h5><a name="2_jwt_4_3">(3) JWT 签名</a></h5>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;JWT 的第三部分是一个签名哈希，这部分是对上面两部分数据签名，通过指定的算法生成哈希，以确保数据不会被篡改。
@@ -483,11 +483,11 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;下面是描述这一过程的 JavaScript 代码：
 
-  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> encodedString = base64UrlEncode(header) + <span class="string">&#x27;.&#x27;</span> + base64UrlEncode(payload);</span><br><span class="line"><span class="keyword">var</span> signature = HMACSHA256(encodedString, <span class="string">&#x27;secret&#x27;</span>); <span class="comment">// TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ</span></span><br></pre></td></tr></table></figure>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> encodedString = <span class="title function_">base64UrlEncode</span>(header) + <span class="string">&#x27;.&#x27;</span> + <span class="title function_">base64UrlEncode</span>(payload);</span><br><span class="line"><span class="keyword">var</span> signature = <span class="title class_">HMACSHA256</span>(encodedString, <span class="string">&#x27;secret&#x27;</span>); <span class="comment">// TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ</span></span><br></pre></td></tr></table></figure>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;将以上这三部分用 "." 连接成一个完整的字符串,构成了最终的 JWT:
 
-  <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ</span><br></pre></td></tr></table></figure>
+  <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ</span><br></pre></td></tr></table></figure>
 </div>
 <!--ref-->
 

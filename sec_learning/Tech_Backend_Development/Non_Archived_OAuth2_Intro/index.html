@@ -34,8 +34,8 @@
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_OAuth2_Intro/pic/jianshu_2.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_OAuth2_Intro/pic/jianshu_4.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_Backend_Development/Non_Archived_OAuth2_Intro/pic/authorization_code.png">
-<meta property="article:published_time" content="2022-02-10T14:39:11.525Z">
-<meta property="article:modified_time" content="2021-11-28T14:36:17.708Z">
+<meta property="article:published_time" content="2024-09-05T09:29:10.515Z">
+<meta property="article:modified_time" content="2021-11-28T14:36:17.700Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -388,7 +388,7 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;观察浏览器地址栏，此时我们发现我们对简书端点的访问被重定向到了微信的登录后台。很好理解，因为微信用户的授权是必须要微信用户先登录的。此时我们进入了上一章描述的授权流程中的第一步：<b><font color="red">Resource Owner 授权阶段</font></b>。我们观察一下这串 URI，里面大有门道：
 
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;open.weixin.qq.com&#x2F;connect&#x2F;qrconnect?appid&#x3D;wxe9199d568fe57fdd&amp;client_id&#x3D;wxe9199d568fe57fdd&amp;redirect_uri&#x3D;https%3A%2F%2Fwww.jianshu.com%2Fusers%2Fauth%2Fwechat%2Fcallback&amp;response_type&#x3D;code&amp;scope&#x3D;snsapi_login&amp;state&#x3D;%257B%257D#wechat_redirect</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://open.weixin.qq.com/connect/qrconnect?appid=wxe9199d568fe57fdd&amp;client_id=wxe9199d568fe57fdd&amp;redirect_uri=https%3A%2F%2Fwww.jianshu.com%2Fusers%2Fauth%2Fwechat%2Fcallback&amp;response_type=code&amp;scope=snsapi_login&amp;state=%257B%257D#wechat_redirect</span><br></pre></td></tr></table></figure>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;我们对这段 URI 进行分析：
 

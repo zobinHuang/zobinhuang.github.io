@@ -32,8 +32,8 @@
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning_backup/Linux_Kernel_Tracing_Ftrace/pic/ftrace_arch.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning_backup/Linux_Kernel_Tracing_Ftrace/pic/ftrace_tracer.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning_backup/Linux_Kernel_Tracing_Ftrace/pic/xxx.png">
-<meta property="article:published_time" content="2022-03-20T10:23:22.826Z">
-<meta property="article:modified_time" content="2022-03-20T10:23:22.826Z">
+<meta property="article:published_time" content="2024-09-05T09:29:04.222Z">
+<meta property="article:modified_time" content="2022-03-20T10:23:22.820Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -351,7 +351,7 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;然后我们运行如下脚本:
 
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;tcp*&#x27;</span> &gt; set_ftrace_filter</span><br><span class="line"><span class="built_in">echo</span> 1 &gt; function_profile_enabled</span><br><span class="line">sleep 10</span><br><span class="line"><span class="built_in">echo</span> 0 &gt; function_profile_enabled</span><br><span class="line"><span class="built_in">echo</span> &gt; set_ftrace_filter</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;tcp*&#x27;</span> &gt; set_ftrace_filter</span><br><span class="line"><span class="built_in">echo</span> 1 &gt; function_profile_enabled</span><br><span class="line"><span class="built_in">sleep</span> 10</span><br><span class="line"><span class="built_in">echo</span> 0 &gt; function_profile_enabled</span><br><span class="line"><span class="built_in">echo</span> &gt; set_ftrace_filter</span><br></pre></td></tr></table></figure>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;然后我们对输出进行观察:
@@ -378,7 +378,7 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;接着我们运行如下脚本:
 
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> 1 &gt; tracing_on</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;*sleep&#x27;</span> &gt; set_ftrace_filter</span><br><span class="line"><span class="built_in">echo</span> <span class="keyword">function</span> &gt; current_tracer</span><br><span class="line">sleep 10</span><br><span class="line">cat trace &gt; /tmp/out.trace01.txt</span><br><span class="line"><span class="built_in">echo</span> nop &gt; current_tracer</span><br><span class="line"><span class="built_in">echo</span> &gt; set_ftrace_filter</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> 1 &gt; tracing_on</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;*sleep&#x27;</span> &gt; set_ftrace_filter</span><br><span class="line"><span class="built_in">echo</span> <span class="keyword">function</span> &gt; current_tracer</span><br><span class="line"><span class="built_in">sleep</span> 10</span><br><span class="line"><span class="built_in">cat</span> trace &gt; /tmp/out.trace01.txt</span><br><span class="line"><span class="built_in">echo</span> nop &gt; current_tracer</span><br><span class="line"><span class="built_in">echo</span> &gt; set_ftrace_filter</span><br></pre></td></tr></table></figure>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;然后我们就可以从文件中观察到如下输出:
 

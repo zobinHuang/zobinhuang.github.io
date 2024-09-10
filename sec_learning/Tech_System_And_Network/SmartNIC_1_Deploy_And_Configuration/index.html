@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/SmartNIC_1_Deploy_And_Configuration/pic/xxx.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/SmartNIC_1_Deploy_And_Configuration/pic/deploy.jpg">
-<meta property="article:published_time" content="2022-02-10T14:39:12.211Z">
+<meta property="article:published_time" content="2024-09-05T09:29:18.902Z">
 <meta property="article:modified_time" content="2021-11-28T14:36:17.710Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
@@ -375,7 +375,7 @@
   &nbsp;&nbsp;&nbsp;&nbsp;修改为如下配置，其中的 tmfifo_net0 接口就是我们的 Rshim 接口：
 
 
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">network:</span><br><span class="line">version: 2</span><br><span class="line">renderer: networkd</span><br><span class="line">ethernets:</span><br><span class="line">  &lt;Your Internet Network Interface&gt;:</span><br><span class="line">    dhcp4: yes</span><br><span class="line">    nameservers:</span><br><span class="line">      addresses: [&lt;IP of Your Gateway Without Mask&gt;]</span><br><span class="line">  tmfifo_net0:</span><br><span class="line">    addresses: [192.168.100.1/24]</span><br><span class="line">    dhcp4: no</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">network:</span><br><span class="line">version: 2</span><br><span class="line">renderer: networkd</span><br><span class="line">ethernets:</span><br><span class="line">  &lt;Your Internet Network Interface&gt;:</span><br><span class="line">    dhcp4: <span class="built_in">yes</span></span><br><span class="line">    nameservers:</span><br><span class="line">      addresses: [&lt;IP of Your Gateway Without Mask&gt;]</span><br><span class="line">  tmfifo_net0:</span><br><span class="line">    addresses: [192.168.100.1/24]</span><br><span class="line">    dhcp4: no</span><br></pre></td></tr></table></figure>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;然后我们需要重启网络接口：
 
@@ -392,7 +392,7 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;目前，我们已经能够 access 我们的 BlueField 网卡了，下面我们需要使能它访问 Internet 的能力，以方便我们后续在 SoC 系统上的操作。首先我们需要使能主机 Internet 网卡的转发服务，如下所示：
 
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">su root</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> 1 | tee /proc/sys/net/ipv4/ip_forward</span><br><span class="line"></span><br><span class="line">iptables -t nat -A POSTROUTING -o &lt;Your Internet Network Interface&gt; -j MASQUERADE</span><br><span class="line"></span><br><span class="line"><span class="comment"># check &quot;net.ipv4.conf.&lt;Your Internet Network Interface&gt;.forwarding = 1&quot;</span></span><br><span class="line">sysctl -a | grep forwarding</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">su root</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> 1 | <span class="built_in">tee</span> /proc/sys/net/ipv4/ip_forward</span><br><span class="line"></span><br><span class="line">iptables -t nat -A POSTROUTING -o &lt;Your Internet Network Interface&gt; -j MASQUERADE</span><br><span class="line"></span><br><span class="line"><span class="comment"># check &quot;net.ipv4.conf.&lt;Your Internet Network Interface&gt;.forwarding = 1&quot;</span></span><br><span class="line">sysctl -a | grep forwarding</span><br></pre></td></tr></table></figure>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;如果上一步 sysctl 检查的结果不对，即 forwarding 没有被使能，那么很可能我们默认的防火墙规则被设置成为了隐式的 deny policy，我们需要手动打开：
 
@@ -419,7 +419,7 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;我们首先需要在 BlueField 上设置 DNS 服务器：
 
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;nameserver &lt;IP of Your Gateway Without Mask&gt;&quot;</span> | sudo tee /etc/resolv.conf</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;nameserver &lt;IP of Your Gateway Without Mask&gt;&quot;</span> | sudo <span class="built_in">tee</span> /etc/resolv.conf</span><br></pre></td></tr></table></figure>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;这样一来，我们就能够基于域名访问外网了。
 
@@ -427,7 +427,7 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;其次我们需要让 on-NIC OS 修改系统时间，否则一些网络服务的访问可能会被认为是不允许的，比如从清华源更新 apt 等操作 (说到这，记得把 on-NIC OS 的源更新为清华源，注意我们的 SmartNIC 是 Arm 架构的处理器，所以换源的时候记得选择 ubuntu-port 源)。修改系统时间的方式如下：
 
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo date -s “m/d/y 11:39”</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">date</span> -s “m/d/y 11:39”</span><br></pre></td></tr></table></figure>
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;这样一来，我们的实验平台基本就搭建完成了。
 </div>

@@ -41,7 +41,7 @@
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_5_Transition_Command/pic/screen.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_5_Transition_Command/pic/retf.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning_backup/Tech_OS_And_Linux_Kernel/Assembly_Basic_5_Transition_Command/pic/call_1.png">
-<meta property="article:published_time" content="2022-02-10T14:39:09.762Z">
+<meta property="article:published_time" content="2024-09-05T09:29:00.424Z">
 <meta property="article:modified_time" content="2021-09-07T12:09:29.000Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
@@ -347,7 +347,7 @@
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;我们可以使用 OFFSET 伪指令来获取某个位置的偏移。考虑下面代码：
 
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">code segment</span><br><span class="line">    start:  mov ax, stack</span><br><span class="line">            mov ss, ax</span><br><span class="line">            mov sp, 128</span><br><span class="line"></span><br><span class="line">    s:      mov ax, OFFSET start</span><br><span class="line">            mov ax, OFFSET s</span><br><span class="line"></span><br><span class="line">            mov ax, 4C00H</span><br><span class="line">            int 21H</span><br><span class="line">code ends</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">code segment</span><br><span class="line">    start:  mov ax, stack</span><br><span class="line">            mov ss, ax</span><br><span class="line">            mov sp, 128</span><br><span class="line"></span><br><span class="line">    s:      mov ax, OFFSET start</span><br><span class="line">            mov ax, OFFSET s</span><br><span class="line"></span><br><span class="line">            mov ax, 4C00H</span><br><span class="line">            int 21H</span><br><span class="line">code ends</span><br></pre></td></tr></table></figure>
 
   <p>
   &nbsp;&nbsp;&nbsp;&nbsp;运行到 Line 7 时，我们往 AX 寄存器中写入的是 s 处在代码段中的偏移，如下图所示：
