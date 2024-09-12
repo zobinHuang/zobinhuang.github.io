@@ -961,25 +961,30 @@ async function _load_citation(){
                 continue
             }
 
+            if(ref_entries[i]._comment != undefined){
+                continue
+            }
+
             let new_list_entry = document.createElement('li')
             
             if(ref_entries[i].author != ""){
-                new_list_entry.append(`${ref_entries[i].author},  `)
+                new_list_entry.append(`${ref_entries[i].author}`)
             }
             
             if(ref_entries[i].title != ""){
+                new_list_entry.append(",  ")
                 if(ref_entries[i].link != ""){
                     let title_with_link = document.createElement('a')
                     title_with_link.setAttribute("href", `${ref_entries[i].link}`)
                     title_with_link.innerHTML = `${ref_entries[i].title}`
                     new_list_entry.append(title_with_link)
-                    new_list_entry.append(",  ")
                 } else {
-                    new_list_entry.append(`${ref_entries[i].title},  `)
+                    new_list_entry.append(`${ref_entries[i].title}`)
                 }
             }
             
             if(ref_entries[i].time != ""){
+                new_list_entry.append(",  ")
                 new_list_entry.append(`${ref_entries[i].time}`)
             }
             
