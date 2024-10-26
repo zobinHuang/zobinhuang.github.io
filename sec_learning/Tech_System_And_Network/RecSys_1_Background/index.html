@@ -34,8 +34,8 @@
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/RecSys_1_Background/pic/dsmm_listwise.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/RecSys_1_Background/pic/dsmm_negative_samples.png">
 <meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/RecSys_1_Background/pic/xxx.png">
-<meta property="article:published_time" content="2024-09-08T19:15:43.301Z">
-<meta property="article:modified_time" content="2024-09-08T19:15:43.301Z">
+<meta property="article:published_time" content="2024-09-24T07:11:51.724Z">
+<meta property="article:modified_time" content="2024-09-24T07:11:51.724Z">
 <meta property="article:author" content="Zhuobin Huang">
 <meta property="article:tag" content="Zobin">
 <meta property="article:tag" content="黄卓彬">
@@ -269,65 +269,65 @@
 <h2 class="title">Introduction</h2>
 <div class="div_learning_post">
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;define <def>like-score</def>: the prediction of the like level of a specific user towards a specific item
+  define <def>like-score</def>: the prediction of the like level of a specific user towards a specific item
 
 <p>  architecture: inference, what is the input, what is the output<br>  training: what is the batch, what is the loss function</p>
 </div>
 
-<h2 class="title">Recall</h2>
+<h2 class="title">Retrieval</h2>
 <div class="div_learning_post">
   <h3 class="title">Item-based CF</h3>
   <label class="title">h3_icf</label>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+
 
   <h3 class="title">User-based CF</h3>
   <label class="title">h3_icf</label>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+
 
   <h3 class="title">Matrix Completion</h3>
   <label class="title">h3_mc</label>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+
 
   <h3 class="title">Deep Structured Semantic Model</h3>
   <label class="title">h3_dssm</label>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Compared to <ref>h3_mc</ref>, <def>Deep Structured Semantic Model</def> (DSSM) takes user/item features into consideration to produce a recommendation, which should produce better result. This architecture was originally proposed by Microsoft in 2013 <cite>dssm</cite>.
+  Compared to <ref>h3_mc</ref>, <def>Deep Structured Semantic Model</def> (DSSM) takes user/item features into consideration to produce a recommendation, which should produce better result. This architecture was originally proposed by Microsoft in 2013 <cite>dssm</cite>.
 
   <h4 class="title">Model Architecture</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;The architecture of DSMM is illustrated in <imgref>dsmm_overview</imgref>.
+  The architecture of DSMM is illustrated in <imgref>dsmm_overview</imgref>.
 
   <div class="img" title="Overview of DSMM Architecture" label="dsmm_overview">
     <img src="./pic/dsmm_overview.png" width="600px" />
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;For obtaining the like-score, DSMM adopts two "towers" to process features of both users and items, and produces a representation of the input user/item. Note that user tower and item tower are two seperated models that are trained independently. DSMM finally conducts a consine similarity calulation to obtain the like-score.
+  For obtaining the like-score, DSMM adopts two "towers" to process features of both users and items, and produces a representation of the input user/item. Note that user tower and item tower are two seperated models that are trained independently. DSMM finally conducts a consine similarity calulation to obtain the like-score.
 
   <div class="img" title="Internal of DSMM Tower" label="dsmm_tower">
     <img src="./pic/dsmm_tower.png" width="800px" />
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Specically, we focus on the architecture inside the user and item tower. Take user tower as an example in <imgref>dsmm_tower</imgref>. The tower is fed with <ci>1</ci> user's index and <ci>2</ci> continuous features (e.g., user age, height, etc.). Based on <ci>1</ci>, the tower first extract a series of embeddings from corresponding embedding matrices $\left(W_{u1},\,W_{u2},\,...,\,W_{uk}\right)$. These embeddings discribe the discreate features of the given user. Note that these embedding matrices are learnable. Besides, based on <ci>2</ci>, the tower would process these continuous value via normalization, etc., generating corresponding embeddings. Then all these embeddings are concatenated together and fed into a neural network to produce a representation of current user $u^{(i)}$.
+  Specically, we focus on the architecture inside the user and item tower. Take user tower as an example in <imgref>dsmm_tower</imgref>. The tower is fed with <ci>1</ci> user's index and <ci>2</ci> continuous features (e.g., user age, height, etc.). Based on <ci>1</ci>, the tower first extract a series of embeddings from corresponding embedding matrices $\left(W_{u1},\,W_{u2},\,...,\,W_{uk}\right)$. These embeddings discribe the discreate features of the given user. Note that these embedding matrices are learnable. Besides, based on <ci>2</ci>, the tower would process these continuous value via normalization, etc., generating corresponding embeddings. Then all these embeddings are concatenated together and fed into a neural network to produce a representation of current user $u^{(i)}$.
 
   <h4 class="title">Training Approach</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;In this section we discuss how to train DSSM. Based on the pattern of input training samples, there're 3 ways to train DSSM: <ci>1</ci> pointwise, <ci>2</ci> pairwise <cite>dssm_pairwise</cite> and <ci>3</ci> listwise <cite>dssm_listwise</cite>.
+  In this section we discuss how to train DSSM. Based on the pattern of input training samples, there're 3 ways to train DSSM: <ci>1</ci> pointwise, <ci>2</ci> pairwise <cite>dssm_pairwise</cite> and <ci>3</ci> listwise <cite>dssm_listwise</cite>.
 
   <h5 class="paragraph">Pointwise Training</h5>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Method <ci>1</ci> regards the process of Recall as binary classification task, which takes a single sample at a time to train the model, as demonstrated in <imgref>dsmm_pointwise</imgref>.
+  Method <ci>1</ci> regards the process of Recall as binary classification task, which takes a single sample at a time to train the model, as demonstrated in <imgref>dsmm_pointwise</imgref>.
 
   <div class="img" title="Pointwise-training of DSMM" label="dsmm_pointwise">
     <img src="./pic/dsmm_pointwise.png" width="400px" />
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;For positive sample, it encourages the similarity value $cos(u^{(k), i^{(j)}})$ to approach $1$ (i.e., $\text{CrossEntropy}$ to approach $0$); otherwise $cos(u^{(k), i^{(j)}})$ to approach $-1$ (i.e., $\text{CrossEntropy}$ to approach $1$). During the backward phrase, the parameters within both neural network and embedding matrices would be updated.
+  For positive sample, it encourages the similarity value $cos(u^{(k), i^{(j)}})$ to approach $1$ (i.e., $\text{CrossEntropy}$ to approach $0$); otherwise $cos(u^{(k), i^{(j)}})$ to approach $-1$ (i.e., $\text{CrossEntropy}$ to approach $1$). During the backward phrase, the parameters within both neural network and embedding matrices would be updated.
 
   <div class="noteblock">
   The engineering experience of ratio of positive-negative sample is 1:2 or 1:3.
@@ -339,28 +339,28 @@
 
   <h5 class="paragraph">Pairwise Training</h5>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Instead, Method <ci>2</ci> feeds a positive and negative item samples to the model simultaneously, as demonstrated in <imgref>dsmm_pairwise</imgref>.
+  Instead, Method <ci>2</ci> feeds a positive and negative item samples to the model simultaneously, as demonstrated in <imgref>dsmm_pairwise</imgref>.
 
   <div class="img" title="Pairwise-training of DSMM" label="dsmm_pairwise">
     <img src="./pic/dsmm_pairwise.png" width="700px" />
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;The insight of the loss function $\mathcal{L}(u^{(k)}, i^{(+)}, i^{(-)})$ is to encourage $cos(u^{(k)}, i^{(+)}) - cos(u^{(k)}, i^{(-)}) > m$, where $m$ is a hyper-parameter. One can choose <def>Triplet Hinge Loss</def> to achieve so, as shown in <equation>dsmm_triplet_hinge_loss</equation>:
+  The insight of the loss function $\mathcal{L}(u^{(k)}, i^{(+)}, i^{(-)})$ is to encourage $cos(u^{(k)}, i^{(+)}) - cos(u^{(k)}, i^{(-)}) > m$, where $m$ is a hyper-parameter. One can choose <def>Triplet Hinge Loss</def> to achieve so, as shown in <equation>dsmm_triplet_hinge_loss</equation>:
 
   <div class="equation" label="dsmm_triplet_hinge_loss">
   $\mathcal{L}(u^{(k)}, i^{(+)}, i^{(-)}) = \max \left[ 0, cos(u^{(k)}, i^{(-)}) + m - cos(u^{(k)}, i^{(+)}) \right]$
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;One can also use <def>Triplet Logistic Loss</def>, , as shown in <equation>dsmm_triplet_logistic_loss</equation>:
+  One can also use <def>Triplet Logistic Loss</def>, , as shown in <equation>dsmm_triplet_logistic_loss</equation>:
 
   <div class="equation" label="dsmm_triplet_logistic_loss">
   $\mathcal{L}(u^{(k)}, i^{(t)}, i^{(j)}) = \log( 1 + \exp \left\{ \sigma \cdot [ cos(u^{(k)}, i^{(-)}) - cos(u^{(k)}, i^{(+)}) ] \right\} )$
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;The minimization of triplet logistic loss trends to decrease $cos(u^{(k)}, i^{(-)})$ and increase $cos(u^{(k)}, i^{(+)})$.
+  The minimization of triplet logistic loss trends to decrease $cos(u^{(k)}, i^{(-)})$ and increase $cos(u^{(k)}, i^{(+)})$.
 
   <div class="queblock">
   How the parameters within item tower be updated? Take average of gradient?
@@ -368,7 +368,7 @@
 
   <h5 class="paragraph">Listwise Training</h5>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Method <ci>3</ci> takes multiple negative samples and a single positive sample as input. As shown in <imgref>dsmm_listwise</imgref>, Ii further uses $\text{softmax}$ function to transform each calculated cosine similarits $cos(u^{(k)}, i_x)$ into $p_{i_x} \in [0,1]$.
+  Method <ci>3</ci> takes multiple negative samples and a single positive sample as input. As shown in <imgref>dsmm_listwise</imgref>, Ii further uses $\text{softmax}$ function to transform each calculated cosine similarits $cos(u^{(k)}, i_x)$ into $p_{i_x} \in [0,1]$.
 
   <div class="img" title="Listwise-training of DSMM" label="dsmm_listwise">
     <img src="./pic/dsmm_listwise.png" width="100%" />
@@ -382,11 +382,11 @@
 
   <h4 class="title">Dataset</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;In this section we discuss how to pick positive and negative samples to form training batches.
+  In this section we discuss how to pick positive and negative samples to form training batches.
 
   <h5 class="paragraph">Positive Sample</h5>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;One can simply choose those items exposed and clicked by user as positive samples.
+  One can simply choose those items exposed and clicked by user as positive samples.
 
   <div class="noteblock">
   As most of the positive samples are hot items which occupy most of user clicks, this would cause unfairness to those cold items. The solution is to <def>up-sampling</def> cold positive items (i.e., one item to be occured multiple times in the batch) and <def>down-sampling</def> hot positive items (i.e., drop some items to not be occured in the batch).
@@ -394,20 +394,20 @@
 
   <h5 class="paragraph">Negative Sample</h5>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;There're 3 positions in the workflow of RecSys to pick up negative samples, as illustrated in <imgref>dsmm_negative_samples</imgref>.
+  There're 3 positions in the workflow of RecSys to pick up negative samples, as illustrated in <imgref>dsmm_negative_samples</imgref>.
 
   <div class="img" title="Source of Negative Samples in the Workflow" label="dsmm_negative_samples">
     <img src="./pic/dsmm_negative_samples.png" width="100%" />
   </div>
 
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;Firstly, one could choose those items that not be recalled for a specific user's query as the negative samples (<ci>1</ci>). These negative samples are regarded as "easy" as they're likely not relevant to this user's interest at all. Besides, all recalled items is only a small portion of the entire item database, hence the scale of these negatie samples are basically the scale of all items.
+  Firstly, one could choose those items that not be recalled for a specific user's query as the negative samples (<ci>1</ci>). These negative samples are regarded as "easy" as they're likely not relevant to this user's interest at all. Besides, all recalled items is only a small portion of the entire item database, hence the scale of these negatie samples are basically the scale of all items.
 
 
 
   <h4 class="title">Online Deployment</h4>
   <p>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+
 
   <h3 class="title">Deep Retrivel</h3>
   <div class="queblock">
@@ -575,7 +575,7 @@ Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
 <!--正文-->
 <!--
 <p>
-&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+公式：<span>`\overline{A}\overline{B}`</span>
 </p>
 -->
       </div>

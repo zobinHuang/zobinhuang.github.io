@@ -853,6 +853,16 @@ async function _load_code_segment(){
             code_segment_container.setAttribute('class', `div_code_container_disapear`)
             code_segment_container.style.display = 'none'
         }
+        
+        // 设置 title
+        let code_index = document.createElement('code_index')
+        if(code_segment_meta.getAttribute("title") !== null){
+            if(language === 'cn'){
+                code_index.innerHTML = `代码块 ${i+1}: ${code_segment_meta.getAttribute("title")}`
+            } else {
+                code_index.innerHTML = `List ${i+1}: ${code_segment_meta.getAttribute("title")}`
+            }
+        }
 
         // 创建一个最外层的 container
         let outside_container = document.createElement('div')
@@ -864,6 +874,11 @@ async function _load_code_segment(){
         // 将代码段 container 塞入最外层 container
         code_segment_container.parentNode.insertBefore(outside_container, code_segment_container.nextElementSibling)
         outside_container.appendChild(code_segment_container)
+
+        // 插入 title
+        if(code_segment_meta.getAttribute("title") !== null){
+            outside_container.appendChild(code_index)
+        }
     }
 
     // 替换所有 code segment 的引用
@@ -956,6 +971,7 @@ async function _load_citation(){
         }
 
         // 整理所有引用文献
+        let actual_i = 0
         for(let i = 0; i < ref_entries.length; i++){
             if(ref_entries[i].author === "author"){
                 continue
@@ -988,7 +1004,7 @@ async function _load_citation(){
                 new_list_entry.append(`${ref_entries[i].time}`)
             }
             
-            mapping[`${ref_entries[i].short}`] = `${i+1}`
+            mapping[`${ref_entries[i].short}`] = `${actual_i+1}`
 
             if(ref_entries[i].link != ""){
                 mapping_links[`${ref_entries[i].short}`] = `${ref_entries[i].link}`
@@ -997,6 +1013,8 @@ async function _load_citation(){
             }
 
             list_element.append(new_list_entry)
+
+            actual_i += 1
         }
 
         // 替换所有引用文献的值
@@ -1008,7 +1026,7 @@ async function _load_citation(){
                 cites[i].innerHTML = `[${ref_index}]`
             } else {
                 let ref_link = document.createElement('a')
-                ref_link.setAttribute('style', 'font-size:12px; font-family: italic; margin-right: 2px;')
+                ref_link.setAttribute('style', 'font-size:12px; font-family: italic; margin-right: 2px; font-weight: bold;')
                 ref_link.setAttribute('href', `${mapping_links[`${short_ref}`]}`)
                 ref_link.innerHTML = `[${ref_index}]`
                 cites[i].innerHTML = ''
