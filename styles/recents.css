@@ -116,3 +116,14 @@
     padding: 3px 0px;
     margin: 0px;
 }
+
+.recents_container .recent_entry_container .content_container .desp_container ul{
+    margin: 0px;
+}
+
+.recents_container .recent_entry_container .content_container .desp_container li{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 14px;
+    padding: 0px 0px;
+    margin: 0px;
+}
