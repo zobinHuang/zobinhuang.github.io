@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zobinhuang.github.io/scripts/recents.json</loc>
+    
+    <lastmod>2024-11-09</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zobinhuang.github.io/index.html</loc>
     
     <lastmod>2024-11-09</lastmod>

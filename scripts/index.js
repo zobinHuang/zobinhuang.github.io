@@ -1,12 +1,110 @@
 function load_mainpage(){
-    // _load_weekly()
-
-    /*
-   _load_recent_post().then(()=>{
-        document.getElementById('recent_post_loading_alert').style.display = 'none'
-    })
-    */
+    // _load_recents()
 }
+
+document.addEventListener('DOMContentLoaded', async function() {
+    await _load_recents()
+    for(let i = 0; i < window.all_recents_length; i++){
+        let img = document.getElementById(`recent_img_${i}`)
+        
+        img.onload = () => {
+            let content_container = document.getElementById(`recent_content_container_${i}`)
+            let height = img.offsetHeight
+            content_container.style.maxHeight = `${height}px`
+        }
+    }
+});
+
+
+async function _load_recents(){
+    return fetch('./scripts/recents.json')
+    .then((res) => {return res.json();})
+    .then(async (json_raw) => {
+        let max_show_length = json_raw.max_show_length
+        let all_recents = json_raw.recents
+
+        let recents_container = document.getElementById("recents_container")
+
+        window.all_recents_length = all_recents.length > max_show_length ? max_show_length : all_recents.length;
+        for(let i = 0; i < all_recents.length; i++){
+            if(i >= max_show_length){ break; }
+
+            let recent = all_recents[i]
+            let recent_entry_container = document.createElement("div");
+            recent_entry_container.setAttribute("class", "recent_entry_container")
+            recents_container.append(recent_entry_container)
+
+            let img_container = document.createElement("div");
+            img_container.setAttribute("id", `recent_img_container_${i}`)
+            img_container.setAttribute("class", "img_container")
+            recent_entry_container.append(img_container)
+            
+            // append image
+            let img = document.createElement("img");
+            img.setAttribute("src", recent["img"])
+            img.setAttribute("id", `recent_img_${i}`)
+            img_container.append(img)
+        
+            let content_container = document.createElement("div");
+            content_container.setAttribute("class", "content_container")
+            content_container.setAttribute("id", `recent_content_container_${i}`)
+            
+            recent_entry_container.append(content_container)
+
+            let title_container = document.createElement("div");
+            title_container.setAttribute("class", "title_container")
+            content_container.append(title_container)
+
+            // add title
+            let h2 = document.createElement("h2");
+            title_container.append(h2)
+            h2.innerHTML = recent["title"]
+
+            // add date
+            let date = document.createElement("date");
+            date.innerHTML = recent["date"]
+            h2.prepend(date);
+            
+            // add desp
+            let desp_container = document.createElement("div");
+            content_container.append(desp_container)
+            desp_container.setAttribute("class", "desp_container")
+            desp_container.innerHTML = recent["description"]
+
+            // append code / press / paper links
+            if(recent["links"] && recent["links"].length > 0){
+                let links_container = document.createElement("div");
+                links_container.setAttribute("class", "links_container")
+                desp_container.prepend(links_container)
+
+                for(let j=0; j<recent["links"].length; j++){
+                    let link = recent["links"][j]
+                    let aa = document.createElement("a");
+                    aa.setAttribute("href", link["link"])
+                    aa.innerHTML = `[${link["name"]}]`
+                    links_container.append(aa)
+                }
+            }
+        }  
+    })
+}
+
+
+function _get_image_size(imagePath) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = imagePath;
+
+        img.onload = () => {
+            resolve({"width": img.width, "height": img.height});
+        };
+
+        img.onerror = () => {
+            reject(new Error('无法加载图片'));
+        };
+    });
+}
+
 
 function _load_weekly(){
     let max_list_length = 5;
