@@ -70,8 +70,8 @@
 .recents_container .recent_entry_container .content_container .title_container{
     display: flex;
     flex-direction: column;
-    position: sticky; /* 使这个元素在滚动时保持在顶部 */
-    top: 0; /* 距离顶部 0 像素 */
+    position: sticky;
+    top: 0;
     width: 100%;
     margin: 0px;
     margin-bottom: 5px;
@@ -84,7 +84,7 @@
 	padding: 0px;
     color: #000000;
     font-size: 17px;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: 'Times New Roman', Times, serif;
 }
 
 .recents_container .recent_entry_container .content_container .title_container h2 date{
