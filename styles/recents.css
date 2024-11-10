@@ -106,8 +106,9 @@
     margin-bottom: 0px;
     margin-right: 10px;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
     border-bottom: none;
-    color: #2d007c;
+    color: #878787;
 }
 
 .recents_container .recent_entry_container .content_container .desp_container p{
