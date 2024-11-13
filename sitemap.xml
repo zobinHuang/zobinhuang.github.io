@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zobinhuang.github.io/sec_about/index.html</loc>
+    
+    <lastmod>2024-11-13</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zobinhuang.github.io/scripts/recents.json</loc>
     
     <lastmod>2024-11-10</lastmod>
@@ -10,13 +17,6 @@
   
   <url>
     <loc>https://zobinhuang.github.io/index.html</loc>
-    
-    <lastmod>2024-11-09</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_about/index.html</loc>
     
     <lastmod>2024-11-09</lastmod>
     
@@ -3490,7 +3490,7 @@
 
   <url>
     <loc>https://zobinhuang.github.io/</loc>
-    <lastmod>2024-11-10</lastmod>
+    <lastmod>2024-11-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
