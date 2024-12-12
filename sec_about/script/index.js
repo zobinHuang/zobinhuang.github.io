@@ -298,7 +298,14 @@ async function _load_papers(){
                 for(let i=0; i<paper.award.length; i++){
                     let paper_award = document.createElement("span")
                     paper_award.setAttribute("class", "paper_award_span")
-                    paper_award.innerHTML = `${paper.award[i]}`
+                    if(paper.award[i].link !== ""){
+                        let paper_award_a = document.createElement("a")
+                        paper_award_a.setAttribute("href", `${paper.award[i].link}`)
+                        paper_award_a.innerHTML = `${paper.award[i].name}`
+                        paper_award.append(paper_award_a)
+                    } else {
+                        paper_award.innerHTML = `${paper.award[i].name}`
+                    }
                     paper_entry_3_row.append(paper_award)
                 }
 

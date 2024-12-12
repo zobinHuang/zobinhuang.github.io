@@ -311,6 +311,12 @@ img{margin-right: 20px;}
     font-size: 12px;
 }
 
+.paper_award_span a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 12px;
+}
+
 .paper_occur_span {
     /* font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; */
     color: #c30600;
@@ -332,7 +338,7 @@ img{margin-right: 20px;}
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.paper_class_container ul li p a{
+.paper_link {
     color: #000be3;
 }
 
