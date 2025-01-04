@@ -1,0 +1,60 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/25.0.2 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="25.0.2">
+  <diagram name="Page-1" id="rVIXp9qpLTswfmhrjh71">
+    <mxGraphModel dx="1026" dy="772" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="3310" pageHeight="4680" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="E49AWT_eim-HWK9bgomT-16" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E6E6E6;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="302.5" y="393.5" width="424.5" height="118" as="geometry" />
+        </mxCell>
+        <mxCell id="E49AWT_eim-HWK9bgomT-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="E49AWT_eim-HWK9bgomT-1" target="E49AWT_eim-HWK9bgomT-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="E49AWT_eim-HWK9bgomT-1" value="Customized Code" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="409" width="111" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="E49AWT_eim-HWK9bgomT-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="E49AWT_eim-HWK9bgomT-3" target="E49AWT_eim-HWK9bgomT-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="E49AWT_eim-HWK9bgomT-3" value="CUDA Code" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="462" width="111" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="E49AWT_eim-HWK9bgomT-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="E49AWT_eim-HWK9bgomT-8" target="E49AWT_eim-HWK9bgomT-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="E49AWT_eim-HWK9bgomT-8" value="Customized Frontend" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="319" y="409" width="128" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="E49AWT_eim-HWK9bgomT-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="E49AWT_eim-HWK9bgomT-10" target="E49AWT_eim-HWK9bgomT-13">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="469" y="480" />
+              <mxPoint x="469" y="453" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="E49AWT_eim-HWK9bgomT-10" value="CUDA C Frontend" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="319" y="462" width="127" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="E49AWT_eim-HWK9bgomT-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="E49AWT_eim-HWK9bgomT-13" target="E49AWT_eim-HWK9bgomT-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="E49AWT_eim-HWK9bgomT-13" value="NVVM IR&lt;div&gt;(binary/text)&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="491" y="421" width="77" height="63" as="geometry" />
+        </mxCell>
+        <mxCell id="E49AWT_eim-HWK9bgomT-17" value="&lt;b&gt;clang++&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="322" y="533" width="125" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="E49AWT_eim-HWK9bgomT-18" value="NVVM Compiler" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="597" y="435" width="102" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="E49AWT_eim-HWK9bgomT-21" value="&lt;b&gt;libNVVM&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="584.5" y="533" width="127" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="E49AWT_eim-HWK9bgomT-22" value="clang++ -S -x cuda matmul.cu --cuda-device-only --cuda-gpu-arch=sm_90 -o matmul.i" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E6E6E6;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="180" y="590" width="481" height="18" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

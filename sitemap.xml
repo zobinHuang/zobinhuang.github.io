@@ -2,14 +2,175 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Life_Work/post_index.json</loc>
+    <loc>https://zobinhuang.github.io/scripts/recents.json</loc>
     
-    <lastmod>2024-12-22</lastmod>
+    <lastmod>2025-01-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/index.html</loc>
+    
+    <lastmod>2025-01-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/LLVM_CUDA_Compilation/index.html</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/LLVM_CUDA_Compilation/ref.json</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/LLVM_CUDA_Compilation/metadata.json</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/post_index.json</loc>
+    
+    <lastmod>2025-01-03</lastmod>
     
   </url>
   
   <url>
     <loc>https://zobinhuang.github.io/sec_learning/script/book_index.json</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/LLVM_CUDA_Compilation/chartjs_data.json</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Life_Health/Science_1_Keep_Healthy_Daily_Life/index.html</loc>
+    
+    <lastmod>2024-12-26</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Life_Health/Science_1_Keep_Healthy_Daily_Life/metadata.json</loc>
+    
+    <lastmod>2024-12-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Life_Health/post_index.json</loc>
+    
+    <lastmod>2024-12-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Life_Health/Science_1_Keep_Healthy_Daily_Life/ref.json</loc>
+    
+    <lastmod>2024-12-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Life_Health/Science_1_Keep_Healthy_Daily_Life/chartjs_data.json</loc>
+    
+    <lastmod>2024-12-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/index.html</loc>
+    
+    <lastmod>2024-12-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Life_Health/index.html</loc>
+    
+    <lastmod>2024-12-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/CUDA_Inline_PTX/index.html</loc>
+    
+    <lastmod>2024-12-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/CUDA_Inline_PTX/ref.json</loc>
+    
+    <lastmod>2024-12-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/CUDA_Inline_PTX/metadata.json</loc>
+    
+    <lastmod>2024-12-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/CUDA_Inline_PTX/chartjs_data.json</loc>
+    
+    <lastmod>2024-12-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/LLM_2_AMP/index.html</loc>
+    
+    <lastmod>2024-12-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/LLM_2_AMP/ref.json</loc>
+    
+    <lastmod>2024-12-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/post_index.json</loc>
+    
+    <lastmod>2024-12-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/LLM_2_AMP/metadata.json</loc>
+    
+    <lastmod>2024-12-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/LLM_2_AMP/chartjs_data.json</loc>
+    
+    <lastmod>2024-12-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zobinhuang.github.io/sec_learning/Life_Work/post_index.json</loc>
     
     <lastmod>2024-12-22</lastmod>
     
@@ -72,13 +233,6 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/index.html</loc>
-    
-    <lastmod>2024-12-22</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zobinhuang.github.io/sec_learning/Life_Work/index.html</loc>
     
     <lastmod>2024-12-22</lastmod>
@@ -107,13 +261,6 @@
   </url>
   
   <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/post_index.json</loc>
-    
-    <lastmod>2024-11-23</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/OVS_2_OvS_DPDK_VxLAN/ref.json</loc>
     
     <lastmod>2024-11-23</lastmod>
@@ -138,20 +285,6 @@
     <loc>https://zobinhuang.github.io/sec_about/index.html</loc>
     
     <lastmod>2024-11-15</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/scripts/recents.json</loc>
-    
-    <lastmod>2024-11-10</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/index.html</loc>
-    
-    <lastmod>2024-11-09</lastmod>
     
   </url>
   
@@ -383,13 +516,6 @@
     <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/CUDA_NVCC_Compilation/index.html</loc>
     
     <lastmod>2023-10-05</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/post_index.json</loc>
-    
-    <lastmod>2023-09-21</lastmod>
     
   </url>
   
@@ -3588,7 +3714,7 @@
 
   <url>
     <loc>https://zobinhuang.github.io/</loc>
-    <lastmod>2024-12-22</lastmod>
+    <lastmod>2025-01-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
