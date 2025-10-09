@@ -75,12 +75,14 @@
 	margin: 0px;
 	padding: 5px 20px;
 	font-size: 18px;
+    font-family: 楷体;
 }
 .weekly-report-current-report-title h5{
 	margin: 0px;
 	padding: 5px;
 	font-size: 14px;
-	font-family:Verdana, Geneva, Tahoma, sans-serif;
+	/* font-family:Verdana, Geneva, Tahoma, sans-serif; */
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 /*本周周报封面介绍 container*/

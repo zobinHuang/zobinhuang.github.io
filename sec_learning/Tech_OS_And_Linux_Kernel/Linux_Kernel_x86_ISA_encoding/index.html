@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Exo 2:300,300italic,400,400italic,700,700italic|Caveat:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zobinhuang.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":180,"display":"post","padding":10,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Encode&#x2F;Decode x86 Instructions">
+<meta property="og:url" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_x86_ISA_encoding/index.html">
+<meta property="og:site_name" content="Zobin">
+<meta property="og:description" content="MathJax &#x3D; {         tex: {             inlineMath: [[&#39;$&#39;,&#39;$&#39;], [&#39;\\(&#39;,&#39;\\)&#39;]],             displayMath: [[&#39;$$&#39;,&#39;$$&#39;], [&#39;\\[&#39;,&#39;\\]&#39;]],             processEscapes: true,             process">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_x86_ISA_encoding/pic/manual_screenshot.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_x86_ISA_encoding/pic/ia64_ia32_instruction_format.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_x86_ISA_encoding/pic/modrm.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_x86_ISA_encoding/pic/address_16.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_x86_ISA_encoding/pic/address_32.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_x86_ISA_encoding/pic/sib_address.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_x86_ISA_encoding/pic/one_byte_opcode.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_x86_ISA_encoding/pic/64_format.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_x86_ISA_encoding/pic/64_extend.png">
+<meta property="og:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_x86_ISA_encoding/pic/xxx.png">
+<meta property="article:published_time" content="2025-02-09T22:14:56.875Z">
+<meta property="article:modified_time" content="2025-02-09T22:14:56.875Z">
+<meta property="article:author" content="Zhuobin Huang">
+<meta property="article:tag" content="Zobin">
+<meta property="article:tag" content="黄卓彬">
+<meta property="article:tag" content="zobinHuang">
+<meta property="article:tag" content="网络工程">
+<meta property="article:tag" content="Networking Engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_x86_ISA_encoding/pic/manual_screenshot.png">
+
+<link rel="canonical" href="https://zobinhuang.github.io/sec_learning/Tech_OS_And_Linux_Kernel/Linux_Kernel_x86_ISA_encoding/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : false,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Encode/Decode x86 Instructions | Zobin
+</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zobin" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zobin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Lovin' Tech with Tea</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about-me">
+
+    <a href="/sec_about/" rel="section"><i class="fa fa-user fa-fw"></i>About Me</a>
+
+  </li>
+        <li class="menu-item menu-item-library">
+
+    <a href="/sec_learning/" rel="section"><i class="fa fa-duotone fa-book fa-fw"></i>Library</a>
+
+  </li>
+        <li class="menu-item menu-item-production">
+
+    <a href="/sec_music/" rel="section"><i class="fa fa-music fa-fw"></i>Production</a>
+
+  </li>
+        <li class="menu-item menu-item-thoughts">
+
+    <a href="/sec_thoughts/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>Thoughts</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+  
+  
+
+          <div class="content page posts-expand">
+            
+
+    
+    
+    
+    <div class="post-block" lang="en">
+      <header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">Encode/Decode x86 Instructions
+</h1>
+
+<div class="post-meta">
+  
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>LINUX_KERNEL_X86_ISA_ENCODING</li>
+        
+  </ul>
+
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <head>
+<!--导入样式表-->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--导入网页脚本-->
+<script src="script/index.js"></script>
+
+<!--支持伪代码显示-->
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+        integrity="sha256-3Fdoa5wQb+JYfEmTpQHx9sc/GuwpfC/0R9EpBki+mf8=" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js">
+</script>
+
+<!--支持网页公式显示-->    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+
+<!--支持矩阵显示-->
+<script type="text/javascript">
+  run_maths = function() {
+    if (document.querySelector('[class*="cmath"]') !== null) {
+      if (typeof (mjax_path)=='undefined') { mjax_path='https://cdn.jsdelivr.net/npm/mathjax@2'; }
+      if (typeof (mjax_config)=='undefined') { mjax_config='AM_CHTML'; }
+      smjax = document.createElement ('script');
+      smjax.setAttribute('src',`${mjax_path}/MathJax.js?config=${mjax_config}`);
+      smjax.setAttribute('async',true);
+      document.getElementsByTagName('head')[0].appendChild(smjax);
+    }
+  };
+  if (document.readyState === 'loading') {  
+    window.addEventListener('DOMContentLoaded', run_maths); 
+  } else { 
+    run_maths(); 
+  }
+</script>
+</head>
+
+<body onload="load_page()">
+
+<!-- 导入 mermaid -->
+<script src="script/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true});</script>
+
+<!-- 导入 chart.js -->
+<script src="script/chart.min.js"></script>
+
+<!-- 本文的 Metadata -->
+<div id="metadata"></div>
+
+<!-- Start your post here -->
+<h2 class="title">Basic (16/32-bits)</h2>
+<div class="div_learning_post">
+  <div class="queblock">
+  Why one need to learn the encoding of instruction on a OS cource? (sincerely)
+  </div>
+
+  <p>
+  This post mainly introduces the methodology to encode/decode IA-64/IA-32 instructions, by querying Intel's manuals.
+  Note that we are not going to discuss functionalities and performance of each instruction in this post.
+
+  <h3 class="title">Where's the Datasheet?</h3>
+  <p>
+  The Volume 2 of <a target="_blank" rel="noopener" href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html">Intel® 64 and IA-32 Architectures Software Developer’s Manuals</a> introduces the instruction format of Intel 64 and IA-32 Architecture.
+
+  <div
+      class="img"
+      title="You Could Find the Content Here at section 2.1 of Volume 2"
+      label="manual_screenshot"
+      source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+      <img src="./pic/manual_screenshot.png" width="80%" />
+  </div>
+
+  <div class="noteblock">
+  Below we refer to Volume 2 of the Manual directly as <def>Manual</def> without specific mentioned
+  </div>
+
+  <p>
+  Specifically:
+
+  <ul>
+    <li><b>Chapter 2</b> provides the formatting rules of all instructions</li>
+    <li><b>Chapter 3-6</b> provide the specific details for each instruction</li>
+    <li><b>Appendix A</b> provide the map of all OpCodes</li>
+    <li><b>Appendix B</b> provide the encoding and formats of all instructions</li>
+  </ul>  
+
+
+  <h3 class="title">Overview</h3>
+  <div
+      class="img"
+      title="Intel 64 and IA-32 Architectures Instruction Format"
+      label="ia64_ia32_isa_format"
+      source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+      <img src="./pic/ia64_ia32_instruction_format.png" width="80%" />
+  </div>
+
+  <p>
+  As shown in <imgref>ia64_ia32_isa_format</imgref>,
+  an instruction could contains four parts:
+  <def>Prefix</def>, <def>OpCode</def>, <def>ModR/M</def>,
+  <def>SIB</def>, <def>Displacement</def> and <def>Immediate</def>.
+  Below we give them some introduction.
+
+  <h3 class="title">$\texttt{prefix}$: Just do Some Decoration</h3>
+  <p>
+  $\texttt{prefix}$ byte could occurs in the very beginning of the instruction.
+  According to Section 2.1.1,
+  $\texttt{prefix}$ is divided into four groups.
+  $\texttt{prefix}$ for different purpose has different values.
+  The processor is able to identify these values
+  instead of uncorrectly interprete them as $\texttt{OpCode}$ (see <ref>opcode</ref>),
+  becaure prefixes's values are unique.
+
+  <p>
+  To identify whether a binary has prefix,
+  one should check whether the first byte match one of the prefixes's value.
+  See Section 2.1.1 in the manual for more details.
+
+  <h3 class="title">$\texttt{OpCode}$: What does the Instruction Gonna to Do?</h3>
+  <label class="title">opcode</label>
+  <p>
+  OpCode defines what is the action of the instruction.
+  According to Section 2.1.2,
+  IA64/32 supports 1/2/3-bytes OpCode.
+
+  <p>
+  If the OpCode is 2-bytes long,
+  an escape opcode byte of <note>$\texttt{0x0F}$</note> should occur at the first byte position.
+  For instance,
+  <code>CVTDQ2PD</code> consists of the following sequence: $\texttt{0xF3}$, $\texttt{0x0F}$, $\texttt{0xE6}$,
+  where $\texttt{0xF3}$ is the prefix,
+  $\texttt{0x0F}$ is the <def>primary opcode</def> with the escape opcode value,
+  $\texttt{0xE6}$ is <def>additional opcode</def>.
+
+  <p>
+  If the OpCode is 3-bytes long,
+  an escape opcode byte of $\texttt{0x0F}$ should also occur at the first byte position,
+  following by two additional opcode.
+  For instance,
+  <code>PHADDW</code> consists of the following sequence: $\texttt{0x66}$, $\texttt{0x0F}$, $\texttt{0x38}$, $\texttt{0x01}$,
+  where $\texttt{0x66}$ is the prefix,
+  $\texttt{0x0F}$ is the primary opcode with the escape opcode value,
+  $\texttt{0x38}$ and $\texttt{0x01}$ are additional opcodes.
+
+
+  <h3 class="title"><ci>1</ci> $\texttt{ModR/M}$, <ci>2</ci> $\texttt{SIB}$ and <ci>3</ci> $\texttt{disp}$: Where the Instruction Operates on?</h3>
+  <label class="title">modrm</label>
+  <p>
+  OpCode obviously isn't enough,
+  as the processor still need to know which register/memory to operate on.
+  The fields of <ci>1</ci> $\texttt{ModR/M}$ (interprete as <i>Mode of Register/Memory</i>, I guess),
+  <ci>2</ci> $\texttt{SIB}$ and <ci>3</ci> $\texttt{disp}$
+  help to address the register/memory operated by the instruction.
+  Below we clearly describe their usage.
+
+  <h4 class="paragraph">$\texttt{ModR/M}$</h4>
+
+  <div
+      class="img"
+      title="Format of ModR/M"
+      label="modrm"
+      source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+      <img src="./pic/modrm.png" width="300px" />
+  </div>
+
+  <p>
+  $\texttt{ModR/M}$ helps to identify the operands of an instruction.
+  Sepecifically,
+  the <def>$\texttt{mod}$</def> and <def>$\texttt{r/m}$</def> fields inside $\texttt{ModR/M}$ helps to identify one of the operand,
+  while the rest (i.e., <def>$\texttt{Reg/OpCode}$</def>) helps to identify another.
+
+  <div class="noteblock">
+  Whether it's source or destination control by each field isn't clear,
+  must combind with $\texttt{OpCode}$ to find out.
+  See <ref>opcode_2</ref> for more details.
+  </div>
+
+  <p>
+  Specifially, you can check the following two tables provided inside the Mannual,
+  which show the addressing in 16-bits and 32-bits mode seperately.
+
+  <div
+      class="img"
+      title="Addressing of Operands (16-bits and 32-bits Mode)"
+      label="address_16_32"
+      source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+      <img src="./pic/address_16.png" width="600px" />
+      <img src="./pic/address_32.png" width="600px" />
+  </div>
+
+  <p>
+  The table is very convinient.
+  You can directly know which operand the instrction is targeting at with the value of $\texttt{ModR/M}$.
+  For instance, in the second table,
+  the value of $\texttt{0x91}$ stands for the operand controlled by $\texttt{mod}$ and $\texttt{r/m}$ fields is $\texttt{[ECX]+disp32}$,
+  while the operand controlled by $\texttt{Reg}$ field is $\texttt{DL}$/$\texttt{DX}$/$\texttt{EDX}$/$\texttt{MM2}$/$\texttt{XMM2}$,
+  depending on the precision of the $\texttt{OpCode}$.
+
+  <p>
+  Note that if the instruction doesn't require a second operand,
+  the field $\texttt{Reg/OpCode}$ of $\texttt{ModR/M}$ would be used as the extention of $\texttt{OpCode}$ as mentioned later (<ref>opcode_2</ref>).
+
+  <h4 class="paragraph">$\texttt{disp}$</h4>
+  <p>
+  You might already notice the $\texttt{disp32}$ of $\texttt{[ECX]+disp32}$ in the above example.
+  Yes,
+  it's used for biasing the memory address.
+  You can choose 1-byte ($\texttt{disp8}$), 2-bytes ($\texttt{disp16}$) or 4-bytes ($\texttt{disp32}$).
+
+  <h4 class="paragraph">$\texttt{SIB}$</h4>
+  <p>
+  In 32-bits Addressing Table inside <imgref>address_16_32</imgref>,
+  you might already notice that some of the first operand (The first column) occurs $\texttt{[--]}$,
+  this means that it require another <def>$\texttt{SIB}$</def> byte (scale/index base) following the $\texttt{ModR/M}$ bytes,
+  which does a cooler thing -- scale for biasing from the base address,
+  as shown in <imgref>address_sib</imgref>.
+
+  <div
+      class="img"
+      title="Addressing with SIB byte (32-bits Mode)"
+      label="address_sib"
+      source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+      <img src="./pic/sib_address.png" width="600px" />
+  </div>
+
+  <p>
+  For instance,
+  suppose we're under 32-bits mode (see <ref>opcode_2</ref> to see how instruction choose operand size),
+  for $[\texttt{ModR/M},\,\texttt{SIB},\,\texttt{disp}] = [\texttt{0x74},\,\texttt{0x44},\,\texttt{0x20}]$:
+
+  <ul>
+    <li>$\texttt{ModR/M}$ = $\texttt{0x74}$, so the operand controlled by $\texttt{Reg}$ is $\%\texttt{esi}$, the operand controlled by $\texttt{mod}$ and $\texttt{r/m}$ fields is from memory, but its value is still unclear.</li>
+    <li>$\texttt{SIB}$ = $\texttt{0x44}$, so the base register is $\%\texttt{esp}$, scaled index is $\%\texttt{eax} \times 2$.</li>
+    <li>$\texttt{disp}$ = $\texttt{0x20}$, so the bias is $\texttt{0x20}$ ($32$ bytes).</li>
+  </ul>
+
+  <p>
+  Hence, another opeand would be $\texttt{0x20}(\%\texttt{esp} \times \%\texttt{eax} \times 2)$.
+
+
+  <div class="noteblock">
+  For more details about how instruction address operands, you can check the Section 2.1.5 of the Manual.
+  </div>
+
+  <h3 class="title">$\texttt{immediate}$: Operate with Instruction Value!</h3>
+  <p>
+  Some instructions could also have a <def>$\texttt{immediate}$</def>,
+  which directly encodes the value inside the instruction,
+  could help recude the times to access memory. 
+
+  <h3 class="title">Back to $\texttt{OpCode}$: More Encoding Details</h3>
+  <label class="title">opcode_2</label>
+  <p>
+  The Appendix A of the Mannal provides detail encoding for $\texttt{OpCode}$ provided by the architecture.
+
+  <div
+      class="img"
+      title="Example of Identifying OpCode: One-byte OpCode Map (0x00-0xF7)"
+      label="one_byte_opcode"
+      source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+      <img src="./pic/one_byte_opcode.png" width="600px" />
+  </div>
+
+  <div class="noteblock">
+  <imgref>one_byte_opcode</imgref> is in Intel syntax, where first operand is the destination, second one is the source.
+  </div>
+
+  <p>
+  For instance,
+  <imgref>one_byte_opcode</imgref> shows the map of 1-byte $\texttt{OpCode}$ ($\texttt{0x00}$-$\texttt{0xF7}$).
+  With the value of $\texttt{0x01}$ for a $\texttt{OpCode}$,
+  one can know that it's a $\texttt{add}$ command.
+  But what about other fields following it?
+  One can see that the map shows $\texttt{Ev,Gv}$ in the table of $\texttt{0x01}$.
+  What do they mean?
+
+  <p>
+  In fact, one can check the Appendix A.2.1 for answer.
+  Turns out:
+
+  <ul>
+    <li>$\texttt{E}$: A $\texttt{ModR/M}$ byte follows the $\texttt{OpCode}$ and specifies the operand. The operand is either a general-purpose register or a memory address. If it is a memory address, the address is computed from a segment register and any of the following values: a base register, an index register, a scaling factor, a displacement.</li>
+    <li>$\texttt{G}$: The $\texttt{Reg}$ field of the $\texttt{ModR/M}$ byte selects a general register (for example, AX (000)).</li>
+    <li>$\texttt{v}$: Word, doubleword or quadword (in 64-bit mode), depending on operand-size attribute.</li>
+  </ul>
+
+  <p>
+  Note that the Manual is in Intel syntax, so $\texttt{Ev}$ is controlling the destination operand, while $\texttt{Gv}$ is for source operand.
+
+  <p>
+  So basicly it just saying that:
+
+  <div class="theorm_prove">
+  <ul>
+    <li>The destination operand (which is $\texttt{Ev}$) could be either register or memory, depending on the $\texttt{mod}$ field of $\texttt{ModR/M}$.</li>
+    <li>Recall <ref>modrm</ref>, it's addressing with $\texttt{Reg}$ field of $\texttt{ModR/M}$.</li>
+    <li>The source operand (which is $\texttt{Gv}$) must be a register.</li>
+    <li>Recall <ref>modrm</ref>, it's addressing with $\texttt{R/M}$ field of $\texttt{ModR/M}$.</li>
+    <li>Operands are in 32-bits (word) length.</li>
+  </ul>
+  </div>
+
+  <p>
+  Given an instruction of $\texttt{0x01}, \texttt{0xd8}$, that means:
+
+  <ul>
+    <li>$\texttt{ModR/M}$ is $\texttt{0xd8}$</li>
+    <li>$\texttt{mod}$ of $\texttt{ModR/M}$ is $\texttt{11}$, so destination operand is a register</li>
+    <li>$\texttt{R/M}$ of $\texttt{ModR/M}$ is $\texttt{000}$, so destination operand is a $\%\texttt{eax}$</li>
+    <li>$\texttt{Reg}$ of $\texttt{ModR/M}$ is $\texttt{011}$, so source operand is a $\%\texttt{ebx}$</li>
+  </ul>
+
+  <p>
+  So the command is $\texttt{add}\,\%\texttt{ebx},\,\%\texttt{eax}$ (<note>in AT&T format</note>).
+
+  <div class="noteblock">
+  Actually you can directly query the <imgref>address_16_32</imgref> for the answer, we just show more details here.
+  </div>
+</div>
+
+
+<h2 class="title">What about 64-bits?</h2>
+<div class="div_learning_post">
+  <p>
+  Chapter 2.2 of the Manual describes how formating works under 64-bits.
+
+  <p>
+  As shown in <imgref>64_format</imgref>,
+  the $\texttt{REX Prefix}$ is added for extend the address bytes mentioned above.
+
+  <div
+      class="img"
+      title="Prefix Ordering in 64-bit Mode"
+      label="64_format"
+      source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+      <img src="./pic/64_format.png" width="600px" />
+  </div>
+
+  <p>
+  Specifically,
+  <imgref>64_extend</imgref> shows the mechanism that how $\texttt{REX Prefix}$ byte extend addressing.
+
+  <div
+      class="img"
+      title="How REX Prefix Extend Addressing"
+      label="64_extend"
+      source="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html"
+  >
+      <img src="./pic/64_extend.png" width="80%" />
+  </div>
+
+  <p>
+
+  <div class="queblock">
+  TODO: how does 64-bit relocate register address? (i.e., two tables)
+  </div>
+
+  <p>
+  Let's travel through an example.
+  For instance, for $\texttt{0x4e},\,\texttt{0x8d},\,\texttt{0x74},\,\texttt{0x67},\,\texttt{0x10}$:
+
+  <ul>
+    <li>No legacy prefix in the instruction</li>
+    <li>
+      $\texttt{0x4e}$: by quering the 1-byte $\texttt{OpCode}$ table (<imgref>one_byte_opcode</imgref>),
+      one can know that this is a $\texttt{REX Prefix}$ byte, binary is $01001110$,
+      so those valuable bits inside the $\texttt{REX Prefix}$ byte are:
+      $\texttt{W}=1$, $\texttt{R}=1$, $\texttt{X}=1$, $\texttt{B}=0$
+    </li>
+    <li>
+      $\texttt{0x8d}$: by quering the 1-byte $\texttt{OpCode}$ table (<imgref>one_byte_opcode</imgref>),
+      one can know that it's the $\texttt{OpCode}$ of $\texttt{lea}$ instruction, with $\texttt{Gv,M}$:
+      <ul>
+        <li>
+          The destination operand is a 32-bits register (indicated by $\texttt{Gv}$), addressed by $\texttt{Reg}$ of $\texttt{ModR/M}$.
+        </li>
+        <li>
+          The source operand is memory (indicated by $\texttt{M}$  $^{\star}$), addressed by $\texttt{mod}$ and $\texttt{r/m}$ of $\texttt{ModR/M}$.
+        </li>
+      </ul>
+    </li>
+    <li>
+      $\texttt{0x74} = \texttt{ModR/M}$, so: (see Figure 2-6 inside <imgref>64_extend</imgref>)
+      <ul>
+        <li>$\texttt{mod} = \texttt{01}$</li>
+        <li>
+          $\texttt{Reg} = \texttt{110}$, add the bit of $\texttt{R}=1$, it's $\texttt{1110} = \%\texttt{r14}$
+        </li>
+        <li>$\texttt{R/M} = \texttt{100}$</li>
+      </ul>
+    </li>
+    <li>
+      $\texttt{0x67} = \texttt{SIB}$, so: (see Figure 2-6 inside <imgref>64_extend</imgref>)
+      <ul>
+        <li>$\texttt{Scale} = \texttt{01} = 2$</li>
+        <li>
+          $\texttt{Index} = \texttt{100}$, add the bit of $\texttt{X}=1$, it's $\texttt{1100} = \%\texttt{r12}$
+        </li>
+        <li>
+          $\texttt{Base} = \texttt{111}$, add the bit of $\texttt{B}=0$, it's $\texttt{0111} = \%\texttt{rdi}$
+        </li>
+      </ul>
+    </li>
+    <li>
+      $\texttt{0x10} = \texttt{disp}$
+    </li>
+  </ul>
+
+  <p>
+  So essentially the instruction is: $\texttt{lea}\,\texttt{0x10}(\%\texttt{rdi},\%\texttt{r12},\texttt{2}),\,\%\texttt{r14}$
+
+  <div class="noteblock">
+  $^{\star}$ $\texttt{M}$: The $\texttt{ModR/M}$ byte may refer only to memory (for example, BOUND, LES, LDS, LSS, LFS, LGS, CMPXCHG8B).
+  </div>
+
+</div>
+
+
+<div class="div_ref" id="ref_container"></div>
+
+</body>
+
+<!-- 代码块 -->
+<!-- <div class="code_segment" label="forward">
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* hello*/</span></span><br></pre></td></tr></table></figure>
+</div> -->
+
+<!-- 代码块引用 -->
+<!-- <coderef>forward</coderef> -->
+
+<!-- Comment -->
+<!-- <div class="comblock" title="xxx"> -->
+
+<!-- Chart Support -->
+<!-- Check https://www.runoob.com/chartjs/chartjs-tutorial.html -->
+<!-- <div class="chartjs" label="naive_impt_performance"></div> -->
+
+<!-- Note Support -->
+<!-- Check https://theme-next.js.org/docs/tag-plugins/note.html -->
+
+<!-- 圆圈数字 -->
+<!--
+⓪ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳ ㉑ ㉒ ㉓ ㉔ ㉕ ㉖ ㉗ ㉘ ㉙ ㉚ ㉛ ㉜ ㉝ ㉞ ㉟ ㊱ ㊲ ㊳ ㊴ ㊵ ㊶ ㊷ ㊸ ㊹ ㊺ ㊻ ㊼ ㊽ ㊾ ㊿
+-->
+
+<!-- Flow Chart -->
+<!--
+Format see: https://mermaid-js.github.io/mermaid/#/flowchart
+-->
+<!-- <flowchart class="mermaid">
+ Mermaid Flow Chart Code
+</flowchart> -->
+
+<!-- Sign Block -->
+<!--
+<div class="noteblock">
+A NOTE
+</div>
+
+<div class="queblock">
+A QUESTION
+</div>
+-->
+
+<!--图片、引用-->
+<!-- 
+<div class="img" title="img title" label="img_label" source="url">
+  <img src="" height="" />
+</div>
+
+<imaging>img_label</imaging>
+-->
+
+<!--等式、引用-->
+<!-- 
+<div class="equation" label="equation_label">
+</div>
+
+<equation>equation_label</equation>
+-->
+
+<!--定理、引用、证明-->
+<!-- 
+<div class="theorm" label="theorm_label">
+</div>
+
+<theorm>theorm_label</theorm>
+
+<div class="theorm_prove">
+</div>
+-->
+
+<!--引用其它章节-->
+<!-- 
+<ref></ref> 
+-->
+
+<!--引用文献-->
+<!-- 
+<cite></cite> 
+-->
+
+<!--关键词-->
+<!-- 
+<def></def> 
+-->
+
+<!--醒目注意-->
+<!-- 
+<note></note> 
+-->
+
+<!--段落-->
+<!--
+<h3 class="paragraph">Paragraph Name</h3>
+-->
+
+<!--表格-->
+<!--
+<div class="table" title="Table Title" label="table_label">
+  <table border="1" align="center" bgcolor="#FFFFFF">
+    <tr>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+    </tr>
+    <tr>
+      <td>xxx</td>
+      <td>xxx</td>
+      <td>xxx</td>
+    </tr>
+  </table>
+</div>
+-->
+
+<!--矩阵公式-->
+<!--
+<div class="cmath" align="center">
+  `((1, 0),(1, 0))`
+</div><br>
+-->
+
+<!--伪代码-->
+<!--
+<pre id="quicksort" style="display:hidden;">
+  % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+  \begin{algorithm}
+  \caption{Quicksort}
+  \begin{algorithmic}
+  \PROCEDURE{Quicksort}{$A, p, r$}
+      % Add Here
+
+      % 空行
+      % \STATE \texttt{\\}
+  \ENDPROCEDURE
+  \end{algorithmic}
+  \end{algorithm}
+</pre>
+<script>
+    pseudocode.renderElement(document.getElementById("quicksort"));
+</script>
+-->
+<!--
+Latex 伪代码格式见: https://github.com/SaswatPadhi/pseudocode.js
+-->
+
+<!--图片-->
+<!--
+<div align="center">
+  <img src="./pic/xxx.png" width=80%>
+</div>
+-->
+
+<!--正文-->
+<!--
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;公式：<span>`\overline{A}\overline{B}`</span>
+</p>
+-->
+      </div>
+      
+      
+      
+    </div>
+    
+  <ul class="breadcrumb">
+          
+            <li><a href="/sec_learning/">SEC_LEARNING</a></li>
+            <li><a href="/sec_learning/Tech_OS_And_Linux_Kernel/">TECH_OS_AND_LINUX_KERNEL</a></li>
+          <li>LINUX_KERNEL_X86_ISA_ENCODING</li>
+        
+  </ul>
+
+    
+    
+    
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhuobin Huang"
+      src="/images/zobin_2025.jpg">
+  <p class="site-author-name" itemprop="name">Zhuobin Huang</p>
+  <div class="site-description" itemprop="description">System Engineer</div>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zobinHuang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zobinHuang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zobin1999@gmail.com" title="E-Mail → mailto:zobin1999@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhuobin Huang</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
